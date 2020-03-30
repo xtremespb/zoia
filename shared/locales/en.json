@@ -1,0 +1,6 @@
+{
+    "not_found": "Not Found",
+    "not_found_msg": "The page you are trying to reach couldn't be found on the server.",
+    "internal_error": "Internal Server Error",
+    "internal_error_msg": "The server encountered an unexpected condition which prevented it from fulfilling the request."
+}

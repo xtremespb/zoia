@@ -1,0 +1,6 @@
+{
+    "js": {
+        "end_with_newline": true,
+        "jslint_happy": true
+    }
+}

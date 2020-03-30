@@ -1,0 +1,5 @@
+{
+    "browser": {
+        "./i18nCatalogsNode.js": "./i18nCatalogsBrowser.js"
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "secret": "e140693fa4c4ce97e0fd4eee37d14a45f8807d44894a650b1ae49776361a8b7e",
+    "logLevel": "info",
+    "trustProxy": true,
+    "stackTrace": true,
+    "mailer": {
+        "service": "Yandex",
+        "auth": {
+            "user": "info@zoiajs.org",
+            "pass": ""
+        }
+    },
+    "mongo": {
+        "url": "mongodb://127.0.0.1:27017",
+        "dbName": "zoia"
+    },
+    "originCORS": "*",
+    "apiServer": {
+        "ip": "127.0.0.1",
+        "port": 3000
+    },
+    "webServer": {
+        "ip": "127.0.0.1",
+        "port": 3001
+    },
+    "languages": {
+        "en": "English",
+        "ru": "Русский"
+    },
+    "site": {
+        "en": {
+            "title": "Zoia Website",
+            "titleShort": "Zoia Website"
+        },
+        "ru": {
+            "title": "Сайт на Zoia",
+            "titleShort": "Сайт на Zoia"
+        }
+    }
+}
