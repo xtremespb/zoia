@@ -4,70 +4,13 @@ const path = require("path");
 const webpack = require("webpack");
 const OptimizeCSSPlugin = require("optimize-css-assets-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const NodeExternals = require("webpack-node-externals");
 const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MarkoPlugin = require("@marko/webpack/plugin").default;
 
+const templates = require(`${__dirname}/etc/templates.json`);
 const markoPlugin = new MarkoPlugin();
-
-const configAPI = {
-    name: "API Server",
-    entry: {
-        app: `${__dirname}/shared/api/index.js`
-    },
-    output: {
-        path: path.resolve(`${__dirname}/dist/bin`),
-        filename: "api.js"
-    },
-    target: "node",
-    node: {
-        __dirname: false,
-        __filename: false,
-    },
-    externals: [NodeExternals()],
-    optimization: {
-        splitChunks: false,
-        minimizer: [
-            new TerserPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: false,
-                extractComments: false,
-            })
-        ]
-    },
-    module: {
-        rules: [{
-            test: /\.marko$/,
-            loader: "@marko/webpack/loader"
-        }, {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: "babel-loader",
-            options: {
-                presets: [
-                    "@babel/preset-env",
-                    {
-                        plugins: [
-                            "@babel/plugin-proposal-class-properties",
-                            "@babel/plugin-syntax-dynamic-import",
-                            "macros",
-                            ["@babel/transform-runtime", {
-                                regenerator: true
-                            }]
-                        ]
-                    }
-                ]
-            }
-        }]
-    },
-    plugins: [
-        new webpack.optimize.LimitChunkCountPlugin({
-            maxChunks: 1
-        })
-    ]
-};
+const webpackConfig = [];
 
 const configWebClient = {
     name: "Web Server - Client Part",
@@ -182,7 +125,7 @@ const configWebServer = {
     output: {
         libraryTarget: "commonjs2",
         path: path.resolve(`${__dirname}/dist/bin`),
-        filename: "web.js",
+        filename: "server.js",
         publicPath: "/web/",
     },
     node: {
@@ -201,26 +144,38 @@ const configWebServer = {
 };
 
 const cleanUpWeb = () => {
-    console.log("Cleaning up public/web...");
+    console.log("Cleaning up dist/public/web...");
     const pathWeb = path.resolve(`${__dirname}/dist/public/web`);
     fs.removeSync(pathWeb);
     fs.ensureDirSync(pathWeb);
 };
 
-const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/modules`));
-const modules = {};
-moduleDirs.map(dir => modules[dir] = require(path.resolve(`${__dirname}/modules/${dir}/module.json`)));
-console.log("Writing modules.json...");
-fs.writeJSONSync(`${__dirname}/etc/modules.json`, modules);
+const rebuildMarkoTemplates = () => {
+    console.log("Re-building Marko templates macro...");
+    const root = `<!-- This file is auto-generated, do not modify -->\n<if(out.global.template === "admin")><admin><i18n/><bulma/><\${input.renderBody}/></admin></if>\n${templates.available.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><bulma/><\${input.renderBody}/></${t}></if>\n`).join("")}`;
+    fs.writeFileSync(path.resolve(`${__dirname}/shared/marko/templates/index.marko`), root);
+};
 
-const webpackConfig = [];
+const generateModulesConfig = () => {
+    const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/modules`));
+    const modules = {};
+    moduleDirs.map(dir => modules[dir] = require(path.resolve(`${__dirname}/modules/${dir}/module.json`)));
+    console.log("Writing modules.json...");
+    fs.writeJSONSync(`${__dirname}/etc/modules.json`, modules);
+};
 
-console.log("Ensuring directories and copying statics...");
-fs.ensureDirSync(path.resolve(`${__dirname}/dist/bin`));
-fs.ensureDirSync(path.resolve(`${__dirname}/dist/public`));
+const ensureDirectories = () => {
+    console.log("Ensuring directories and copying statics...");
+    fs.ensureDirSync(path.resolve(`${__dirname}/dist/bin`));
+    fs.ensureDirSync(path.resolve(`${__dirname}/dist/public`));
+};
+
 cleanUpWeb();
+ensureDirectories();
+generateModulesConfig();
+rebuildMarkoTemplates();
 
-webpackConfig.push(configAPI, configWebClient, configWebServer);
+webpackConfig.push(configWebClient, configWebServer);
 
 console.log("Staring Webpack...");
 

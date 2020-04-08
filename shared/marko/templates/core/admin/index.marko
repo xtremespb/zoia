@@ -1,0 +1,30 @@
+style {
+  @import "./admin.scss";
+}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>ADMIN ${out.global.pageTitle} | ${out.global.siteData.title}</title>
+  </head>
+  <body>
+    <navigation/>
+    <div class="columns is-gapeless za-ap-main-columns">
+      <div class="column is-narrow is-hidden-touch">
+        <aside class="za-ap-side-menu">
+          <ul class="menu-list">
+            <li>
+              <a>Users</a>
+            </li>
+            <li>
+              <a>Navigation</a>
+            </li>
+          </ul>
+        </aside>
+      </div>
+      <div class="column is-auto za-ap-content">Second column</div>
+    </div>
+  </body>
+</html>

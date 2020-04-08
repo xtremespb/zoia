@@ -1,4 +1,10 @@
 export default {
+    logWarn: (req, message) => req.log.warn({
+        ip: req.ip,
+        path: req.urlData().path,
+        query: req.urlData().query,
+        message
+    }),
     logError: (req, message, e) => req.log.error({
         ip: req.ip,
         path: req.urlData().path,

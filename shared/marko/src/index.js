@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs-extra";
+import fastifyMongo from "fastify-mongodb";
 import fastifyURLData from "fastify-url-data";
 import fastifyCORS from "fastify-cors";
 import fastifyJWT from "fastify-jwt";
@@ -8,11 +9,16 @@ import fastifyMultipart from "fastify-multipart";
 import fastifyCookie from "fastify-cookie";
 import Pino from "pino";
 import Fastify from "fastify";
+import {
+    MongoClient
+} from "mongodb";
 import logger from "../../lib/logger";
-import loggerHelpers from '../../lib/loggerHelpers';
+import loggerHelpers from "../../lib/loggerHelpers";
 import site from "../../lib/site";
 import internalServerErrorHandler from "./internalServerErrorHandler";
 import notFoundErrorHandler from "./notFoundErrorHandler";
+import modules from "../../../etc/modules.json";
+import response from "../../lib/response";
 
 (async () => {
     let config;
@@ -37,14 +43,32 @@ import notFoundErrorHandler from "./notFoundErrorHandler";
             trustProxy: config.trustProxy,
             ignoreTrailingSlash: true
         });
+        // Create MongoDB client and connect
+        const mongoClient = new MongoClient(config.mongo.url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        await mongoClient.connect();
+        // Regitser MongoDB for Fastify
+        fastify.register(fastifyMongo, {
+            client: mongoClient,
+            database: config.mongo.dbName
+        }).register((ff, opts, next) => {
+            ff.mongo.client.db(config.mongo.dbName).on("close", () => {
+                pino.error("Connection to MongoDB is broken");
+                process.exit(1);
+            });
+            next();
+        });
         // Decorate Fastify with configuration and helpers
         fastify.decorate("zoiaSite", site);
-        fastify.decorateRequest("zoiaSite", site);
+        fastify.decorateRequest("ZoiaSite", site);
         fastify.decorate("zoiaConfig", config);
         fastify.decorateRequest("zoiaConfig", config);
         fastify.decorate("zoiaTemplates", templates);
         fastify.decorateRequest("zoiaTemplates", templates);
         Object.keys(loggerHelpers).map(i => fastify.decorateReply(i, loggerHelpers[i]));
+        Object.keys(response).map(i => fastify.decorateReply(i, response[i]));
         // Register FormBody and Multipart
         fastify.register(fastifyFormbody);
         fastify.register(fastifyMultipart, {
@@ -66,6 +90,26 @@ import notFoundErrorHandler from "./notFoundErrorHandler";
         fastify.setNotFoundHandler((req, rep) => notFoundErrorHandler(req, rep));
         // Set handler for error 500
         fastify.setErrorHandler((err, req, rep) => internalServerErrorHandler(err, req, rep));
+        // Load all web server modules
+        await Promise.all(Object.keys(modules).map(async m => {
+            try {
+                const module = await import(`../../../modules/${m}/web/index.js`);
+                module.default(fastify);
+                pino.info(`Web Module loaded: ${m}`);
+            } catch (e) {
+                pino.info(`Cannot load module: ${m} (${e.message})`);
+            }
+        }));
+        // Load all API modules
+        await Promise.all(Object.keys(modules).map(async m => {
+            try {
+                const module = await import(`../../../modules/${m}/api/index.js`);
+                module.default(fastify);
+                pino.info(`API Module loaded: ${m}`);
+            } catch (e) {
+                pino.info(`Cannot load API module: ${m}`);
+            }
+        }));
         // Start server
         await fastify.listen(config.webServer.port, config.webServer.ip);
     } catch (e) {

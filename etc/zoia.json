@@ -1,5 +1,6 @@
 {
     "secret": "e140693fa4c4ce97e0fd4eee37d14a45f8807d44894a650b1ae49776361a8b7e",
+    "authTokenExpiresIn": "7 days",
     "logLevel": "info",
     "trustProxy": true,
     "stackTrace": true,
@@ -12,7 +13,7 @@
     },
     "mongo": {
         "url": "mongodb://127.0.0.1:27017",
-        "dbName": "zoia"
+        "dbName": "zoia3"
     },
     "originCORS": "*",
     "apiServer": {

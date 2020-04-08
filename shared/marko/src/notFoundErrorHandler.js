@@ -1,19 +1,21 @@
 import error404 from "../error404/index.marko";
 
 export default async (req, rep) => {
-    const language = req.zoiaSite.languages[0];
-    req.zoiaSite.i18n.setLanguage(language);
+    const site = new req.ZoiaSite(req);
     const render = await error404.stream({
         $global: {
             serializedGlobals: {
                 template: true,
                 pageTitle: true,
-                ...req.zoiaSite.serializedGlobals
+                ...site.getSerializedGlobals()
             },
             template: req.zoiaTemplates.available[0],
-            pageTitle: req.zoiaSite.i18n.t("not_found"),
-            ...req.zoiaSite.globals(language)
+            pageTitle: site.i18n.t("not_found"),
+            ...site.getGlobals()
         }
     });
-    rep.code(404).type("text/html").send(render);
+    rep.logWarn(req, "Not Found");
+    req.urlData().path.match(/^\/api\//) ? rep.code(404).type("application/json").send({
+        errorMessage: "Not Found"
+    }) : rep.code(404).type("text/html").send(render);
 };
