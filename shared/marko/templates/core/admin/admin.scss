@@ -1,3 +1,11 @@
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
+
+.za-ap-noselect {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .za-ap-side-menu {
     width: 200px;
 }
@@ -5,5 +13,3 @@
 .za-ap-main-columns {
     padding: 10px;
 }
-
-.za-ap-content {}
