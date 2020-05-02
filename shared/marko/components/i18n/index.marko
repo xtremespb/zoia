@@ -1,0 +1,11 @@
+import I18n from "../../../lib/i18n"
+
+class {
+  onCreate(input, out) {
+    const i18n = new I18n();
+    Object.keys(out.global.languages).map(language => i18n.addLanguage(language));
+    i18n.setLanguageData(out.global.language, out.global.languageData);
+    i18n.setLanguage(out.global.language);
+    out.global.i18n = i18n;
+  }
+}

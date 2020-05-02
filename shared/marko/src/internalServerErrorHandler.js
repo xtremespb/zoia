@@ -1,4 +1,4 @@
-import error500 from "../error500/index.marko";
+import error500 from "./error500/index.marko";
 
 export default async (err, req, rep) => {
     const site = new req.ZoiaSite(req);

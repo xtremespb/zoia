@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import fs from "fs-extra";
 import path from "path";
 import I18n from "./i18n";
@@ -8,16 +9,21 @@ const config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`))
 export default class {
     constructor(req, module) {
         this.module = module;
-        this.catalogs = i18nCatalogs(module);
+        this.catalogs = i18nCatalogs.getModuleCatalog(module);
         this.language = this.getLocaleFromURL(req);
-        this.languages = this.catalogs.languages;
-        this.i18n = new I18n(this.languages);
+        this.languagesList = this.catalogs.languages;
+        this.languages = config.languages;
+        this.path = req.urlData().path;
+        this.query = req.urlData().query;
+        this.i18n = new I18n(this.languagesList);
         this.i18n.setLanguageCatalogs(this.catalogs.translationData);
         this.siteData = config.site;
         this.serializedGlobals = {
             language: true,
+            languages: true,
             languageData: true,
             siteData: true,
+            path: true,
         };
         this.i18n.setLanguage(this.language);
     }
@@ -46,9 +52,11 @@ export default class {
     getGlobals() {
         return {
             language: this.language,
+            languages: this.languages,
             languageData: this.i18n.getLanguageData(this.language),
             i18n: this.i18n,
-            siteData: this.siteData[this.language]
+            siteData: this.siteData[this.language],
+            path: this.path,
         };
     }
-}
+};

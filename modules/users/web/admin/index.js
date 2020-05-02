@@ -1,6 +1,6 @@
 import template from "./template.marko";
 
-export default () => ({
+export default (fastify, routeId) => ({
     async handler(req, rep) {
         try {
             const site = new req.ZoiaSite(req, "users");
@@ -9,12 +9,17 @@ export default () => ({
                     serializedGlobals: {
                         template: true,
                         pageTitle: true,
+                        routeId: true,
+                        routeParams: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
-                    pageTitle: site.i18n.t("users"),
+                    pageTitle: `${site.i18n.t("module_title")} | ${site.i18n.t("admin_panel")}`,
+                    routeId,
+                    routeParams: req.params || {},
                     ...site.getGlobals()
-                }
+                },
+                modules: req.zoiaModules
             });
             return rep.code(200).type("text/html").send(render);
         } catch (e) {

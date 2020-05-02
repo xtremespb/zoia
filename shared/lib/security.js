@@ -2,7 +2,7 @@ import {
     ObjectId
 } from "mongodb";
 
-export default class {
+module.exports = class {
     constructor(fastify) {
         this.fastify = fastify;
     }
@@ -25,4 +25,4 @@ export default class {
             return null;
         }
     }
-}
+};

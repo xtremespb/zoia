@@ -1,0 +1,53 @@
+.z3-mtable-wrap {
+    position: relative;
+}
+
+.z3-mtable-visible {
+    opacity: 1;
+}
+
+.z3-mtable-hidden {
+    opacity: 0;
+}
+
+.z3-mtable-sortable {
+    cursor: pointer;
+}
+
+.z3-mtable-noselect {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.z3-mtable-loading {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.4);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.z3-mtable-loading>span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 30%;
+}
+
+.z3-mtable-loading-spinner {
+    background: rgba(255, 255, 255, 0) !important;
+}
+
+.z3-mtable-action-button {
+    margin: 1px;
+}
+
+.z3-mtable-actions-wrap {
+    white-space: nowrap;
+    width: 10px;
+}

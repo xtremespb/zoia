@@ -1,3 +1,5 @@
 {
-	"id": "test"
+    "id": "users",
+    "icon": "users",
+    "admin": "/admin/users"
 }

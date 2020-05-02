@@ -3,10 +3,12 @@
         "@babel/plugin-syntax-dynamic-import",
         "macros",
         ["@babel/transform-runtime", {
-            "regenerator": true
+            "regenerator": true,
+            "polyfill": false
         }]
     ],
     "presets": [
         "@babel/preset-env"
-    ]
+    ],
+    "sourceType": "unambiguous"
 }

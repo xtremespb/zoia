@@ -35,18 +35,6 @@ export default class i18n {
         }
     }
 
-    // static async loadLanguageDataFromPath(filePath) {
-    //     try {
-    //         const rawData = await fs.readFile(filePath, "utf8");
-    //         const data = JSON.parse(rawData);
-    //         return data;
-    //     } catch (e) {
-    //         // eslint-disable-next-line no-console
-    //         console.error(e);
-    //         return null;
-    //     }
-    // }
-
     setLanguageData(language, data) {
         this._strings[language] = data;
     }
@@ -57,6 +45,31 @@ export default class i18n {
 
     setLanguageCatalogs(data) {
         this._strings = data;
+    }
+
+    getLocalizedURL(path, language) {
+        let newURL = path;
+        if (newURL) {
+            const url = path;
+            const urlParts = url.split(/\//);
+            if (urlParts.length > 1) {
+                const firstPartOfURL = urlParts[1];
+                if (this._langs.indexOf(firstPartOfURL) > -1) {
+                    urlParts[1] = language;
+                    if (urlParts[1] === this._langs[0]) {
+                        urlParts.splice(1, 1);
+                    }
+                    if (urlParts.length === 2 && language !== this._langs[0]) {
+                        urlParts[1] = language;
+                    }
+                } else if (language !== this._langs[0]) {
+                    urlParts.splice(1, 0, language);
+                }
+            }
+            newURL = urlParts.join("/") || "/";
+        }
+        newURL = newURL.length > 1 ? newURL.replace(/\/$/, "") : newURL;
+        return newURL;
     }
 
     t(str, num, params = {}) {

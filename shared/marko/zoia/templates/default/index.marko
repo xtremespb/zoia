@@ -1,0 +1,19 @@
+style.scss {
+  @import "./template.scss";
+}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>${out.global.pageTitle} | ${out.global.siteData.title}</title>
+  </head>
+  <body>
+    <section class="section">
+      <div class="container">
+        <${input.renderBody}/>
+      </div>
+    </section>
+  </body>
+</html>

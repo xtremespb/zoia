@@ -1,0 +1,57 @@
+style.scss {
+  @import "./userList.scss";
+}
+
+<div>
+  <h1 class="title">Users</h1>
+  <mtable css="table is-striped is-hoverable is-fullwidth" dataSource={
+    method: "post",
+    url: "/api/users/list",
+    data: {}
+  } id="users" columns=[
+    {
+      id: "username",
+      title: "Username",
+      css: "z3-ap-users-list-username",
+      sortable: true
+    },
+    {
+      id: "email",
+      title: "E-mail"
+    }
+  ] actions=[
+    {
+      id: "btnEdit",
+      css: "button is-small",
+      icon: "far fa-edit",
+      text: "Edit",
+      displayText: false,
+      tooltip: true
+    },
+    {
+      id: "btnTrash",
+      css: "button is-small is-danger",
+      icon: "far fa-trash-alt",
+      text: "Delete",
+      displayText: false,
+      tooltip: true
+    }
+  ] buttons=[
+    {
+      id: "btnAdd",
+      css: "button",
+      icon: "fas fa-user-plus",
+      text: "Add",
+      displayText: true,
+      tooltip: false
+    },
+    {
+      id: "btnDeleteSelected",
+      css: "button is-danger",
+      icon: "far fa-trash-alt",
+      text: "Delete",
+      displayText: true,
+      tooltip: false
+    }
+  ] actionsTitle="Actions" processValue=state.processValue sortId="username" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick")/>
+</div>

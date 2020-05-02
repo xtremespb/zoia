@@ -1,0 +1,33 @@
+.z3-ap-noselect {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.z3-ap-side-menu {
+    width: 200px;
+}
+
+.z3-ap-main-columns {
+    padding: 10px;
+}
+
+.z3-ap-navbar-link {
+    font-size: 90%;
+}
+
+.z3-ap-logo {
+    display: inline-block;
+    background-image: url(logo.svg);
+    width: 80px;
+    height: 26px;
+}
+
+$family-sans-serif: "Source Sans Pro",
+sans-serif;
+$primary: #35525f;
+$link: #35525f;
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
+@import "../../../fonts/source-sans-pro/source-sans-pro.css";
+@import "~bulma/bulma";
+@import '~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass';

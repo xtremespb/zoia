@@ -1,0 +1,25 @@
+import createRouter from "router5"
+import browserPlugin from "router5-plugin-browser"
+
+class {
+  onCreate(input) {
+    this.routes = input.routes || [];
+  }
+
+  onMount() {
+    this.router = createRouter(this.routes, this.options);
+    this.router.usePlugin(
+      browserPlugin({
+        useHash: false
+      })
+    );
+    this.router.start();
+    this.router.subscribe(obj => {
+      this.emit("state-change", obj);
+      this.forceUpdate();
+    });
+    window.router = this.router;
+  }
+}
+
+<${input.renderBody}/>

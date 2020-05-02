@@ -37,5 +37,6 @@
             "title": "Сайт на Zoia",
             "titleShort": "Сайт на Zoia"
         }
-    }
+    },
+    "commonTableItemsLimit": 8
 }

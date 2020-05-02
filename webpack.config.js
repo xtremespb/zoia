@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-console */
 const fs = require("fs-extra");
 const path = require("path");
@@ -7,8 +8,9 @@ const TerserPlugin = require("terser-webpack-plugin");
 const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MarkoPlugin = require("@marko/webpack/plugin").default;
+const config = require("./etc/zoia.json");
 
-const templates = require(`${__dirname}/etc/templates.json`);
+const languages = Object.keys(config.languages);
 const markoPlugin = new MarkoPlugin();
 const webpackConfig = [];
 
@@ -27,8 +29,7 @@ const configWebClient = {
                 test: /\.s?css$/,
                 use: [{
                         loader: ExtractCssChunks.loader
-                    },
-                    {
+                    }, {
                         loader: "css-loader"
                     },
                     {
@@ -54,10 +55,10 @@ const configWebClient = {
             cacheGroups: {
                 styles: {
                     name: "styles",
-                    test: /\.s?css$/,
+                    test: /\.(s?css|sass)$/,
                     chunks: "all",
                     minChunks: 2,
-                    enforce: true
+                    enforce: false
                 },
                 vendor: {
                     test: /[\\/](node_modules)[\\/]/,
@@ -90,7 +91,8 @@ const configWebClient = {
         new ExtractCssChunks({
             filename: "[name]_[contenthash:8].css",
             chunkFilename: "[name]_[contenthash:8].css",
-            orderWarning: true
+            orderWarning: true,
+            ignoreOrder: false
         }),
         new OptimizeCSSPlugin(),
         markoPlugin.browser
@@ -159,16 +161,37 @@ const cleanUpWeb = () => {
     fs.ensureDirSync(pathWeb);
 };
 
+const generateTemplatesJSON = () => {
+    const available = fs.readdirSync(path.resolve(`${__dirname}/shared/marko/zoia/templates`));
+    const templatesJSON = {
+        available
+    };
+    fs.writeJSONSync(path.resolve(`${__dirname}/etc/templates.json`), templatesJSON);
+};
+
 const rebuildMarkoTemplates = () => {
+    const templates = require(`${__dirname}/etc/templates.json`);
     console.log("Re-building Marko templates macro...");
-    const root = `<!-- This file is auto-generated, do not modify -->\n<if(out.global.template === "admin")><admin><i18n/><bulma/><\${input.renderBody}/></admin></if>\n${templates.available.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><bulma/><\${input.renderBody}/></${t}></if>\n`).join("")}`;
-    fs.writeFileSync(path.resolve(`${__dirname}/shared/marko/templates/index.marko`), root);
+    const root = `<!-- This file is auto-generated, do not modify -->\n${templates.available.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
+    fs.writeFileSync(path.resolve(`${__dirname}/shared/marko/zoia/index.marko`), root);
 };
 
 const generateModulesConfig = () => {
     const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/modules`));
-    const modules = {};
-    moduleDirs.map(dir => modules[dir] = require(path.resolve(`${__dirname}/modules/${dir}/module.json`)));
+    const modules = [];
+    moduleDirs.map(dir => {
+        const moduleData = require(path.resolve(`${__dirname}/modules/${dir}/module.json`));
+        moduleData.title = {};
+        languages.map(language => {
+            try {
+                const catalog = require(path.resolve(`${__dirname}/modules/${dir}/locales/${language}.json`));
+                moduleData.title[language] = catalog.module_title;
+            } catch (e) {
+                // Ignore
+            }
+        });
+        modules.push(moduleData);
+    });
     console.log("Writing modules.json...");
     fs.writeJSONSync(`${__dirname}/etc/modules.json`, modules);
 };
@@ -182,6 +205,7 @@ const ensureDirectories = () => {
 cleanUpWeb();
 ensureDirectories();
 generateModulesConfig();
+generateTemplatesJSON();
 rebuildMarkoTemplates();
 
 webpackConfig.push(configWebClient, configWebServer);

@@ -14,31 +14,34 @@ languages.map(language => {
     }
 });
 
-Object.keys(modules).map(m => {
-    catalogs[m] = {};
+modules.map(m => {
+    catalogs[m.id] = {};
     languages.map(language => {
         try {
-            const catalog = require(`../../modules/${m}/locales/${language}.json`);
+            const catalog = require(`../../modules/${m.id}/locales/${language}.json`);
             Object.keys(catalog).map(k => catalog[k] = catalog[k] || k);
-            catalogs[m][language] = {
+            catalogs[m.id][language] = {
                 ...generic[language],
                 ...catalog
             };
         } catch (e) {
             // Ignore
         }
-        if (!catalogs[m][language]) {
-            catalogs[m][language] = {
+        if (!catalogs[m.id][language]) {
+            catalogs[m.id][language] = {
                 ...generic[language]
             };
         }
     });
 });
 
-export default module => module ? ({
-    languages,
-    translationData: catalogs[module]
-}) : ({
-    languages,
-    translationData: generic
-});
+export default {
+    getModuleCatalog: module => module ? ({
+        languages,
+        translationData: catalogs[module]
+    }) : ({
+        languages,
+        translationData: generic
+    }),
+    getAllModuleCatalogs: () => catalogs
+};

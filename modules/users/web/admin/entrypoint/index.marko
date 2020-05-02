@@ -1,0 +1,31 @@
+class {
+  onCreate(input, out) {
+    this.state = {
+      route: {
+        name: out.global.routeId,
+        params: out.global.routeParams
+      }
+    };
+  }
+  onStateChange(obj) {
+    this.state.route = obj.route;
+  }
+}
+
+<router routes=[
+  {
+    name: "users",
+    path: "/admin/users"
+  },
+  {
+    name: "users.edit",
+    path: "/edit/:id"
+  }
+] on-state-change("onStateChange")>
+  <if(state.route.name === "users")>
+    <usersList/>
+  </if>
+  <if(state.route.name === "users.edit")>
+    <usersEdit ...state.route.params/>
+  </if>
+</router>

@@ -61,12 +61,14 @@ import response from "../../lib/response";
             next();
         });
         // Decorate Fastify with configuration and helpers
-        fastify.decorate("zoiaSite", site);
+        fastify.decorate("ZoiaSite", site);
         fastify.decorateRequest("ZoiaSite", site);
         fastify.decorate("zoiaConfig", config);
         fastify.decorateRequest("zoiaConfig", config);
         fastify.decorate("zoiaTemplates", templates);
         fastify.decorateRequest("zoiaTemplates", templates);
+        fastify.decorate("zoiaModules", modules);
+        fastify.decorateRequest("zoiaModules", modules);
         Object.keys(loggerHelpers).map(i => fastify.decorateReply(i, loggerHelpers[i]));
         Object.keys(response).map(i => fastify.decorateReply(i, response[i]));
         // Register FormBody and Multipart
@@ -91,29 +93,32 @@ import response from "../../lib/response";
         // Set handler for error 500
         fastify.setErrorHandler((err, req, rep) => internalServerErrorHandler(err, req, rep));
         // Load all web server modules
-        await Promise.all(Object.keys(modules).map(async m => {
+        await Promise.all(modules.map(async m => {
             try {
-                const module = await import(`../../../modules/${m}/web/index.js`);
-                module.default(fastify);
-                pino.info(`Web Module loaded: ${m}`);
+                const moduleWeb = await import(`../../../modules/${m.id}/web/index.js`);
+                moduleWeb.default(fastify);
+                pino.info(`Web Module loaded: ${m.id}`);
             } catch (e) {
-                pino.info(`Cannot load module: ${m} (${e.message})`);
+                pino.info(`Cannot load module: ${m.id}`);
+                if (config.stackTrace && e.stack) {
+                    pino.info(e.stack);
+                }
             }
         }));
         // Load all API modules
-        await Promise.all(Object.keys(modules).map(async m => {
+        await Promise.all(modules.map(async m => {
             try {
-                const module = await import(`../../../modules/${m}/api/index.js`);
-                module.default(fastify);
-                pino.info(`API Module loaded: ${m}`);
+                const moduleAPI = await import(`../../../modules/${m.id}/api/index.js`);
+                moduleAPI.default(fastify);
+                pino.info(`API Module loaded: ${m.id}`);
             } catch (e) {
-                pino.info(`Cannot load API module: ${m}`);
+                pino.info(`Cannot load API module: ${m.id}`);
             }
         }));
         // Start server
         await fastify.listen(config.webServer.port, config.webServer.ip);
     } catch (e) {
-        pino.error(e.message);
+        pino.error(e);
         process.exit(1);
     }
 })();

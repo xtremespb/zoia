@@ -1,4 +1,4 @@
-import error404 from "../error404/index.marko";
+import error404 from "./error404/index.marko";
 
 export default async (req, rep) => {
     const site = new req.ZoiaSite(req);

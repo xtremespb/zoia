@@ -1,4 +1,7 @@
 {
+    "admin_panel": "Admin Panel",
+    "modules": "Modules",
+    "log_out": "Log Out",
     "not_found": "Not Found",
     "not_found_msg": "The page you are trying to reach couldn't be found on the server.",
     "internal_error": "Internal Server Error",

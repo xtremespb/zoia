@@ -1,0 +1,36 @@
+style.scss {
+  @import "./template.scss";
+}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>${out.global.pageTitle} | ${out.global.siteData.title}</title>
+  </head>
+  <body>
+    <i18n/>
+    <navigation modules=input.modules/>
+    <div class="columns is-gapeless z3-ap-main-columns">
+      <div class="column is-narrow is-hidden-touch z3-ap-noselect">
+        <aside class="z3-ap-side-menu">
+          <ul class="menu-list">
+            <for|module| of=input.modules>
+              <if(module.admin)>
+                <li>
+                  <a href=out.global.i18n.getLocalizedURL(module.admin, out.global.language)>
+                    <i class=`fas fa-${module.icon}`/>&nbsp;&nbsp;${module.title[out.global.language]}
+                  </a>
+                </li>
+              </if>
+            </for>
+          </ul>
+        </aside>
+      </div>
+      <div class="column is-auto">
+        <${input.renderBody}/>
+      </div>
+    </div>
+  </body>
+</html>

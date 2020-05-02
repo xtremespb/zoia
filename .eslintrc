@@ -37,6 +37,8 @@
         "no-case-declarations": "off",
         "global-require": "off",
         "no-async-promise-executor": "off",
-        "dot-notation": "off"
+        "dot-notation": "off",
+        "no-param-reassign": "off",
+        "import/no-extraneous-dependencies": "off"
     }
 }
