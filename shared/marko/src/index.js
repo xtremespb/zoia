@@ -19,6 +19,7 @@ import internalServerErrorHandler from "./internalServerErrorHandler";
 import notFoundErrorHandler from "./notFoundErrorHandler";
 import modules from "../../../etc/modules.json";
 import response from "../../lib/response";
+import extendedValidation from "../../lib/extendedValidation";
 
 (async () => {
     let config;
@@ -69,6 +70,8 @@ import response from "../../lib/response";
         fastify.decorateRequest("zoiaTemplates", templates);
         fastify.decorate("zoiaModules", modules);
         fastify.decorateRequest("zoiaModules", modules);
+        fastify.decorate("ExtendedValidation", extendedValidation);
+        fastify.decorateRequest("ExtendedValidation", extendedValidation);
         Object.keys(loggerHelpers).map(i => fastify.decorateReply(i, loggerHelpers[i]));
         Object.keys(response).map(i => fastify.decorateReply(i, response[i]));
         // Register FormBody and Multipart

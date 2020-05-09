@@ -3,28 +3,28 @@ style.scss {
 }
 
 <div>
-  <h1 class="title">Users</h1>
+  <h1 class="z3-ap-head-thin">${out.global.i18n.t("moduleTitle")}</h1>
   <mtable css="table is-striped is-hoverable is-fullwidth" dataSource={
     method: "post",
     url: "/api/users/list",
     data: {}
-  } id="users" columns=[
+  } id="users" key="usersTable" columns=[
     {
       id: "username",
-      title: "Username",
+      title: out.global.i18n.t("username"),
       css: "z3-ap-users-list-username",
       sortable: true
     },
     {
       id: "email",
-      title: "E-mail"
+      title: out.global.i18n.t("email")
     }
   ] actions=[
     {
       id: "btnEdit",
       css: "button is-small",
       icon: "far fa-edit",
-      text: "Edit",
+      text: out.global.i18n.t("edit"),
       displayText: false,
       tooltip: true
     },
@@ -32,7 +32,7 @@ style.scss {
       id: "btnTrash",
       css: "button is-small is-danger",
       icon: "far fa-trash-alt",
-      text: "Delete",
+      text: out.global.i18n.t("delete"),
       displayText: false,
       tooltip: true
     }
@@ -41,7 +41,7 @@ style.scss {
       id: "btnAdd",
       css: "button",
       icon: "fas fa-user-plus",
-      text: "Add",
+      text: out.global.i18n.t("add"),
       displayText: true,
       tooltip: false
     },
@@ -49,9 +49,17 @@ style.scss {
       id: "btnDeleteSelected",
       css: "button is-danger",
       icon: "far fa-trash-alt",
-      text: "Delete",
+      text: out.global.i18n.t("delete"),
       displayText: true,
       tooltip: false
-    }
-  ] actionsTitle="Actions" processValue=state.processValue sortId="username" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick")/>
+    },
+    {
+      id: "btnReload",
+      css: "button",
+      icon: "fas fa-sync-alt",
+      text: out.global.i18n.t("reload"),
+      displayText: true,
+      tooltip: false
+    },
+  ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="username" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick")/>
 </div>

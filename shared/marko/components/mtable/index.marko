@@ -6,8 +6,8 @@ style.scss {
 }
 
 class {
-  onCreate() {
-    this.state = {
+  onCreate(input) {
+    this.initialState = {
       data: [],
       totalCount: 0,
       paginationData: [],
@@ -19,8 +19,41 @@ class {
       page: 1,
       limit: 0,
       pagesCount: 0,
-      loading: false
+      loading: false,
+      searchText: ""
     };
+    this.state = this.initialState;
+    this.mounted = false;
+    this.componentId = input.id;
+    this.func = {
+      loadData: this.loadData.bind(this),
+      setLoading: this.setLoading.bind(this),
+      dataRequest: this.dataRequest.bind(this),
+    };
+  }
+
+  onMount() {
+    this.state.sortId = this.input.sortId;
+    this.state.sortDirection = this.input.sortDirection;
+    this.state.dataSource = this.input.dataSource;
+    this.dataRequestDebounced = debounce(this.dataRequest, 300);
+    // Check if there is an Object to save state
+    window.__z3_mtable = window.__z3_mtable || {};
+    if (window.__z3_mtable[this.componentId]) {
+      // Restore state from saved data
+      Object.keys(this.initialState).map(k => this.setState(k, window.__z3_mtable[this.componentId][k]));
+    } else {
+      // Request new data
+      this.dataRequest();
+    }
+    this.mounted = true;
+  }
+
+  onUpdate() {
+    if (this.mounted) {
+      // Save data to the Object, so we can restore it in the future
+      window.__z3_mtable[this.componentId] = this.state;
+    }
   }
 
   setLoading(state) {
@@ -35,19 +68,19 @@ class {
     source.data = {
       page: this.state.page,
       sortId: this.state.sortId,
-      sortDirection: this.state.sortDirection
+      sortDirection: this.state.sortDirection,
+      searchText: this.state.searchText
     };
     try {
       const response = await axios(source);
-      if (response && response.data && response.data.data && response.data.count && response.data.limit && response.data.pagesCount && response.data.internalStatusCode === 200) {
-        this.setState("data", response.data.data);
-        this.setState("totalCount", response.data.count);
-        this.setState("limit", response.data.limit);
-        this.setState("pagesCount", response.data.pagesCount);
+      if (response && response.data && response.data.internalStatusCode === 200) {
+        this.setState("data", response.data.data || []);
+        this.setState("totalCount", response.data.count || 0);
+        this.setState("limit", response.data.limit || 1);
+        this.setState("pagesCount", response.data.pagesCount || 1);
         this.setState("paginationData", this.generatePagination());
       }
       this.setLoading(false);
-      // if (response && response.data)
     } catch (e) {
       this.setLoading(false);
       console.error(e);
@@ -63,13 +96,6 @@ class {
     if (this.state.dataSource) {
       await this.loadData();
     }
-  }
-
-  onMount() {
-    this.state.sortId = this.input.sortId;
-    this.state.sortDirection = this.input.sortDirection;
-    this.state.dataSource = this.input.dataSource;
-    this.dataRequest();
   }
 
   setCheckbox(e) {
@@ -121,7 +147,7 @@ class {
       this.state.sortDirection = this.state.sortDirection;
     }
     this.setState("page", 1);
-    this.loadData();
+    this.dataRequest();
   }
 
   onPageClick(e) {
@@ -130,7 +156,7 @@ class {
       return;
     }
     this.setState("page", page);
-    this.loadData();
+    this.dataRequest();
   }
 
   onActionButtonClick(e) {
@@ -142,6 +168,11 @@ class {
   onTopButtonClick(e) {
     const button = e.target.dataset.button;
     this.emit("top-button-click", { button });
+  }
+  onSearchFieldInput(e) {
+    const val = e.target.value.trim();
+    this.setState("searchText", val);
+    this.dataRequestDebounced();
   }
 }
 
@@ -165,7 +196,7 @@ class {
     </div>
     <div class="column">
       <div class="control has-icons-right">
-        <input class="input" type="text"/>
+        <input class="input" type="text" on-input("onSearchFieldInput") value=state.searchText/>
         <span class="icon is-small is-right">
           <i class="fas fa-search"/>
         </span>

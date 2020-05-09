@@ -26,6 +26,7 @@
         "fastify-url-data": "^2.4.0",
         "fs-extra": "^9.0.0",
         "lodash": "^4.17.15",
+        "lodash.clonedeep": "^4.5.0",
         "marko": "^4.21.5",
         "mongodb": "^3.5.7",
         "nodemailer": "^6.4.6",

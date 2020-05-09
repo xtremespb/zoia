@@ -18,8 +18,16 @@ module.exports = class {
         console.log(data);
     }
 
-    // eslint-disable-next-line class-methods-use-this
     onTopButtonClick(data) {
-        console.log(data);
+        switch (data.button) {
+        case "btnReload":
+            this.getComponent("usersTable").func.dataRequest();
+            break;
+        case "btnAdd":
+            window.router.navigate("users.edit", {
+                id: "new"
+            });
+            break;
+        }
     }
 };

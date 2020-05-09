@@ -1,0 +1,33 @@
+.z3-mf-field-columns,
+.z3-mf-field-columns-group {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.z3-mf-field-columns>div,
+.z3-mf-field-columns-group>div {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.z3-mf-fields-wrap>div:not(:last-child) {
+    margin-bottom: 9px !important;
+}
+
+.z3-mf-field-columns-group>div:not(:last-child) {
+    margin-right: 9px !important;
+}
+
+.z3-mf-margin-small-top {
+    margin-top: 9px;
+}
+
+@media (max-width: 768px) {
+    .z3-mf-field-columns-group>div:not(:first-child) {
+        margin-top: 9px !important;
+    }
+
+    .z3-mf-field-columns-group>div:not(:last-child) {
+        margin-right: 0 !important;
+    }
+}

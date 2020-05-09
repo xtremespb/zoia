@@ -1,0 +1,39 @@
+style.scss {
+  @import "./mform.scss";
+}
+
+<div class="z3-mf-wrap">
+  <if(input.tabs && input.tabs.length > 1)>
+    <div class="tabs">
+      <ul>
+        <for|tab| of=input.tabs>
+          <li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
+            <a on-click("onTabClick") data-id=tab.id>${tab.label}</a>
+          </li>
+        </for>
+      </ul>
+    </div>
+  </if>
+  <form>
+    <div class="z3-mf-fields-wrap">
+      <for|tItem, tIndex| of=input.fields>
+        <if(typeof tItem === "object" && tItem.type)>
+          <div class="field columns z3-mf-field-columns">
+            <div class=`control column ${tItem.wrapCSS || ""}`>
+              <mField key=tItem.id item=tItem value=state.data[state.activeTabId][tItem.id] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem")/>
+            </div>
+          </div>
+        </if>
+        <if(Array.isArray(tItem))>
+          <div class="field columns is-gapless z3-mf-field-columns-group">
+            <for|sItem, sIndex| of=tItem>
+              <div class=`control column ${sItem.wrapCSS || ""}`>
+                <mField key=sItem.id item=sItem value=state.data[state.activeTabId][sItem.id] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem")/>
+              </div>
+            </for>
+          </div>
+        </if>
+      </for>
+    </div>
+  </form>
+</div>

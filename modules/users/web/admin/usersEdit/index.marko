@@ -1,13 +1,141 @@
-class {
-    onCreate() {
-      // console.log("Test");
-    }
-    onMount() {
-      // console.log("USERS.EDIT onMount");
-    }
-  }
+style.scss {
+}
 
 <div>
-  <div>Template 2 --- ${input.id}</div>
-  <router-link href="/admin/users" route="users">Users!</router-link>
+  <h1 class="z3-ap-head-thin">${input.id === "new" ? out.global.i18n.t("userAdd") : out.global.i18n.t("userEdit")}</h1>
+  <mform fields=[
+    {
+      id: "file1",
+      type: "file",
+      label: "File 1",
+      multiple: true
+    },
+    {
+      id: "field1",
+      type: "text",
+      label: "Field 1",
+      placeholder: "Field 1 Placeholder",
+      helpText: "Field 1 Help Text",
+      wrapCSS: "is-5",
+      defaultValue: "12345",
+      autoFocus: true,
+      convert: "integer"
+    },
+    {
+      id: "field2",
+      type: "text",
+      label: "Field 2",
+      placeholder: "Field 2 Placeholder",
+      helpText: "Field 2 Help Text",
+      mandatory: true,
+      shared: true,
+      validation: {
+        minLength: 24,
+        maxLength: 24,
+        pattern: "^[a-f0-9]+$"
+      }
+    },
+    [
+      {
+        id: "field3",
+        type: "text",
+        label: "Field 3",
+        placeholder: "Field 3 Placeholder",
+        helpText: "Field 3 Help Text",
+        wrapCSS: "is-2"
+      },
+      {
+        id: "field4",
+        type: "text",
+        label: "Field 4",
+        placeholder: "Field 4 Placeholder",
+        helpText: "Field 4 Help Text",
+        wrapCSS: "is-3"
+      },
+      {
+        id: "field5",
+        type: "text",
+        label: "Field 5",
+        placeholder: "Field 5 Placeholder",
+        helpText: "Field 5 Help Text",
+        wrapCSS: "is-2"
+      }
+    ],
+    {
+      id: "field6",
+      type: "text",
+      label: "Field 6",
+      placeholder: "Field 6 Placeholder",
+      helpText: "Field 6 Help Text"
+    },
+    [
+      {
+        id: "field7",
+        type: "text",
+        label: "Field 7",
+        placeholder: "Field 7 Placeholder",
+        helpText: "Field 7 Help Text",
+        wrapCSS: "is-2"
+      },
+      {
+        id: "field8",
+        type: "text",
+        label: "Field 8",
+        placeholder: "Field 8 Placeholder",
+        helpText: "Field 8 Help Text",
+        wrapCSS: "is-3"
+      },
+      {
+        id: "field9",
+        type: "text",
+        label: "Field 9",
+        placeholder: "Field 9 Placeholder",
+        helpText: "Field 9 Help Text",
+        wrapCSS: "is-2"
+      }
+    ],
+    [
+      {
+        id: "field11",
+        type: "text",
+        label: "Field 11",
+        placeholder: "Field 11 Placeholder",
+        helpText: "Field 11 Help Text",
+        wrapCSS: "is-2"
+      },
+      {
+        id: "field12",
+        type: "text",
+        label: "Field 12",
+        placeholder: "Field 12 Placeholder",
+        helpText: "Field 12 Help Text",
+        wrapCSS: "is-3"
+      },
+      {
+        id: "field13",
+        type: "text",
+        label: "Field 13",
+        placeholder: "Field 13 Placeholder",
+        helpText: "Field 13 Help Text",
+        wrapCSS: "is-2"
+      }
+    ],
+    {
+      id: "field10",
+      type: "text",
+      label: "Field 10",
+      placeholder: "Field 10 Placeholder",
+      helpText: "Field 10 Help Text",
+      wrapCSS: "is-2"
+    }
+  ] tabs=[
+    {
+      id: "en",
+      label: "English"
+    },
+    {
+      id: "ru",
+      label: "Русский"
+    }
+  ] formType="formData"/>
 </div>

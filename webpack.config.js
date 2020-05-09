@@ -185,7 +185,7 @@ const generateModulesConfig = () => {
         languages.map(language => {
             try {
                 const catalog = require(path.resolve(`${__dirname}/modules/${dir}/locales/${language}.json`));
-                moduleData.title[language] = catalog.module_title;
+                moduleData.title[language] = catalog.moduleTitle;
             } catch (e) {
                 // Ignore
             }

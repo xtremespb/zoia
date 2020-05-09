@@ -31,3 +31,9 @@ $link: #35525f;
 @import "../../../fonts/source-sans-pro/source-sans-pro.css";
 @import "~bulma/bulma";
 @import '~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass';
+
+.z3-ap-head-thin {
+    font-size: 210%;
+    font-weight: 200;
+    margin-bottom: 10px;
+}

@@ -39,6 +39,8 @@
         "no-async-promise-executor": "off",
         "dot-notation": "off",
         "no-param-reassign": "off",
-        "import/no-extraneous-dependencies": "off"
+        "import/no-extraneous-dependencies": "off",
+        "default-case": "off",
+        "class-methods-use-this": "off"
     }
 }

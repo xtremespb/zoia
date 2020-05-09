@@ -1,9 +1,8 @@
-import schemaUsersList from "./schemaUsersList.json";
-import projectionUsersList from "./projectionUsersList.json";
+import usersListData from "./data/usersList.json";
 
 export default () => ({
     schema: {
-        body: schemaUsersList
+        body: usersListData.schema
     },
     attachValidation: true,
     async handler(req, rep) {
@@ -16,14 +15,24 @@ export default () => ({
         try {
             const options = {
                 sort: {},
-                projection: projectionUsersList
+                projection: usersListData.projection
             };
             const query = {};
-            const count = await this.mongo.db.collection("users").find(query, options).count();
+            if (req.body.searchText && req.body.searchText.length > 1) {
+                query.$or = usersListData.search.map(c => {
+                    const sr = {};
+                    sr[c] = {
+                        $regex: req.body.searchText,
+                        $options: "i"
+                    };
+                    return sr;
+                });
+            }
+            const count = await this.mongo.db.collection(usersListData.collection).find(query, options).count();
             options.limit = req.zoiaConfig.commonTableItemsLimit;
             options.skip = (req.body.page - 1) * req.zoiaConfig.commonTableItemsLimit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const data = await this.mongo.db.collection("users").find(query, options).toArray();
+            const data = await this.mongo.db.collection(usersListData.collection).find(query, options).toArray();
             // Send response
             rep.successJSON(rep, {
                 data,

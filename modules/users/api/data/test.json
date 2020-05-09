@@ -1,0 +1,36 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "__form": {
+                "type": "string"
+            }
+        },
+        "required": ["__form"]
+    },
+    "part": {
+        "type": "object",
+        "properties": {
+            "field1": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 999
+            },
+            "field3": {
+                "type": "string",
+                "pattern": "^[a-z]+$"
+            }
+        },
+        "required": ["field1", "field3"]
+    },
+    "root": {
+        "type": "object",
+        "properties": {
+            "field2": {
+                "type": "string",
+                "pattern": "^[a-z]+$"
+            }
+        },
+        "required": ["field2"]
+    }
+}
