@@ -8,7 +8,7 @@ export default async (err, req, rep) => {
                 pageTitle: true,
                 ...site.getSerializedGlobals()
             },
-            pageTitle: site.i18n.t("internal_error"),
+            pageTitle: site.i18n.t("internalError"),
             ...site.getGlobals()
         }
     });

@@ -12,7 +12,7 @@ export default () => ({
             rep.validationError(rep, req.validationError);
             return;
         }
-        const extendedValidation = new req.ExtendedValidation(req.body, test.root, test.part, ["en", "ru"]);
+        const extendedValidation = new req.ExtendedValidation(req.body, test.root, test.part, test.files, ["en", "ru"]);
         const extendedValidationResult = extendedValidation.validate();
         try {
             rep.successJSON(rep, extendedValidationResult);

@@ -10,7 +10,7 @@ export default async (req, rep) => {
                 ...site.getSerializedGlobals()
             },
             template: req.zoiaTemplates.available[0],
-            pageTitle: site.i18n.t("not_found"),
+            pageTitle: site.i18n.t("notFound"),
             ...site.getGlobals()
         }
     });

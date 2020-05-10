@@ -1,3 +1,5 @@
+import test from "../../../api/data/test.json"
+
 style.scss {
 }
 
@@ -9,6 +11,14 @@ style.scss {
       type: "file",
       label: "File 1",
       multiple: true
+    },
+    {
+      id: "file2",
+      type: "file",
+      label: "File 2",
+      multiple: false,
+      shared: true,
+      helpText: "Hello World"
     },
     {
       id: "field1",
@@ -137,5 +147,5 @@ style.scss {
       id: "ru",
       label: "Русский"
     }
-  ] formType="formData"/>
+  ] formType="formData" validation=test i18n=out.global.i18n/>
 </div>

@@ -14,7 +14,7 @@ export default (fastify, routeId) => ({
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
-                    pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("admin_panel")}`,
+                    pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
                     routeId,
                     routeParams: req.params || {},
                     ...site.getGlobals()

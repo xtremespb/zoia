@@ -12,6 +12,7 @@ module.exports = class {
 
     setFocus() {
         const field = this.getEl(this.item.id);
+        console.log(field);
         if (field) {
             field.focus();
         }
@@ -28,15 +29,6 @@ module.exports = class {
             id,
             type: "input",
             value
-        });
-    }
-
-    toBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
         });
     }
 
@@ -58,7 +50,7 @@ module.exports = class {
                     name: file.name,
                     id: uid,
                     data: files[index],
-                    type: "file"
+                    type: "file",
                 };
             }))
         });

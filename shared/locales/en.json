@@ -1,9 +1,21 @@
 {
-    "admin_panel": "Admin Panel",
+    "adminPanel": "Admin Panel",
     "modules": "Modules",
-    "log_out": "Log Out",
-    "not_found": "Not Found",
-    "not_found_msg": "The page you are trying to reach couldn't be found on the server.",
-    "internal_error": "Internal Server Error",
-    "internal_error_msg": "The server encountered an unexpected condition which prevented it from fulfilling the request."
+    "logOut": "Log Out",
+    "notFound": "Not Found",
+    "notFoundMsg": "The page you are trying to reach couldn't be found on the server.",
+    "internalError": "Internal Server Error",
+    "internalErrorMsg": "The server encountered an unexpected condition which prevented it from fulfilling the request.",
+    "mFormErr.type": "Invalid format",
+    "mFormErr.pattern": "Invalid format",
+    "mFormErr.minimum": "Value is too small",
+    "mFormErr.maximum": "Value is too big",
+    "mFormErr.minLength": "Length is too small",
+    "mFormErr.maxLength": "Length is too big",
+    "mFormErr.required": "Required",
+    "mFormErr.maxAmount": "Too many files",
+    "mFormErr.minAmount": "More files required",
+    "mFormErr.minSizeBytes": "File(s) size is too small",
+    "mFormErr.maxSizeBytes": "File(s) size is too big",
+    "mFormErr.allowedMimeTypes": "Invalid file(s) type"
 }

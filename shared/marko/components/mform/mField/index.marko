@@ -8,10 +8,13 @@ Text Input
     </if>
   </label>
   <div class="control">
-    <input class="input" key=input.item.id type="text" placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` key=input.item.id type="text" placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
   </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
   </if>
 </if>
 <!--
@@ -23,15 +26,15 @@ File Input
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
-  <div id="file-js-example" class="file">
+  <div class=`file${input.errors[input.item.id] ? " is-danger" : ""}`>
     <label class="file-label">
       <input class="file-input" type="file" multiple=input.item.multiple on-change("onFileInputChange") data-id=input.item.id/>
-      <span class="file-cta">
+      <a class="file-cta" key=input.item.id tabindex="0">
         <span class="file-icon">
           <i class="fas fa-upload"/>
         </span>
         <span class="file-label">Choose a file…</span>
-      </span>
+      </a>
     </label>
   </div>
   <if(input.value)>
@@ -42,5 +45,11 @@ File Input
         </div>
       </for>
     </div>
+  </if>
+  <if(input.item.helpText)>
+    <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
   </if>
 </if>

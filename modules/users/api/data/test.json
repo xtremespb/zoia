@@ -19,6 +19,30 @@
             "field3": {
                 "type": "string",
                 "pattern": "^[a-z]+$"
+            },
+            "file1": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "maxLength": 128
+                        },
+                        "id": {
+                            "type": "string",
+                            "minLength": 36,
+                            "maxLength": 36
+                        },
+                        "type": {
+                            "const": "file"
+                        },
+                        "upload": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["name", "id", "type"]
+                }
             }
         },
         "required": ["field1", "field3"]
@@ -29,8 +53,48 @@
             "field2": {
                 "type": "string",
                 "pattern": "^[a-z]+$"
+            },
+            "file2": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "maxLength": 128
+                        },
+                        "id": {
+                            "type": "string",
+                            "minLength": 36,
+                            "maxLength": 36
+                        },
+                        "type": {
+                            "const": "file"
+                        },
+                        "upload": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["name", "id", "type"]
+                }
             }
         },
         "required": ["field2"]
+    },
+    "files": {
+        "file1": {
+            "minAmount": 1,
+            "maxAmount": 3,
+            "minSizeBytes": 0,
+            "maxSizeBytes": 102400,
+            "allowedMimeTypes": ["image/png", "image/jpeg"]
+        },
+        "file2": {
+            "minAmount": 1,
+            "maxAmount": 3,
+            "minSizeBytes": 0,
+            "maxSizeBytes": 102400,
+            "allowedMimeTypes": ["image/png", "image/jpeg"]
+        }
     }
 }
