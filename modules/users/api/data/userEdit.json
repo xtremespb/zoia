@@ -1,0 +1,50 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "minLength": 24,
+                "maxLength": 24,
+                "pattern": "^[a-f0-9]+$"
+            },
+            "username": {
+                "type": "string",
+                "anyOf": [{
+                    "pattern": "^[a-zA-Z0-9_-]+$",
+                    "minLength": 1,
+                    "maxLength": 32
+                }, {
+                    "minLength": 0,
+                    "maxLength": 0
+                }]
+            },
+            "email": {
+                "type": "string",
+                "pattern": "^(?:[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-])+@(?:[a-zA-Z0-9]|[^\\u0000-\\u007F])(?:(?:[a-zA-Z0-9-]|[^\\u0000-\\u007F]){0,61}(?:[a-zA-Z0-9]|[^\\u0000-\\u007F]))?(?:\\.(?:[a-zA-Z0-9]|[^\\u0000-\\u007F])(?:(?:[a-zA-Z0-9-]|[^\\u0000-\\u007F]){0,61}(?:[a-zA-Z0-9]|[^\\u0000-\\u007F]))?)*$",
+                "minLength": 5,
+                "maxLength": 254
+            },
+            "status": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "enum": ["admin", "active"]
+                },
+                "maxItems": 2,
+                "uniqueItems": true
+            },
+            "password": {
+                "type": "string",
+                "minLength": 8,
+                "maxLength": 64
+            },
+            "passwordRepeat": {
+                "type": "string",
+                "minLength": 8,
+                "maxLength": 64
+            }
+        },
+        "required": ["username", "email"]
+    }
+}

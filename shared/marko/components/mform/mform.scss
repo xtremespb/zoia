@@ -10,6 +10,16 @@
     padding-bottom: 0 !important;
 }
 
+.z3-mf-fields-border {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-top: unset !important;
+}
+
+.z3-mform-tabs {
+    margin-bottom: 0 !important;
+}
+
 .z3-mf-fields-wrap>div:not(:last-child) {
     margin-bottom: 9px !important;
 }
@@ -20,6 +30,43 @@
 
 .z3-mf-margin-small-top {
     margin-top: 9px;
+}
+
+.z3-mf-divider {
+    display: block;
+    padding: 7px;
+}
+
+.z3-mform-noselect {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.z3-is-small {
+    max-width: 150px;
+}
+
+.z3-is-medium {
+    max-width: 200px;
+}
+
+.z3-is-large {
+    max-width: 350px;
+}
+
+@media (max-width: 1024px) {
+    .z3-is-small {
+        max-width: unset;
+    }
+
+    .z3-is-medium {
+        max-width: unset;
+    }
+
+    .z3-is-large {
+        max-width: unset;
+    }
 }
 
 @media (max-width: 768px) {

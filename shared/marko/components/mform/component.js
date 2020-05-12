@@ -4,14 +4,25 @@ const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
 module.exports = class {
     onCreate(input) {
-        const tabs = input.tabs || [{
-            id: "__default",
-            label: ""
-        }];
+        let tabs;
+        if (input.tabsAvail && input.tabsActive) {
+            tabs = input.tabsActive.map(taId => input.tabsAvail.find(t => t.id === taId));
+        } else if (input.tabsAvail) {
+            tabs = input.tabsAvail;
+        } else {
+            tabs = [{
+                id: "__default",
+                label: "",
+                default: true
+            }];
+        }
         const state = {
             tabs,
+            tabsSelect: [],
+            tabSettingsDialogActive: false,
             activeTabId: tabs[0].id,
             data: {},
+            error: null,
             errors: {}
         };
         tabs.map(tab => {
@@ -20,20 +31,40 @@ module.exports = class {
         });
         this.fieldsFlat = input.fields.flat();
         if (input.fields) {
-            tabs.map(tab => this.fieldsFlat.map(i => state.data[tab.id][i.id] = i.defaultValue || null));
+            tabs.map(tab => this.fieldsFlat.map(i => state.data[tab.id][i.id] = this.getDefaultValue(i)));
         }
         this.state = state;
         if (input.validation) {
-            this.extendedValidation = new ExtendedValidation(null, input.validation.root, input.validation.part, input.validation.files, input.tabs.map(t => t.id));
+            this.extendedValidation = new ExtendedValidation(null, input.validation.root, input.validation.part, input.validation.files, tabs.map(t => t.id));
         }
         this.i18n = input.i18n;
     }
 
-    onMount() {
+    getDefaultValue(item) {
+        if (item.defaultValue) {
+            return item.defaultValue;
+        }
+        switch (item.type) {
+        case "select":
+            return item.options && item.options.length ? item.options[0].value : null;
+        case "checkbox":
+            return false;
+        case "checkboxes":
+            return [];
+        default:
+            return null;
+        }
+    }
+
+    autoFocus() {
         const autoFocusField = this.fieldsFlat.find(i => i.autoFocus);
-        if (autoFocusField) {
+        if (autoFocusField && this.getComponent(autoFocusField.id)) {
             this.getComponent(autoFocusField.id).func.setFocus();
         }
+    }
+
+    onMount() {
+        this.autoFocus();
     }
 
     onTabClick(e) {
@@ -41,19 +72,107 @@ module.exports = class {
             id
         } = e.target.dataset;
         this.setState("activeTabId", id);
+        this.autoFocus();
+    }
+
+    onTabSettingsClick() {
+        const tabsSelect = this.input.tabsAvail.map(tab => ({
+            ...tab,
+            selected: !!this.state.tabs.find(t => t.id === tab.id)
+        }));
+        this.setState("tabsSelect", tabsSelect);
+        this.setState("tabSettingsDialogActive", true);
+    }
+
+    onTabsSelectChange(e) {
+        const tabsSelect = cloneDeep(this.state.tabsSelect);
+        const {
+            id
+        } = e.target.dataset;
+        const {
+            checked
+        } = e.target;
+        const tab = tabsSelect.find(t => t.id === id);
+        if (tab) {
+            tab.selected = checked;
+        }
+        this.setState("tabsSelect", tabsSelect);
+    }
+
+    onTabSettingsDialogCloseClick() {
+        this.setState("tabSettingsDialogActive", false);
+    }
+
+    onTabSettingsDialogSaveClick() {
+        let tabs = cloneDeep(this.state.tabs);
+        const data = cloneDeep(this.state.data);
+        const errors = {};
+        tabs.map(t => errors[t.id] = {});
+        let dataCurrent = {};
+        if (this.state.activeTabId) {
+            dataCurrent = cloneDeep(this.state.data[this.state.activeTabId]);
+        } else {
+            this.fieldsFlat.map(i => dataCurrent[i.id] = this.getDefaultValue(i));
+        }
+        this.state.tabsSelect.map(ts => {
+            const findTab = tabs.find(t => t.id === ts.id);
+            // Add missing tabs and data
+            if (ts.selected && !findTab) {
+                delete ts.selected;
+                tabs.push(ts);
+                data[ts.id] = {};
+                errors[ts.id] = {};
+                this.fieldsFlat.map(i => data[ts.id][i.id] = i.shared ? dataCurrent[i.id] : this.getDefaultValue(i));
+            }
+            // Remove existing tabs and data
+            if (!ts.selected && findTab) {
+                tabs = tabs.filter(t => t.id !== ts.id);
+                delete data[ts.id];
+                delete errors[ts.id];
+            }
+        });
+        let activeTabId = cloneDeep(this.state.activeTabId);
+        if (!tabs.find(t => t.id === activeTabId)) {
+            if (Object.keys(tabs).length) {
+                activeTabId = tabs[0].id;
+            } else {
+                activeTabId = null;
+            }
+        }
+        this.extendedValidation.setParts(tabs.map(t => t.id));
+        this.setState("data", data);
+        this.setState("errors", errors);
+        this.setState("tabs", tabs);
+        this.setState("tabSettingsDialogActive", false);
+        this.setState("activeTabId", activeTabId);
+        if (activeTabId) {
+            this.autoFocus();
+        }
     }
 
     onValueChange(obj) {
-        const data = {
-            ...this.state.data
-        };
+        const data = cloneDeep(this.state.data);
         let {
             value,
         } = obj;
         switch (obj.type) {
+        case "boolean":
+            value = Boolean(value);
+            break;
         case "file":
             const prev = data[this.state.activeTabId][obj.id] ? data[this.state.activeTabId][obj.id] : [];
             value = [...prev, ...Array.from(value)];
+            break;
+        case "arr":
+            let currentItemState = cloneDeep(data[this.state.activeTabId][obj.id]);
+            const checked = !!value;
+            if (currentItemState.indexOf(obj.inputid) === -1 && checked) {
+                currentItemState.push(obj.inputid);
+            }
+            if (currentItemState.indexOf(obj.inputid) > -1 && !checked) {
+                currentItemState = currentItemState.filter(i => i !== obj.inputid);
+            }
+            value = currentItemState;
             break;
         default:
             value = String(value).trim();
@@ -63,11 +182,6 @@ module.exports = class {
             this.state.tabs.map(tab => data[tab.id][obj.id] = value);
         }
         this.setState("data", data);
-        const serialized = this.serialize(true);
-        console.log(serialized);
-        const validationResult = this.validate(serialized);
-        this.visualizeErrors(validationResult.errorData);
-        this.upload(this.serialize(false));
     }
 
     onRemoveArrItem(obj) {
@@ -83,7 +197,6 @@ module.exports = class {
     }
 
     visualizeErrors(validationErrors) {
-        console.log(validationErrors);
         let errorData = cloneDeep(validationErrors);
         const errors = {};
         this.state.tabs.map(tab => errors[tab.id] = {});
@@ -129,26 +242,37 @@ module.exports = class {
             });
         }
         let focus = false;
-        console.log(errors);
         Object.keys(errors).map(tab => {
             if (!focus && Object.keys(errors[tab]).length) {
-                console.log(`tab -> ${tab}`);
                 this.setState("activeTabId", tab);
                 const firstField = Object.keys(errors[tab])[0];
                 const firstFieldComponent = this.getComponent(firstField);
                 if (firstFieldComponent) {
                     firstFieldComponent.func.setFocus();
                 }
-                console.log(`field -> ${firstField}`);
                 focus = true;
             }
         });
+        this.setState("error", focus ? this.i18n.t(`mFormErr.general`) : null);
         this.setState("errors", errors);
     }
 
     validate(serialized) {
         const data = cloneDeep(serialized);
         const validationResult = this.extendedValidation.validate(data);
+        this.fieldsFlat.map(field => {
+            if (field.shouldMatch) {
+                const value1 = String(this.state.data[this.state.activeTabId][field.id]);
+                const value2 = String(this.state.data[this.state.activeTabId][field.shouldMatch]);
+                if ((field.mandatory && (!value1 || value1 !== value2)) || (!field.mandatory && value1 !== value2)) {
+                    validationResult.errorData.push({
+                        keyword: "shouldMatch",
+                        dataPath: `.${field.id}`,
+                        message: `Should match ${field.shouldMatch}`
+                    });
+                }
+            }
+        });
         return validationResult;
     }
 
@@ -226,9 +350,10 @@ module.exports = class {
     }
 
     upload(serialized) {
-        const data = {
-            ...serialized
-        };
+        if (!this.input.save) {
+            return;
+        }
+        const data = cloneDeep(serialized);
         let uploadData;
         if (this.input.formType === "formData") {
             uploadData = new FormData();
@@ -239,9 +364,34 @@ module.exports = class {
                 }
             });
             uploadData.append("__form", JSON.stringify(this.filterSerialized(data)));
+            if (this.input.save.extras) {
+                Object.keys(this.input.save.extras).map(e => uploadData.append(e, this.input.save.extras[e]));
+            }
         } else {
             uploadData = this.filterSerialized(data);
+            if (this.input.save.extras) {
+                uploadData = {
+                    ...uploadData,
+                    ...this.input.save.extras
+                };
+            }
         }
-        axios.post("/api/users/test", uploadData);
+        axios.post(this.input.save.url, uploadData);
+    }
+
+    onFormSubmit(e) {
+        e.preventDefault();
+        const serialized = this.serialize(true);
+        const validationResult = this.validate(serialized);
+        this.visualizeErrors(validationResult.errorData);
+        if (validationResult.failed) {
+            return;
+        }
+        this.upload(this.serialize(false));
+    }
+
+    onButtonClick(obj) {
+        // console.log("Button clicked");
+        // console.log(obj);
     }
 };

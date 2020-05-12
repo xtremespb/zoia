@@ -6,6 +6,11 @@
     "notFoundMsg": "The page you are trying to reach couldn't be found on the server.",
     "internalError": "Internal Server Error",
     "internalErrorMsg": "The server encountered an unexpected condition which prevented it from fulfilling the request.",
+    "mForm.save": "Save",
+    "mForm.cancel": "Cancel",
+    "mForm.settings": "Settings",
+    "mFormErr.general": "Form contain errors, please check all inputs",
+    "mFormErr.server": "Form data could not be saved, loaded or processed",
     "mFormErr.type": "Invalid format",
     "mFormErr.pattern": "Invalid format",
     "mFormErr.minimum": "Value is too small",
@@ -17,5 +22,6 @@
     "mFormErr.minAmount": "More files required",
     "mFormErr.minSizeBytes": "File(s) size is too small",
     "mFormErr.maxSizeBytes": "File(s) size is too big",
-    "mFormErr.allowedMimeTypes": "Invalid file(s) type"
+    "mFormErr.allowedMimeTypes": "Invalid file(s) type",
+    "mFormErr.shouldMatch": "Should match"
 }

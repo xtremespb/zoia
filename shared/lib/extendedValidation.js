@@ -5,8 +5,8 @@ export default class {
         this.body = body;
         this.ajv = new Ajv();
         this.schemas = {
-            root,
-            part,
+            root: parts.length === 1 && parts[0] === "__default" ? null : root,
+            part: parts.length === 1 && parts[0] === "__default" ? root : part,
             files
         };
         this.parts = parts;
@@ -164,6 +164,10 @@ export default class {
             });
         });
         return errors;
+    }
+
+    setParts(parts) {
+        this.parts = parts;
     }
 
     validate(data) {

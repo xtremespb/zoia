@@ -8,7 +8,7 @@ Text Input
     </if>
   </label>
   <div class="control">
-    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` key=input.item.id type="text" placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` key=input.item.id type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
   </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>
@@ -33,7 +33,7 @@ File Input
         <span class="file-icon">
           <i class="fas fa-upload"/>
         </span>
-        <span class="file-label">Choose a file…</span>
+        <span class="file-label">${input.item.buttonLabel}</span>
       </a>
     </label>
   </div>
@@ -46,6 +46,120 @@ File Input
       </for>
     </div>
   </if>
+  <if(input.item.helpText)>
+    <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  </if>
+</if>
+<!--
+Button
+-->
+<if(input.item.type === "button")>
+  <button class=`button ${input.item.css || ""}` type=input.item.buttonType data-id=btn.id on-click("onButtonClick")>${input.item.label}</button>
+</if>
+<!--
+Button group
+-->
+<if(input.item.type === "buttons")>
+  <div class="buttons">
+    <for|btn| of=input.item.data>
+      <button class=`button ${btn.css || ""}` type=btn.buttonType data-id=btn.id on-click("onButtonClick")>${btn.label}</button>
+    </for>
+  </div>
+</if>
+<!--
+Divider
+-->
+<if(input.item.type === "divider")>
+  <div class="z3-mf-divider"/>
+</if>
+<!--
+Select
+-->
+<if(input.item.type === "select")>
+  <label class="label">
+    ${input.item.label}:<if(input.item.mandatory)>
+      &nbsp;<span class="has-text-danger">*</span>
+    </if>
+  </label>
+  <div class=`select ${input.item.css || ""}${input.errors[input.item.id] ? " is-danger" : ""}`>
+    <select data-id=input.item.id key=input.item.id value=input.value on-change("onFieldValueChange")>
+      <for|option| of=input.item.options>
+        <option value=option.value selected=(input.value === String(option.value))>${option.label}</option>
+      </for>
+    </select>
+  </div>
+  <if(input.item.helpText)>
+    <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  </if>
+</if>
+<!--
+Radio
+-->
+<if(input.item.type === "radio")>
+  <label class="label">
+    ${input.item.label}:<if(input.item.mandatory)>
+      &nbsp;<span class="has-text-danger">*</span>
+    </if>
+  </label>
+  <div>
+    <for|option, index| of=input.item.options>
+      <label class=`radio ${input.item.css || ""}`>
+        <input type="radio" key=`${input.item.id}_${index}` data-id=input.item.id name=input.item.id value=option.value checked=(input.value === String(option.value)) on-change("onFieldValueChange")/>&nbsp;${option.label}
+      </label>
+    </for>
+  </div>
+  <if(input.item.helpText)>
+    <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  </if>
+</if>
+<!--
+Checkboxes
+-->
+<if(input.item.type === "checkboxes")>
+  <label class="label">
+    ${input.item.label}:<if(input.item.mandatory)>
+      &nbsp;<span class="has-text-danger">*</span>
+    </if>
+  </label>
+  <div>
+    <for|option, index| of=input.item.options>
+      <label class=`checkbox ${input.item.css || ""}`>
+        <input type="checkbox" key=`${input.item.id}_${index}` on-change("onArrInputChange") data-id=input.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>&nbsp;${option.label}&nbsp;&nbsp;
+      </label>
+    </for>
+  </div>
+  <if(input.item.helpText)>
+    <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  </if>
+</if>
+<!--
+Checkbox
+-->
+<if(input.item.type === "checkbox")>
+  <if(input.item.label)>
+    <label class="label">
+      ${input.item.label}:<if(input.item.mandatory)>
+        &nbsp;<span class="has-text-danger">*</span>
+      </if>
+    </label>
+  </if>
+  <div>
+    <label class=`checkbox ${input.item.css || ""}`>
+      <input type="checkbox" key=input.item.id on-change("onBooleanInputChange") data-id=input.item.id checked=input.value/>&nbsp;${input.item.labelCheckbox}&nbsp;
+    </label>
+  </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>
   </if>

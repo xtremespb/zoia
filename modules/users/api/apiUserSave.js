@@ -1,8 +1,8 @@
-import test from "./data/test.json";
+import userEdit from "./data/userEdit.json";
 
 export default () => ({
     schema: {
-        body: test.schema
+        body: userEdit.root
     },
     attachValidation: true,
     async handler(req, rep) {
@@ -12,10 +12,10 @@ export default () => ({
             rep.validationError(rep, req.validationError);
             return;
         }
-        const extendedValidation = new req.ExtendedValidation(req.body, test.root, test.part, test.files, ["en", "ru"]);
-        const extendedValidationResult = extendedValidation.validate();
+        // const extendedValidation = new req.ExtendedValidation(req.body, userEdit.root, userEdit.part, userEdit.files);
+        // const extendedValidationResult = extendedValidation.validate();
         try {
-            rep.successJSON(rep, extendedValidationResult);
+            rep.successJSON(rep, {});
             return;
         } catch (e) {
             rep.logError(req, null, e);

@@ -8,5 +8,15 @@
     "delete": "Delete",
     "reload": "Reload",
     "userAdd": "Add User",
-    "userEdit": "Edit User"
+    "userEdit": "Edit User",
+    "usernameHelpText": "Allowed: latin letters, numbers, underscore, hyphen",
+    "emailHelpText": "Example: user@domain.org",
+    "password": "Password",
+    "passwordRepeat": "Repeat password",
+    "passwordHelpText": "At least 8 chars",
+    "status": "Status",
+    "active": "Active user",
+    "admin": "Administrator",
+    "save": "Save",
+    "cancel": "Cancel"
 }

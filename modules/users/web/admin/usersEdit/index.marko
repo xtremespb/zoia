@@ -1,151 +1,99 @@
-import test from "../../../api/data/test.json"
+import userEdit from "../../../api/data/userEdit.json"
 
 style.scss {
 }
 
+$ if (input.id === "new") {
+  userEdit.root.required = [...userEdit.root.required, "password", "passwordRepeat"];
+}
 <div>
   <h1 class="z3-ap-head-thin">${input.id === "new" ? out.global.i18n.t("userAdd") : out.global.i18n.t("userEdit")}</h1>
-  <mform fields=[
-    {
-      id: "file1",
-      type: "file",
-      label: "File 1",
-      multiple: true
-    },
-    {
-      id: "file2",
-      type: "file",
-      label: "File 2",
-      multiple: false,
-      shared: true,
-      helpText: "Hello World"
-    },
-    {
-      id: "field1",
-      type: "text",
-      label: "Field 1",
-      placeholder: "Field 1 Placeholder",
-      helpText: "Field 1 Help Text",
-      wrapCSS: "is-5",
-      defaultValue: "12345",
-      autoFocus: true,
-      convert: "integer"
-    },
-    {
-      id: "field2",
-      type: "text",
-      label: "Field 2",
-      placeholder: "Field 2 Placeholder",
-      helpText: "Field 2 Help Text",
-      mandatory: true,
-      shared: true,
-      validation: {
-        minLength: 24,
-        maxLength: 24,
-        pattern: "^[a-f0-9]+$"
-      }
-    },
-    [
-      {
-        id: "field3",
-        type: "text",
-        label: "Field 3",
-        placeholder: "Field 3 Placeholder",
-        helpText: "Field 3 Help Text",
-        wrapCSS: "is-2"
-      },
-      {
-        id: "field4",
-        type: "text",
-        label: "Field 4",
-        placeholder: "Field 4 Placeholder",
-        helpText: "Field 4 Help Text",
-        wrapCSS: "is-3"
-      },
-      {
-        id: "field5",
-        type: "text",
-        label: "Field 5",
-        placeholder: "Field 5 Placeholder",
-        helpText: "Field 5 Help Text",
-        wrapCSS: "is-2"
-      }
-    ],
-    {
-      id: "field6",
-      type: "text",
-      label: "Field 6",
-      placeholder: "Field 6 Placeholder",
-      helpText: "Field 6 Help Text"
-    },
-    [
-      {
-        id: "field7",
-        type: "text",
-        label: "Field 7",
-        placeholder: "Field 7 Placeholder",
-        helpText: "Field 7 Help Text",
-        wrapCSS: "is-2"
-      },
-      {
-        id: "field8",
-        type: "text",
-        label: "Field 8",
-        placeholder: "Field 8 Placeholder",
-        helpText: "Field 8 Help Text",
-        wrapCSS: "is-3"
-      },
-      {
-        id: "field9",
-        type: "text",
-        label: "Field 9",
-        placeholder: "Field 9 Placeholder",
-        helpText: "Field 9 Help Text",
-        wrapCSS: "is-2"
-      }
-    ],
-    [
-      {
-        id: "field11",
-        type: "text",
-        label: "Field 11",
-        placeholder: "Field 11 Placeholder",
-        helpText: "Field 11 Help Text",
-        wrapCSS: "is-2"
-      },
-      {
-        id: "field12",
-        type: "text",
-        label: "Field 12",
-        placeholder: "Field 12 Placeholder",
-        helpText: "Field 12 Help Text",
-        wrapCSS: "is-3"
-      },
-      {
-        id: "field13",
-        type: "text",
-        label: "Field 13",
-        placeholder: "Field 13 Placeholder",
-        helpText: "Field 13 Help Text",
-        wrapCSS: "is-2"
-      }
-    ],
-    {
-      id: "field10",
-      type: "text",
-      label: "Field 10",
-      placeholder: "Field 10 Placeholder",
-      helpText: "Field 10 Help Text",
-      wrapCSS: "is-2"
+  <mform save={
+    url: "/api/users/edit/save",
+    extras: {
+      id: input.id === "new" ? undefined : input.id
     }
-  ] tabs=[
+  } fields=[
+    [
+      {
+        id: "username",
+        type: "text",
+        label: out.global.i18n.t("username"),
+        helpText: out.global.i18n.t("usernameHelpText"),
+        wrapCSS: "z3-is-medium",
+        autoFocus: true,
+        mandatory: true
+      },
+      {
+        id: "email",
+        type: "text",
+        label: out.global.i18n.t("email"),
+        helpText: out.global.i18n.t("emailHelpText"),
+        wrapCSS: "z3-is-large",
+        mandatory: true
+      }
+    ],
+    [
+      {
+        id: "password",
+        type: "text",
+        label: out.global.i18n.t("password"),
+        helpText: out.global.i18n.t("passwordHelpText"),
+        wrapCSS: "z3-is-small",
+        mandatory: input.id === "new",
+        textType: "password",
+        shouldMatch: "passwordRepeat"
+      },
+      {
+        id: "passwordRepeat",
+        type: "text",
+        label: out.global.i18n.t("passwordRepeat"),
+        wrapCSS: "z3-is-small",
+        textType: "password",
+        mandatory: input.id === "new",
+        shouldMatch: "password"
+      }
+    ],
     {
-      id: "en",
-      label: "English"
+      id: "status",
+      type: "checkboxes",
+      label: out.global.i18n.t("status"),
+      options: [
+        {
+          id: "active",
+          value: "active",
+          label: out.global.i18n.t("active")
+        },
+        {
+          id: "admin",
+          value: "admin",
+          label: out.global.i18n.t("admin")
+        }
+      ],
+      defaultValue: ["active"]
     },
     {
-      id: "ru",
-      label: "Русский"
+      id: "div1",
+      type: "divider"
+    },
+    {
+      id: "bg1",
+      type: "buttons",
+      data: [
+        {
+          id: "btnSave",
+          type: "button",
+          buttonType: "submit",
+          label: out.global.i18n.t("save"),
+          css: "is-primary"
+        },
+        {
+          id: "btnCancel",
+          type: "button",
+          buttonType: "button",
+          label: out.global.i18n.t("cancel")
+        }
+      ]
     }
-  ] formType="formData" validation=test i18n=out.global.i18n/>
+  ] validation=userEdit i18n=out.global.i18n/>
 </div>

@@ -3,37 +3,74 @@ style.scss {
 }
 
 <div class="z3-mf-wrap">
-  <if(input.tabs && input.tabs.length > 1)>
-    <div class="tabs">
+  <if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
+    <div class=`tabs is-boxed ${input.tabsCSS || ""} ${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mform-tabs" : ""}`>
       <ul>
-        <for|tab| of=input.tabs>
+        <for|tab| of=state.tabs>
           <li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
             <a on-click("onTabClick") data-id=tab.id>${tab.label}</a>
           </li>
         </for>
+        <if(input.tabsActive)>
+          <li>
+            <a on-click("onTabSettingsClick")>
+              <span class="icon is-small">
+                <i class="fas fa-cog" aria-hidden="true"/>
+              </span>
+              <span>${input.i18n.t("mForm.settings")}</span>
+            </a>
+          </li>
+        </if>
       </ul>
     </div>
   </if>
-  <form>
-    <div class="z3-mf-fields-wrap">
-      <for|tItem, tIndex| of=input.fields>
-        <if(typeof tItem === "object" && tItem.type)>
-          <div class="field columns z3-mf-field-columns">
-            <div class=`control column ${tItem.wrapCSS || ""}`>
-              <mField key=tItem.id item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem")/>
-            </div>
-          </div>
-        </if>
-        <if(Array.isArray(tItem))>
-          <div class="field columns is-gapless z3-mf-field-columns-group">
-            <for|sItem, sIndex| of=tItem>
-              <div class=`control column ${sItem.wrapCSS || ""}`>
-                <mField key=sItem.id item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem")/>
+  <if(state.error)>
+    <div class="notification is-danger">${state.error}</div>
+  </if>
+  <form on-submit("onFormSubmit")>
+    <div class=`z3-mf-fields-wrap z3-mform-noselect${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-fields-border" : ""}`>
+      <if(state.activeTabId)>
+        <for|tItem, tIndex| of=input.fields>
+          <if(typeof tItem === "object" && tItem.type)>
+            <div class="field columns z3-mf-field-columns">
+              <div class=`control column ${tItem.wrapCSS || ""}`>
+                <mField key=tItem.id item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick")/>
               </div>
-            </for>
-          </div>
-        </if>
-      </for>
+            </div>
+          </if>
+          <if(Array.isArray(tItem))>
+            <div class="field columns is-gapless z3-mf-field-columns-group">
+              <for|sItem, sIndex| of=tItem>
+                <div class=`control column ${sItem.wrapCSS || ""}`>
+                  <mField key=sItem.id item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick")/>
+                </div>
+              </for>
+            </div>
+          </if>
+        </for>
+      </if>
     </div>
   </form>
+  <div class=`modal${state.tabSettingsDialogActive ? " is-active" : ""}`>
+    <div class="modal-background"/>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">${input.i18n.t("mForm.settings")}</p>
+        <button class="delete" aria-label="close" on-click("onTabSettingsDialogCloseClick")/>
+      </header>
+      <section class="modal-card-body">
+        <for|tab| of=state.tabsSelect>
+          <div>
+            <label class="checkbox">
+              <input type="checkbox" checked=tab.selected data-id=tab.id on-change("onTabsSelectChange")/>&nbsp;&nbsp;${tab.label}
+            </label>
+          </div>
+        </for>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-primary" on-click("onTabSettingsDialogSaveClick")>${input.i18n.t("mForm.save")}</button>
+        <button class="button" on-click("onTabSettingsDialogCloseClick")>${input.i18n.t("mForm.cancel")}</button>
+      </footer>
+    </div>
+  </div>
 </div>
