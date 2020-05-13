@@ -13,6 +13,11 @@ export default {
             errorMessage: "Request Validation Failed",
             error
         }),
+    requestError: (rep, error = {}) => rep.code(400).type("application/json")
+        .send({
+            errorMessage: "Request Failed",
+            error
+        }),
     unauthorizedError: rep => rep.code(401).type("application/json")
         .send({
             errorMessage: "Unauthorized",

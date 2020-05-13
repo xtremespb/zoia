@@ -172,7 +172,7 @@ export default class {
 
     validate(data) {
         try {
-            const formData = data || JSON.parse(this.body.__form);
+            const formData = this.body || data || JSON.parse(this.body.__form);
             let errors = [];
             if (this.schemas.part) {
                 this.parts.map(part => {
@@ -212,5 +212,24 @@ export default class {
                 errorData: []
             };
         }
+    }
+
+    getData() {
+        const data = {};
+        const formData = this.body || JSON.parse(this.body.__form);
+        this.parts.map(part => {
+            if (this.body[part]) {
+                data[part] = {};
+                Object.keys(this.schemas.part.properties).map(field => {
+                    data[part][field] = formData[part][field];
+                });
+            }
+        });
+        if (this.schemas.root) {
+            Object.keys(this.schemas.root.properties).map(field => {
+                data[field] = formData[field];
+            });
+        }
+        return data;
     }
 }

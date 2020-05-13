@@ -18,5 +18,7 @@
     "active": "Active user",
     "admin": "Administrator",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "mFormErr.userAlreadyExists": "User already exists in the database",
+    "mFormErr.emailAlreadyExists": "E-mail already exists in the database"
 }

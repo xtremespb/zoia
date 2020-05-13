@@ -2,6 +2,8 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file"];
+
 module.exports = class {
     onCreate(input) {
         let tabs;
@@ -23,7 +25,9 @@ module.exports = class {
             activeTabId: tabs[0].id,
             data: {},
             error: null,
-            errors: {}
+            errors: {},
+            disabled: false,
+            loading: false
         };
         tabs.map(tab => {
             state.data[tab.id] = {};
@@ -196,7 +200,7 @@ module.exports = class {
         this.setState("data", data);
     }
 
-    visualizeErrors(validationErrors) {
+    visualizeErrors(validationErrors, generalError = true) {
         let errorData = cloneDeep(validationErrors);
         const errors = {};
         this.state.tabs.map(tab => errors[tab.id] = {});
@@ -253,7 +257,9 @@ module.exports = class {
                 focus = true;
             }
         });
-        this.setState("error", focus ? this.i18n.t(`mFormErr.general`) : null);
+        if (generalError) {
+            this.setState("error", focus ? this.i18n.t(`mFormErr.general`) : null);
+        }
         this.setState("errors", errors);
     }
 
@@ -327,6 +333,10 @@ module.exports = class {
                         }
                     });
                 }
+                const field = this.fieldsFlat.find(f => f.id === i);
+                if (field && field.type && serializableTypes.indexOf(field.type) === -1) {
+                    data[tab.id][field.id] = undefined;
+                }
             });
         });
         Object.keys(data).map(i => {
@@ -337,6 +347,10 @@ module.exports = class {
                         f.upload = true;
                     }
                 });
+            }
+            const field = this.fieldsFlat.find(f => f.id === i);
+            if (field && field.type && serializableTypes.indexOf(field.type) === -1) {
+                data[field.id] = undefined;
             }
         });
         if (this.state.tabs[0].id === "__default") {
@@ -349,7 +363,7 @@ module.exports = class {
         return data;
     }
 
-    upload(serialized) {
+    async upload(serialized) {
         if (!this.input.save) {
             return;
         }
@@ -376,10 +390,27 @@ module.exports = class {
                 };
             }
         }
-        axios.post(this.input.save.url, uploadData);
+        try {
+            this.setState("loading", true);
+            this.setState("disabled", true);
+            const result = await axios.post(this.input.save.url, uploadData);
+            this.setState("loading", false);
+            this.setState("disabled", false);
+        } catch (e) {
+            this.setState("loading", false);
+            this.setState("disabled", false);
+            if (e.response && e.response.data && e.response.data.error) {
+                if (e.response.data.error.errorKeyword) {
+                    this.setState("error", this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`));
+                }
+                if (e.response.data.error.errorData) {
+                    this.visualizeErrors(e.response.data.error.errorData, !(e.response.data.error.errorKeyword));
+                }
+            }
+        }
     }
 
-    onFormSubmit(e) {
+    async onFormSubmit(e) {
         e.preventDefault();
         const serialized = this.serialize(true);
         const validationResult = this.validate(serialized);
@@ -387,7 +418,7 @@ module.exports = class {
         if (validationResult.failed) {
             return;
         }
-        this.upload(this.serialize(false));
+        await this.upload(this.serialize(false));
     }
 
     onButtonClick(obj) {
