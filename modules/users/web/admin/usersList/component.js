@@ -15,7 +15,13 @@ module.exports = class {
 
     // eslint-disable-next-line class-methods-use-this
     onActionClick(data) {
-        console.log(data);
+        switch (data.action) {
+        case "btnEdit":
+            window.router.navigate("users.edit", {
+                id: data.id
+            });
+            break;
+        }
     }
 
     onTopButtonClick(data) {

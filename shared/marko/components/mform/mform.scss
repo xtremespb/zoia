@@ -16,7 +16,7 @@
     border-top: unset !important;
 }
 
-.z3-mform-tabs {
+.z3-mf-tabs {
     margin-bottom: 0 !important;
 }
 
@@ -37,7 +37,7 @@
     padding: 7px;
 }
 
-.z3-mform-noselect {
+.z3-mf-noselect {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
@@ -55,6 +55,34 @@
     max-width: 350px;
 }
 
+.z3-mf-wrap {
+    position: relative;
+}
+
+.z3-mf-loading {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.4);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    z-index: 999;
+}
+
+.z3-mf-loading>span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 30%;
+}
+
+.z3-mf-loading-spinner {
+    background: rgba(255, 255, 255, 0) !important;
+}
+
 @media (max-width: 1024px) {
     .z3-is-small {
         max-width: unset;
@@ -70,6 +98,13 @@
 }
 
 @media (max-width: 768px) {
+
+    .z3-mf-notification {
+        left: 12px;
+        right: 12px;
+        transform: unset;
+    }
+
     .z3-mf-field-columns-group>div:not(:first-child) {
         margin-top: 9px !important;
     }

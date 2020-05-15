@@ -4,7 +4,7 @@ style.scss {
 
 <div class="z3-mf-wrap">
   <if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
-    <div class=`tabs is-boxed ${input.tabsCSS || ""} ${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mform-tabs" : ""}`>
+    <div class=`tabs is-boxed ${input.tabsCSS || ""} ${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-tabs" : ""}`>
       <ul>
         <for|tab| of=state.tabs>
           <li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
@@ -28,13 +28,13 @@ style.scss {
     <div class="notification is-danger">${state.error}</div>
   </if>
   <form on-submit("onFormSubmit")>
-    <fieldset disabled=state.disabled class=`z3-mf-fields-wrap z3-mform-noselect${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-fields-border" : ""}`>
+    <fieldset disabled=state.disabled class=`z3-mf-fields-wrap z3-mf-noselect${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-fields-border" : ""}`>
       <if(state.activeTabId)>
         <for|tItem, tIndex| of=input.fields>
           <if(typeof tItem === "object" && tItem.type)>
             <div class="field columns z3-mf-field-columns">
               <div class=`control column ${tItem.wrapCSS || ""}`>
-                <mField key=tItem.id item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") loading=state.loading loadingButtonId=input.loadingButtonId/>
+                <mField key=tItem.id item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") progress=state.progress progressButtonId=input.progressButtonId/>
               </div>
             </div>
           </if>
@@ -42,7 +42,7 @@ style.scss {
             <div class="field columns is-gapless z3-mf-field-columns-group">
               <for|sItem, sIndex| of=tItem>
                 <div class=`control column ${sItem.wrapCSS || ""}`>
-                  <mField key=sItem.id item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") loading=state.loading loadingButtonId=input.loadingButtonId/>
+                  <mField key=sItem.id item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") progress=state.progress progressButtonId=input.progressButtonId/>
                 </div>
               </for>
             </div>
@@ -75,4 +75,10 @@ style.scss {
       </div>
     </div>
   </if>
+  <if(state.loading)>
+    <div class="z3-mf-loading">
+      <span class="button is-white is-loading is-large z3-mf-loading-spinner">&nbsp;</span>
+    </div>
+  </if>
+  <mnotify key=`${input.id}_mnotify`/>
 </div>

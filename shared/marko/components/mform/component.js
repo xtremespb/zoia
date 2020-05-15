@@ -27,6 +27,7 @@ module.exports = class {
             error: null,
             errors: {},
             disabled: false,
+            progress: false,
             loading: false
         };
         tabs.map(tab => {
@@ -41,6 +42,9 @@ module.exports = class {
         if (input.validation) {
             this.extendedValidation = new ExtendedValidation(null, input.validation.root, input.validation.part, input.validation.files, tabs.map(t => t.id));
         }
+        this.func = {
+            loadData: this.loadData.bind(this)
+        };
         this.i18n = input.i18n;
     }
 
@@ -271,6 +275,7 @@ module.exports = class {
                 const value1 = String(this.state.data[this.state.activeTabId][field.id]);
                 const value2 = String(this.state.data[this.state.activeTabId][field.shouldMatch]);
                 if ((field.mandatory && (!value1 || value1 !== value2)) || (!field.mandatory && value1 !== value2)) {
+                    validationResult.failed = true;
                     validationResult.errorData.push({
                         keyword: "shouldMatch",
                         dataPath: `.${field.id}`,
@@ -363,6 +368,11 @@ module.exports = class {
         return data;
     }
 
+    _setProgress(state) {
+        this.setState("progress", state);
+        this.setState("disabled", state);
+    }
+
     async upload(serialized) {
         if (!this.input.save) {
             return;
@@ -391,14 +401,12 @@ module.exports = class {
             }
         }
         try {
-            this.setState("loading", true);
-            this.setState("disabled", true);
+            this._setProgress(true);
             const result = await axios.post(this.input.save.url, uploadData);
-            this.setState("loading", false);
-            this.setState("disabled", false);
+            this._setProgress(false);
+            this.emit("post-success", result);
         } catch (e) {
-            this.setState("loading", false);
-            this.setState("disabled", false);
+            this._setProgress(false);
             if (e.response && e.response.data && e.response.data.error) {
                 if (e.response.data.error.errorKeyword) {
                     this.setState("error", this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`));
@@ -422,7 +430,57 @@ module.exports = class {
     }
 
     onButtonClick(obj) {
-        // console.log("Button clicked");
-        // console.log(obj);
+        this.emit("button-click", obj);
+    }
+
+    deserialize(raw) {
+        const data = {};
+        if (this.input.tabsAvail) {
+            // Deserialize all tabs
+            this.input.tabsAvail.map(tab => {
+                data[tab.id] = {};
+                this.fieldsFlat.map(field => data[tab.id][field.id] = raw[tab.id] && raw[tab.id][field.id] ? raw[tab.id][field.id] : this.getDefaultValue(field));
+            });
+            // Deserialize shared fields
+            this.input.tabsAvail.map(tab => {
+                this.fieldsFlat.map(field => {
+                    if (raw[field.id]) {
+                        data[tab.id][field.id] = raw[field.id];
+                    }
+                });
+            });
+        } else {
+            // There are no tabs
+            data.__default = {};
+            this.fieldsFlat.map(field => {
+                data.__default[field.id] = raw[field.id] || this.getDefaultValue(field);
+            });
+        }
+        return data;
+    }
+
+    async loadData() {
+        if (!this.input.load) {
+            return;
+        }
+        this.setState("loading", true);
+        this.setState("disabled", true);
+        try {
+            const result = await axios.post(this.input.load.url, this.input.load.extras);
+            this.setState("loading", false);
+            this.setState("disabled", false);
+            if (result && result.data && result.data.data) {
+                const data = this.deserialize(result.data.data);
+                this.setState("data", data);
+                setTimeout(this.autoFocus.bind(this), 0);
+            }
+        } catch (e) {
+            this.setState("loading", false);
+            if (e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword) {
+                this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`) || this.i18n.t(`mFormErr.server`), "is-danger");
+            } else {
+                this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.server`), "is-danger");
+            }
+        }
     }
 };

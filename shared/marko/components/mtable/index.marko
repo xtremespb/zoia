@@ -1,189 +1,15 @@
-import axios from "axios"
-import debounce from "lodash/debounce"
-
 style.scss {
   @import "./mtable.scss";
 }
 
-class {
-  onCreate(input) {
-    this.initialState = {
-      data: [],
-      totalCount: 0,
-      paginationData: [],
-      dataSource: null,
-      checkboxes: {},
-      allCheckboxes: false,
-      sortId: null,
-      sortDirection: "asc",
-      page: 1,
-      limit: 0,
-      pagesCount: 0,
-      loading: false,
-      searchText: ""
-    };
-    this.state = this.initialState;
-    this.mounted = false;
-    this.componentId = input.id;
-    this.func = {
-      loadData: this.loadData.bind(this),
-      setLoading: this.setLoading.bind(this),
-      dataRequest: this.dataRequest.bind(this),
-    };
-  }
-
-  onMount() {
-    this.state.sortId = this.input.sortId;
-    this.state.sortDirection = this.input.sortDirection;
-    this.state.dataSource = this.input.dataSource;
-    this.dataRequestDebounced = debounce(this.dataRequest, 300);
-    // Check if there is an Object to save state
-    window.__z3_mtable = window.__z3_mtable || {};
-    if (window.__z3_mtable[this.componentId]) {
-      // Restore state from saved data
-      Object.keys(this.initialState).map(k => this.setState(k, window.__z3_mtable[this.componentId][k]));
-    } else {
-      // Request new data
-      this.dataRequest();
-    }
-    this.mounted = true;
-  }
-
-  onUpdate() {
-    if (this.mounted) {
-      // Save data to the Object, so we can restore it in the future
-      window.__z3_mtable[this.componentId] = this.state;
-    }
-  }
-
-  setLoading(state) {
-    this.setState("loading", state);
-  }
-
-  async loadData() {
-    this.setLoading(true);
-    this.setChecked(false);
-    const source = this.state.dataSource;
-    source.data = source.data || {};
-    source.data = {
-      page: this.state.page,
-      sortId: this.state.sortId,
-      sortDirection: this.state.sortDirection,
-      searchText: this.state.searchText
-    };
-    try {
-      const response = await axios(source);
-      if (response && response.data && response.data.internalStatusCode === 200) {
-        this.setState("data", response.data.data || []);
-        this.setState("totalCount", response.data.count || 0);
-        this.setState("limit", response.data.limit || 1);
-        this.setState("pagesCount", response.data.pagesCount || 1);
-        this.setState("paginationData", this.generatePagination());
-      }
-      this.setLoading(false);
-    } catch (e) {
-      this.setLoading(false);
-      console.error(e);
-    }
-  }
-
-  async dataRequest() {
-    this.emit("data-request", {
-      page: this.state.page,
-      sortId: this.state.sortId,
-      sortDirection: this.state.sortDirection
-    });
-    if (this.state.dataSource) {
-      await this.loadData();
-    }
-  }
-
-  setCheckbox(e) {
-    this.state.checkboxes[`i${e.currentTarget.dataset.id}`] = e.target.checked || false;
-  }
-
-  setChecked(state) {
-    this.state.allCheckboxes = state;
-    this.state.data.map(i => (this.state.checkboxes[`i${i.id || i._id}`] = state));
-  }
-
-  setCheckboxes(e) {
-    const checked = e.target.checked || false;
-    this.setChecked(checked);
-    this.forceUpdate();
-  }
-
-  generatePagination() {
-    const delta = 2;
-    const range = [];
-    const pagesCount = parseInt(this.state.pagesCount, 10);
-    if (pagesCount <= 1) {
-      return range;
-    }
-    const page = parseInt(this.state.page, 10);
-    for (let i = Math.max(2, page - delta); i <= Math.min(pagesCount - 1, page + delta); i += 1) {
-      range.push({ type: "page", active: page === i, page: i });
-    }
-    if (page - delta > 2) {
-      range.unshift({ type: "dots" });
-    }
-    if (page + delta < pagesCount - 1) {
-      range.push({ type: "dots" });
-    }
-    range.unshift({ type: "page", active: page === 1, page: 1 });
-    range.push({ type: "page", active: page === pagesCount, page: pagesCount });
-    return range;
-  }
-
-  onColumnClick(e) {
-    if (e.target.dataset.sortable === undefined) {
-      return;
-    }
-    const { id } = e.target.dataset;
-    if (id === this.state.sortId) {
-      this.state.sortDirection = this.state.sortDirection === "asc" ? "desc" : "asc";
-    } else {
-      this.state.sortId = id;
-      this.state.sortDirection = this.state.sortDirection;
-    }
-    this.setState("page", 1);
-    this.dataRequest();
-  }
-
-  onPageClick(e) {
-    const page = e.target.dataset.page;
-    if (page === this.state.page) {
-      return;
-    }
-    this.setState("page", page);
-    this.dataRequest();
-  }
-
-  onActionButtonClick(e) {
-    const action = e.target.dataset.action;
-    const id = e.target.dataset.id;
-    this.emit("action-click", { action, id });
-  }
-
-  onTopButtonClick(e) {
-    const button = e.target.dataset.button;
-    this.emit("top-button-click", { button });
-  }
-  onSearchFieldInput(e) {
-    const val = e.target.value.trim();
-    this.setState("searchText", val);
-    this.dataRequestDebounced();
-  }
-}
-
-<div class="z3-mtable-wrap">
+<div class="z3-mt-wrap">
   <div class="columns">
     <div class="column is-four-fifths">
       <if(input.buttons && input.buttons.length)>
         <div class="field has-addons">
           <for|btn| of=input.buttons>
             <p class="control">
-              <button class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id type="button" on-click("onTopButtonClick") data-tooltip=btn.text>
+              <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id type="button" on-click("onTopButtonClick") data-tooltip=btn.text>
                 <if(btn.icon)>
                   <i class=btn.icon data-button=btn.id/>
                 </if>
@@ -203,78 +29,111 @@ class {
       </div>
     </div>
   </div>
-  <div class="table-container">
-    <table class=input.css>
-      <thead class="z3-mtable-noselect">
-        <tr>
-          <if(input.checkboxColumn)>
-            <th style="width:10px">
-              <label class="checkbox">
-                <input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
-              </label>
-            </th>
-          </if>
-          <for|column| of=input.columns>
-            <th data-id=column.id data-sortable=column.sortable class=`${column.css || ""}${column.sortable ? " z3-mtable-sortable" : ""}` on-click("onColumnClick")>
-              ${column.title}&nbsp;<i class=`fas ${state.sortDirection === "asc" ? "fa-angle-up" : "fa-angle-down"}${state.sortId === column.id ? " z3-mtable-visible" : " z3-mtable-hidden"}`/>
-            </th>
-          </for>
-          <if(input.actions && input.actions.length)>
-            <th>${input.actionsTitle}</th>
-          </if>
-        </tr>
-      </thead>
-      <tbody>
-        <for|row| of=state.data>
+  <if(state.error)>
+    <div class="notification is-danger">${state.error}</div>
+  </if>
+  <else>
+    <div class="table-container">
+      <table class=input.css>
+        <thead class="z3-mt-noselect">
           <tr>
             <if(input.checkboxColumn)>
-              <td style="width:10px">
+              <th style="width:10px">
                 <label class="checkbox">
-                  <input data-id=(row.id || row._id) type="checkbox" checked=state.checkboxes[`i${row.id || row._id}`] on-change("setCheckbox")/>
+                  <input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
                 </label>
-              </td>
+              </th>
             </if>
-            <for|column| of=input.columns.map(c => c.id)>
-              <td>${row[column] ? (input.processValue ? input.processValue(row.id, row[column], column, row) : row[column]) : ""}</td>
+            <for|column| of=input.columns>
+              <th data-id=column.id data-sortable=column.sortable class=`${column.css || ""}${column.sortable ? " z3-mt-sortable" : ""}` on-click("onColumnClick")>
+                ${column.title}&nbsp;<i class=`fas ${state.sortDirection === "asc" ? "fa-angle-up" : "fa-angle-down"}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
+              </th>
             </for>
             <if(input.actions && input.actions.length)>
-              <td class="z3-mtable-actions-wrap">
-                <for|action| of=input.actions>
-                  <button class=`${action.css} z3-mtable-action-button${action.tooltip ? " tooltip" : ""}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tooltip=action.text>
-                    <if(action.icon)>
-                      <i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
-                    </if>
-                    <if(action.displayText && action.text)>&nbsp;${action.text}</if>
-                  </button>
-                </for>
-              </td>
+              <th>${input.actionsTitle}</th>
             </if>
           </tr>
-        </for>
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          <for|row| of=state.data>
+            <tr>
+              <if(input.checkboxColumn)>
+                <td style="width:10px">
+                  <label class="checkbox">
+                    <input data-id=(row.id || row._id) type="checkbox" checked=state.checkboxes[`i${row.id || row._id}`] on-change("setCheckbox")/>
+                  </label>
+                </td>
+              </if>
+              <for|column| of=input.columns.map(c => c.id)>
+                <td>${row[column] ? (input.processValue ? input.processValue(row.id, row[column], column, row) : row[column]) : ""}</td>
+              </for>
+              <if(input.actions && input.actions.length)>
+                <td class="z3-mt-actions-wrap">
+                  <for|action| of=input.actions>
+                    <button class=`${action.css} z3-mt-action-button${action.tooltip ? " tooltip" : ""}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tooltip=action.text>
+                      <if(action.icon)>
+                        <i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
+                      </if>
+                      <if(action.displayText && action.text)>&nbsp;${action.text}</if>
+                    </button>
+                  </for>
+                </td>
+              </if>
+            </tr>
+          </for>
+        </tbody>
+      </table>
+    </div>
+    <if(state.paginationData.length)>
+      <nav class="pagination is-small" role="navigation" aria-label="pagination">
+        <ul class="pagination-list">
+          <for|pi| of=state.paginationData>
+            <if(pi.type === "page")>
+              <li>
+                <a class=`pagination-link${pi.active ? " is-current" : ""}` data-page=pi.page on-click("onPageClick")>${pi.page}</a>
+              </li>
+            </if>
+            <if(pi.type === "dots")>
+              <li>
+                <span class="pagination-ellipsis">&hellip;</span>
+              </li>
+            </if>
+          </for>
+        </ul>
+      </nav>
+    </if>
+  </else>
   <if(state.loading)>
-    <div class="z3-mtable-loading">
-      <span class="button is-white is-loading is-large z3-mtable-loading-spinner">&nbsp;</span>
+    <div class="z3-mt-loading">
+      <span class="button is-white is-loading is-large z3-mt-loading-spinner">&nbsp;</span>
     </div>
   </if>
-  <if(state.paginationData.length)>
-    <nav class="pagination is-small" role="navigation" aria-label="pagination">
-      <ul class="pagination-list">
-        <for|pi| of=state.paginationData>
-          <if(pi.type === "page")>
-            <li>
-              <a class=`pagination-link${pi.active ? " is-current" : ""}` data-page=pi.page on-click("onPageClick")>${pi.page}</a>
-            </li>
+  <if(input.genericDelete)>
+    <div class=`modal${state.deleteDialogActive ? " is-active" : ""}`>
+      <div class="modal-background"/>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">${input.i18n.t("mTable.deleteTitle")}</p>
+          <if(!state.deleteDialogProgress)>
+            <button class="delete" aria-label="close" on-click("onDeleteDialogClose")/>
           </if>
-          <if(pi.type === "dots")>
-            <li>
-              <span class="pagination-ellipsis">&hellip;</span>
-            </li>
-          </if>
-        </for>
-      </ul>
-    </nav>
+        </header>
+        <section class="modal-card-body">
+          <p>${input.i18n.t("mTable.deleteDesc")}:</p>
+          <div class="list z3-margin-top">
+            <for|title| of=state.deleteDialogTitles>
+              <span class="list-item">${title}</span>
+            </for>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <fieldset disabled=state.deleteDialogProgress>
+            <button class=`button is-primary${state.deleteDialogProgress ? " is-loading" : ""}` on-click("onDeleteDialogSubmit")>${input.i18n.t("mTable.delete")}</button>
+            <button class="button" on-click("onDeleteDialogClose")>${input.i18n.t("mTable.cancel")}</button>
+          </fieldset>
+        </footer>
+      </div>
+    </div>
   </if>
+  <mnotify key=`${input.id}_mnotify`/>
 </div>

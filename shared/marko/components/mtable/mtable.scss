@@ -1,26 +1,26 @@
-.z3-mtable-wrap {
+.z3-mt-wrap {
     position: relative;
 }
 
-.z3-mtable-visible {
+.z3-mt-visible {
     opacity: 1;
 }
 
-.z3-mtable-hidden {
+.z3-mt-hidden {
     opacity: 0;
 }
 
-.z3-mtable-sortable {
+.z3-mt-sortable {
     cursor: pointer;
 }
 
-.z3-mtable-noselect {
+.z3-mt-noselect {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
 
-.z3-mtable-loading {
+.z3-mt-loading {
     position: absolute;
     background-color: rgba(255, 255, 255, 0.4);
     top: 0;
@@ -31,7 +31,7 @@
     z-index: 999;
 }
 
-.z3-mtable-loading>span {
+.z3-mt-loading>span {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -40,15 +40,19 @@
     width: 30%;
 }
 
-.z3-mtable-loading-spinner {
+.z3-mt-loading-spinner {
     background: rgba(255, 255, 255, 0) !important;
 }
 
-.z3-mtable-action-button {
+.z3-mt-action-button {
     margin: 1px;
 }
 
-.z3-mtable-actions-wrap {
+.z3-margin-top {
+    margin-top: 10px;
+}
+
+.z3-mt-actions-wrap {
     white-space: nowrap;
     width: 10px;
 }

@@ -29,7 +29,7 @@ style.scss {
       tooltip: true
     },
     {
-      id: "btnTrash",
+      id: "btnDeleteGeneric",
       css: "button is-small is-danger",
       icon: "far fa-trash-alt",
       text: out.global.i18n.t("delete"),
@@ -46,7 +46,7 @@ style.scss {
       tooltip: false
     },
     {
-      id: "btnDeleteSelected",
+      id: "btnDeleteSelectedGeneric",
       css: "button is-danger",
       icon: "far fa-trash-alt",
       text: out.global.i18n.t("delete"),
@@ -60,6 +60,10 @@ style.scss {
       text: out.global.i18n.t("reload"),
       displayText: true,
       tooltip: false
-    },
-  ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="username" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick")/>
+    }
+  ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="username" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
+    title: "username",
+    url: "/api/users/edit/delete",
+    extras: {}
+  }/>
 </div>

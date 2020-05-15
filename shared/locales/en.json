@@ -23,5 +23,12 @@
     "mFormErr.minSizeBytes": "File(s) size is too small",
     "mFormErr.maxSizeBytes": "File(s) size is too big",
     "mFormErr.allowedMimeTypes": "Invalid file(s) type",
-    "mFormErr.shouldMatch": "Should match"
+    "mFormErr.shouldMatch": "Should match",
+    "mTable.deleteTitle": "Delete",
+    "mTable.deleteDesc": "The following item(s) will be deleted",
+    "mTable.delete": "Delete",
+    "mTable.cancel": "Cancel",
+    "mTable.deleteSuccess": "Operation complete",
+    "mTableErr.general": "Could not load data from server, please try to reload",
+    "mTableErr.delete": "Could not delete one or more items"
 }
