@@ -19,6 +19,7 @@ import internalServerErrorHandler from "./internalServerErrorHandler";
 import notFoundErrorHandler from "./notFoundErrorHandler";
 import modules from "../../../etc/modules.json";
 import response from "../../lib/response";
+import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
 
 (async () => {
@@ -74,6 +75,7 @@ import extendedValidation from "../../lib/extendedValidation";
         fastify.decorateRequest("ExtendedValidation", extendedValidation);
         Object.keys(loggerHelpers).map(i => fastify.decorateReply(i, loggerHelpers[i]));
         Object.keys(response).map(i => fastify.decorateReply(i, response[i]));
+        Object.keys(utils).map(i => fastify.decorateReply(i, utils[i]));
         // Register FormBody and Multipart
         fastify.register(fastifyFormbody);
         fastify.register(fastifyMultipart, {

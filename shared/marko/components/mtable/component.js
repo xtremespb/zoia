@@ -26,7 +26,6 @@ module.exports = class {
         };
         this.state = this.initialState;
         this.mounted = false;
-        this.componentId = input.id;
         this.func = {
             loadData: this.loadData.bind(this),
             setLoading: this.setLoading.bind(this),
@@ -41,22 +40,29 @@ module.exports = class {
         this.state.dataSource = this.input.dataSource;
         this.dataRequestDebounced = debounce(this.dataRequest, 300);
         // Check if there is an Object to save state
-        window.__z3_mtable = window.__z3_mtable || {};
-        if (window.__z3_mtable[this.componentId]) {
+        window.__z3_mtable_data = window.__z3_mtable_data || {};
+        if (window.__z3_mtable_data[this.input.id]) {
             // Restore state from saved data
-            Object.keys(this.initialState).map(k => this.setState(k, window.__z3_mtable[this.componentId][k]));
+            Object.keys(this.initialState).map(k => this.setState(k, window.__z3_mtable_data[this.input.id][k]));
         } else {
             // Request new data
             this.dataRequest();
         }
         this.mounted = true;
+        // Set functions for window object
+        window.__z3_mtable_func = window.__z3_mtable_func || {};
+        window.__z3_mtable_func[this.input.id] = this.func;
+    }
+
+    savePersistentData() {
+        if (this.mounted) {
+            // Save data to the Object, so we can restore it in the future
+            window.__z3_mtable_data[this.input.id] = this.state;
+        }
     }
 
     onUpdate() {
-        if (this.mounted) {
-            // Save data to the Object, so we can restore it in the future
-            window.__z3_mtable[this.componentId] = this.state;
-        }
+        this.savePersistentData();
     }
 
     setLoading(state) {
@@ -88,6 +94,7 @@ module.exports = class {
                 this.setState("error", this.i18n.t("mTableErr.general"));
             }
             this.setLoading(false);
+            // this.savePersistentData();
         } catch (e) {
             this.setLoading(false);
             this.setState("error", this.i18n.t("mTableErr.general"));

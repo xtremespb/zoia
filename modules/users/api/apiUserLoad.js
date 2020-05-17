@@ -1,21 +1,20 @@
 import {
     ObjectId
 } from "mongodb";
+import cloneDeep from "lodash/cloneDeep";
+import userEdit from "./data/userEdit.json";
 
 export default () => ({
     async handler(req, rep) {
-        // const userEditRoot = cloneDeep(userEdit.root);
-        // if (!req.body.id) {
-        //     userEditRoot.required = [...userEditRoot.required, "password"];
-        // }
-        // const extendedValidation = new req.ExtendedValidation(req.body, userEditRoot);
-        // const extendedValidationResult = extendedValidation.validate();
-        // if (extendedValidationResult.failed) {
-        //     rep.logError(req, extendedValidationResult.message);
-        //     rep.validationError(rep, extendedValidationResult);
-        //     return;
-        // }
-        // const data = extendedValidation.getData();
+        const userEditRoot = cloneDeep(userEdit.root);
+        userEditRoot.required = ["id"];
+        const extendedValidation = new req.ExtendedValidation(req.body, userEditRoot);
+        const extendedValidationResult = extendedValidation.validate();
+        if (extendedValidationResult.failed) {
+            rep.logError(req, extendedValidationResult.message);
+            rep.validationError(rep, extendedValidationResult);
+            return;
+        }
         try {
             const user = await this.mongo.db.collection("users").findOne({
                 _id: new ObjectId(req.body.id)

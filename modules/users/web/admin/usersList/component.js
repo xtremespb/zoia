@@ -1,16 +1,32 @@
 /* eslint-disable arrow-body-style */
 module.exports = class {
-    onCreate() {
+    onCreate(input, out) {
         this.state = {
             processValue: null
         };
+        this.i18n = out.global.i18n;
     }
 
     onMount() {
         // eslint-disable-next-line no-unused-vars
         this.state.processValue = (id, value, column, row) => {
-            return value;
+            switch (column) {
+            case "status":
+                const statusText = [];
+                if (row.status.indexOf("active") > -1) {
+                    statusText.push(`<i class="fas fa-user"/>`);
+                }
+                if (row.status.indexOf("admin") > -1) {
+                    statusText.push(`<i class="fas fa-crown"/>`);
+                }
+                return statusText.join("&nbsp;");
+            default:
+                return value;
+            }
         };
+        if (this.input.successNotification) {
+            this.getComponent(`usersList_mnotify`).func.show(this.i18n.t("dataSaveSuccess"), "is-success");
+        }
     }
 
     // eslint-disable-next-line class-methods-use-this

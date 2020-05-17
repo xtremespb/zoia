@@ -12,6 +12,14 @@ module.exports = class {
         };
     }
 
+    onMount() {
+        // Set functions for window object
+        if (this.input.id) {
+            window.__z3_mnotify_func = window.__z3_mtable_func || {};
+            window.__z3_mnotify_func[this.input.id] = this.func;
+        }
+    }
+
     show(message, css = "", delay = 3500) {
         this.setState("message", message);
         this.setState("activeFlag", false);

@@ -4,8 +4,8 @@ import userEdit from "../../../api/data/userEdit.json"
 style.scss {
 }
 
+$ input.userEditData = cloneDeep(userEdit);
 $ if (input.id === "new") {
-  input.userEditData = cloneDeep(userEdit);
   input.userEditData.root.required = [...input.userEditData.root.required, "password", "passwordRepeat"];
 }
 <div>

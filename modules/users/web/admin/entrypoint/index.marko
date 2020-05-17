@@ -1,17 +1,3 @@
-class {
-  onCreate(input, out) {
-    this.state = {
-      route: {
-        name: out.global.routeId,
-        params: out.global.routeParams
-      }
-    };
-  }
-  onStateChange(obj) {
-    this.state.route = obj.route;
-  }
-}
-
 <router routes=[
   {
     name: "users",
@@ -23,7 +9,7 @@ class {
   }
 ] on-state-change("onStateChange")>
   <if(state.route.name === "users")>
-    <usersList/>
+    <usersList ...state.route.params/>
   </if>
   <if(state.route.name === "users.edit")>
     <usersEdit ...state.route.params/>

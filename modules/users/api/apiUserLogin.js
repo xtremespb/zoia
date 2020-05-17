@@ -2,26 +2,11 @@ import crypto from "crypto";
 import {
     v4 as uuid
 } from "uuid";
+import userLogin from "./data/userLogin.json";
 
 export default fastify => ({
     schema: {
-        body: {
-            type: "object",
-            properties: {
-                username: {
-                    type: "string",
-                    minLength: 4,
-                    maxLength: 32,
-                    pattern: "^[a-zA-Z0-9_-]+$"
-                },
-                password: {
-                    type: "string",
-                    minLength: 8,
-                    maxLength: 64
-                }
-            },
-            required: ["username", "password"]
-        }
+        body: userLogin.root
     },
     attachValidation: true,
     async handler(req, rep) {
@@ -35,7 +20,7 @@ export default fastify => ({
                 username: req.body.username.toLowerCase()
             });
             const passwordHash = crypto.createHmac("sha256", req.zoiaConfig.secret).update(req.body.password).digest("hex");
-            if (!user || user.password !== passwordHash || !user.active) {
+            if (!user || user.password !== passwordHash || user.status.indexOf("active") === -1) {
                 rep.unauthorizedError(rep);
                 return;
             }

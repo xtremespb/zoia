@@ -12,7 +12,7 @@ export default () => ({
                         ...site.getSerializedGlobals()
                     },
                     template: "default",
-                    pageTitle: site.i18n.t("users"),
+                    pageTitle: site.i18n.t("login"),
                     ...site.getGlobals()
                 }
             });

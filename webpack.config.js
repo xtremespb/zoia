@@ -91,8 +91,7 @@ const configWebClient = {
         new ExtractCssChunks({
             filename: "[name]_[contenthash:8].css",
             chunkFilename: "[name]_[contenthash:8].css",
-            orderWarning: true,
-            ignoreOrder: false
+            ignoreOrder: true
         }),
         new OptimizeCSSPlugin(),
         markoPlugin.browser

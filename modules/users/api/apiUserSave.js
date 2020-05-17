@@ -2,66 +2,91 @@ import {
     ObjectId
 } from "mongodb";
 import cloneDeep from "lodash/cloneDeep";
+import crypto from "crypto";
 import userEdit from "./data/userEdit.json";
 
 export default () => ({
     async handler(req, rep) {
+        // Clone root validation schema
         const userEditRoot = cloneDeep(userEdit.root);
         if (!req.body.id) {
+            // If it's a new record, password is mandatory
             userEditRoot.required = [...userEditRoot.required, "password"];
         }
+        // Initialize validator
         const extendedValidation = new req.ExtendedValidation(req.body, userEditRoot);
+        // Perform validation
         const extendedValidationResult = extendedValidation.validate();
+        // Check if there are any validation errors
         if (extendedValidationResult.failed) {
             rep.logError(req, extendedValidationResult.message);
             rep.validationError(rep, extendedValidationResult);
             return;
         }
+        // Get data from form body
         const data = extendedValidation.getData();
         try {
-            data.username = data.username.toLowerCase();
-            data.email = data.email.toLowerCase();
-            const dbUsername = await this.mongo.db.collection("users").findOne({
-                username: data.username,
-                _id: {
-                    $ne: req.body.id ? new ObjectId(req.body.id) : null
-                }
-            });
+            // Process case for username and e-mail
+            data.username = data.username.trim().toLowerCase();
+            data.email = data.email.trim().toLowerCase();
             // Check for username duplicates
-            if (dbUsername) {
+            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, "users", {
+                    username: data.username,
+                    _id: {
+                        $ne: req.body.id ? new ObjectId(req.body.id) : null
+                    }
+                }, "userAlreadyExists", "username")) {
+                return;
+            }
+            // Check for email duplicates
+            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, "users", {
+                    email: data.email,
+                    _id: {
+                        $ne: req.body.id ? new ObjectId(req.body.id) : null
+                    }
+                }, "emailAlreadyExists", "email")) {
+                return;
+            }
+            // Set password when necessary
+            const updateExtras = {};
+            if (data.password) {
+                updateExtras.password = crypto.createHmac("sha256", req.zoiaConfig.secret).update(data.password).digest("hex");
+            }
+            // Set createdAt timestamp if that's a new record
+            if (!data.id) {
+                updateExtras.createdAt = new Date();
+            }
+            // Update database
+            const update = await this.mongo.db.collection("users").updateOne(data.id ? {
+                _id: new ObjectId(data.id)
+            } : {
+                username: data.username
+            }, {
+                $set: {
+                    username: data.username,
+                    email: data.email,
+                    status: data.status,
+                    modifiedAt: new Date(),
+                    ...updateExtras
+                }
+            }, {
+                upsert: true
+            });
+            // Check result
+            if (!update || !update.result || !update.result.ok) {
                 rep.requestError(rep, {
                     failed: true,
                     error: "Database error",
-                    errorKeyword: "userAlreadyExists",
-                    errorData: [{
-                        keyword: "userAlreadyExists",
-                        dataPath: `.username`
-                    }]
+                    errorKeyword: "databaseError",
+                    errorData: []
                 });
                 return;
             }
-            const dbEmail = await this.mongo.db.collection("users").findOne({
-                email: data.email,
-                _id: {
-                    $ne: req.body.id ? new ObjectId(req.body.id) : null
-                }
-            });
-            // Check for username duplicates
-            if (dbEmail) {
-                rep.requestError(rep, {
-                    failed: true,
-                    error: "Database error",
-                    errorKeyword: "emailAlreadyExists",
-                    errorData: [{
-                        keyword: "emailAlreadyExists",
-                        dataPath: `.email`
-                    }]
-                });
-                return;
-            }
+            // Return "success" result
             rep.successJSON(rep);
             return;
         } catch (e) {
+            // There is an exception, send error 500 as response
             rep.logError(req, null, e);
             rep.internalServerError(rep, e.message);
         }

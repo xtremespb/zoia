@@ -6,6 +6,7 @@
     "notFoundMsg": "The page you are trying to reach couldn't be found on the server.",
     "internalError": "Internal Server Error",
     "internalErrorMsg": "The server encountered an unexpected condition which prevented it from fulfilling the request.",
+    "dataSaveSuccess": "Data has been successfully saved",
     "mForm.save": "Save",
     "mForm.cancel": "Cancel",
     "mForm.settings": "Settings",
@@ -28,6 +29,8 @@
     "mTable.deleteDesc": "The following item(s) will be deleted",
     "mTable.delete": "Delete",
     "mTable.cancel": "Cancel",
+    "mTable.loading": "Loading data, please wait…",
+    "mTable.noData": "No data to display",
     "mTable.deleteSuccess": "Operation complete",
     "mTableErr.general": "Could not load data from server, please try to reload",
     "mTableErr.delete": "Could not delete one or more items"

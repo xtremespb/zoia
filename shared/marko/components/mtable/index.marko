@@ -55,32 +55,46 @@ style.scss {
           </tr>
         </thead>
         <tbody>
-          <for|row| of=state.data>
-            <tr>
-              <if(input.checkboxColumn)>
-                <td style="width:10px">
-                  <label class="checkbox">
-                    <input data-id=(row.id || row._id) type="checkbox" checked=state.checkboxes[`i${row.id || row._id}`] on-change("setCheckbox")/>
-                  </label>
-                </td>
-              </if>
-              <for|column| of=input.columns.map(c => c.id)>
-                <td>${row[column] ? (input.processValue ? input.processValue(row.id, row[column], column, row) : row[column]) : ""}</td>
-              </for>
-              <if(input.actions && input.actions.length)>
-                <td class="z3-mt-actions-wrap">
-                  <for|action| of=input.actions>
-                    <button class=`${action.css} z3-mt-action-button${action.tooltip ? " tooltip" : ""}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tooltip=action.text>
-                      <if(action.icon)>
-                        <i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
-                      </if>
-                      <if(action.displayText && action.text)>&nbsp;${action.text}</if>
-                    </button>
-                  </for>
-                </td>
-              </if>
-            </tr>
-          </for>
+          <if(state.data.length)>
+            <for|row| of=state.data>
+              <tr>
+                <if(input.checkboxColumn)>
+                  <td style="width:10px">
+                    <label class="checkbox">
+                      <input data-id=(row.id || row._id) type="checkbox" checked=state.checkboxes[`i${row.id || row._id}`] on-change("setCheckbox")/>
+                    </label>
+                  </td>
+                </if>
+                <for|column| of=input.columns.map(c => c.id)>
+                  <td>$!{row[column] ? (input.processValue ? input.processValue(row.id || row._id, row[column], column, row) : row[column]) : ""}</td>
+                </for>
+                <if(input.actions && input.actions.length)>
+                  <td class="z3-mt-actions-wrap">
+                    <for|action| of=input.actions>
+                      <button class=`${action.css} z3-mt-action-button${action.tooltip ? " tooltip" : ""}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tooltip=action.text>
+                        <if(action.icon)>
+                          <i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
+                        </if>
+                        <if(action.displayText && action.text)>&nbsp;${action.text}</if>
+                      </button>
+                    </for>
+                  </td>
+                </if>
+              </tr>
+            </for>
+          </if>
+          <else>
+            <if(state.loading)>
+              <tr>
+                <td colspan="100%">${input.i18n.t("mTable.loading")}</td>
+              </tr>
+            </if>
+            <else>
+              <tr>
+                <td colspan="100%">${input.i18n.t("mTable.noData")}</td>
+              </tr>
+            </else>
+          </else>
         </tbody>
       </table>
     </div>
@@ -135,5 +149,5 @@ style.scss {
       </div>
     </div>
   </if>
-  <mnotify key=`${input.id}_mnotify`/>
+  <mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
 </div>

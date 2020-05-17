@@ -19,6 +19,10 @@
     "admin": "Administrator",
     "save": "Save",
     "cancel": "Cancel",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "statusAdministrator": "Administrator",
+    "login": "Log In",
     "mFormErr.userAlreadyExists": "User already exists in the database",
     "mFormErr.emailAlreadyExists": "E-mail already exists in the database",
     "mFormErr.userNotFound": "User not found in the database"

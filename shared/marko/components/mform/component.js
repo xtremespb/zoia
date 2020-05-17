@@ -147,7 +147,9 @@ module.exports = class {
                 activeTabId = null;
             }
         }
-        this.extendedValidation.setParts(tabs.map(t => t.id));
+        if (this.input.validation) {
+            this.extendedValidation.setParts(tabs.map(t => t.id));
+        }
         this.setState("data", data);
         this.setState("errors", errors);
         this.setState("tabs", tabs);
@@ -256,7 +258,7 @@ module.exports = class {
                 const firstField = Object.keys(errors[tab])[0];
                 const firstFieldComponent = this.getComponent(firstField);
                 if (firstFieldComponent) {
-                    firstFieldComponent.func.setFocus();
+                    setTimeout(firstFieldComponent.func.setFocus.bind(this), 0);
                 }
                 focus = true;
             }
@@ -269,6 +271,12 @@ module.exports = class {
 
     validate(serialized) {
         const data = cloneDeep(serialized);
+        if (!this.input.validation) {
+            return {
+                failed: false,
+                errorData: []
+            };
+        }
         const validationResult = this.extendedValidation.validate(data);
         this.fieldsFlat.map(field => {
             if (field.shouldMatch) {
@@ -408,11 +416,12 @@ module.exports = class {
         } catch (e) {
             this._setProgress(false);
             if (e.response && e.response.data && e.response.data.error) {
-                if (e.response.data.error.errorKeyword) {
-                    this.setState("error", this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`));
+                const errorKeyword = e.response.data.error.errorKeyword || (e.response.data.error.errorData && e.response.data.error.errorData.length && e.response.data.error.errorData[0].keyword) ? e.response.data.error.errorData[0].keyword : null;
+                if (errorKeyword) {
+                    this.setState("error", this.i18n.t(`mFormErr.${errorKeyword || "general"}`));
                 }
                 if (e.response.data.error.errorData) {
-                    this.visualizeErrors(e.response.data.error.errorData, !(e.response.data.error.errorKeyword));
+                    this.visualizeErrors(e.response.data.error.errorData, false);
                 }
             }
         }

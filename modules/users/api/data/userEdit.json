@@ -36,13 +36,23 @@
             },
             "password": {
                 "type": "string",
-                "minLength": 8,
-                "maxLength": 64
+                "anyOf": [{
+                    "minLength": 8,
+                    "maxLength": 64
+                }, {
+                    "minLength": 0,
+                    "maxLength": 0
+                }]
             },
             "passwordRepeat": {
                 "type": "string",
-                "minLength": 8,
-                "maxLength": 64
+                "anyOf": [{
+                    "minLength": 8,
+                    "maxLength": 64
+                }, {
+                    "minLength": 0,
+                    "maxLength": 0
+                }]
             }
         },
         "required": ["username", "email"]
