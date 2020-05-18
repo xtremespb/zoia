@@ -43,7 +43,8 @@ module.exports = class {
             this.extendedValidation = new ExtendedValidation(null, input.validation.root, input.validation.part, input.validation.files, tabs.map(t => t.id));
         }
         this.func = {
-            loadData: this.loadData.bind(this)
+            loadData: this.loadData.bind(this),
+            setProgress: this.setProgress.bind(this)
         };
         this.i18n = input.i18n;
     }
@@ -376,7 +377,7 @@ module.exports = class {
         return data;
     }
 
-    _setProgress(state) {
+    setProgress(state) {
         this.setState("progress", state);
         this.setState("disabled", state);
     }
@@ -409,12 +410,12 @@ module.exports = class {
             }
         }
         try {
-            this._setProgress(true);
+            this.setProgress(true);
             const result = await axios.post(this.input.save.url, uploadData);
-            this._setProgress(false);
+            this.setProgress(false);
             this.emit("post-success", result);
         } catch (e) {
-            this._setProgress(false);
+            this.setProgress(false);
             if (e.response && e.response.data && e.response.data.error) {
                 const errorKeyword = e.response.data.error.errorKeyword || (e.response.data.error.errorData && e.response.data.error.errorData.length && e.response.data.error.errorData[0].keyword) ? e.response.data.error.errorData[0].keyword : null;
                 if (errorKeyword) {
@@ -423,6 +424,8 @@ module.exports = class {
                 if (e.response.data.error.errorData) {
                     this.visualizeErrors(e.response.data.error.errorData, false);
                 }
+            } else {
+                this.setState("error", this.i18n.t(`mFormErr.server`));
             }
         }
     }

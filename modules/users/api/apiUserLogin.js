@@ -21,7 +21,7 @@ export default fastify => ({
             });
             const passwordHash = crypto.createHmac("sha256", req.zoiaConfig.secret).update(req.body.password).digest("hex");
             if (!user || user.password !== passwordHash || user.status.indexOf("active") === -1) {
-                rep.unauthorizedError(rep);
+                rep.unauthorizedError(rep, true);
                 return;
             }
             const ip = crypto.createHmac("md5", req.zoiaConfig.secret).update(req.body.password).digest("hex");

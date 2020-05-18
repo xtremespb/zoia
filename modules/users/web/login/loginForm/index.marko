@@ -36,5 +36,5 @@ import userLogin from "../../../api/data/userLogin.json"
   ] i18n=out.global.i18n save={
     url: "/api/users/login",
     extras: {}
-  } validation=userLogin/>
+  } validation=userLogin progressButtonId="btnLogin" on-post-success("onFormPostSuccess")/>
 </div>

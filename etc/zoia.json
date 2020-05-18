@@ -15,6 +15,13 @@
         "url": "mongodb://127.0.0.1:27017",
         "dbName": "zoia3"
     },
+    "cookieOptions": {
+        "expires": 604800,
+        "path": "/",
+        "domain": "",
+        "secure": null,
+        "sameSite": null
+    },
     "originCORS": "*",
     "apiServer": {
         "ip": "127.0.0.1",
@@ -28,7 +35,7 @@
         "en": "English",
         "ru": "Русский"
     },
-    "site": {
+    "siteMetadata": {
         "en": {
             "title": "Zoia Website",
             "titleShort": "Zoia Website"
@@ -37,6 +44,9 @@
             "title": "Сайт на Zoia",
             "titleShort": "Сайт на Zoia"
         }
+    },
+    "siteOptions": {
+        "globalPrefix": "z3"
     },
     "commonTableItemsLimit": 8
 }

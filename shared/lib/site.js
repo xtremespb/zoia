@@ -17,13 +17,14 @@ export default class {
         this.query = req.urlData().query;
         this.i18n = new I18n(this.languagesList);
         this.i18n.setLanguageCatalogs(this.catalogs.translationData);
-        this.siteData = config.site;
         this.serializedGlobals = {
             language: true,
             languages: true,
             languageData: true,
-            siteData: true,
+            siteMetadata: true,
+            siteOptions: true,
             path: true,
+            cookieOptions: true
         };
         this.i18n.setLanguage(this.language);
     }
@@ -55,8 +56,10 @@ export default class {
             languages: this.languages,
             languageData: this.i18n.getLanguageData(this.language),
             i18n: this.i18n,
-            siteData: this.siteData[this.language],
+            siteMetadata: config.siteMetadata[this.language],
+            siteOptions: config.siteOptions,
             path: this.path,
+            cookieOptions: config.cookieOptions
         };
     }
-};
+}

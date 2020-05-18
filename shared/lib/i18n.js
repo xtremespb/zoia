@@ -1,4 +1,4 @@
-export default class i18n {
+export default class {
     constructor(langs = [], language = "") {
         this._langs = langs;
         this._language = language;

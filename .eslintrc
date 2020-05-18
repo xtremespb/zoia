@@ -41,6 +41,7 @@
         "no-param-reassign": "off",
         "import/no-extraneous-dependencies": "off",
         "default-case": "off",
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "no-cond-assign": "off"
     }
 }

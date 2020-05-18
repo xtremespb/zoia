@@ -57,7 +57,7 @@ File Input
 Button
 -->
 <if(input.item.type === "button")>
-  <button class=`button ${input.item.css || ""} ${input.progress && input.progressButtonId === input.item.id ? "is-progress" : ""}` type=input.item.buttonType data-id=input.item.id key=input.item.id on-click("onButtonClick")>${input.item.label}</button>
+  <button class=`button ${input.item.css || ""} ${input.progress && input.progressButtonId === input.item.id ? "is-loading" : ""}` type=input.item.buttonType data-id=input.item.id key=input.item.id on-click("onButtonClick")>${input.item.label}</button>
 </if>
 <!--
 Button group
@@ -65,7 +65,7 @@ Button group
 <if(input.item.type === "buttons")>
   <div class="buttons">
     <for|btn| of=input.item.data>
-      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-progress" : ""}` type=btn.buttonType data-id=btn.id key=btn.id on-click("onButtonClick")>${btn.label}</button>
+      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` type=btn.buttonType data-id=btn.id key=btn.id on-click("onButtonClick")>${btn.label}</button>
     </for>
   </div>
 </if>
