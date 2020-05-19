@@ -6,8 +6,13 @@ const Query = require("../../../../../shared/lib/query").default;
 
 module.exports = class {
     onCreate(input, out) {
+        const state = {
+            unauthorized: true
+        };
+        this.state = state;
         this.cookieOptions = out.global.cookieOptions;
         this.siteOptions = out.global.siteOptions;
+        this.i18n = out.global.i18n;
     }
 
     onMount() {
@@ -21,6 +26,7 @@ module.exports = class {
         } = response.data;
         this.cookies.set(`${this.siteOptions.globalPrefix || "zoia3"}.authToken`, token);
         this.getComponent("userLoginForm").func.setProgress(true);
-        window.location.href = `${this.query.get("redirect") || "/"}?_=${uuidv4()}`;
+        this.setState("unauthorized", false);
+        window.location.href = `${this.query.get("redirect") || this.i18n.getLocalizedURL("/")}?_=${uuidv4()}`;
     }
 };

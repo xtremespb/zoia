@@ -1,8 +1,6 @@
 import crypto from "crypto";
-import {
-    v4 as uuid
-} from "uuid";
 import userLogin from "./data/userLogin.json";
+import Auth from "../../../shared/lib/auth";
 
 export default fastify => ({
     schema: {
@@ -15,6 +13,7 @@ export default fastify => ({
             rep.validationError(rep, req.validationError);
             return;
         }
+        const auth = new Auth(this.mongo.db, fastify, req);
         try {
             const user = await this.mongo.db.collection("users").findOne({
                 username: req.body.username.toLowerCase()
@@ -24,25 +23,18 @@ export default fastify => ({
                 rep.unauthorizedError(rep, true);
                 return;
             }
-            const ip = crypto.createHmac("md5", req.zoiaConfig.secret).update(req.body.password).digest("hex");
-            const sessionId = user.sessionId || uuid();
-            const token = fastify.jwt.sign({
-                userId: String(user._id),
-                sessionId,
-                ip
-            }, {
-                expiresIn: req.zoiaConfig.authTokenExpiresIn
-            });
-            // Update database and set session ID
+            const sid = user.sid || auth.generateSid();
+            const tokenSigned = auth.signToken(user._id, sid);
+            // Update database and set Session ID (sid)
             await this.mongo.db.collection("users").updateOne({
                 _id: user._id
             }, {
                 $set: {
-                    sessionId
+                    sid
                 }
             });
             rep.successJSON(rep, {
-                token
+                token: tokenSigned
             });
             return;
         } catch (e) {

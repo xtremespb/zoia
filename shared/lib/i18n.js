@@ -47,7 +47,7 @@ export default class {
         this._strings = data;
     }
 
-    getLocalizedURL(path, language) {
+    getLocalizedURL(path, language = this._language) {
         let newURL = path;
         if (newURL) {
             const url = path;

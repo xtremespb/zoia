@@ -118,6 +118,7 @@ import extendedValidation from "../../lib/extendedValidation";
                 pino.info(`API Module loaded: ${m.id}`);
             } catch (e) {
                 pino.info(`Cannot load API module: ${m.id}`);
+                pino.info(e);
             }
         }));
         // Start server
