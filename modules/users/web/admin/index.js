@@ -1,9 +1,10 @@
 import Auth from "../../../../shared/lib/auth";
 import template from "./template.marko";
+import C from "../../../../shared/lib/constants";
 
 export default (fastify, routeId) => ({
     async handler(req, rep) {
-        const auth = new Auth(this.mongo.db, fastify, req, rep);
+        const auth = new Auth(this.mongo.db, fastify, req, rep, C.USE_COOKIE_FOR_TOKEN);
         try {
             const site = new req.ZoiaSite(req, "users");
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {

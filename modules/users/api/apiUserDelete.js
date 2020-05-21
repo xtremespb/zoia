@@ -3,6 +3,7 @@ import {
 } from "mongodb";
 import userDelete from "./data/userDelete.json";
 import Auth from "../../../shared/lib/auth";
+import C from "../../../shared/lib/constants";
 
 export default fastify => ({
     schema: {
@@ -11,7 +12,7 @@ export default fastify => ({
     attachValidation: true,
     async handler(req, rep) {
         // Check permissions
-        const auth = new Auth(this.mongo.db, fastify, req, rep);
+        const auth = new Auth(this.mongo.db, fastify, req, rep, C.USE_BEARER_FOR_TOKEN);
         if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
             rep.unauthorizedError(rep);
             return;

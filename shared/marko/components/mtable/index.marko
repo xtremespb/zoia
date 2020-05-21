@@ -2,7 +2,7 @@ style.scss {
   @import "./mtable.scss";
 }
 
-<div class="z3-mt-wrap">
+<div class="z3-mt-wrap" id=`${input.id}_wrap`>
   <div class="columns">
     <div class="column is-four-fifths">
       <if(input.buttons && input.buttons.length)>
@@ -33,7 +33,7 @@ style.scss {
     <div class="notification is-danger">${state.error}</div>
   </if>
   <else>
-    <div class="table-container">
+    <div class="table-container" id=`${input.id}_tableContainer`>
       <table class=input.css>
         <thead class="z3-mt-noselect">
           <tr>

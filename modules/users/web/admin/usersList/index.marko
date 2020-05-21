@@ -13,7 +13,7 @@ $ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.a
     url: "/api/users/list",
     data: {},
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     }
   } id="users" key="usersTable" columns=[
     {
@@ -78,6 +78,6 @@ $ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.a
     title: "username",
     url: "/api/users/edit/delete",
     extras: {}
-  } on-unauthorized("onUnauthorized")/>
+  } on-unauthorized("onUnauthorized") autoItemsPerPage=true/>
   <mnotify key=`usersList_mnotify`/>
 </div>

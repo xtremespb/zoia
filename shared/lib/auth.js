@@ -5,16 +5,21 @@ import crypto from "crypto";
 import {
     v4 as uuid
 } from "uuid";
+import C from "./constants";
 
 export default class {
-    constructor(db, fastify, req, rep) {
+    constructor(db, fastify, req, rep, useBearer = C.USE_COOKIE_FOR_TOKEN) {
         this.jwt = fastify.jwt;
         this.db = db;
         this.user = null;
         this.req = req;
         this.rep = rep;
         this.ip = crypto.createHmac("md5", this.req.zoiaConfig.secret).update(req.ip).digest("hex");
-        this.token = req.cookies[`${req.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`];
+        if (useBearer && req.headers.authorization) {
+            this.token = req.headers.authorization.replace(/^Bearer /, "");
+        } else if (!useBearer) {
+            this.token = req.cookies[`${req.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`];
+        }
     }
 
     getToken() {

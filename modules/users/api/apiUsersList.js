@@ -1,5 +1,6 @@
 import Auth from "../../../shared/lib/auth";
 import usersListData from "./data/usersList.json";
+import C from "../../../shared/lib/constants";
 
 export default fastify => ({
     schema: {
@@ -8,7 +9,7 @@ export default fastify => ({
     attachValidation: true,
     async handler(req, rep) {
         // Check permissions
-        const auth = new Auth(this.mongo.db, fastify, req, rep);
+        const auth = new Auth(this.mongo.db, fastify, req, rep, C.USE_BEARER_FOR_TOKEN);
         if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
             rep.unauthorizedError(rep);
             return;
@@ -36,16 +37,17 @@ export default fastify => ({
                 });
             }
             const count = await this.mongo.db.collection(usersListData.collection).find(query, options).count();
-            options.limit = req.zoiaConfig.commonTableItemsLimit;
-            options.skip = (req.body.page - 1) * req.zoiaConfig.commonTableItemsLimit;
+            const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            options.limit = limit;
+            options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
             const data = await this.mongo.db.collection(usersListData.collection).find(query, options).toArray();
             // Send response
             rep.successJSON(rep, {
                 data,
                 count,
-                limit: req.zoiaConfig.commonTableItemsLimit,
-                pagesCount: Math.ceil(count / req.zoiaConfig.commonTableItemsLimit)
+                limit,
+                pagesCount: Math.ceil(count / limit)
             });
             return;
         } catch (e) {

@@ -20,6 +20,11 @@
                 "type": "string",
                 "minLength": 0,
                 "maxLength": 128
+            },
+            "itemsPerPage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000
             }
         },
         "required": ["page", "sortId", "sortDirection"]

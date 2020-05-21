@@ -4,11 +4,12 @@ import {
 import cloneDeep from "lodash/cloneDeep";
 import userEdit from "./data/userEdit.json";
 import Auth from "../../../shared/lib/auth";
+import C from "../../../shared/lib/constants";
 
 export default fastify => ({
     async handler(req, rep) {
         // Check permissions
-        const auth = new Auth(this.mongo.db, fastify, req, rep);
+        const auth = new Auth(this.mongo.db, fastify, req, rep, C.USE_BEARER_FOR_TOKEN);
         if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
             rep.unauthorizedError(rep);
             return;

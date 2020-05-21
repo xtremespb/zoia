@@ -22,7 +22,8 @@ module.exports = class {
             deleteDialogIds: [],
             deleteDialogTitles: [],
             deleteDialogProgress: false,
-            anyCheckboxSelected: false
+            anyCheckboxSelected: false,
+            itemsPerPage: null
         };
         this.state = this.initialState;
         this.mounted = false;
@@ -35,6 +36,12 @@ module.exports = class {
     }
 
     onMount() {
+        // Do we need to auto-set itemsPerPage?
+        if (this.input.autoItemsPerPage) {
+            const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_tableContainer`).getBoundingClientRect().top + window.scrollY - 120) / 50, 10);
+            this.state.itemsPerPage = itemsCount > 0 ? itemsCount : 1;
+        }
+        // Define inputs
         this.state.sortId = this.input.sortId;
         this.state.sortDirection = this.input.sortDirection;
         this.state.dataSource = this.input.dataSource;
@@ -79,7 +86,8 @@ module.exports = class {
             page: this.state.page,
             sortId: this.state.sortId,
             sortDirection: this.state.sortDirection,
-            searchText: this.state.searchText
+            searchText: this.state.searchText,
+            itemsPerPage: this.state.itemsPerPage
         };
         try {
             const response = await axios(source);

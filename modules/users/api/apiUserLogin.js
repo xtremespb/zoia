@@ -1,5 +1,6 @@
 import userLogin from "./data/userLogin.json";
 import Auth from "../../../shared/lib/auth";
+import C from "../../../shared/lib/constants";
 
 export default fastify => ({
     schema: {
@@ -12,7 +13,7 @@ export default fastify => ({
             rep.validationError(rep, req.validationError);
             return;
         }
-        const auth = new Auth(this.mongo.db, fastify, req, rep);
+        const auth = new Auth(this.mongo.db, fastify, req, rep, C.USE_BEARER_FOR_TOKEN);
         try {
             const tokenSigned = await auth.login(req.body.username.toLowerCase(), req.body.password);
             if (!tokenSigned) {
