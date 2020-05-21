@@ -411,7 +411,9 @@ module.exports = class {
         }
         try {
             this.setProgress(true);
-            const result = await axios.post(this.input.save.url, uploadData, this.input.save.headers);
+            const result = await axios.post(this.input.save.url, uploadData, this.input.save.headers ? {
+                headers: this.input.save.headers
+            } : undefined);
             this.setProgress(false);
             this.emit("post-success", result);
         } catch (e) {
@@ -481,7 +483,9 @@ module.exports = class {
         this.setState("loading", true);
         this.setState("disabled", true);
         try {
-            const result = await axios.post(this.input.load.url, this.input.load.extras, this.input.load.headers);
+            const result = await axios.post(this.input.load.url, this.input.load.extras, this.input.load.headers ? {
+                headers: this.input.load.headers
+            } : undefined);
             this.setState("loading", false);
             this.setState("disabled", false);
             if (result && result.data && result.data.data) {
