@@ -1,5 +1,7 @@
+const cloneDeep = require("lodash.clonedeep");
+
 export default class {
-    constructor(options = {}) {
+    constructor(optionsConfig = {}) {
         const defaults = {
             path: "/",
             domain: "",
@@ -7,6 +9,7 @@ export default class {
             secure: undefined,
             sameSite: undefined,
         };
+        const options = cloneDeep(optionsConfig);
         this.options = {
             ...defaults
         };
@@ -39,8 +42,8 @@ export default class {
     }
 
     get(name, json = false) {
-        if (!name) {
-            return undefined;
+        if (!name || !process.browser) {
+            return null;
         }
         const matches = document.cookie.match(new RegExp(`(?:^|; )${name.replace(/([.$?*|{}()[\]\\/+^])/g, "\\$1")}=([^;]*)`));
         if (matches) {
@@ -54,7 +57,7 @@ export default class {
             }
             return res;
         }
-        return undefined;
+        return null;
     }
 
     delete(name) {

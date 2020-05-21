@@ -7,20 +7,32 @@ import {
 } from "uuid";
 
 export default class {
-    constructor(db, fastify, req) {
+    constructor(db, fastify, req, rep) {
         this.jwt = fastify.jwt;
         this.db = db;
         this.user = null;
         this.req = req;
+        this.rep = rep;
         this.ip = crypto.createHmac("md5", this.req.zoiaConfig.secret).update(req.ip).digest("hex");
+        this.token = req.cookies[`${req.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`];
     }
 
-    async getUserData(token) {
-        if (!token) {
+    getToken() {
+        return this.token;
+    }
+
+    clearAuthCookie() {
+        this.rep.clearCookie(`${this.req.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`, {
+            path: "/"
+        });
+    }
+
+    async getUserData() {
+        if (!this.token) {
             return null;
         }
         try {
-            const tokenData = this.jwt.verify(token);
+            const tokenData = this.jwt.verify(this.token);
             if (!tokenData || !tokenData.id || !tokenData.sid) {
                 return null;
             }
@@ -33,6 +45,7 @@ export default class {
             if (this.req.zoiaConfig.token.ip && tokenData.ip !== this.ip) {
                 return null;
             }
+            delete user.password;
             this.user = user;
             return user;
         } catch (e) {
@@ -63,5 +76,54 @@ export default class {
             expiresIn: this.req.zoiaConfig.token.expires
         });
         return signedToken;
+    }
+
+    async login(username, password) {
+        try {
+            const user = await this.db.collection("users").findOne({
+                username
+            });
+            const passwordHash = crypto.createHmac("sha256", this.req.zoiaConfig.secret).update(password).digest("hex");
+            if (!user || user.password !== passwordHash || !user.status || user.status.indexOf("active") === -1) {
+                return null;
+            }
+            const sid = user.sid || this.generateSid();
+            const tokenSigned = this.signToken(user._id, sid);
+            await this.db.collection("users").updateOne({
+                _id: user._id
+            }, {
+                $set: {
+                    sid
+                }
+            });
+            return tokenSigned;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    getUser() {
+        return this.user || {};
+    }
+
+    async logout() {
+        // Get user data
+        const user = await this.getUserData();
+        // Authorized, let's remove SID
+        if (user) {
+            try {
+                await this.db.collection("users").updateOne({
+                    _id: this.user._id
+                }, {
+                    $set: {
+                        sid: undefined
+                    }
+                });
+            } catch (e) {
+                // Ignore
+            }
+        }
+        // Clear auth cookie
+        this.clearAuthCookie();
     }
 }

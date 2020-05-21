@@ -24,9 +24,14 @@ export default class {
             siteMetadata: true,
             siteOptions: true,
             path: true,
-            cookieOptions: true
+            cookieOptions: true,
+            authData: true
         };
         this.i18n.setLanguage(this.language);
+    }
+
+    setAuth(auth) {
+        this.authData = auth ? auth.getUser() : {};
     }
 
     getLocaleFromURL(req) {
@@ -59,7 +64,8 @@ export default class {
             siteMetadata: config.siteMetadata[this.language],
             siteOptions: config.siteOptions,
             path: this.path,
-            cookieOptions: config.cookieOptions
+            cookieOptions: config.cookieOptions,
+            authData: this.authData
         };
     }
 }

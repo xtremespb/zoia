@@ -3,9 +3,16 @@ import {
 } from "mongodb";
 import cloneDeep from "lodash/cloneDeep";
 import userEdit from "./data/userEdit.json";
+import Auth from "../../../shared/lib/auth";
 
-export default () => ({
+export default fastify => ({
     async handler(req, rep) {
+        // Check permissions
+        const auth = new Auth(this.mongo.db, fastify, req, rep);
+        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            rep.unauthorizedError(rep);
+            return;
+        }
         const userEditRoot = cloneDeep(userEdit.root);
         userEditRoot.required = ["id"];
         const extendedValidation = new req.ExtendedValidation(req.body, userEditRoot);

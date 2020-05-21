@@ -1,10 +1,16 @@
 /* eslint-disable arrow-body-style */
+
+const {
+    v4: uuidv4
+} = require("uuid");
+
 module.exports = class {
     onCreate(input, out) {
         this.state = {
             processValue: null
         };
         this.i18n = out.global.i18n;
+        this.language = out.global.language;
     }
 
     onMount() {
@@ -51,5 +57,9 @@ module.exports = class {
             });
             break;
         }
+    }
+
+    onUnauthorized() {
+        window.location.href = this.i18n.getLocalizedURL(`/users/login?_=${uuidv4()}`, this.language);
     }
 };

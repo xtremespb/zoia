@@ -2,13 +2,20 @@ import {
     ObjectId
 } from "mongodb";
 import userDelete from "./data/userDelete.json";
+import Auth from "../../../shared/lib/auth";
 
-export default () => ({
+export default fastify => ({
     schema: {
         body: userDelete.root
     },
     attachValidation: true,
     async handler(req, rep) {
+        // Check permissions
+        const auth = new Auth(this.mongo.db, fastify, req, rep);
+        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            rep.unauthorizedError(rep);
+            return;
+        }
         // Validate form
         if (req.validationError) {
             rep.logError(req, req.validationError.message);

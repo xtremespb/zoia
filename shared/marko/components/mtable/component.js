@@ -96,6 +96,9 @@ module.exports = class {
             this.setLoading(false);
             // this.savePersistentData();
         } catch (e) {
+            if (e && e.response && e.response.status === 401) {
+                this.emit("unauthorized", {});
+            }
             this.setLoading(false);
             this.setState("error", this.i18n.t("mTableErr.general"));
         }
@@ -259,6 +262,9 @@ module.exports = class {
             this.setState("page", 1);
             this.loadData();
         } catch (e) {
+            if (e && e.response && e.response.status === 401) {
+                this.emit("unauthorized", {});
+            }
             this.setState("deleteDialogActive", false);
             this.setState("deleteDialogProgress", false);
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTableErr.delete`), "is-danger");

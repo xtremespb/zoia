@@ -411,10 +411,13 @@ module.exports = class {
         }
         try {
             this.setProgress(true);
-            const result = await axios.post(this.input.save.url, uploadData);
+            const result = await axios.post(this.input.save.url, uploadData, this.input.save.headers);
             this.setProgress(false);
             this.emit("post-success", result);
         } catch (e) {
+            if (e && e.response && e.response.status === 401) {
+                this.emit("unauthorized", {});
+            }
             this.setProgress(false);
             if (e.response && e.response.data && e.response.data.error) {
                 const errorKeyword = e.response.data.error.errorKeyword || (e.response.data.error.errorData && e.response.data.error.errorData.length && e.response.data.error.errorData[0].keyword) ? e.response.data.error.errorData[0].keyword : null;
@@ -478,7 +481,7 @@ module.exports = class {
         this.setState("loading", true);
         this.setState("disabled", true);
         try {
-            const result = await axios.post(this.input.load.url, this.input.load.extras);
+            const result = await axios.post(this.input.load.url, this.input.load.extras, this.input.load.headers);
             this.setState("loading", false);
             this.setState("disabled", false);
             if (result && result.data && result.data.data) {
@@ -487,6 +490,9 @@ module.exports = class {
                 setTimeout(this.autoFocus.bind(this), 0);
             }
         } catch (e) {
+            if (e && e.response && e.response.status === 401) {
+                this.emit("unauthorized", {});
+            }
             this.setState("loading", false);
             if (e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword) {
                 this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`) || this.i18n.t(`mFormErr.server`), "is-danger");

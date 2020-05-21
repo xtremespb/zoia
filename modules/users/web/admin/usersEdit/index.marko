@@ -1,5 +1,6 @@
 import cloneDeep from "lodash/cloneDeep"
 import userEdit from "../../../api/data/userEdit.json"
+import Cookies from "../../../../../shared/lib/cookies"
 
 style.scss {
 }
@@ -8,17 +9,25 @@ $ input.userEditData = cloneDeep(userEdit);
 $ if (input.id === "new") {
   input.userEditData.root.required = [...input.userEditData.root.required, "password", "passwordRepeat"];
 }
+$ const cookies = new Cookies(out.global.cookieOptions);
+$ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.authToken`);
 <div>
   <h1 class="z3-ap-head-thin">${input.id === "new" ? out.global.i18n.t("userAdd") : out.global.i18n.t("userEdit")}</h1>
   <mform key="userEditForm" id="userEditForm" save={
     url: "/api/users/edit/save",
     extras: {
       id: input.id === "new" ? undefined : input.id
+    },
+    headers: {
+      Authorization: `Bearer ${token}`
     }
   } load={
     url: "/api/users/edit/load",
     extras: {
       id: input.id
+    },
+    headers: {
+      Authorization: `Bearer ${token}`
     }
   } fields=[
     [
@@ -102,5 +111,5 @@ $ if (input.id === "new") {
         }
       ]
     }
-  ] validation=input.userEditData progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick")/>
+  ] validation=input.userEditData progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized")/>
 </div>

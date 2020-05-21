@@ -3,10 +3,17 @@ import {
 } from "mongodb";
 import cloneDeep from "lodash/cloneDeep";
 import crypto from "crypto";
+import Auth from "../../../shared/lib/auth";
 import userEdit from "./data/userEdit.json";
 
-export default () => ({
+export default fastify => ({
     async handler(req, rep) {
+        // Check permissions
+        const auth = new Auth(this.mongo.db, fastify, req, rep);
+        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            rep.unauthorizedError(rep);
+            return;
+        }
         // Clone root validation schema
         const userEditRoot = cloneDeep(userEdit.root);
         if (!req.body.id) {

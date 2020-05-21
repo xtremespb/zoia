@@ -3,13 +3,11 @@ import Auth from "../../../../shared/lib/auth";
 
 export default fastify => ({
     async handler(req, rep) {
-        const auth = new Auth(this.mongo.db, fastify, req);
+        const auth = new Auth(this.mongo.db, fastify, req, rep);
         try {
             const site = new req.ZoiaSite(req, "users");
-            const token = req.cookies[`${req.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`];
-            if (auth.getUserData(token)) {
-                rep.code(302).redirect(url);
-                return;
+            if (await auth.getUserData()) {
+                return rep.redirectToQuery(req, rep, site);
             }
             const render = await template.stream({
                 $global: {
@@ -23,7 +21,7 @@ export default fastify => ({
                     ...site.getGlobals()
                 }
             });
-            return rep.code(200).type("text/html").send(render);
+            return rep.sendHTML(rep, render);
         } catch (e) {
             return Promise.reject(e);
         }
