@@ -2,6 +2,8 @@ import Auth from "../../../../shared/lib/auth";
 import template from "./template.marko";
 import C from "../../../../shared/lib/constants";
 import moduleData from "../../module.json";
+// eslint-disable-next-line import/no-unresolved
+import moduleConfig from "../../config.json";
 
 export default (fastify, routeId) => ({
     async handler(req, rep) {
@@ -20,12 +22,14 @@ export default (fastify, routeId) => ({
                         pageTitle: true,
                         routeId: true,
                         routeParams: true,
+                        routes: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
                     pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
                     routeId,
                     routeParams: req.params || {},
+                    routes: moduleConfig.routes,
                     ...site.getGlobals()
                 },
                 modules: req.zoiaModules,

@@ -11,6 +11,7 @@ module.exports = class {
         };
         this.i18n = out.global.i18n;
         this.language = out.global.language;
+        this.routes = out.global.routes;
     }
 
     onMount() {
@@ -60,6 +61,6 @@ module.exports = class {
     }
 
     onUnauthorized() {
-        window.location.href = this.i18n.getLocalizedURL(`/users/login?_=${uuidv4()}`, this.language);
+        window.location.href = this.i18n.getLocalizedURL(`${this.routes.login}?_=${uuidv4()}`, this.language);
     }
 };

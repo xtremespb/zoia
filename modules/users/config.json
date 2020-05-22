@@ -1,7 +1,8 @@
 {
+    "collectionUsers": "users",
     "routes": {
         "admin": "/admin/users",
-        "login": "/users/login",
-        "logout": "/users/logout"
+        "login": "/users/vkhod",
+        "logout": "/users/vykhod"
     }
 }
