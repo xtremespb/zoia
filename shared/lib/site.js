@@ -25,7 +25,7 @@ export default class {
             siteOptions: true,
             path: true,
             cookieOptions: true,
-            authData: true
+            authData: true,
         };
         this.i18n.setLanguage(this.language);
     }
@@ -65,7 +65,7 @@ export default class {
             siteOptions: config.siteOptions,
             path: this.path,
             cookieOptions: config.cookieOptions,
-            authData: this.authData
+            authData: this.authData,
         };
     }
 }

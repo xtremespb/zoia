@@ -38,7 +38,7 @@ module.exports = class {
     onMount() {
         // Do we need to auto-set itemsPerPage?
         if (this.input.autoItemsPerPage) {
-            const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_tableContainer`).getBoundingClientRect().top + window.scrollY - 120) / 50, 10);
+            const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_tableContainer`).getBoundingClientRect().top - 103) / 49, 10) - 1;
             this.state.itemsPerPage = itemsCount > 0 ? itemsCount : 1;
         }
         // Define inputs

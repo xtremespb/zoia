@@ -57,8 +57,8 @@ const configWebClient = {
                     name: "styles",
                     test: /\.(s?css|sass)$/,
                     chunks: "all",
-                    minChunks: 2,
-                    enforce: false
+                    minChunks: 3,
+                    enforce: true
                 },
                 vendor: {
                     test: /[\\/](node_modules)[\\/]/,
@@ -179,7 +179,11 @@ const generateModulesConfig = () => {
     const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/modules`));
     const modules = [];
     moduleDirs.map(dir => {
+        if (!fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/config.json`)) && fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`))) {
+            fs.copyFileSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`), path.resolve(`${__dirname}/modules/${dir}/config.json`));
+        }
         const moduleData = require(path.resolve(`${__dirname}/modules/${dir}/module.json`));
+        const moduleConfig = require(path.resolve(`${__dirname}/modules/${dir}/config.json`));
         moduleData.title = {};
         languages.map(language => {
             try {
@@ -189,6 +193,9 @@ const generateModulesConfig = () => {
                 // Ignore
             }
         });
+        if (moduleConfig.routes && moduleConfig.routes.admin) {
+            moduleData.admin = moduleConfig.routes.admin;
+        }
         modules.push(moduleData);
     });
     console.log("Writing modules.json...");

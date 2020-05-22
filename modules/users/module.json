@@ -1,5 +1,12 @@
 {
     "id": "users",
     "icon": "users",
-    "admin": "/admin/users"
+    "database": {
+        "collections": {
+            "users": {
+                "indexesAsc": ["username", "email"],
+                "indexesDesc": ["username", "email"]
+            }
+        }
+    }
 }

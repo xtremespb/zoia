@@ -16,7 +16,7 @@ export default fastify => ({
                         pageTitle: true,
                         ...site.getSerializedGlobals()
                     },
-                    template: "default",
+                    template: req.zoiaTemplates.available[0],
                     pageTitle: site.i18n.t("login"),
                     ...site.getGlobals()
                 }

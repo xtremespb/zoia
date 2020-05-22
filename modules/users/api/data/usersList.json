@@ -1,5 +1,4 @@
 {
-    "collection": "users",
     "schema": {
         "type": "object",
         "properties": {

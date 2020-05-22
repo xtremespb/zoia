@@ -17,7 +17,7 @@ export default fastify => ({
         try {
             const tokenSigned = await auth.login(req.body.username.toLowerCase(), req.body.password);
             if (!tokenSigned) {
-                rep.unauthorizedError(rep, true);
+                rep.unauthorizedError(rep, C.SEND_USERNAME_PASSWORD_FIELDS_ERROR);
                 return;
             }
             rep.successJSON(rep, {

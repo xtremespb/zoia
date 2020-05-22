@@ -25,7 +25,7 @@ export default fastify => ({
         }
         try {
             // Delete requested IDs
-            const result = await this.mongo.db.collection("users").deleteMany({
+            const result = await this.mongo.db.collection(req.zoiaConfig.collectionUsers).deleteMany({
                 $or: req.body.ids.map(id => ({
                     _id: new ObjectId(id)
                 }))

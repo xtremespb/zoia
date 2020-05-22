@@ -14,11 +14,13 @@ export default class {
         this.user = null;
         this.req = req;
         this.rep = rep;
-        this.ip = crypto.createHmac("md5", this.req.zoiaConfig.secret).update(req.ip).digest("hex");
+        this.zoiaConfig = fastify.zoiaConfig;
+        this.collectionUsers = fastify.zoiaConfig.collectionUsers;
+        this.ip = crypto.createHmac("md5", this.zoiaConfig.secret).update(req.ip).digest("hex");
         if (useBearer && req.headers.authorization) {
             this.token = req.headers.authorization.replace(/^Bearer /, "");
         } else if (!useBearer) {
-            this.token = req.cookies[`${req.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`];
+            this.token = req.cookies[`${this.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`];
         }
     }
 
@@ -27,7 +29,7 @@ export default class {
     }
 
     clearAuthCookie() {
-        this.rep.clearCookie(`${this.req.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`, {
+        this.rep.clearCookie(`${this.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`, {
             path: "/"
         });
     }
@@ -41,13 +43,13 @@ export default class {
             if (!tokenData || !tokenData.id || !tokenData.sid) {
                 return null;
             }
-            const user = await this.db.collection("users").findOne({
+            const user = await this.db.collection(this.collectionUsers).findOne({
                 _id: new ObjectId(tokenData.id)
             });
             if (!user || user.sid !== tokenData.sid) {
                 return null;
             }
-            if (this.req.zoiaConfig.token.ip && tokenData.ip !== this.ip) {
+            if (this.zoiaConfig.token.ip && tokenData.ip !== this.ip) {
                 return null;
             }
             delete user.password;
@@ -74,27 +76,27 @@ export default class {
             id: String(id),
             sid,
         };
-        if (this.req.zoiaConfig.token.ip) {
+        if (this.zoiaConfig.token.ip) {
             data.ip = this.ip;
         }
         const signedToken = this.jwt.sign(data, {
-            expiresIn: this.req.zoiaConfig.token.expires
+            expiresIn: this.zoiaConfig.token.expires
         });
         return signedToken;
     }
 
     async login(username, password) {
         try {
-            const user = await this.db.collection("users").findOne({
+            const user = await this.db.collection(this.collectionUsers).findOne({
                 username
             });
-            const passwordHash = crypto.createHmac("sha256", this.req.zoiaConfig.secret).update(password).digest("hex");
+            const passwordHash = crypto.createHmac("sha256", this.zoiaConfig.secret).update(password).digest("hex");
             if (!user || user.password !== passwordHash || !user.status || user.status.indexOf("active") === -1) {
                 return null;
             }
             const sid = user.sid || this.generateSid();
             const tokenSigned = this.signToken(user._id, sid);
-            await this.db.collection("users").updateOne({
+            await this.db.collection(this.collectionUsers).updateOne({
                 _id: user._id
             }, {
                 $set: {
@@ -117,7 +119,7 @@ export default class {
         // Authorized, let's remove SID
         if (user) {
             try {
-                await this.db.collection("users").updateOne({
+                await this.db.collection(this.collectionUsers).updateOne({
                     _id: this.user._id
                 }, {
                     $set: {

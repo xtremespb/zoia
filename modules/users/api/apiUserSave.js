@@ -38,7 +38,7 @@ export default fastify => ({
             data.username = data.username.trim().toLowerCase();
             data.email = data.email.trim().toLowerCase();
             // Check for username duplicates
-            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, "users", {
+            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaConfig.collectionUsers, {
                     username: data.username,
                     _id: {
                         $ne: req.body.id ? new ObjectId(req.body.id) : null
@@ -47,7 +47,7 @@ export default fastify => ({
                 return;
             }
             // Check for email duplicates
-            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, "users", {
+            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaConfig.collectionUsers, {
                     email: data.email,
                     _id: {
                         $ne: req.body.id ? new ObjectId(req.body.id) : null
@@ -65,7 +65,7 @@ export default fastify => ({
                 updateExtras.createdAt = new Date();
             }
             // Update database
-            const update = await this.mongo.db.collection("users").updateOne(data.id ? {
+            const update = await this.mongo.db.collection(req.zoiaConfig.collectionUsers).updateOne(data.id ? {
                 _id: new ObjectId(data.id)
             } : {
                 username: data.username
