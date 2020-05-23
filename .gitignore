@@ -21,3 +21,5 @@ typings/
 .yarn-integrity
 .env
 /dist/
+/etc/modules
+/etc/scripts

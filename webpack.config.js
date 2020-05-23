@@ -178,12 +178,14 @@ const rebuildMarkoTemplates = () => {
 const generateModulesConfig = () => {
     const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/modules`));
     const modules = [];
+    fs.ensureDirSync(path.resolve(`${__dirname}/etc/modules`));
+    fs.ensureDirSync(path.resolve(`${__dirname}/etc/scripts`));
     moduleDirs.map(dir => {
-        if (!fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/config.json`)) && fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`))) {
-            fs.copyFileSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`), path.resolve(`${__dirname}/modules/${dir}/config.json`));
+        if (!fs.existsSync(path.resolve(`${__dirname}/etc/modules/${dir}.json`)) && fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`))) {
+            fs.copyFileSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`), path.resolve(`${__dirname}/etc/modules/${dir}.json`));
         }
         const moduleData = require(path.resolve(`${__dirname}/modules/${dir}/module.json`));
-        const moduleConfig = require(path.resolve(`${__dirname}/modules/${dir}/config.json`));
+        const moduleConfig = require(path.resolve(`${__dirname}/etc/modules/${dir}.json`));
         moduleData.title = {};
         languages.map(language => {
             try {
@@ -193,10 +195,10 @@ const generateModulesConfig = () => {
                 // Ignore
             }
         });
-        if (moduleConfig.routes && moduleConfig.routes.admin) {
-            moduleData.admin = moduleConfig.routes.admin;
-        }
         modules.push(moduleData);
+        if (moduleConfig.setup && fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/setup.js`))) {
+            fs.copyFileSync(path.resolve(`${__dirname}/modules/${dir}/setup.js`), path.resolve(`${__dirname}/etc/scripts/${dir}.js`));
+        }
     });
     console.log("Writing modules.json...");
     fs.writeJSONSync(`${__dirname}/etc/modules.json`, modules);

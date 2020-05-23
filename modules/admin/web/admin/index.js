@@ -1,11 +1,7 @@
-import fs from "fs-extra";
-import path from "path";
 import Auth from "../../../../shared/lib/auth";
 import template from "./template.marko";
 import C from "../../../../shared/lib/constants";
 import moduleData from "../../module.json";
-
-const packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
 
 export default (fastify) => ({
     async handler(req, rep) {
@@ -29,8 +25,8 @@ export default (fastify) => ({
                     ...site.getGlobals()
                 },
                 modules: req.zoiaModules,
-                version: packageJson.version,
-                moduleId: moduleData.id
+                version: req.zoiaPackageJson.version,
+                moduleId: moduleData.id,
             });
             return rep.sendHTML(rep, render);
         } catch (e) {

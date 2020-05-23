@@ -15,7 +15,7 @@ export default class {
         this.req = req;
         this.rep = rep;
         this.zoiaConfig = fastify.zoiaConfig;
-        this.collectionUsers = fastify.zoiaConfig.collectionUsers;
+        this.collectionUsers = req.zoiaModulesConfig["users"].collectionUsers;
         this.ip = crypto.createHmac("md5", this.zoiaConfig.secret).update(req.ip).digest("hex");
         if (useBearer && req.headers.authorization) {
             this.token = req.headers.authorization.replace(/^Bearer /, "");

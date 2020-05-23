@@ -3,11 +3,13 @@ import fs from "fs-extra";
 import path from "path";
 import I18n from "./i18n";
 import i18nCatalogs from "./i18nCatalogsNode";
+// eslint-disable-next-line import/no-unresolved
 
 const config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
 
 export default class {
     constructor(req, module) {
+        this.moduleConfigUsers = req.zoiaModulesConfig["users"];
         this.module = module;
         this.catalogs = i18nCatalogs.getModuleCatalog(module);
         this.language = this.getLocaleFromURL(req);
@@ -26,6 +28,7 @@ export default class {
             path: true,
             cookieOptions: true,
             authData: true,
+            logout: true
         };
         this.i18n.setLanguage(this.language);
     }
@@ -66,6 +69,7 @@ export default class {
             path: this.path,
             cookieOptions: config.cookieOptions,
             authData: this.authData,
+            logout: this.moduleConfigUsers.routes.logout
         };
     }
 }

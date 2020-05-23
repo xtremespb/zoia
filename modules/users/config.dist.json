@@ -1,8 +1,21 @@
 {
     "collectionUsers": "users",
+    "database": {
+        "collections": {
+            "users": {
+                "indexesAsc": ["username", "email"],
+                "indexesDesc": ["username", "email"]
+            }
+        }
+    },
     "routes": {
         "admin": "/admin/users",
         "login": "/users/login",
         "logout": "/users/logout"
-    }
+    },
+    "defaults": {
+        "username": "admin",
+        "password": "password"
+    },
+    "setup": true
 }

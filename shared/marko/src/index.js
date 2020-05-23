@@ -17,7 +17,6 @@ import loggerHelpers from "../../lib/loggerHelpers";
 import site from "../../lib/site";
 import internalServerErrorHandler from "./internalServerErrorHandler";
 import notFoundErrorHandler from "./notFoundErrorHandler";
-import modules from "../../../etc/modules.json";
 import response from "../../lib/response";
 import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
@@ -26,9 +25,18 @@ import extendedValidation from "../../lib/extendedValidation";
     let config;
     let templates;
     let pino;
+    let modules;
+    let packageJson;
+    const modulesConfig = {};
     try {
-        config = await fs.readJSON(path.resolve(`${__dirname}/../../etc/zoia.json`));
-        templates = await fs.readJSON(path.resolve(`${__dirname}/../../etc/templates.json`));
+        packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
+        config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
+        templates = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/templates.json`));
+        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/modules.json`));
+        modules.map(m => {
+            modulesConfig[m.id] = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/modules/${m.id}.json`));
+            m.admin = modulesConfig[m.id] && modulesConfig[m.id].routes && modulesConfig[m.id].routes.admin ? modulesConfig[m.id].routes.admin : undefined;
+        });
         pino = Pino({
             level: config.logLevel
         });
@@ -71,8 +79,12 @@ import extendedValidation from "../../lib/extendedValidation";
         fastify.decorateRequest("zoiaTemplates", templates);
         fastify.decorate("zoiaModules", modules);
         fastify.decorateRequest("zoiaModules", modules);
+        fastify.decorate("zoiaModulesConfig", modulesConfig);
+        fastify.decorateRequest("zoiaModulesConfig", modulesConfig);
         fastify.decorate("ExtendedValidation", extendedValidation);
         fastify.decorateRequest("ExtendedValidation", extendedValidation);
+        fastify.decorate("zoiaPackageJson", packageJson);
+        fastify.decorateRequest("zoiaPackageJson", packageJson);
         Object.keys(loggerHelpers).map(i => fastify.decorateReply(i, loggerHelpers[i]));
         Object.keys(response).map(i => fastify.decorateReply(i, response[i]));
         Object.keys(utils).map(i => fastify.decorateReply(i, utils[i]));

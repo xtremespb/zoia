@@ -24,7 +24,7 @@ export default fastify => ({
             return;
         }
         try {
-            const user = await this.mongo.db.collection(req.zoiaConfig.collectionUsers).findOne({
+            const user = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).findOne({
                 _id: new ObjectId(req.body.id)
             });
             if (!user) {

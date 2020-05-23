@@ -2,8 +2,6 @@ import Auth from "../../../../shared/lib/auth";
 import template from "./template.marko";
 import C from "../../../../shared/lib/constants";
 import moduleData from "../../module.json";
-// eslint-disable-next-line import/no-unresolved
-import moduleConfig from "../../config.json";
 
 export default (fastify, routeId) => ({
     async handler(req, rep) {
@@ -12,7 +10,7 @@ export default (fastify, routeId) => ({
             const site = new req.ZoiaSite(req, "users");
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
-                return rep.redirectToLogin(req, rep, site, "/admin/users");
+                return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["users"].routes.admin);
             }
             site.setAuth(auth);
             const render = await template.stream({
@@ -29,11 +27,11 @@ export default (fastify, routeId) => ({
                     pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
                     routeId,
                     routeParams: req.params || {},
-                    routes: moduleConfig.routes,
+                    routes: req.zoiaModulesConfig["users"].routes,
                     ...site.getGlobals()
                 },
                 modules: req.zoiaModules,
-                moduleId: moduleData.id
+                moduleId: moduleData.id,
             });
             return rep.sendHTML(rep, render);
         } catch (e) {

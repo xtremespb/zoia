@@ -1,1 +1,1 @@
-[{"id":"admin","icon":"tools","title":{"en":"Home","ru":"Главная"},"admin":"/admin"},{"id":"users","icon":"users","database":{"collections":{"users":{"indexesAsc":["username","email"],"indexesDesc":["username","email"]}}},"title":{"en":"Users","ru":"Пользователи"},"admin":"/admin/users"}]
+[{"id":"admin","icon":"tools","title":{"en":"Home","ru":"Главная"}},{"id":"users","icon":"users","title":{"en":"Users","ru":"Пользователи"}}]
