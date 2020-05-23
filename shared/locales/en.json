@@ -10,7 +10,7 @@
     "mForm.save": "Save",
     "mForm.cancel": "Cancel",
     "mForm.settings": "Settings",
-    "mFormErr.general": "Form contain errors, please check all inputs",
+    "mFormErr.general": "Form contains errors, please check all inputs",
     "mFormErr.server": "Form data could not be saved, loaded or processed",
     "mFormErr.type": "Invalid format",
     "mFormErr.pattern": "Invalid format",
@@ -34,5 +34,6 @@
     "mTable.noData": "No data to display",
     "mTable.deleteSuccess": "Operation complete",
     "mTableErr.general": "Could not load data from server, please try to reload",
-    "mTableErr.delete": "Could not delete one or more items"
+    "mTableErr.delete": "Could not delete one or more items",
+    "loading": "Loading, please wait…"
 }

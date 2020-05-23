@@ -26,10 +26,6 @@
         "sameSite": null
     },
     "originCORS": "*",
-    "apiServer": {
-        "ip": "127.0.0.1",
-        "port": 3000
-    },
     "webServer": {
         "ip": "127.0.0.1",
         "port": 3001

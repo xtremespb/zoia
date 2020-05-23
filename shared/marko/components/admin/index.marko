@@ -12,25 +12,6 @@ style.scss {
   <body>
     <i18n/>
     <navigation modules=input.modules/>
-    <div class="columns is-gapeless z3-ap-main-columns">
-      <div class="column is-narrow is-hidden-touch z3-ap-noselect">
-        <aside class="z3-ap-side-menu">
-          <ul class="menu-list">
-            <for|module| of=input.modules>
-              <if(module.admin)>
-                <li>
-                  <a href=out.global.i18n.getLocalizedURL(module.admin, out.global.language) class=(module.id === input.moduleId ? "is-active" : "")>
-                    <i class=`fas fa-${module.icon}`/>&nbsp;&nbsp;${module.title[out.global.language]}
-                  </a>
-                </li>
-              </if>
-            </for>
-          </ul>
-        </aside>
-      </div>
-      <div class="column is-auto">
-        <${input.renderBody}/>
-      </div>
-    </div>
+    <adminContent modules=input.modules moduleId=input.moduleId renderBody=input.renderBody/>
   </body>
 </html>

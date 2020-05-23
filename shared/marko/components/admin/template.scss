@@ -8,10 +8,6 @@
     width: 200px;
 }
 
-.z3-ap-main-columns {
-    padding: 10px;
-}
-
 .z3-ap-navbar-link {
     font-size: 90%;
 }
@@ -36,4 +32,14 @@ $link: #35525f;
     font-size: 210%;
     font-weight: 200;
     margin-bottom: 10px;
+}
+
+.z3-ap-main-columns {
+    padding: 10px;
+}
+
+@media (min-width: 1024px) {
+    .z3-ap-main-columns {
+        padding: 5px;
+    }
 }
