@@ -1,0 +1,110 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "limit": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 20
+            },
+            "page": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 99999
+            },
+            "dateFrom": {
+                "type": "string",
+                "pattern": "^\\d{2}\\d{2}\\d{4}$"
+            },
+            "dateTo": {
+                "type": "string",
+                "pattern": "^\\d{2}\\d{2}\\d{4}$"
+            },
+            "country": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+            },
+            "region": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+            },
+            "shipyard": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+            },
+            "base": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+            },
+            "sailingAreas": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+            },
+            "minCabins": {
+                "type": "number",
+                "minimum": 0,
+                "maxiumum": 99
+            },
+            "minBerths": {
+                "type": "number",
+                "minimum": 0,
+                "maxiumum": 99
+            },
+            "minLength": {
+                "type": "number",
+                "minimum": 0,
+                "maxiumum": 999
+            },
+            "minBeam": {
+                "type": "number",
+                "minimum": 0,
+                "maxiumum": 999
+            },
+            "minDraught": {
+                "type": "number",
+                "minimum": 0,
+                "maxiumum": 999
+            },
+            "minFuelCapacity": {
+                "type": "number",
+                "minimum": 0,
+                "maxiumum": 999
+            },
+            "minWC": {
+                "type": "number",
+                "minimum": 0,
+                "maxiumum": 999
+            },
+            "minYear": {
+                "type": "number",
+                "minimum": 0,
+                "maxiumum": 999
+            },
+            "minWaterCapacity": {
+                "type": "number",
+                "minimum": 0,
+                "maxiumum": 999
+            },
+            "equipment": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$",
+                    "minLength": 1
+                },
+                "minItems": 0,
+                "uniqueItems": true
+            },
+            "skipper": {
+                "type": "boolean"
+            },
+            "product": {
+                "type": "string",
+                "enum": ["bareboat", "crewed", "cabin", "flotilla", "power", "berth", "regatta"]
+            }
+        },
+        "required": []
+    },
+    "projection": {},
+    "search": []
+}

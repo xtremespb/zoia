@@ -29,6 +29,8 @@
         "lodash.clonedeep": "^4.5.0",
         "lodash.debounce": "^4.0.8",
         "marko": "^4.21.9",
+        "moment": "^2.26.0",
+        "moment-range": "^4.0.2",
         "mongodb": "^3.5.7",
         "nodemailer": "^6.4.6",
         "pino": "^6.2.1"
@@ -45,7 +47,7 @@
         "babel-plugin-macros": "^2.8.0",
         "bulma": "^0.8.2",
         "css-loader": "^3.5.3",
-        "eslint": "^7.0.0",
+        "eslint": "^5.16.0",
         "eslint-config-airbnb-base": "^14.1.0",
         "eslint-plugin-import": "^2.20.2",
         "extract-css-chunks-webpack-plugin": "^4.7.4",

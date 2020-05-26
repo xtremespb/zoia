@@ -1,0 +1,20 @@
+.z3-bm-side-menu {
+    padding-left: 10px;
+    width: 270px;
+}
+
+.z3-bm-fullwidth {
+    width: 100%;
+}
+
+.z3-bm-noselect {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.z3-bm-card-content {
+    padding-top: 0;
+}
+
+@media (min-width: 1024px) {}

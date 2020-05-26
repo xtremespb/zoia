@@ -1,0 +1,45 @@
+<div>
+  <div class="field z3-bm-fullwidth">
+    <label class="label">${out.global.i18n.t("destination")}:</label>
+    <div class="control">
+      <div class="select is-fullwidth">
+        <select on-change("onDestinationChange")>
+          <option value=null/>
+          <for|destination| of=out.global.destinations>
+            <option value=destination._id selected=(state.destination === destination._id)>${destination.name}</option>
+          </for>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="field z3-bm-fullwidth">
+    <label class="label">${out.global.i18n.t("country")}:</label>
+    <div class="control">
+      <div class="select is-fullwidth">
+        <select on-change("onCountryChange")>
+          <option value=null/>
+          <for|country| of=out.global.countries>
+            <if(!state.destination || state.destination === country.region)>
+              <option value=country._id selected=(state.country === country._id)>${country.name}</option>
+            </if>
+          </for>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="field z3-bm-fullwidth">
+    <label class="label">${out.global.i18n.t("base")}:</label>
+    <div class="control">
+      <div class="select is-fullwidth">
+        <select on-change("onBaseChange")>
+          <if(state.bases.length)>
+            <option value=null/>
+            <for|base| of=state.bases>
+              <option value=base._id selected=(state.base === base._id)>${base.name} (${base.city})</option>
+            </for>
+          </if>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

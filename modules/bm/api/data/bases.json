@@ -1,0 +1,14 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "country": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+            }
+        },
+        "required": ["country"]
+    },
+    "projection": {},
+    "search": []
+}

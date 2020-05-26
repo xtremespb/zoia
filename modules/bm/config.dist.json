@@ -1,0 +1,10 @@
+{
+    "database": {
+        "collections": {}
+    },
+    "routes": {
+        "search": "/bm"
+    },
+    "defaults": {},
+    "setup": false
+}
