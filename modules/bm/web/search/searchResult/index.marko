@@ -1,15 +1,36 @@
 <for|yacht| of=state.yachts>
   <div class="card-content z3-bm-card-content">
-    <div class="media">
-      <div class="media-left">
-        <figure class="image">
-          <img src="https://via.placeholder.com/180" alt="Placeholder image"/>
-        </figure>
+    <div class="columns is-gapeless">
+      <div class="column is-narrow z3-bm-yacht-tn-img-wrap">
+        <img src="https://via.placeholder.com/180" alt="Placeholder image"/>
       </div>
-      <div>
+      <div class="column is-auto z3-bm-yacht-desc-wrap">
         <p class="title is-4">${yacht.name} &ndash; ${yacht.model} (${yacht.year})</p>
         <p class="subtitle is-6">@johnsmith</p>
       </div>
     </div>
   </div>
 </for>
+<if(state.paginationData.length)>
+  <nav class="pagination is-small" role="navigation" aria-label="pagination">
+    <ul class="pagination-list">
+      <for|pi| of=state.paginationData>
+        <if(pi.type === "page")>
+          <li>
+            $ let params;
+            $ if (process.browser) {
+              params = new URLSearchParams(window.location.search);
+              params.set("page", pi.page);
+            }
+            <a href=(params ? `${window.location.pathname}?${params.toString()}` : "#") class=`pagination-link${pi.active ? " is-current" : ""}` data-page=pi.page on-click("onPageClick")>${pi.page}</a>
+          </li>
+        </if>
+        <if(pi.type === "dots")>
+          <li>
+            <span class="pagination-ellipsis">&hellip;</span>
+          </li>
+        </if>
+      </for>
+    </ul>
+  </nav>
+</if>

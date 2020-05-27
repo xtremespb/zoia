@@ -1,6 +1,6 @@
 .z3-bm-side-menu {
     padding-left: 10px;
-    width: 270px;
+    width: 290px;
 }
 
 .z3-bm-fullwidth {
@@ -15,6 +15,26 @@
 
 .z3-bm-card-content {
     padding-top: 0;
+    padding-left: 0;
 }
 
-@media (min-width: 1024px) {}
+.z3-bm-yacht-tn-img-wrap {
+    max-width: 180px;
+}
+
+.z3-bm-search-btn-wrap {
+    padding-top: 10px;
+}
+
+@media (max-width: 1024px) {
+    .z3-bm-yacht-tn-img-wrap {
+        max-width: unset;
+        text-align: center;
+    }
+
+    .z3-bm-yacht-desc-wrap {
+        text-align: center;
+    }
+}
+
+@import '~bulma-extensions/bulma-calendar/dist/css/bulma-calendar.min.css';

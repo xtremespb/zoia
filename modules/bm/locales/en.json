@@ -1,6 +1,11 @@
 {
     "moduleTitle": "Yachts",
-    "destination": "Destination",
+    "region": "Region",
     "country": "Country",
-    "base": "Base"
+    "base": "Base",
+    "dates": "Dates",
+    "calendar.today": "Today",
+    "calendar.cancel": "Cancel",
+    "calendar.clear": "Clear",
+    "search": "Search"
 }

@@ -3,12 +3,12 @@
     <aside class="z3-bm-side-menu">
       <nav class="panel">
         <div class="panel-block">
-          <searchFilter/>
+          <searchFilter on-query-change("onQueryChange") on-data-request("onDataRequest")/>
         </div>
       </nav>
     </aside>
   </div>
   <div class="column is-auto">
-    <searchResult/>
+    <searchResult key="bmSearchResult" on-query-change("onQueryChange") query=state.query/>
   </div>
 </div>

@@ -13,4 +13,20 @@ export default class {
     get(id) {
         return this.store[id];
     }
+
+    set(id, value) {
+        this.store[id] = value;
+    }
+
+    replace(obj = {}) {
+        const params = new URLSearchParams(window.location.search);
+        Object.keys(obj).map(i => {
+            if (obj[i] !== undefined) {
+                params.set(i, obj[i]);
+            } else {
+                params.delete(i);
+            }
+        });
+        window.history.replaceState({}, "", `${window.location.pathname}?${params.toString()}`);
+    }
 }

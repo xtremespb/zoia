@@ -1,12 +1,12 @@
 <div>
   <div class="field z3-bm-fullwidth">
-    <label class="label">${out.global.i18n.t("destination")}:</label>
+    <label class="label">${out.global.i18n.t("region")}:</label>
     <div class="control">
       <div class="select is-fullwidth">
-        <select on-change("onDestinationChange")>
+        <select on-change("onRegionChange")>
           <option value=null/>
-          <for|destination| of=out.global.destinations>
-            <option value=destination._id selected=(state.destination === destination._id)>${destination.name}</option>
+          <for|region| of=out.global.regions>
+            <option value=region._id selected=(state.region === region._id)>${region.name}</option>
           </for>
         </select>
       </div>
@@ -18,10 +18,8 @@
       <div class="select is-fullwidth">
         <select on-change("onCountryChange")>
           <option value=null/>
-          <for|country| of=out.global.countries>
-            <if(!state.destination || state.destination === country.region)>
-              <option value=country._id selected=(state.country === country._id)>${country.name}</option>
-            </if>
+          <for|country| of=state.countries>
+            <option value=country._id selected=(state.country === country._id)>${country.name}</option>
           </for>
         </select>
       </div>
@@ -41,5 +39,14 @@
         </select>
       </div>
     </div>
+  </div>
+  <div class="field z3-bm-fullwidth">
+    <label class="label">${out.global.i18n.t("dates")}:</label>
+    <div class="control" style="max-width:255px">
+      <input type="date" id="z3_bm_selectDate"/>
+    </div>
+  </div>
+  <div class="field z3-bm-fullwidth z3-bm-search-btn-wrap">
+    <button class="button is-medium is-primary is-fullwidth" on-click("searchBtnClick")>${out.global.i18n.t("search")}</button>
   </div>
 </div>

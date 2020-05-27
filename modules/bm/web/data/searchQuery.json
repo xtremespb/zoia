@@ -1,0 +1,26 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "d": {
+                "type": "number",
+                "pattern": "^[0-9]+$"
+            },
+            "c": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+            },
+            "b": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+            },
+            "p": {
+                "type": "number",
+                "minimum": 0
+            }
+        },
+        "required": []
+    },
+    "projection": {},
+    "search": []
+}
