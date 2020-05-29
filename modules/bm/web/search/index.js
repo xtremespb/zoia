@@ -15,12 +15,33 @@ export default () => ({
                 rep.validationError(rep, req.validationError);
                 return null;
             }
+            // Get features array
+            let features;
+            try {
+                features = [...new Set(req.query.f.split(/-/).filter(f => parseInt(f, 10)).map(f => String(f)))];
+                features = features.length ? features : undefined;
+            } catch (e) {
+                features = undefined;
+            }
+            // Get array of boat kinds
+            let kinds;
+            try {
+                kinds = [...new Set(req.query.k.split(/-/).filter(k => parseInt(k, 10)).map(k => String(k)))];
+                kinds = kinds.length ? kinds : undefined;
+            } catch (e) {
+                kinds = undefined;
+            }
+            console.log(kinds);
             const site = new req.ZoiaSite(req, "bm");
             const search = new Search(this.mongo.db);
             const data = await search.query({
                 region: req.query.d ? String(req.query.d) : undefined,
                 country: req.query.c ? String(req.query.c) : undefined,
                 base: req.query.b ? String(req.query.b) : undefined,
+                dateFrom: req.query.df ? String(req.query.df) : undefined,
+                dateTo: req.query.dt ? String(req.query.dt) : undefined,
+                equipment: features,
+                kinds
             }, 10, req.query.p || 1);
             const regions = await this.mongo.db.collection("regions").find({}).toArray();
             const countries = (await this.mongo.db.collection("countries").find({}).toArray()).map(c => ({

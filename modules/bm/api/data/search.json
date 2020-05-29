@@ -95,6 +95,16 @@
                 "minItems": 0,
                 "uniqueItems": true
             },
+            "kind": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "pattern": "^[0-9]+$",
+                    "minLength": 1
+                },
+                "minItems": 0,
+                "uniqueItems": true
+            },
             "skipper": {
                 "type": "boolean"
             },

@@ -31,6 +31,10 @@ module.exports = class {
                 c: this.input.query.country,
                 d: this.input.query.region,
                 b: this.input.query.base,
+                df: this.input.query.dateFrom,
+                dt: this.input.query.dateTo,
+                f: this.input.query.equipment && this.input.query.equipment.length ? this.input.query.equipment.join("-") : undefined,
+                k: this.input.query.kinds && this.input.query.kinds.length ? this.input.query.kinds.join("-") : undefined
             });
             this.state.paginationData = this.generatePagination(page, pagesCount);
             window.scrollTo({

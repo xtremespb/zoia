@@ -41,9 +41,41 @@
     </div>
   </div>
   <div class="field z3-bm-fullwidth">
+    <label class="label">${out.global.i18n.t("boatKind")}:</label>
+    <div class="control">
+      $ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran", "other"];
+      <for|kind, index| of=kinds>
+        <div>
+          <label class="checkbox">
+            <input type="checkbox" data-id=(index + 1) on-change("onBoatKindChange") checked=(state.kinds.indexOf(index + 1) > -1)/>
+            ${out.global.i18n.t(`boatKind.${kind}`)}
+          </label>
+        </div>
+      </for>
+    </div>
+  </div>
+  <div class="field z3-bm-fullwidth">
     <label class="label">${out.global.i18n.t("dates")}:</label>
     <div class="control" style="max-width:255px">
-      <input type="date" id="z3_bm_selectDate"/>
+      <input type="date" class="input" id="z3_bm_selectDate"/>
+    </div>
+  </div>
+  <div class="field z3-bm-fullwidth">
+    <p>
+      <a href="#z3_bm_features" data-action="collapse" class="label">${out.global.i18n.t("features")}:</a>
+    </p>
+    <div class="message">
+      <div id="z3_bm_features" class="message-body">
+        <div class="z3-bm-features-wrap">
+          $ const icons = ["air", "water", "power", "engine", "autopilot", "thruster", "toilet", "racing", "solar", "radar", "winch", "wifi"];
+          $ const iconsData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thruster: 9, toilet: 27, racing: 43, solar: 46, radar: 10, winch: 6, wifi: 21 };
+          <div class="z3-bm-feature-icons">
+            <for|icon| of=icons>
+              <div class=`z3-bm-feature-icon z3-bm-feature-icon-${icon}${state.features.indexOf(iconsData[icon]) > -1 ? "-active" : ""} tooltip` data-tooltip=out.global.i18n.t(`featureToolip.${icon}`) data-id=iconsData[icon] on-click("onFeatureIconClick")/>
+            </for>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="field z3-bm-fullwidth z3-bm-search-btn-wrap">

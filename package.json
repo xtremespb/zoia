@@ -13,6 +13,7 @@
         "url": "https://github.com/xtremespb/zoia3"
     },
     "dependencies": {
+        "@creativebulma/bulma-collapsible": "^1.0.4",
         "axios": "^0.19.2",
         "bulma-extensions": "^6.2.7",
         "fastify": "^2.14.1",

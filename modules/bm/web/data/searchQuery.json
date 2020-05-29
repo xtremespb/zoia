@@ -17,6 +17,10 @@
             "p": {
                 "type": "number",
                 "minimum": 0
+            },
+            "f": {
+                "type": "string",
+                "pattern": "[0-9-]+"
             }
         },
         "required": []

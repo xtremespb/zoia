@@ -1,7 +1,6 @@
-.h1-test {
-    font-size: 200%;
-}
-
-$family-sans-serif: "Source Sans Pro", sans-serif;
+$family-sans-serif: "Source Sans Pro",
+sans-serif;
 @import "../../../../fonts/source-sans-pro/source-sans-pro.css";
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
 @import "~bulma/bulma";
+@import '~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass';

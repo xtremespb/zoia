@@ -11,7 +11,7 @@ module.exports = class {
     onQueryChange(newData = {}) {
         const query = cloneDeep(this.state.query);
         Object.keys(newData).map(s => {
-            if (newData[s] === undefined || newData[s] === null || newData[s] === "") {
+            if (newData[s] === undefined || newData[s] === null || newData[s] === "" || (Array.isArray(newData[s]) && !newData[s].length)) {
                 delete query[s];
             } else {
                 query[s] = newData[s];

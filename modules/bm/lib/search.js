@@ -15,7 +15,8 @@ export default class {
             avail: {
                 $exists: true,
                 $gt: []
-            }
+            },
+            $or: []
         };
         const dateFrom = moment.utc(input.dateFrom, "DDMMYYYY").startOf("day");
         const dateTo = moment.utc(input.dateTo, "DDMMYYYY").endOf("day");
@@ -34,6 +35,12 @@ export default class {
             datesRange = moment.range(dateFrom, dateTo);
             datesRangeDaysCount = Array.from(datesRange.by("day")).length;
         }
+        // Boat kinds
+        if (input.kinds) {
+            input.kinds.map(k => query.$or.push({
+                kind: parseInt(k, 10)
+            }));
+        }
         // Country, region, shipyard, home base
         query.countryId = input.country;
         query.regionId = input.region;
@@ -45,7 +52,7 @@ export default class {
         } : undefined;
         // Equipment
         query.equipmentIds = input.equipment ? {
-            $in: input.equipment
+            $all: input.equipment
         } : undefined;
         // Cabins
         query.cabins = input.minCabins ? {

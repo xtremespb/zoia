@@ -26,6 +26,141 @@
     padding-top: 10px;
 }
 
+.z3-bm-feature-icons {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.z3-bm-feature-icon {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+    margin-right: 10px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.z3-bm-features-wrap {
+    padding-bottom: 25px !important;
+}
+
+$feature-gradient: linear-gradient(to bottom, rgba(245, 245, 245, 0.7) 0%, rgba(245, 245, 245, 0.7) 100%);
+
+.z3-bm-feature-icon-air {
+    background: $feature-gradient, url(svg/feature_air.svg);
+}
+
+.z3-bm-feature-icon-anchor {
+    background: $feature-gradient, url(svg/feature_anchor.svg);
+}
+
+.z3-bm-feature-icon-autopilot {
+    background: $feature-gradient, url(svg/feature_autopilot.svg);
+}
+
+.z3-bm-feature-icon-bbq {
+    background: $feature-gradient, url(svg/feature_bbq.svg);
+}
+
+.z3-bm-feature-icon-engine {
+    background: $feature-gradient, url(svg/feature_engine.svg);
+}
+
+.z3-bm-feature-icon-racing {
+    background: $feature-gradient, url(svg/feature_racing.svg);
+}
+
+.z3-bm-feature-icon-radar {
+    background: $feature-gradient, url(svg/feature_radar.svg);
+}
+
+.z3-bm-feature-icon-power {
+    background: $feature-gradient, url(svg/feature_power.svg);
+}
+
+.z3-bm-feature-icon-thruster {
+    background: $feature-gradient, url(svg/feature_thruster.svg);
+}
+
+.z3-bm-feature-icon-toilet {
+    background: $feature-gradient, url(svg/feature_toilet.svg);
+}
+
+.z3-bm-feature-icon-water {
+    background: $feature-gradient, url(svg/feature_water.svg);
+}
+
+.z3-bm-feature-icon-wifi {
+    background: $feature-gradient, url(svg/feature_wifi.svg);
+}
+
+.z3-bm-feature-icon-winch {
+    background: $feature-gradient, url(svg/feature_winch.svg);
+}
+
+.z3-bm-feature-icon-solar {
+    background: $feature-gradient, url(svg/feature_solar.svg);
+}
+
+.z3-bm-feature-icon-air-active {
+    background: url(svg/feature_air.svg);
+}
+
+.z3-bm-feature-icon-anchor-active {
+    background: url(svg/feature_anchor.svg);
+}
+
+.z3-bm-feature-icon-autopilot-active {
+    background: url(svg/feature_autopilot.svg);
+}
+
+.z3-bm-feature-icon-bbq-active {
+    background: url(svg/feature_bbq.svg);
+}
+
+.z3-bm-feature-icon-engine-active {
+    background: url(svg/feature_engine.svg);
+}
+
+.z3-bm-feature-icon-racing-active {
+    background: url(svg/feature_racing.svg);
+}
+
+.z3-bm-feature-icon-radar-active {
+    background: url(svg/feature_radar.svg);
+}
+
+.z3-bm-feature-icon-power-active {
+    background: url(svg/feature_power.svg);
+}
+
+.z3-bm-feature-icon-thruster-active {
+    background: url(svg/feature_thruster.svg);
+}
+
+.z3-bm-feature-icon-toilet-active {
+    background: url(svg/feature_toilet.svg);
+}
+
+.z3-bm-feature-icon-water-active {
+    background: url(svg/feature_water.svg);
+}
+
+.z3-bm-feature-icon-wifi-active {
+    background: url(svg/feature_wifi.svg);
+}
+
+.z3-bm-feature-icon-winch-active {
+    background: url(svg/feature_winch.svg);
+}
+
+.z3-bm-feature-icon-solar-active {
+    background: url(svg/feature_solar.svg);
+}
+
 @media (max-width: 1024px) {
     .z3-bm-yacht-tn-img-wrap {
         max-width: unset;
