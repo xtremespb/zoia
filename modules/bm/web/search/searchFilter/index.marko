@@ -1,84 +1,143 @@
-<div>
-  <div class="field z3-bm-fullwidth">
-    <label class="label">${out.global.i18n.t("region")}:</label>
-    <div class="control">
-      <div class="select is-fullwidth">
-        <select on-change("onRegionChange")>
-          <option value=null/>
-          <for|region| of=out.global.regions>
-            <option value=region._id selected=(state.region === region._id)>${region.name}</option>
-          </for>
-        </select>
-      </div>
-    </div>
-  </div>
-  <div class="field z3-bm-fullwidth">
-    <label class="label">${out.global.i18n.t("country")}:</label>
-    <div class="control">
-      <div class="select is-fullwidth">
-        <select on-change("onCountryChange")>
-          <option value=null/>
-          <for|country| of=state.countries>
-            <option value=country._id selected=(state.country === country._id)>${country.name}</option>
-          </for>
-        </select>
-      </div>
-    </div>
-  </div>
-  <div class="field z3-bm-fullwidth">
-    <label class="label">${out.global.i18n.t("base")}:</label>
-    <div class="control">
-      <div class="select is-fullwidth">
-        <select on-change("onBaseChange")>
-          <if(state.bases.length)>
-            <option value=null/>
-            <for|base| of=state.bases>
-              <option value=base._id selected=(state.base === base._id)>${base.name} (${base.city})</option>
-            </for>
-          </if>
-        </select>
-      </div>
-    </div>
-  </div>
-  <div class="field z3-bm-fullwidth">
-    <label class="label">${out.global.i18n.t("boatKind")}:</label>
-    <div class="control">
-      $ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran", "other"];
-      <for|kind, index| of=kinds>
-        <div>
-          <label class="checkbox">
-            <input type="checkbox" data-id=(index + 1) on-change("onBoatKindChange") checked=(state.kinds.indexOf(index + 1) > -1)/>
-            ${out.global.i18n.t(`boatKind.${kind}`)}
-          </label>
-        </div>
-      </for>
-    </div>
-  </div>
-  <div class="field z3-bm-fullwidth">
-    <label class="label">${out.global.i18n.t("dates")}:</label>
-    <div class="control" style="max-width:255px">
-      <input type="date" class="input" id="z3_bm_selectDate"/>
-    </div>
-  </div>
-  <div class="field z3-bm-fullwidth">
-    <p>
-      <a href="#z3_bm_features" data-action="collapse" class="label">${out.global.i18n.t("features")}:</a>
-    </p>
-    <div class="message">
-      <div id="z3_bm_features" class="message-body">
-        <div class="z3-bm-features-wrap">
-          $ const icons = ["air", "water", "power", "engine", "autopilot", "thruster", "toilet", "racing", "solar", "radar", "winch", "wifi"];
-          $ const iconsData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thruster: 9, toilet: 27, racing: 43, solar: 46, radar: 10, winch: 6, wifi: 21 };
-          <div class="z3-bm-feature-icons">
-            <for|icon| of=icons>
-              <div class=`z3-bm-feature-icon z3-bm-feature-icon-${icon}${state.features.indexOf(iconsData[icon]) > -1 ? "-active" : ""} tooltip` data-tooltip=out.global.i18n.t(`featureToolip.${icon}`) data-id=iconsData[icon] on-click("onFeatureIconClick")/>
-            </for>
+<div class="column is-hidden-tablet">
+  <button class="button is-fullwidth is-medium is-link" on-click("onFilterTriggerClick")>${out.global.i18n.t("searchParameters")}</button>
+</div>
+<div class=`column is-narrow z3-bm-filter-wrap${!state.filterOpen ? " is-hidden-touch" : ""}`>
+  <aside class="z3-bm-side-menu">
+    <nav class="panel">
+      <div class="panel-block">
+        <div class="z3-bm-noselect">
+          <div class="field z3-bm-fullwidth">
+            <label class="label">${out.global.i18n.t("region")}:</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select on-change("onRegionChange")>
+                  <option value=null/>
+                  <for|region| of=out.global.regions>
+                    <option value=region._id selected=(state.region === region._id)>${region.name}</option>
+                  </for>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">${out.global.i18n.t("country")}:</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select on-change("onCountryChange")>
+                  <option value=null/>
+                  <for|country| of=state.countries>
+                    <option value=country._id selected=(state.country === country._id)>${country.name}</option>
+                  </for>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">${out.global.i18n.t("base")}:</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select on-change("onBaseChange")>
+                  <if(state.bases.length)>
+                    <option value=null/>
+                    <for|base| of=state.bases>
+                      <option value=base._id selected=(state.base === base._id)>${base.name} (${base.city})</option>
+                    </for>
+                  </if>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">${out.global.i18n.t("product")}:</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select on-change("onProductChange")>
+                  $ const products = ["bareboat", "cabin", "crewed", "flotilla", "power", "regatta", "allinclusive"];
+                  <option value=null>${out.global.i18n.t("product.any")}</option>
+                  <for|product, index| of=products>
+                    <option value=(index + 1) selected=(state.product === index + 1)>${out.global.i18n.t(`product.${product}`)}</option>
+                  </for>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">${out.global.i18n.t("dates")}:</label>
+            <div class="control" style="max-width:255px">
+              <input type="date" class="input" id="z3_bm_selectDate"/>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">
+              ${out.global.i18n.t("cabins")}:&nbsp;<span class="tag is-light z3-bm-slider-indicator">${state.cabins}</span>
+            </label>
+            <div class="control" style="max-width:255px">
+              <input class="z3-bm-fullwidth" step="1" min="1" max="20" value=state.cabins type="range" on-change("onCabinsChange") on-input("onCabinsChange")/>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">${out.global.i18n.t("skipper")}:</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select on-change("onSkipperChange")>
+                  <option value="0" selected=(state.skipper === 0)>${out.global.i18n.t("skipper.null")}</option>
+                  <option value="1" selected=(state.skipper === 1)>${out.global.i18n.t("skipper.true")}</option>
+                  <option value="2" selected=(state.skipper === 2)>${out.global.i18n.t("skipper.false")}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">${out.global.i18n.t("boatKind")}:</label>
+            <div class="control message message-body">
+              $ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran", "other"];
+              <for|kind, index| of=kinds>
+                <div>
+                  <div class="z3-pretty p-default">
+                    <input id="z3_bm_cabins_slider" type="checkbox" data-id=(index + 1) on-change("onBoatKindChange") checked=(state.kinds.indexOf(index + 1) > -1)/>
+                    <div class="state p-primary">
+                      <label>${out.global.i18n.t(`boatKind.${kind}`)}</label>
+                    </div>
+                  </div>
+                </div>
+              </for>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">
+              ${out.global.i18n.t("year")}:&nbsp;<span class="tag is-light z3-bm-slider-indicator">${state.year}</span>
+            </label>
+            <div class="control" style="max-width:255px">
+              <input class="z3-bm-fullwidth" step="1" min="1975" max=(new Date().getFullYear()) value=state.year type="range" on-change("onYearChange") on-input("onYearChange")/>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">
+              ${out.global.i18n.t("length")}:&nbsp;<span class="tag is-light z3-bm-slider-indicator">${state.length}&nbsp;${out.global.i18n.t("metersShort")}</span>
+            </label>
+            <div class="control" style="max-width:255px">
+              <input class="z3-bm-fullwidth" step="1" min="3" max="50" value=state.length type="range" on-change("onLengthChange") on-input("onLengthChange")/>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth">
+            <label class="label">${out.global.i18n.t("features")}:</label>
+            <div class="message control message-body">
+              <div class="z3-bm-features-wrap">
+                $ const icons = ["air", "water", "power", "engine", "autopilot", "thruster", "toilet", "racing", "solar", "radar", "winch", "wifi"];
+                $ const iconsData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thruster: 9, toilet: 27, racing: 43, solar: 46, radar: 10, winch: 6, wifi: 21 };
+                <div class="z3-bm-feature-icons">
+                  <for|icon| of=icons>
+                    <div class=`z3-bm-feature-icon z3-bm-feature-icon-${icon}${state.features.indexOf(iconsData[icon]) > -1 ? "-active" : ""} tooltip` data-tooltip=out.global.i18n.t(`featureToolip.${icon}`) data-id=iconsData[icon] on-click("onFeatureIconClick")/>
+                  </for>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field z3-bm-fullwidth z3-bm-search-btn-wrap">
+            <button class="button is-medium is-primary is-fullwidth" on-click("searchBtnClick")>${out.global.i18n.t("search")}</button>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="field z3-bm-fullwidth z3-bm-search-btn-wrap">
-    <button class="button is-medium is-primary is-fullwidth" on-click("searchBtnClick")>${out.global.i18n.t("search")}</button>
-  </div>
+    </nav>
+  </aside>
 </div>

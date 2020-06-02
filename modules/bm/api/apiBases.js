@@ -1,5 +1,7 @@
 // import cloneDeep from "lodash/cloneDeep";
 import basesData from "./data/bases.json";
+import i18nDb from "../locales/database.json";
+import utils from "../../../shared/lib/utils";
 
 export default () => ({
     schema: {
@@ -14,13 +16,14 @@ export default () => ({
             return;
         }
         try {
+            i18nDb[req.body.language] = i18nDb[req.body.language] || {};
             const bases = (await this.mongo.db.collection("bases").find({
                 countryId: req.body.country
             }).toArray()).map(b => ({
                 _id: b._id,
-                name: b.name,
+                name: i18nDb[req.body.language][b.name] || b.name,
                 city: b.city
-            }));
+            })).sort(utils.sortByName);
             rep.successJSON(rep, {
                 bases
             });

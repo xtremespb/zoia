@@ -5,9 +5,13 @@
             "country": {
                 "type": "string",
                 "pattern": "^[0-9]+$"
+            },
+            "language": {
+                "type": "string",
+                "pattern": "^[a-z]{2}$"
             }
         },
-        "required": ["country"]
+        "required": ["country", "language"]
     },
     "projection": {},
     "search": []

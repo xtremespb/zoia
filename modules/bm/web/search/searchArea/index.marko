@@ -1,14 +1,6 @@
 <div class=`columns is-gapeless`>
-  <div class="column is-narrow is-hidden-touch">
-    <aside class="z3-bm-side-menu">
-      <nav class="panel">
-        <div class="panel-block">
-          <searchFilter on-query-change("onQueryChange") on-data-request("onDataRequest")/>
-        </div>
-      </nav>
-    </aside>
-  </div>
+  <searchFilter key="bmSearchFilter" on-query-change("onQueryChange") on-data-request("onDataRequest")/>
   <div class="column is-auto">
-    <searchResult key="bmSearchResult" on-query-change("onQueryChange") query=state.query/>
+    <searchResult key="bmSearchResult" on-query-change("onQueryChange") on-page-change("onPageChange")/>
   </div>
 </div>

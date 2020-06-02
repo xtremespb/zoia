@@ -1,7 +1,6 @@
 {
     "browser": {
         "./i18nCatalogsNode.js": "./i18nCatalogsBrowser.js",
-        "./bulmaCalendarNode.js": "./bulmaCalendarBrowser.js",
-        "./bulmaCollapsibleNode.js": "./bulmaCollapsibleBrowser.js"
+        "./bulmaCalendarNode.js": "./bulmaCalendarBrowser.js"
     }
 }

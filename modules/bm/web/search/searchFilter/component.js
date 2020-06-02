@@ -6,6 +6,7 @@ const Query = require("../../../../../shared/lib/query").default;
 module.exports = class {
     onCreate(input, out) {
         const state = {
+            filterOpen: false,
             region: null,
             country: null,
             countries: [],
@@ -13,11 +14,20 @@ module.exports = class {
             bases: [],
             features: [],
             kinds: [],
+            product: null,
+            cabins: 1,
+            year: 1975,
+            length: 3,
+            skipper: 0
         };
+        this.defaults = cloneDeep(state);
         this.state = state;
         this.countries = out.global.countries;
         this.language = out.global.language;
         this.i18n = out.global.i18n;
+        this.func = {
+            hideFilter: this.hideFilter.bind(this)
+        };
     }
 
     setCountries() {
@@ -63,6 +73,26 @@ module.exports = class {
                 update.kinds = kinds;
             }
         }
+        if (this.query.get("pr") && this.query.get("pr").match(/^[0-9]+$/)) {
+            this.state.product = parseInt(this.query.get("pr"), 10);
+            update.product = this.query.get("pr");
+        }
+        if (this.query.get("mc") && this.query.get("mc").match(/^[0-9]+$/)) {
+            this.state.cabins = parseInt(this.query.get("mc"), 10);
+            update.minCabins = this.query.get("mc");
+        }
+        if (this.query.get("my") && this.query.get("my").match(/^[0-9]+$/)) {
+            this.state.year = parseInt(this.query.get("my"), 10);
+            update.minYear = this.query.get("my");
+        }
+        if (this.query.get("ml") && this.query.get("ml").match(/^[0-9]+$/)) {
+            this.state.length = parseInt(this.query.get("ml"), 10);
+            update.minLength = this.query.get("ml");
+        }
+        if (this.query.get("sk") && this.query.get("sk").match(/^(true|false)$/)) {
+            this.state.skipper = this.query.get("sk") === "true" ? 1 : 2;
+            update.skipper = Boolean(this.query.get("sk"));
+        }
         let startDate;
         let endDate;
         if (this.query.get("df") && this.query.get("df").match(/^[0-9]{8}$/) && this.query.get("dt") && this.query.get("dt").match(/^[0-9]{8}$/)) {
@@ -84,7 +114,7 @@ module.exports = class {
             allowSameDayRange: false,
             minDate: new Date(),
             startDate,
-            endDate
+            endDate,
         }));
         this.calendarDates.on("select", e => {
             const dateFrom = this.dateToDMY(e.data.date.start);
@@ -126,10 +156,19 @@ module.exports = class {
         });
     }
 
+    onProductChange(e) {
+        const product = parseInt(e.target.value, 10);
+        this.setState("product", product);
+        this.emit("query-change", {
+            product
+        });
+    }
+
     async loadBases(country) {
         try {
             const res = await axios.post("/api/bm/bases", {
-                country
+                country,
+                language: this.language
             });
             this.setState("bases", res && res.data && res.data.bases ? res.data.bases : []);
         } catch (error) {
@@ -152,6 +191,7 @@ module.exports = class {
     }
 
     searchBtnClick() {
+        this.hideFilter();
         this.emit("data-request");
     }
 
@@ -183,5 +223,45 @@ module.exports = class {
         this.emit("query-change", {
             kinds
         });
+    }
+
+    onCabinsChange(e) {
+        const minCabins = e.target.value;
+        this.setState("cabins", minCabins);
+        this.emit("query-change", {
+            minCabins
+        });
+    }
+
+    onYearChange(e) {
+        const minYear = e.target.value;
+        this.setState("year", minYear);
+        this.emit("query-change", {
+            minYear
+        });
+    }
+
+    onLengthChange(e) {
+        const minLength = e.target.value;
+        this.setState("length", minLength);
+        this.emit("query-change", {
+            minLength
+        });
+    }
+
+    onSkipperChange(e) {
+        const skipper = parseInt(e.target.value, 10);
+        this.setState("skipper", skipper);
+        this.emit("query-change", {
+            skipper: skipper === 0 ? null : skipper === 1
+        });
+    }
+
+    hideFilter() {
+        this.state.filterOpen = false;
+    }
+
+    onFilterTriggerClick() {
+        this.state.filterOpen = !this.state.filterOpen;
     }
 };

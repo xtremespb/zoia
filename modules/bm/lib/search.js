@@ -2,6 +2,7 @@ import Moment from "moment";
 import {
     extendMoment
 } from "moment-range";
+import i18nDb from "../locales/database.json";
 
 const moment = extendMoment(Moment);
 
@@ -106,6 +107,9 @@ export default class {
                 delete query[i];
             }
         });
+        if (!query.$or.length) {
+            delete query.$or;
+        }
         console.log(query);
         return {
             query,
@@ -114,8 +118,15 @@ export default class {
         };
     }
 
-    async query(input, limit = 10, page = 1) {
+    async query(input, limit = 10, page = 1, language = "") {
+        const countriesData = {};
+        const regionsData = {};
+        const basesData = {};
+        i18nDb[language] = i18nDb[language] || {};
         try {
+            const countriesToQuery = {};
+            const regionsToQuery = {};
+            const basesToQuery = {};
             const {
                 query,
                 datesRange,
@@ -128,6 +139,9 @@ export default class {
             };
             const total = await this.db.collection("yachts").find(query).count();
             const yachts = (await this.db.collection("yachts").find(query, options).toArray()).map(yacht => {
+                countriesToQuery[yacht.countryId] = true;
+                regionsToQuery[yacht.regionId] = true;
+                basesToQuery[yacht.homeBaseId] = true;
                 if (datesRange && yacht.prices && yacht.prices.length) {
                     yacht.price = 0;
                     let priceDaysCount = 0;
@@ -151,13 +165,56 @@ export default class {
                 }
                 return yacht;
             });
+            if (yachts.length) {
+                const regionsIds = Object.keys(regionsToQuery);
+                if (regionsIds.length) {
+                    const regionsQuery = regionsIds.map(id => ({
+                        _id: String(id)
+                    }));
+                    (await this.db.collection("regions").find({
+                        $or: regionsQuery
+                    }).toArray()).map(i => {
+                        regionsData[i._id] = i18nDb[language][i.name] || i.name;
+                    });
+                }
+                const countriesIds = Object.keys(countriesToQuery);
+                if (countriesIds.length) {
+                    const countriesQuery = countriesIds.map(id => ({
+                        _id: String(id)
+                    }));
+                    (await this.db.collection("countries").find({
+                        $or: countriesQuery
+                    }).toArray()).map(i => {
+                        countriesData[i._id] = i18nDb[language][i.name] || i.name;
+                    });
+                }
+                const basesIds = Object.keys(basesToQuery);
+                if (basesIds.length) {
+                    const basesQuery = basesIds.map(id => ({
+                        _id: String(id)
+                    }));
+                    (await this.db.collection("bases").find({
+                        $or: basesQuery
+                    }).toArray()).map(i => {
+                        basesData[i._id] = i18nDb[language][i.name] || i.name;
+                    });
+                }
+            }
             return {
                 yachts,
-                total
+                total,
+                regionsData,
+                countriesData,
+                basesData,
+                i18nHP: i18nDb[language].hp || "HP",
+                i18nMeters: i18nDb[language].meters || "m"
             };
         } catch (e) {
             return {
                 yachts: [],
+                regionsData: {},
+                countriesData: {},
+                basesData: {},
                 total: 0
             };
         }

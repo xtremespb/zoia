@@ -14,8 +14,7 @@
 }
 
 .z3-bm-card-content {
-    padding-top: 0;
-    padding-left: 0;
+    padding: 0;
 }
 
 .z3-bm-yacht-tn-img-wrap {
@@ -43,11 +42,20 @@
     cursor: pointer;
 }
 
+.z3-bm-feature-icon-list {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    margin-right: 5px;
+}
+
 .z3-bm-features-wrap {
     padding-bottom: 25px !important;
 }
 
 $feature-gradient: linear-gradient(to bottom, rgba(245, 245, 245, 0.7) 0%, rgba(245, 245, 245, 0.7) 100%);
+$feature-list-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%);
 
 .z3-bm-feature-icon-air {
     background: $feature-gradient, url(svg/feature_air.svg);
@@ -103,6 +111,62 @@ $feature-gradient: linear-gradient(to bottom, rgba(245, 245, 245, 0.7) 0%, rgba(
 
 .z3-bm-feature-icon-solar {
     background: $feature-gradient, url(svg/feature_solar.svg);
+}
+
+.z3-bm-feature-icon-air-list {
+    background: $feature-list-gradient, url(svg/feature_air.svg);
+}
+
+.z3-bm-feature-icon-anchor-list {
+    background: $feature-list-gradient, url(svg/feature_anchor.svg);
+}
+
+.z3-bm-feature-icon-autopilot-list {
+    background: $feature-list-gradient, url(svg/feature_autopilot.svg);
+}
+
+.z3-bm-feature-icon-bbq-list {
+    background: $feature-list-gradient, url(svg/feature_bbq.svg);
+}
+
+.z3-bm-feature-icon-engine-list {
+    background: $feature-list-gradient, url(svg/feature_engine.svg);
+}
+
+.z3-bm-feature-icon-racing-list {
+    background: $feature-list-gradient, url(svg/feature_racing.svg);
+}
+
+.z3-bm-feature-icon-radar-list {
+    background: $feature-list-gradient, url(svg/feature_radar.svg);
+}
+
+.z3-bm-feature-icon-power-list {
+    background: $feature-list-gradient, url(svg/feature_power.svg);
+}
+
+.z3-bm-feature-icon-thruster-list {
+    background: $feature-list-gradient, url(svg/feature_thruster.svg);
+}
+
+.z3-bm-feature-icon-toilet-list {
+    background: $feature-list-gradient, url(svg/feature_toilet.svg);
+}
+
+.z3-bm-feature-icon-water-list {
+    background: $feature-list-gradient, url(svg/feature_water.svg);
+}
+
+.z3-bm-feature-icon-wifi-list {
+    background: $feature-list-gradient, url(svg/feature_wifi.svg);
+}
+
+.z3-bm-feature-icon-winch-list {
+    background: $feature-list-gradient, url(svg/feature_winch.svg);
+}
+
+.z3-bm-feature-icon-solar-list {
+    background: $feature-list-gradient, url(svg/feature_solar.svg);
 }
 
 .z3-bm-feature-icon-air-active {
@@ -161,15 +225,172 @@ $feature-gradient: linear-gradient(to bottom, rgba(245, 245, 245, 0.7) 0%, rgba(
     background: url(svg/feature_solar.svg);
 }
 
+.z3-bm-list-h1 {
+    font-size: 140%;
+    font-weight: 300;
+    margin-top: -2px;
+}
+
+.z3-bm-hr {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.z3-bm-slider-indicator {
+    float: right;
+    margin-top: 1px;
+}
+
+.z3-bm-pagination {
+    margin-top: 30px;
+}
+
+.z3-bm-yacht-price-wrap {
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background: #eee;
+    margin-top: 15px;
+}
+
+.z3-bm-yacht-tn-img-wrap {
+    margin-right: 15px;
+}
+
+.z3-bm-list-img {
+    min-width: 180px !important;
+    min-height: 180px !important;
+    border: 1px solid #ccc;
+}
+
+.z3-bm-list-price,
+.z3-bm-list-price-on-request {
+    color: #f0506e;
+    font-size: 120%;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.z3-bm-list-starting-from,
+.z3-bm-list-price,
+.z3-bm-list-price-on-request {
+    text-align: center;
+}
+
+.z3-bm-yacht-base-country {
+    font-size: 90%;
+}
+
+.z3-bm-yacht-chars-wrap {
+    display: flex;
+    margin-top: 15px;
+}
+
+.z3-bm-yacht-eq-wrap {
+    display: flex;
+    margin-top: 15px;
+}
+
+.z3-bm-yacht-char {
+    width: 60px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.z3-bm-char-text {
+    background-color: #ccc;
+    text-align: center;
+    font-size: 70%;
+    width: 100%;
+    padding: 3px 2px 3px 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.z3-bm-char-icon {
+    margin: 10px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+}
+
+.z3-bm-char-icon-cabins {
+    background: url(svg/char_cabins.svg);
+}
+
+.z3-bm-char-icon-berths {
+    background: url(svg/char_berths.svg);
+}
+
+.z3-bm-char-icon-engine {
+    background: url(svg/char_engine.svg);
+}
+
+.z3-bm-char-icon-beam {
+    background: url(svg/char_beam.svg);
+}
+
+.z3-bm-char-icon-length {
+    background: url(svg/char_length.svg);
+}
+
+.z3-bm-list-price-week {
+    font-weight: normal;
+}
+
 @media (max-width: 1024px) {
     .z3-bm-yacht-tn-img-wrap {
         max-width: unset;
         text-align: center;
+        margin-right: unset;
     }
 
     .z3-bm-yacht-desc-wrap {
         text-align: center;
     }
-}
 
-@import '~bulma-extensions/bulma-calendar/dist/css/bulma-calendar.min.css';
+    .z3-bm-yacht-price-wrap {
+        width: unset;
+        height: unset;
+        display: block;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: unset;
+        margin-top: unset;
+        margin-bottom: 35px;
+    }
+
+    .z3-bm-yacht-chars-wrap {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .z3-bm-yacht-eq-wrap {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .z3-bm-filter-wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .z3-bm-side-menu {
+        padding-left: unset;
+        width: 100%;
+        margin-top: -20px;
+        margin-bottom: 20px;
+    }
+}

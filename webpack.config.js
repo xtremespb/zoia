@@ -45,6 +45,11 @@ const configWebClient = {
                         name: "[name].[ext]",
                     }
                 }]
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader"
             }
         ]
     },
@@ -94,7 +99,7 @@ const configWebClient = {
             ignoreOrder: true
         }),
         new OptimizeCSSPlugin(),
-        markoPlugin.browser
+        markoPlugin.browser,
     ]
 };
 

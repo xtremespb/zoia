@@ -1,18 +1,67 @@
-<for|yacht| of=state.yachts>
+$ const placeholderURL = "https://via.placeholder.com/180";
+$ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thruster: 9, toilet: 27, racing: 43, solar: 46, radar: 10, winch: 6, wifi: 21 };
+<for|yacht, index| of=state.yachts>
   <div class="card-content z3-bm-card-content">
     <div class="columns is-gapeless">
       <div class="column is-narrow z3-bm-yacht-tn-img-wrap">
-        <img src="https://via.placeholder.com/180" alt="Placeholder image"/>
+        $ const mainPicture = yacht.images && yacht.images.length ? yacht.images.find(i => i.main) : null;
+        <a href=`/bm/yacht/${yacht._id}`>
+          <img src=(mainPicture ? `/bm/pictures/${yacht._id}/tn_${mainPicture.filename}.jpg` : placeholderURL) alt=yacht.name class="z3-bm-list-img"/>
+        </a>
       </div>
       <div class="column is-auto z3-bm-yacht-desc-wrap">
-        <p class="title is-4">${yacht.name} &ndash; ${yacht.model} (${yacht.year})</p>
-        <p class="subtitle is-6">@johnsmith</p>
+        <div class="z3-bm-list-h1 has-text-black-ter">${yacht.name} &ndash; ${yacht.model} (${yacht.year})</div>
+        <div class="has-text-grey z3-bm-yacht-base-country">
+          ${yacht.base}&nbsp;&nbsp;
+          <span class="has-text-grey-light">•</span>
+          &nbsp;&nbsp;${yacht.country}
+        </div>
+        $ const chars = ["cabins", "berths", "engine", "beam", "length"];
+        <div class="z3-bm-yacht-chars-wrap">
+          <for|char| of=chars>
+            <div class="z3-bm-yacht-char">
+              <div class=`z3-bm-char-icon z3-bm-char-icon-${char} tooltip` data-tooltip=out.global.i18n.t(`chars.${char}`)/>
+              <div class=`z3-bm-char-text`>${yacht[char] || "-"}${(char === "beam" || char === "length") && yacht[char] ? ` ${out.global.i18n.t("metersShort")}` : ""}</div>
+            </div>
+          </for>
+        </div>
+        <div class="z3-bm-yacht-eq-wrap">
+          <for|eqId, eqIndex| of=Object.keys(eqData)>
+            <if(yacht.equipment && yacht.equipment.indexOf(String(eqData[eqId])) > -1)>
+              <div class=`z3-bm-feature-icon-list z3-bm-feature-icon-${eqId}-list tooltip` data-tooltip=out.global.i18n.t(`featureToolip.${eqId}`)/>
+            </if>
+          </for>
+        </div>
+      </div>
+      <div class="column is-narrow z3-bm-yacht-price-wrap">
+        <div>
+          <if(!yacht.price && yacht.minPrice)>
+            <div class="z3-bm-list-starting-from">${out.global.i18n.t("startingFrom")}</div>
+          </if>
+          <if(yacht.price || yacht.minPrice)>
+            <div class="z3-bm-list-price">
+              ${yacht.price || yacht.minPrice}&nbsp;€
+              <if(!yacht.price && yacht.minPrice)>
+                <span class="z3-bm-list-price-week">&nbsp;/&nbsp;${out.global.i18n.t("pricePerWeek")}</span>
+              </if>
+            </div>
+          </if>
+          <else>
+            <div class="z3-bm-list-price-on-request">${out.global.i18n.t("priceOnRequest")}</div>
+          </else>
+        </div>
+        <div>
+          <a class="button is-link" href=`/bm/yacht/${yacht._id}`>${out.global.i18n.t("moreInfo")}</a>
+        </div>
       </div>
     </div>
   </div>
+  <if(index !== state.yachts.length - 1)>
+    <hr class="z3-bm-hr"/>
+  </if>
 </for>
 <if(state.paginationData.length)>
-  <nav class="pagination is-small" role="navigation" aria-label="pagination">
+  <nav class="pagination is-small z3-bm-pagination" role="navigation" aria-label="pagination">
     <ul class="pagination-list">
       <for|pi| of=state.paginationData>
         <if(pi.type === "page")>

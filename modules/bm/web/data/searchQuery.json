@@ -3,7 +3,7 @@
         "type": "object",
         "properties": {
             "d": {
-                "type": "number",
+                "type": "string",
                 "pattern": "^[0-9]+$"
             },
             "c": {
@@ -15,12 +15,36 @@
                 "pattern": "^[0-9]+$"
             },
             "p": {
-                "type": "number",
-                "minimum": 0
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 99999
             },
             "f": {
                 "type": "string",
                 "pattern": "[0-9-]+"
+            },
+            "pr": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 7
+            },
+            "mc": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20
+            },
+            "my": {
+                "type": "integer",
+                "minimum": 1975,
+                "maximum": 2030
+            },
+            "ml": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 50
+            },
+            "sk": {
+                "type": "boolean"
             }
         },
         "required": []

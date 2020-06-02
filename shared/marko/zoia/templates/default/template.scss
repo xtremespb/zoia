@@ -4,3 +4,6 @@ sans-serif;
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
 @import "~bulma/bulma";
 @import '~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass';
+@import '~bulma-extensions/bulma-calendar/src/sass/index.sass';
+// @import '~bulma-extensions/bulma-calendar/dist/css/bulma-calendar.min.css';
+@import './inputs.scss';

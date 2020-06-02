@@ -34,10 +34,28 @@ export default () => ({
                 waterCapacity: req.body.waterCapacity,
                 minYear: req.body.minYear,
                 skipper: req.body.skipper,
-                product: req.body.product
+                product: req.body.product,
+                kinds: req.body.kinds
             }, req.body.limit || 10, req.body.page || 1);
             rep.successJSON(rep, {
-                yachts: data.yachts,
+                yachts: data.yachts.map(y => ({
+                    _id: y._id,
+                    name: y.name,
+                    model: y.model,
+                    year: y.year,
+                    images: y.images,
+                    region: data.regionsData[y.regionId],
+                    country: data.countriesData[y.countryId],
+                    base: data.basesData[y.homeBaseId],
+                    price: y.price,
+                    minPrice: y.minPrice,
+                    cabins: y.cabins,
+                    berths: y.berths,
+                    engine: y.engine ? y.engine.replace(/hp/gm, ` ${data.i18nHP}`).replace(/\s\s+/g, " ") : undefined,
+                    beam: y.beam,
+                    length: y.length,
+                    equipment: y.equipmentIds
+                })),
                 total: data.total,
             });
             return;

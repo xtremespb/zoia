@@ -3,12 +3,12 @@
         "type": "object",
         "properties": {
             "limit": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maximum": 20
             },
             "page": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maximum": 99999
             },
@@ -41,47 +41,47 @@
                 "pattern": "^[0-9]+$"
             },
             "minCabins": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maxiumum": 99
             },
             "minBerths": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maxiumum": 99
             },
             "minLength": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maxiumum": 999
             },
             "minBeam": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maxiumum": 999
             },
             "minDraught": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maxiumum": 999
             },
             "minFuelCapacity": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maxiumum": 999
             },
             "minWC": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maxiumum": 999
             },
             "minYear": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maxiumum": 999
             },
             "minWaterCapacity": {
-                "type": "number",
+                "type": "integer",
                 "minimum": 0,
                 "maxiumum": 999
             },
@@ -109,8 +109,9 @@
                 "type": "boolean"
             },
             "product": {
-                "type": "string",
-                "enum": ["bareboat", "crewed", "cabin", "flotilla", "power", "berth", "regatta"]
+                "type": "integer",
+                "minumum": 0,
+                "maximum": 7
             }
         },
         "required": []

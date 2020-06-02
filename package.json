@@ -13,7 +13,6 @@
         "url": "https://github.com/xtremespb/zoia3"
     },
     "dependencies": {
-        "@creativebulma/bulma-collapsible": "^1.0.4",
         "axios": "^0.19.2",
         "bulma-extensions": "^6.2.7",
         "fastify": "^2.14.1",
@@ -34,7 +33,8 @@
         "moment-range": "^4.0.2",
         "mongodb": "^3.5.7",
         "nodemailer": "^6.4.6",
-        "pino": "^6.2.1"
+        "pino": "^6.2.1",
+        "pretty-checkbox": "^3.0.3"
     },
     "devDependencies": {
         "@babel/core": "^7.9.6",

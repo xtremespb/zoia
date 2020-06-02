@@ -3,8 +3,7 @@
         "@babel/plugin-syntax-dynamic-import",
         "macros",
         ["@babel/transform-runtime", {
-            "regenerator": true,
-            "polyfill": false
+            "regenerator": true
         }]
     ],
     "presets": [

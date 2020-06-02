@@ -1,6 +1,11 @@
+import moment from "moment";
 import template from "./index.marko";
 import searchQuery from "../data/searchQuery.json";
 import Search from "../../lib/search";
+import utils from "../../../../shared/lib/utils";
+import i18nDb from "../../locales/database.json";
+
+searchQuery.schema.properties.my.maximum = moment().year();
 
 export default () => ({
     schema: {
@@ -31,7 +36,6 @@ export default () => ({
             } catch (e) {
                 kinds = undefined;
             }
-            console.log(kinds);
             const site = new req.ZoiaSite(req, "bm");
             const search = new Search(this.mongo.db);
             const data = await search.query({
@@ -41,14 +45,30 @@ export default () => ({
                 dateFrom: req.query.df ? String(req.query.df) : undefined,
                 dateTo: req.query.dt ? String(req.query.dt) : undefined,
                 equipment: features,
-                kinds
-            }, 10, req.query.p || 1);
-            const regions = await this.mongo.db.collection("regions").find({}).toArray();
-            const countries = (await this.mongo.db.collection("countries").find({}).toArray()).map(c => ({
+                kinds,
+                product: req.query.pr ? parseInt(req.query.pr, 10) : undefined,
+                minCabins: req.query.mc ? parseInt(req.query.mc, 10) : undefined,
+                minYear: req.query.my ? parseInt(req.query.my, 10) : undefined,
+                minLength: req.query.ml ? parseInt(req.query.ml, 10) : undefined,
+                skipper: req.query.sk === undefined ? undefined : Boolean(req.query.sk)
+            }, 10, req.query.p || 1, site.language);
+            let regions = await this.mongo.db.collection("regions").find({}).toArray();
+            let countries = (await this.mongo.db.collection("countries").find({}).toArray()).map(c => ({
                 _id: c._id,
                 name: c.name,
                 region: c.worldRegion
             }));
+            // const countriesLang = {};
+            // countries.map(r => countriesLang[r.name] = "");
+            // fs.writeJSONSync(`${__dirname}/countries.json`, countriesLang);
+            // Translate data if site language is Russian
+            i18nDb[site.language] = i18nDb[site.language] || {};
+            regions.map(r => r.name = i18nDb[site.language][r.name] || r.name);
+            countries.map(c => c.name = i18nDb[site.language][c.name] || c.name);
+            // Sort by names
+            regions = regions.sort(utils.sortByName);
+            countries = countries.sort(utils.sortByName);
+            // Render
             const render = await template.stream({
                 $global: {
                     serializedGlobals: {
@@ -67,7 +87,19 @@ export default () => ({
                         _id: y._id,
                         name: y.name,
                         model: y.model,
-                        year: y.year
+                        year: y.year,
+                        images: y.images,
+                        region: data.regionsData[y.regionId],
+                        country: data.countriesData[y.countryId],
+                        base: data.basesData[y.homeBaseId],
+                        price: y.price,
+                        minPrice: y.minPrice,
+                        cabins: y.cabins,
+                        berths: y.berths,
+                        engine: y.engine ? y.engine.replace(/hp/gm, ` ${data.i18nHP}`).replace(/\s\s+/g, " ") : undefined,
+                        beam: y.beam,
+                        length: y.length,
+                        equipment: y.equipmentIds
                     })),
                     pagesCount: Math.ceil(data.total / 10),
                     page: req.query.p || 1,
