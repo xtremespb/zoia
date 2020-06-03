@@ -252,7 +252,6 @@ $feature-list-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, 
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    background: #eee;
     margin-top: 15px;
 }
 
@@ -346,6 +345,42 @@ $feature-list-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, 
 
 .z3-bm-list-price-week {
     font-weight: normal;
+}
+
+.z3-bm-yachts-found-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.z3-bm-yachts-sort-wrap {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.z3-bm-loading {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    z-index: 999;
+}
+
+.z3-bm-loading>span {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    margin-top: 45vh;
+}
+
+.z3-bm-loading-spinner {
+    background: rgba(255, 255, 255, 0) !important;
 }
 
 @media (max-width: 1024px) {

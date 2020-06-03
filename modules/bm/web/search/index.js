@@ -38,6 +38,7 @@ export default () => ({
             }
             const site = new req.ZoiaSite(req, "bm");
             const search = new Search(this.mongo.db);
+            const sort = req.query.s ? parseInt(req.query.s, 10) : undefined;
             const data = await search.query({
                 region: req.query.d ? String(req.query.d) : undefined,
                 country: req.query.c ? String(req.query.c) : undefined,
@@ -51,7 +52,7 @@ export default () => ({
                 minYear: req.query.my ? parseInt(req.query.my, 10) : undefined,
                 minLength: req.query.ml ? parseInt(req.query.ml, 10) : undefined,
                 skipper: req.query.sk === undefined ? undefined : Boolean(req.query.sk)
-            }, 10, req.query.p || 1, site.language);
+            }, 10, req.query.p || 1, sort, site.language);
             let regions = await this.mongo.db.collection("regions").find({}).toArray();
             let countries = (await this.mongo.db.collection("countries").find({}).toArray()).map(c => ({
                 _id: c._id,
@@ -79,6 +80,7 @@ export default () => ({
                         countries: true,
                         pagesCount: true,
                         page: true,
+                        total: true,
                         ...site.getSerializedGlobals()
                     },
                     template: req.zoiaTemplates.available[0],
@@ -88,7 +90,7 @@ export default () => ({
                         name: y.name,
                         model: y.model,
                         year: y.year,
-                        images: y.images,
+                        image: y.images && y.images.length ? y.images.find(i => i.main) : null,
                         region: data.regionsData[y.regionId],
                         country: data.countriesData[y.countryId],
                         base: data.basesData[y.homeBaseId],
@@ -101,6 +103,7 @@ export default () => ({
                         length: y.length,
                         equipment: y.equipmentIds
                     })),
+                    total: data.total,
                     pagesCount: Math.ceil(data.total / 10),
                     page: req.query.p || 1,
                     regions,

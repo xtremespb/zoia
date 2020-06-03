@@ -16,6 +16,7 @@ export default () => ({
         }
         try {
             const search = new Search(this.mongo.db);
+            const sort = req.body.sort && req.body.sort > 1 ? parseInt(req.body.sort, 10) : undefined;
             const data = await search.query({
                 dateFrom: req.body.dateFrom,
                 dateTo: req.body.dateTo,
@@ -36,14 +37,14 @@ export default () => ({
                 skipper: req.body.skipper,
                 product: req.body.product,
                 kinds: req.body.kinds
-            }, req.body.limit || 10, req.body.page || 1);
+            }, req.body.limit || 10, req.body.page || 1, sort);
             rep.successJSON(rep, {
                 yachts: data.yachts.map(y => ({
                     _id: y._id,
                     name: y.name,
                     model: y.model,
                     year: y.year,
-                    images: y.images,
+                    image: y.images && y.images.length ? y.images.find(i => i.main) : null,
                     region: data.regionsData[y.regionId],
                     country: data.countriesData[y.countryId],
                     base: data.basesData[y.homeBaseId],

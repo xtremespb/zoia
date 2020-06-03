@@ -112,6 +112,11 @@
                 "type": "integer",
                 "minumum": 0,
                 "maximum": 7
+            },
+            "sort": {
+                "type": "integer",
+                "minumum": 0,
+                "maximum": 9
             }
         },
         "required": []

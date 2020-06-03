@@ -1,16 +1,65 @@
 $ const placeholderURL = "https://via.placeholder.com/180";
 $ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thruster: 9, toilet: 27, racing: 43, solar: 46, radar: 10, winch: 6, wifi: 21 };
+<if(state.error)>
+  <article class="message is-danger">
+    <div class="message-header">
+      <p>${out.global.i18n.t("errorTitle")}</p>
+    </div>
+    <div class="message-body">${out.global.i18n.t("errorDesc")}</div>
+  </article>
+</if>
+<div class="columns is-gapless">
+  <div class="column z3-bm-yachts-found-wrap is-gapless">
+    <strong>${out.global.i18n.t("yachtsFound")}:</strong>&nbsp;${state.total}
+  </div>
+  <div class="column is-narrow">
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">$!{out.global.i18n.t("sortBy").replace(/\s/gm, "&nbsp;")}:</label>
+      </div>
+      <div class="field-body">
+        <div class="field is-narrow">
+          <div class="control">
+            <div class="select is-fullwidth">
+              $ const sortOptions = ["title", "averagePriceAsc", "averagePriceDesc", "minPriceAsc", "minPriceDesc", "boatLengthAsc", "boatLengthDesc", "boatCabinsAsc", "boatCabinsDesc"];
+              <select on-change("onSortChange") disabled=(state.total === 0)>
+                <for|option, index| of=sortOptions>
+                  <option value=(index + 1) selected=(state.sort === index + 1)>${out.global.i18n.t(`sort.${option}`)}</option>
+                </for>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<if(!state.total)>
+  <article class="message is-info">
+    <div class="message-header">
+      <p>${out.global.i18n.t("noYachtsTitle")}</p>
+    </div>
+    <div class="message-body">${out.global.i18n.t("noYachtsText")}</div>
+  </article>
+</if>
 <for|yacht, index| of=state.yachts>
+  $ let params = "";
+  $ if (process.browser) {
+    const paramsCurrent = new URLSearchParams(window.location.search);
+    if (paramsCurrent.get("df") && paramsCurrent.get("dt")) {
+      params = `?df=${paramsCurrent.get("df")}&dt=${paramsCurrent.get("dt")}`;
+    }
+  }
+  $ const yachtURL = `/bm/yacht/${yacht._id}${params}`;
   <div class="card-content z3-bm-card-content">
-    <div class="columns is-gapeless">
+    <div class="columns">
       <div class="column is-narrow z3-bm-yacht-tn-img-wrap">
-        $ const mainPicture = yacht.images && yacht.images.length ? yacht.images.find(i => i.main) : null;
-        <a href=`/bm/yacht/${yacht._id}`>
-          <img src=(mainPicture ? `/bm/pictures/${yacht._id}/tn_${mainPicture.filename}.jpg` : placeholderURL) alt=yacht.name class="z3-bm-list-img"/>
+        <a href=yachtURL>
+          <img src=(yacht.image ? `/bm/pictures/${yacht._id}/tn_${yacht.image.filename}.jpg` : placeholderURL) alt=yacht.name class="z3-bm-list-img"/>
         </a>
       </div>
       <div class="column is-auto z3-bm-yacht-desc-wrap">
-        <div class="z3-bm-list-h1 has-text-black-ter">${yacht.name} &ndash; ${yacht.model} (${yacht.year})</div>
+        <div class="z3-bm-list-h1 has-text-black-ter">${yacht.name || out.global.i18n.t("noNameYacht")} &ndash; ${yacht.model} (${yacht.year})</div>
         <div class="has-text-grey z3-bm-yacht-base-country">
           ${yacht.base}&nbsp;&nbsp;
           <span class="has-text-grey-light">•</span>
@@ -51,7 +100,7 @@ $ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thru
           </else>
         </div>
         <div>
-          <a class="button is-link" href=`/bm/yacht/${yacht._id}`>${out.global.i18n.t("moreInfo")}</a>
+          <a class="button is-link" href=yachtURL>${out.global.i18n.t("moreInfo")}</a>
         </div>
       </div>
     </div>
@@ -69,7 +118,7 @@ $ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thru
             $ let params;
             $ if (process.browser) {
               params = new URLSearchParams(window.location.search);
-              params.set("page", pi.page);
+              params.set("p", pi.page);
             }
             <a href=(params ? `${window.location.pathname}?${params.toString()}` : "#") class=`pagination-link${pi.active ? " is-current" : ""}` data-page=pi.page on-click("onPageClick")>${pi.page}</a>
           </li>

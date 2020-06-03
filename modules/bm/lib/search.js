@@ -110,7 +110,6 @@ export default class {
         if (!query.$or.length) {
             delete query.$or;
         }
-        console.log(query);
         return {
             query,
             datesRange,
@@ -118,7 +117,7 @@ export default class {
         };
     }
 
-    async query(input, limit = 10, page = 1, language = "") {
+    async query(input, limit = 10, page = 1, sort = 1, language = "") {
         const countriesData = {};
         const regionsData = {};
         const basesData = {};
@@ -137,6 +136,39 @@ export default class {
                 limit,
                 skip
             };
+            if (sort) {
+                options.sort = {};
+                switch (sort) {
+                case 2:
+                    options.sort.averagePrice = 1;
+                    break;
+                case 3:
+                    options.sort.averagePrice = -1;
+                    break;
+                case 4:
+                    options.sort.minPrice = 1;
+                    break;
+                case 5:
+                    options.sort.minPrice = -1;
+                    break;
+                case 6:
+                    options.sort.length = 1;
+                    break;
+                case 7:
+                    options.sort.length = -1;
+                    break;
+                case 8:
+                    options.sort.cabins = 1;
+                    break;
+                case 9:
+                    options.sort.cabins = -1;
+                    break;
+                default:
+                    options.sort.name = 1;
+                }
+            }
+            // console.log(query);
+            // console.log(options);
             const total = await this.db.collection("yachts").find(query).count();
             const yachts = (await this.db.collection("yachts").find(query, options).toArray()).map(yacht => {
                 countriesToQuery[yacht.countryId] = true;

@@ -4,7 +4,8 @@ module.exports = class {
     onCreate() {
         const state = {
             query: {},
-            currentQuery: {}
+            currentQuery: {},
+            loading: false
         };
         this.state = state;
     }
@@ -28,5 +29,9 @@ module.exports = class {
 
     onPageChange() {
         this.getComponent("bmSearchFilter").func.hideFilter();
+    }
+
+    onLoading(loading) {
+        this.state.loading = loading;
     }
 };

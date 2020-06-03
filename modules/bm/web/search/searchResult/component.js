@@ -5,9 +5,12 @@ module.exports = class {
     onCreate(input, out) {
         const state = {
             yachts: out.global.yachts || [],
+            total: out.global.total || 0,
             pagesCount: out.global.pagesCount || 1,
             page: out.global.page || 1,
-            paginationData: []
+            paginationData: [],
+            sort: 1,
+            error: false
         };
         state.paginationData = this.generatePagination(state.page, state.pagesCount);
         this.state = state;
@@ -25,20 +28,32 @@ module.exports = class {
 
     setChangedQuery(query) {
         this.changedQuery = query;
+        if (!this.query) {
+            this.setQuery(query);
+        }
     }
 
     async loadData(page = 1) {
+        this.state.error = false;
+        this.emit("loading", true);
+        window.scrollTo({
+            top: 0
+        });
         try {
             const res = await axios.post("/api/bm/search", {
                 ...this.query,
-                page
+                page,
+                sort: this.state.sort > 1 ? this.state.sort : undefined
             });
+            this.emit("loading", false);
             this.query = this.query || {};
             const pagesCount = Math.ceil(res.data.total / 10) || 1;
             this.state.page = page;
+            this.state.total = res.data.total;
             this.state.pagesCount = pagesCount;
             this.state.yachts = res.data.yachts;
             this.queryLib.replace({
+                s: this.state.sort > 1 ? this.state.sort : undefined,
                 p: page,
                 c: this.query.country,
                 d: this.query.region,
@@ -54,12 +69,9 @@ module.exports = class {
                 sk: (this.query.skipper === null || this.query.skipper === undefined) ? undefined : this.query.skipper === true,
             });
             this.state.paginationData = this.generatePagination(page, pagesCount);
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
         } catch (e) {
-            // TODO Error handling!
+            this.emit("loading", false);
+            this.state.error = true;
         }
     }
 
@@ -77,6 +89,10 @@ module.exports = class {
 
     onMount() {
         this.queryLib = new Query();
+        if (this.queryLib.get("s") && this.queryLib.get("s").match(/^[1-9]$/)) {
+            const sort = parseInt(this.queryLib.get("s"), 10);
+            this.state.sort = sort;
+        }
     }
 
     generatePagination(pageData, pagesCountData) {
@@ -115,5 +131,11 @@ module.exports = class {
             page: pagesCount
         });
         return range;
+    }
+
+    onSortChange(e) {
+        const sort = parseInt(e.target.value, 10);
+        this.state.sort = sort;
+        this.loadData();
     }
 };

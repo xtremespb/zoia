@@ -1,0 +1,58 @@
+.z3-bm-v-yacht-title {
+    font-weight: 300;
+}
+
+.z3-bm-v-h1 {
+    font-size: 230%;
+}
+
+.z3-bm-v-h2 {
+    font-size: 150%;
+}
+
+.z3-bm-v-images-wrap {
+    overflow-x: hidden;
+    margin-top: 20px;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+}
+
+.z3-bm-v-images-wrap>a>img {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.z3-bm-v-images-btn-left {
+    margin-right: 5px;
+}
+
+.z3-bm-v-lightbox-left,
+.z3-bm-v-lightbox-right {
+    position: fixed;
+    z-index: 1;
+    cursor: pointer;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.z3-bm-v-lightbox-left {
+    left: 0;
+}
+
+.z3-bm-v-lightbox-right {
+    right: 0;
+}
+
+@media (max-width: 1024px) {
+    .z3-bm-v-images-wrap {
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .z3-bm-carousel-btn-wrap {
+        display: none;
+    }
+}

@@ -3,7 +3,8 @@
         "collections": {}
     },
     "routes": {
-        "search": "/bm"
+        "search": "/bm",
+        "yacht": "/bm/yacht"
     },
     "defaults": {},
     "setup": false

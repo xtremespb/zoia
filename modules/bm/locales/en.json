@@ -58,5 +58,21 @@
     "chars.engine": "Engine",
     "chars.beam": "Beam",
     "chars.length": "Length",
-    "searchParameters": "Search Parameters"
+    "searchParameters": "Search Parameters",
+    "yachtsFound": "Yachts found",
+    "sortBy": "Sort by",
+    "sort.title": "Boat title",
+    "sort.averagePriceAsc": "Average price (ascending)",
+    "sort.averagePriceDesc": "Average price (descending)",
+    "sort.minPriceAsc": "Min. price (ascending)",
+    "sort.minPriceDesc": "Min. price (descending)",
+    "sort.boatLengthAsc": "Boat length (ascending)",
+    "sort.boatLengthDesc": "Boat length (descending)",
+    "sort.boatCabinsAsc": "Number of cabins (ascending)",
+    "sort.boatCabinsDesc": "Number of cabins (descending)",
+    "noNameYacht": "No Name",
+    "errorTitle": "Internal Server Error",
+    "errorDesc": "Could not load or process data from server. Please try to refresh the page or contact support for assistance if error persists.",
+    "noYachtsTitle": "No Yachts Found",
+    "noYachtsText": "There are no yachts found based on your search query. Please try to change your search query to find more results."
 }

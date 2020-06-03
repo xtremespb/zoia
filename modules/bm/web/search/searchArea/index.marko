@@ -1,6 +1,11 @@
-<div class=`columns is-gapeless`>
+<div class=`columns`>
   <searchFilter key="bmSearchFilter" on-query-change("onQueryChange") on-data-request("onDataRequest")/>
   <div class="column is-auto">
-    <searchResult key="bmSearchResult" on-query-change("onQueryChange") on-page-change("onPageChange")/>
+    <searchResult key="bmSearchResult" on-query-change("onQueryChange") on-page-change("onPageChange") on-loading("onLoading")/>
   </div>
+  <if(state.loading)>
+    <div class="z3-bm-loading">
+      <span class="button is-white is-loading is-large z3-bm-loading-spinner">&nbsp;</span>
+    </div>
+  </if>
 </div>
