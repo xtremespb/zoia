@@ -21,7 +21,7 @@ export default () => ({
                 return rep.code(204);
             }
             const site = new req.ZoiaSite(req, "bm");
-            i18nDb[site.language] = {};
+            i18nDb[site.language] = i18nDb[site.language] || {};
             const countryData = await this.mongo.db.collection("countries").findOne({
                 _id: String(yacht.countryId)
             });
@@ -32,6 +32,18 @@ export default () => ({
             yacht.base = i18nDb[site.language][baseData.name] || baseData.name;
             yacht.plan = yacht.images ? yacht.images.find(i => i.plan ? i.filename : null) : null;
             yacht.images = yacht.images ? yacht.images.map(i => !i.plan ? i.filename : null).filter(i => i) : [];
+            // Query for equipment
+            yacht.equipment = [];
+            if (yacht.equipmentIds && yacht.equipmentIds.length) {
+                const equipmentData = await this.mongo.db.collection("equipment").find({
+                    $or: yacht.equipmentIds.map(e => ({
+                        _id: String(e)
+                    }))
+                }).toArray();
+                if (equipmentData && equipmentData.length) {
+                    yacht.equipment = equipmentData.map(e => i18nDb[site.language][e.name] || e.name).sort();
+                }
+            }
             // Render
             const render = await template.stream({
                 $global: {
@@ -58,7 +70,8 @@ export default () => ({
                         year: yacht.year,
                         engine: yacht.engine,
                         length: yacht.length,
-                        beam: yacht.beam
+                        beam: yacht.beam,
+                        equipment: yacht.equipment
                     },
                     ...site.getGlobals()
                 },
