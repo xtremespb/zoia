@@ -43,6 +43,8 @@
     "product.allinclusive": "All Inclusive",
     "cabins": "Cabins (at least)",
     "year": "Year (at least)",
+    "chars.year": "Year of construction",
+    "chars.toilets": "Toilets",
     "length": "Length",
     "metersShort": "m",
     "skipper": "Skipper",

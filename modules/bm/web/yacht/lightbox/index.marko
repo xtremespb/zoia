@@ -3,25 +3,27 @@ $ const yacht = out.global.yacht;
   <div class="z3-bm-v-images-wrap" id="bmCarousel">
     <for|image, index| of=yacht.images>
       <a href=`/bm/pictures/${yacht.id}/${image}.jpg` on-click("onLightboxImageClick")>
-        <img src=`/bm/pictures/${yacht.id}/tn_${image}.jpg` data-index=index/>
+        <div class="z3-bm-v-image">
+          <img src=`/bm/pictures/${yacht.id}/tn_${image}.jpg` data-index=index/>
+        </div>
       </a>
     </for>
   </div>
+  <if(state.carouselControls)>
+    <div class="z3-bm-v-carousel-btn-wrap">
+      <button on-click("onCarouselLeft") class="button is-small z3-bm-v-images-btn-left">
+        <span class="icon is-small">
+          <i class="fas fa-chevron-left"/>
+        </span>
+      </button>
+      <button on-click("onCarouselRight") class="button is-small z3-bm-v-images-btn-right">
+        <span class="icon is-small">
+          <i class="fas fa-chevron-right"/>
+        </span>
+      </button>
+    </div>
+  </if>
 </div>
-<if(state.carouselControls)>
-  <div class="z3-bm-carousel-btn-wrap">
-    <button on-click("onCarouselLeft") class="button is-rounded is-small z3-bm-v-images-btn-left">
-      <span class="icon is-small">
-        <i class="fas fa-chevron-left"/>
-      </span>
-    </button>
-    <button on-click("onCarouselRight") class="button is-rounded is-small">
-      <span class="icon is-small">
-        <i class="fas fa-chevron-right"/>
-      </span>
-    </button>
-  </div>
-</if>
 <div class=`modal${state.lightboxActive ? " is-active" : ""}`>
   <div class="modal-background" on-click("onLightboxClose")/>
   <div class="modal-content">

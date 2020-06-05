@@ -13,6 +13,22 @@ module.exports = class {
         this.carousel = document.getElementById("bmCarousel");
         window.addEventListener("resize", this.setCarouselControlsActive.bind(this));
         this.setCarouselControlsActive();
+        window.addEventListener("keydown", e => {
+            if (!this.state.lightboxActive) {
+                return;
+            }
+            switch (e.key) {
+            case "ArrowLeft":
+                this.onLightboxPrev();
+                break;
+            case "ArrowRight":
+                this.onLightboxNext();
+                break;
+            case "Escape":
+                this.onLightboxClose();
+                break;
+            }
+        });
     }
 
     setCarouselControlsActive() {

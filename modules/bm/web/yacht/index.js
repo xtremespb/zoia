@@ -30,6 +30,7 @@ export default () => ({
                 _id: String(yacht.homeBaseId)
             });
             yacht.base = i18nDb[site.language][baseData.name] || baseData.name;
+            yacht.plan = yacht.images ? yacht.images.find(i => i.plan ? i.filename : null) : null;
             yacht.images = yacht.images ? yacht.images.map(i => !i.plan ? i.filename : null).filter(i => i) : [];
             // Render
             const render = await template.stream({
@@ -49,7 +50,15 @@ export default () => ({
                         base: yacht.base,
                         kind: yacht.kind,
                         country: yacht.country,
-                        images: yacht.images
+                        images: yacht.images,
+                        plan: yacht.plan,
+                        cabins: yacht.cabins,
+                        berths: yacht.berths,
+                        wc: yacht.wc,
+                        year: yacht.year,
+                        engine: yacht.engine,
+                        length: yacht.length,
+                        beam: yacht.beam
                     },
                     ...site.getGlobals()
                 },

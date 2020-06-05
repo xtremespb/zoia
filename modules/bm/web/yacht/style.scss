@@ -10,9 +10,14 @@
     font-size: 150%;
 }
 
+.z3-bm-carousel-wrap {
+    margin-top: 20px;
+    background: #f2f2f2;
+    padding: 10px;
+}
+
 .z3-bm-v-images-wrap {
     overflow-x: hidden;
-    margin-top: 20px;
     scroll-behavior: smooth;
     white-space: nowrap;
 }
@@ -26,7 +31,27 @@
 }
 
 .z3-bm-v-images-btn-left {
-    margin-right: 5px;
+    margin-left: 8px;
+}
+
+.z3-bm-v-images-btn-right {
+    right: 0;
+    // position: absolute;
+    float: right;
+    margin-right: 10px;
+}
+
+.z3-bm-v-images-btn-left,
+.z3-bm-v-images-btn-right {
+    box-shadow: 0px 6px 5px 0px rgba(0, 0, 0, 0.15);
+    border: 0px !important;
+    border-radius: 50% !important;
+    margin-top: -66px;
+}
+
+.z3-bm-v-images-btn-left:hover,
+.z3-bm-v-images-btn-right:hover {
+    background: #f5f5f5;
 }
 
 .z3-bm-v-lightbox-left,
@@ -36,6 +61,8 @@
     cursor: pointer;
     top: 50%;
     transform: translate(0, -50%);
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .z3-bm-v-lightbox-left {
@@ -46,13 +73,64 @@
     right: 0;
 }
 
+.z3-bm-v-lightbox-left:hover,
+.z3-bm-v-lightbox-right:hover {
+    background: #000;
+    border-radius: 50%;
+}
+
+.z3-bm-v-order-details-wrap {
+    min-width: 400px;
+}
+
+.z3-bm-v-carousel-btn-wrap {
+    height: 0px;
+}
+
+.z3-bm-v-info-wrap {
+    margin-top: 20px;
+}
+
+.z3-bm-v-image {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.z3-bm-v-plan {
+    padding: 10px;
+    border: 1px solid #f2f2f2;
+    text-align: center;
+    display: inline-block;
+}
+
+.z3-bm-v-plan>a>img {
+    vertical-align: top;
+}
+
+.z3-bm-v-table td,
+.z3-bm-v-table th {
+    border: unset;
+}
+
+.z3-bm-v-table-value {
+    width: 20%;
+}
+
+.z3-bm-v-plan-wrap {
+    display: flex;
+    justify-content: center;
+}
+
 @media (max-width: 1024px) {
-    .z3-bm-v-images-wrap {
-        overflow-x: scroll;
-        -webkit-overflow-scrolling: touch;
+    .z3-bm-v-table-desc {
+        width: unset;
     }
 
-    .z3-bm-carousel-btn-wrap {
-        display: none;
+    .z3-bm-v-images-wrap {
+        overflow-x: scroll;
     }
 }

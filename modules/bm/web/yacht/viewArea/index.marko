@@ -9,4 +9,48 @@ $ const yacht = out.global.yacht;
   <span class="has-text-grey-light">•</span>
   &nbsp;&nbsp;${yacht.country}
 </div>
-<lightbox/>
+<if(yacht.images && yacht.images.length)>
+  <lightbox/>
+</if>
+<div class="columns z3-bm-v-info-wrap">
+  <div class="column is-auto">
+    <div class="columns">
+      <div class="column is-auto">
+        <table class="table is-narrow is-fullwidth z3-bm-v-table">
+          <tbody>
+            <tr>
+              <td>${out.global.i18n.t("chars.year")}:</td>
+              <td class="z3-bm-v-table-value">${yacht.year}</td>
+            </tr>
+            <tr>
+              <td>${out.global.i18n.t("chars.engine")}:</td>
+              <td>${yacht.engine}</td>
+            </tr>
+            <tr>
+              <td>${out.global.i18n.t("chars.length")}:</td>
+              <td>${yacht.length}</td>
+            </tr>
+            <tr>
+              <td>${out.global.i18n.t("chars.beam")}:</td>
+              <td>${yacht.beam}</td>
+            </tr>
+            <tr>
+              <td>${out.global.i18n.t("chars.cabins")}:</td>
+              <td>${yacht.cabins}</td>
+            </tr>
+            <tr>
+              <td>${out.global.i18n.t("chars.berths")}:</td>
+              <td>${yacht.berths}</td>
+            </tr>
+            <tr>
+              <td>${out.global.i18n.t("chars.toilets")}:</td>
+              <td>${yacht.wc}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <plan/>
+    </div>
+  </div>
+  <div class="column is-narrow z3-bm-v-order-details-wrap">Okay</div>
+</div>
