@@ -1,5 +1,19 @@
 {
+    "en": {
+        "per booking": "per booking",
+        "per booking person": "per booking, per person",
+        "per day": "per day",
+        "per day person": "per day, per person",
+        "per week": "per week",
+        "per week person": "per week, per person"
+    },
     "ru": {
+        "per booking": "",
+        "per booking person": "",
+        "per day": "",
+        "per day person": "",
+        "per week": "",
+        "per week person": "",
         "Autopilot": "Автопилот",
         "meters": "m",
         "hp": "HP",

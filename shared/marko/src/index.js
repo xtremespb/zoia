@@ -33,14 +33,25 @@ import extendedValidation from "../../lib/extendedValidation";
         config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
         templates = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/templates.json`));
         modules = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/modules.json`));
-        modules.map(m => {
-            modulesConfig[m.id] = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/modules/${m.id}.json`));
-            m.admin = modulesConfig[m.id] && modulesConfig[m.id].routes && modulesConfig[m.id].routes.admin ? modulesConfig[m.id].routes.admin : undefined;
-        });
         pino = Pino({
             level: config.logLevel
         });
         pino.info(`Starting`);
+        modules.map(m => {
+            try {
+                modulesConfig[m.id] = require(`../../../modules/${m.id}/config.dist.json`);
+            } catch (e) {
+                pino.error(`Unable to load default config for ${m.id}`);
+                process.exit(1);
+            }
+            try {
+                modulesConfig[m.id] = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/modules/${m.id}.json`));
+                m.admin = modulesConfig[m.id] && modulesConfig[m.id].routes && modulesConfig[m.id].routes.admin ? modulesConfig[m.id].routes.admin : undefined;
+            } catch (e) {
+                // Ignore
+                pino.info(`Using default config for ${m.id}`);
+            }
+        });
     } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);

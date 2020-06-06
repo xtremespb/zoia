@@ -52,7 +52,9 @@
     "skipper.true": "Only with skipper",
     "skipper.false": "Only without skipper",
     "priceOnRequest": "Price on request",
+    "priceOnRequestShort": "on request",
     "startingFrom": "Starting from",
+    "startingFromShort": "from",
     "moreInfo": "More Info",
     "pricePerWeek": "week",
     "chars.cabins": "Cabins",
@@ -76,5 +78,13 @@
     "errorTitle": "Internal Server Error",
     "errorDesc": "Could not load or process data from server. Please try to refresh the page or contact support for assistance if error persists.",
     "noYachtsTitle": "No Yachts Found",
-    "noYachtsText": "There are no yachts found based on your search query. Please try to change your search query to find more results."
+    "noYachtsText": "There are no yachts found based on your search query. Please try to change your search query to find more results.",
+    "hp": "HP",
+    "products": "Products",
+    "obligatory": "Obligatory",
+    "free": "Free",
+    "price": "Price",
+    "sendRequest": "Send Request",
+    "orderNotice": "The price is indicative and may vary both upward and downward. The final price will be specified after the call of the operator.",
+    "priceOrder": "Price & Order"
 }

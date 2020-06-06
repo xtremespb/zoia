@@ -19,7 +19,7 @@ const main = async () => {
         const db = mongoClient.db(config.mongo.dbName);
         await Promise.all(modules.map(async m => {
             try {
-                const moduleConfig = require(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`));
+                const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) : require(path.resolve(`${__dirname}/../modules/${m.id}/config.dist.json`));
                 // Process database routines
                 if (moduleConfig.database) {
                     const collections = Object.keys(moduleConfig.database.collections);
@@ -44,7 +44,7 @@ const main = async () => {
                                     }
                                 });
                                 await db.collection(c).createIndex(indexes, {
-                                    name: `${m.id}_asc`
+                                    name: `${m.id}_${c}_asc`
                                 });
                             }
                             if (indexesDesc && indexesDesc.length) {
@@ -60,7 +60,7 @@ const main = async () => {
                                     }
                                 });
                                 await db.collection(c).createIndex(indexes, {
-                                    name: `${m.id}_desc`
+                                    name: `${m.id}_${c}_desc`
                                 });
                             }
                             if (expires) {
@@ -69,7 +69,7 @@ const main = async () => {
                                 }, {
                                     expireAfterSeconds: parseInt(expires, 10)
                                 }, {
-                                    name: `${m.id}_exp`
+                                    name: `${m.id}_${c}_exp`
                                 });
                             }
                         } catch (e) {

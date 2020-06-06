@@ -75,6 +75,6 @@ export default class {
     t(str, num, params = {}) {
         let strTranslated = this._strings[this._language][str];
         Object.keys(params).map(i => strTranslated = strTranslated.replace(new RegExp(`\${${i}}`, "g"), params[i]));
-        return strTranslated;
+        return strTranslated || str;
     }
 }

@@ -4,7 +4,8 @@
     "description": "Zoia CMS",
     "main": "index.js",
     "scripts": {
-        "build-dev": "webpack --display minimal --progress --mode development --config ./webpack.config.js"
+        "build-dev": "webpack --display minimal --progress --mode development --config ./webpack.config.js",
+        "build": "webpack --display minimal --progress --mode production --config ./webpack.config.js"
     },
     "author": "Michael Matveev <xtreme@rh1.ru> (re-hash.ru)",
     "license": "MIT",

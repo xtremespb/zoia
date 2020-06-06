@@ -20,17 +20,10 @@ $ const yacht = out.global.yacht;
       </div>
       <plan/>
     </div>
-    <if(yacht.equipment && yacht.equipment.length)>
-      <hr/>
-      <div class="z3-bm-v-eq-wrap">
-        <for|eq| of=yacht.equipment>
-          <div>
-            <i class="fas fa-check"/>&nbsp;${eq}
-          </div>
-        </for>
-      </div>
-    </if>
-    <hr/>
+    <equipment/>
   </div>
-  <div class="column is-narrow z3-bm-v-order-details-wrap">Okay</div>
+  <div class="column is-narrow">
+    <order/>
+  </div>
 </div>
+<products/>

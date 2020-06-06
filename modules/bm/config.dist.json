@@ -1,11 +1,48 @@
 {
     "database": {
-        "collections": {}
+        "collections": {
+            "areas": {
+                "indexesAsc": [],
+                "indexesDesc": []
+            },
+            "bases": {
+                "indexesAsc": ["countryId"],
+                "indexesDesc": []
+            },
+            "companies": {
+                "indexesAsc": [],
+                "indexesDesc": []
+            },
+            "countries": {
+                "indexesAsc": ["worldRegion"],
+                "indexesDesc": []
+            },
+            "equipment": {
+                "indexesAsc": [],
+                "indexesDesc": []
+            },
+            "regions": {
+                "indexesAsc": [],
+                "indexesDesc": []
+            },
+            "shipyards": {
+                "indexesAsc": [],
+                "indexesDesc": []
+            },
+            "yachts": {
+                "indexesAsc": ["originId", "countryId", "regionId", "shipyardId", "homeBaseId", "cabins", "length", "berths", "beam", "draught", "fuelCapacity", "wc", "waterCapacity", "year", "skipper", "avail.start", "avail.end", "kind", "averagePrice", "minPrice", "name"],
+                "indexesDesc": ["averagePrice", "minPrice", "cabins", "length"]
+            }
+        }
     },
     "routes": {
         "search": "/bm",
         "yacht": "/bm/yacht"
     },
     "defaults": {},
-    "setup": false
+    "setup": false,
+    "frontend": {
+        "placeholderURL": "/bm/placeholder.png",
+        "picturesURL": "/bm/pictures"
+    }
 }

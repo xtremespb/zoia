@@ -1,8 +1,7 @@
-$family-sans-serif: "Source Sans Pro",
-sans-serif;
+@import "./variables.scss";
 @import "../../../../fonts/source-sans-pro/source-sans-pro.css";
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
 @import "~bulma/bulma";
-@import "~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass";
+@import "~bulma-extensions/bulma-tooltip/src/sass/index.sass";
 @import "~bulma-extensions/bulma-calendar/src/sass/index.sass";
 @import "./inputs.scss";

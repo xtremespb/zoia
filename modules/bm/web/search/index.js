@@ -20,6 +20,10 @@ export default () => ({
                 rep.validationError(rep, req.validationError);
                 return null;
             }
+            const moduleConfig = {
+                frontend: req.zoiaModulesConfig["bm"].frontend,
+                routes: req.zoiaModulesConfig["bm"].routes
+            };
             // Get features array
             let features;
             try {
@@ -81,6 +85,7 @@ export default () => ({
                         pagesCount: true,
                         page: true,
                         total: true,
+                        moduleConfig: true,
                         ...site.getSerializedGlobals()
                     },
                     template: req.zoiaTemplates.available[0],
@@ -101,13 +106,14 @@ export default () => ({
                         engine: y.engine ? y.engine.replace(/hp/gm, ` ${data.i18nHP}`).replace(/\s\s+/g, " ") : undefined,
                         beam: y.beam,
                         length: y.length,
-                        equipment: y.equipmentIds
+                        equipment: y.equipmentIds,
                     })),
                     total: data.total,
                     pagesCount: Math.ceil(data.total / 10),
                     page: req.query.p || 1,
                     regions,
                     countries,
+                    moduleConfig,
                     ...site.getGlobals()
                 },
             });

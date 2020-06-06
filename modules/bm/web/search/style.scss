@@ -1,6 +1,8 @@
+@import "../../../../shared/marko/zoia/templates/default/variables.scss";
+
 .z3-bm-side-menu {
     padding-left: 10px;
-    width: 290px;
+    width: 310px;
 }
 
 .z3-bm-fullwidth {
@@ -262,12 +264,12 @@ $feature-list-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, 
 .z3-bm-list-img {
     min-width: 180px !important;
     min-height: 180px !important;
-    border: 1px solid #ccc;
+    border: 1px solid $grey-lightest;
 }
 
 .z3-bm-list-price,
 .z3-bm-list-price-on-request {
-    color: #f0506e;
+    color: $orange;
     font-size: 120%;
     margin-bottom: 10px;
     font-weight: bold;
@@ -295,7 +297,7 @@ $feature-list-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, 
 
 .z3-bm-yacht-char {
     width: 60px;
-    border: 1px solid #ccc;
+    border: 1px solid $grey-lightest;
     margin-right: 5px;
     display: flex;
     flex-direction: column;
@@ -305,7 +307,7 @@ $feature-list-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, 
 }
 
 .z3-bm-char-text {
-    background-color: #ccc;
+    background-color: $grey-lightest;
     text-align: center;
     font-size: 70%;
     width: 100%;

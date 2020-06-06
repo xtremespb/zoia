@@ -1,4 +1,4 @@
-$ const placeholderURL = "/bm/placeholder.png";
+$ const placeholderURL = out.global.moduleConfig.frontend.placeholderURL;
 $ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thruster: 9, toilet: 27, racing: 43, solar: 46, radar: 10, winch: 6, wifi: 21 };
 <if(state.error)>
   <article class="message is-danger">
@@ -50,12 +50,12 @@ $ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thru
       params = `?df=${paramsCurrent.get("df")}&dt=${paramsCurrent.get("dt")}`;
     }
   }
-  $ const yachtURL = `/bm/yacht/${yacht._id}${params}`;
+  $ const yachtURL = out.global.i18n.getLocalizedURL(`${out.global.moduleConfig.routes.yacht}/${yacht._id}${params}`);
   <div class="card-content z3-bm-card-content">
     <div class="columns">
       <div class="column is-narrow z3-bm-yacht-tn-img-wrap">
         <a href=yachtURL>
-          <img src=(yacht.image ? `/bm/pictures/${yacht._id}/tn_${yacht.image.filename}.jpg` : placeholderURL) alt=yacht.name class="z3-bm-list-img"/>
+          <img src=(yacht.image ? `${out.global.moduleConfig.frontend.picturesURL}/${yacht._id}/tn_${yacht.image.filename}.jpg` : placeholderURL) alt=yacht.name class="z3-bm-list-img"/>
         </a>
       </div>
       <div class="column is-auto z3-bm-yacht-desc-wrap">

@@ -2,8 +2,8 @@ $ const yacht = out.global.yacht;
 <if(yacht.plan && yacht.plan.filename)>
   <div class="column z3-bm-v-plan-wrap">
     <div class="z3-bm-v-plan">
-      <a href=`/bm/pictures/${yacht.id}/${yacht.plan.filename}.jpg` on-click("onLightboxImageClick")>
-        <img src=`/bm/pictures/${yacht.id}/tn_${yacht.plan.filename}.jpg`/>
+      <a href=`${out.global.moduleConfig.frontend.picturesURL}/${yacht.id}/${yacht.plan.filename}.jpg` on-click("onLightboxImageClick")>
+        <img src=`${out.global.moduleConfig.frontend.picturesURL}/${yacht.id}/tn_${yacht.plan.filename}.jpg`/>
       </a>
     </div>
   </div>
@@ -12,7 +12,7 @@ $ const yacht = out.global.yacht;
       <div class="modal-background" on-click("onLightboxClose")/>
       <div class="modal-content">
         <p class="image">
-          <img src=`/bm/pictures/${yacht.id}/${yacht.plan.filename}.jpg`/>
+          <img src=`${out.global.moduleConfig.frontend.picturesURL}/${yacht.id}/${yacht.plan.filename}.jpg`/>
         </p>
       </div>
       <button class="modal-close is-large" aria-label="close" on-click("onLightboxClose")/>

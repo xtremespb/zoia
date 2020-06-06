@@ -1,0 +1,17 @@
+$ const yacht = out.global.yacht;
+<nav class="panel">
+  <p class="panel-heading">${out.global.i18n.t("priceOrder")}</p>
+  <div class="panel-block z3-bm-v-order-wrap">
+    <div class="field z3-bm-v-order-field">
+      <label class="label">${out.global.i18n.t("dates")}:</label>
+      <div class="control">
+        <input type="date" class="input" id="z3_bm_selectDate"/>
+      </div>
+    </div>
+    <div class="field z3-bm-v-order-field z3-bm-v-price">$!{yacht.minPrice && !yacht.price ? `${out.global.i18n.t("startingFrom")}&nbsp;` : ""}${yacht.price || yacht.minPrice || out.global.i18n.t("priceOnRequest")}$!{yacht.price || yacht.minPrice ? "&nbsp;&euro;" : ""}$!{yacht.minPrice && !yacht.price ? `&nbsp;/&nbsp;${out.global.i18n.t("pricePerWeek")}` : ""}</div>
+    <div class="field z3-bm-v-order-notice">${out.global.i18n.t("orderNotice")}</div>
+    <div class="field z3-bm-v-order-field">
+      <button class="button is-medium is-primary is-fullwidth">${out.global.i18n.t("sendRequest")}</button>
+    </div>
+  </div>
+</nav>
