@@ -1,0 +1,22 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+            },
+            "dateFrom": {
+                "type": "string",
+                "pattern": "^\\d{2}\\d{2}\\d{4}$"
+            },
+            "dateTo": {
+                "type": "string",
+                "pattern": "^\\d{2}\\d{2}\\d{4}$"
+            }
+        },
+        "required": ["id", "dateFrom", "dateTo"]
+    },
+    "projection": {},
+    "search": []
+}

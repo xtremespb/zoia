@@ -34,7 +34,7 @@ style.scss {
           <if(typeof tItem === "object" && tItem.type)>
             <div class="field columns z3-mf-field-columns">
               <div class=`control column ${tItem.wrapCSS || ""}`>
-                <mField key=tItem.id item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") progress=state.progress progressButtonId=input.progressButtonId/>
+                <mField key=tItem.id item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
               </div>
             </div>
           </if>
@@ -42,7 +42,7 @@ style.scss {
             <div class="field columns is-gapless z3-mf-field-columns-group">
               <for|sItem, sIndex| of=tItem>
                 <div class=`control column ${sItem.wrapCSS || ""}`>
-                  <mField key=sItem.id item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") progress=state.progress progressButtonId=input.progressButtonId/>
+                  <mField key=sItem.id item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
                 </div>
               </for>
             </div>

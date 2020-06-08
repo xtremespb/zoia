@@ -26,6 +26,7 @@
     "mFormErr.allowedMimeTypes": "Неверный тип(ы) файлов",
     "mFormErr.invalidUsernameOrPassword": "Неправильное имя пользователя или пароль",
     "mFormErr.shouldMatch": "Не совпадает",
+    "mFormErr.invalidCaptcha": "Введен неверный защитный код",
     "mTable.deleteTitle": "Удаление",
     "mTable.deleteDesc": "Следующая запись (записи) будут удалены",
     "mTable.delete": "Удалить",

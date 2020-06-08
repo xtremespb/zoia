@@ -1,0 +1,36 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "pattern": "^[a-f\\d]{24}$"
+            },
+            "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+            },
+            "phone": {
+                "type": "string",
+                "minLength": 11,
+                "maxLength": 11,
+                "pattern": "^7[0-9]{10}"
+            },
+            "dateFrom": {
+                "type": "string",
+                "pattern": "^\\d{2}\\d{2}\\d{4}$"
+            },
+            "dateTo": {
+                "type": "string",
+                "pattern": "^\\d{2}\\d{2}\\d{4}$"
+            },
+            "captcha": {
+                "type": "string",
+                "minLength": 4,
+                "maxLength": 4
+            }
+        },
+        "required": ["name", "phone", "captcha"]
+    }
+}

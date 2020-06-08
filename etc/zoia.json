@@ -47,5 +47,6 @@
     "siteOptions": {
         "globalPrefix": "z3"
     },
-    "commonTableItemsLimit": 8
+    "commonTableItemsLimit": 8,
+    "captchaValidity": 3600
 }

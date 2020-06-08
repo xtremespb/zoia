@@ -8,7 +8,7 @@ Text Input
     </if>
   </label>
   <div class="control">
-    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` key=input.item.id type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=input.item.id type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
   </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>
@@ -159,6 +159,32 @@ Checkbox
     <label class=`checkbox ${input.item.css || ""}`>
       <input type="checkbox" key=input.item.id on-change("onBooleanInputChange") data-id=input.item.id checked=input.value/>&nbsp;${input.item.labelCheckbox}&nbsp;
     </label>
+  </div>
+  <if(input.item.helpText)>
+    <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  </if>
+</if>
+<!--
+Captcha
+-->
+<if(input.item.type === "captcha")>
+  <label class="label">
+    ${input.item.label}:<if(input.item.mandatory)>
+      &nbsp;<span class="has-text-danger">*</span>
+    </if>
+  </label>
+  <div class="control">
+    <div class="z3-mf-captcha-wrap">
+      <div>
+        <input class=`z3-mf-captcha-input input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=input.item.id type="text" placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+      </div>
+      <div>
+        <img src=state.captchaData class="z3-mf-captcha-img" on-click("reloadCaptcha")/>
+      </div>
+    </div>
   </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>

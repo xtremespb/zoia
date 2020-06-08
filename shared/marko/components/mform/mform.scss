@@ -83,18 +83,34 @@
     background: rgba(255, 255, 255, 0) !important;
 }
 
+.z3-mf-captcha-input {
+    min-width: 100px !important;
+}
+
+.z3-mf-captcha-img {
+    margin-top: 5px;
+    min-width: 85px;
+    width: 85px;
+    height: 29px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.z3-mf-captcha-wrap {
+    margin-bottom: 0 !important;
+    display: flex;
+}
+
 @media (max-width: 1024px) {
-    .z3-is-small {
-        max-width: unset;
-    }
 
-    .z3-is-medium {
-        max-width: unset;
-    }
-
+    .z3-mf-captcha-input,
+    .z3-is-small,
+    .z3-is-medium,
     .z3-is-large {
         max-width: unset;
+        min-width: unset;
     }
+
 }
 
 @media (max-width: 768px) {

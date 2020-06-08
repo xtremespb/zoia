@@ -165,6 +165,10 @@
     text-align: center;
 }
 
+.z3-bm-v-loading-spinner {
+    background: rgba(255, 255, 255, 0) !important;
+}
+
 @media (max-width: 1024px) {
     .z3-bm-v-table-value {
         width: unset;

@@ -2,6 +2,7 @@ import {
     ObjectId
 } from "mongodb";
 import crypto from "crypto";
+import Cryptr from "cryptr";
 import {
     v4 as uuid
 } from "uuid";
@@ -132,5 +133,39 @@ export default class {
         }
         // Clear auth cookie
         this.clearAuthCookie();
+    }
+
+    async validateCaptcha(captchaSecret, code) {
+        if (!captchaSecret || typeof captchaSecret !== "string" || !code || typeof code !== "string") {
+            return false;
+        }
+        try {
+            // Generate hash of a secret string
+            const captchaSecretHash = crypto.createHmac("sha256", this.req.zoiaConfig.secret).update(captchaSecret).digest("hex");
+            // Check if this captcha has been already used before
+            const invCaptcha = await this.db.collection("captcha").findOne({
+                _id: captchaSecretHash
+            });
+            if (invCaptcha) {
+                return false;
+            }
+            // Decrypt catcha secret and parse it to JSON
+            const cryptr = new Cryptr(this.req.zoiaConfig.secret);
+            const decrypted = cryptr.decrypt(captchaSecret);
+            const dataJSON = JSON.parse(decrypted) || {};
+            // Check if captcha is valid and not outdated
+            if (!dataJSON.c || dataJSON.c !== code || (dataJSON.t && new Date().getTime() - parseInt(dataJSON.t, 10) > (this.req.zoiaConfig.captchaValidity * 1000 || 3600000))) {
+                return false;
+            }
+            // All checks are passed
+            // Invalidate captcha
+            await this.db.collection("captcha").insertOne({
+                _id: captchaSecretHash,
+                createdAt: new Date()
+            });
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }

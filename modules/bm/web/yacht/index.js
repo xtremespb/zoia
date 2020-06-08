@@ -2,6 +2,9 @@ import Moment from "moment";
 import {
     extendMoment
 } from "moment-range";
+import {
+    ObjectId
+} from "mongodb";
 import template from "./index.marko";
 import searchQuery from "../data/searchQuery.json";
 import i18nDb from "../../locales/database.json";
@@ -15,12 +18,12 @@ export default () => ({
     attachValidation: true,
     async handler(req, rep) {
         try {
-            if (req.validationError || !req.params.id) {
+            if (req.validationError || !req.params.id || typeof req.params.id !== "string" || !req.params.id.match(/^[a-f\d]{24}$/)) {
                 rep.callNotFound();
                 return rep.code(204);
             }
             const yacht = await this.mongo.db.collection("yachts").findOne({
-                _id: String(req.params.id)
+                _id: new ObjectId(req.params.id)
             });
             if (!yacht) {
                 rep.callNotFound();

@@ -86,5 +86,12 @@
     "price": "Price",
     "sendRequest": "Send Request",
     "orderNotice": "The price is indicative and may vary both upward and downward. The final price will be specified after the call of the operator.",
-    "priceOrder": "Price & Order"
+    "priceOrder": "Price & Order",
+    "priceError": "Could not load price",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "name": "Your name",
+    "phone": "Phone",
+    "captcha": "Captcha",
+    "mFormErr.yachtNotFound": "Requested yacht is not founds"
 }

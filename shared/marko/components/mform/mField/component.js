@@ -1,13 +1,37 @@
 const {
     v4: uuidv4
 } = require("uuid");
+const axios = require("axios");
 
 module.exports = class {
     onCreate(input) {
+        const state = {
+            captchaData: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+            captchaSecret: ""
+        };
+        this.state = state;
         this.item = input.item;
         this.func = {
-            setFocus: this.setFocus.bind(this)
+            setFocus: this.setFocus.bind(this),
+            reloadCaptcha: this.reloadCaptcha.bind(this)
         };
+    }
+
+    async reloadCaptcha() {
+        if (this.item.type === "captcha") {
+            try {
+                const res = await axios.post("/api/core/captcha");
+                this.state.captchaData = res.data.imageData;
+                this.state.captchaSecret = res.data.imageSecret;
+                this.emit("captcha", this.state.captchaSecret);
+            } catch (e) {
+                // Ignore
+            }
+        }
+    }
+
+    async onMount() {
+        await this.reloadCaptcha();
     }
 
     setFocus() {

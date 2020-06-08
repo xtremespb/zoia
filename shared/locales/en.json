@@ -26,6 +26,7 @@
     "mFormErr.allowedMimeTypes": "Invalid file(s) type",
     "mFormErr.invalidUsernameOrPassword": "Invalid username or password",
     "mFormErr.shouldMatch": "Should match",
+    "mFormErr.invalidCaptcha": "Invalid captcha code",
     "mTable.deleteTitle": "Delete",
     "mTable.deleteDesc": "The following item(s) will be deleted",
     "mTable.delete": "Delete",

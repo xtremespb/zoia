@@ -1,8 +1,11 @@
+const {
+    InputMask
+} = require("imask");
 const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha"];
 
 module.exports = class {
     onCreate(input) {
@@ -47,6 +50,8 @@ module.exports = class {
             setProgress: this.setProgress.bind(this)
         };
         this.i18n = input.i18n;
+        this.masked = {};
+        this.captchaSecret = undefined;
     }
 
     getDefaultValue(item) {
@@ -74,6 +79,14 @@ module.exports = class {
 
     onMount() {
         this.autoFocus();
+        this.fieldsFlat.map(field => {
+            if (field.maskOptions) {
+                const element = document.getElementById(field.id);
+                if (element) {
+                    this.masked[field.id] = new InputMask(element, field.maskOptions);
+                }
+            }
+        });
     }
 
     onTabClick(e) {
@@ -210,6 +223,7 @@ module.exports = class {
     visualizeErrors(validationErrors, generalError = true) {
         let errorData = cloneDeep(validationErrors);
         const errors = {};
+        const formData = cloneDeep(this.state.data);
         this.state.tabs.map(tab => errors[tab.id] = {});
         if (errorData && errorData.length) {
             // Identify field for each error
@@ -220,6 +234,18 @@ module.exports = class {
                 }
                 if (error.field) {
                     error.field = error.field.replace(/^\./, "");
+                    if (error.clear) {
+                        formData[this.state.activeTabId][error.field] = "";
+                        if (this.masked[error.field]) {
+                            this.masked[error.field].value = "";
+                        }
+                    }
+                    if (error.reloadCaptcha) {
+                        const reloadCaptchaComponent = this.getComponent(error.field);
+                        if (reloadCaptchaComponent) {
+                            reloadCaptchaComponent.func.reloadCaptcha();
+                        }
+                    }
                 } else {
                     error.field = null;
                 }
@@ -268,6 +294,7 @@ module.exports = class {
             this.setState("error", focus ? this.i18n.t(`mFormErr.general`) : null);
         }
         this.setState("errors", errors);
+        this.state.data = formData;
     }
 
     validate(serialized) {
@@ -311,12 +338,12 @@ module.exports = class {
         this.fieldsFlat.map(field => {
             if (field.shared) {
                 const value = this.processSerializedValue(field, data[this.state.activeTabId][field.id]);
-                serialized[field.id] = value === null ? emptyValues : value;
+                serialized[field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
             } else {
                 this.state.tabs.map(tab => {
                     serialized[tab.id] = serialized[tab.id] || {};
                     const value = this.processSerializedValue(field, data[tab.id][field.id]);
-                    serialized[tab.id][field.id] = value === null ? emptyValues : value;
+                    serialized[tab.id][field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
                 });
             }
         });
@@ -400,12 +427,16 @@ module.exports = class {
             if (this.input.save.extras) {
                 Object.keys(this.input.save.extras).map(e => uploadData.append(e, this.input.save.extras[e]));
             }
+            if (this.captchaSecret) {
+                uploadData.append("captchaSecret", this.captchaSecret);
+            }
         } else {
             uploadData = this.filterSerialized(data);
             if (this.input.save.extras) {
                 uploadData = {
                     ...uploadData,
-                    ...this.input.save.extras
+                    ...this.input.save.extras,
+                    captchaSecret: this.captchaSecret
                 };
             }
         }
@@ -417,12 +448,14 @@ module.exports = class {
             this.setProgress(false);
             this.emit("post-success", result);
         } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error(e);
             if (e && e.response && e.response.status === 401) {
                 this.emit("unauthorized", {});
             }
             this.setProgress(false);
             if (e.response && e.response.data && e.response.data.error) {
-                const errorKeyword = e.response.data.error.errorKeyword || (e.response.data.error.errorData && e.response.data.error.errorData.length && e.response.data.error.errorData[0].keyword) ? e.response.data.error.errorData[0].keyword : null;
+                const errorKeyword = e.response.data.error.errorKeyword || (e.response.data.error.errorData && e.response.data.error.errorData.length && e.response.data.error.errorData[0] && e.response.data.error.errorData[0].keyword) ? e.response.data.error.errorKeyword ? e.response.data.error.errorKeyword : e.response.data.error.errorData[0].keyword : null;
                 if (errorKeyword) {
                     this.setState("error", this.i18n.t(`mFormErr.${errorKeyword || "general"}`));
                 }
@@ -504,5 +537,9 @@ module.exports = class {
                 this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.server`), "is-danger");
             }
         }
+    }
+
+    onCaptcha(secret) {
+        this.captchaSecret = secret;
     }
 };
