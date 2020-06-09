@@ -45,10 +45,7 @@ $ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thru
 <for|yacht, index| of=state.yachts>
   $ let params = "";
   $ if (process.browser) {
-    const paramsCurrent = new URLSearchParams(window.location.search);
-    if (paramsCurrent.get("df") && paramsCurrent.get("dt")) {
-      params = `?df=${paramsCurrent.get("df")}&dt=${paramsCurrent.get("dt")}`;
-    }
+    params = window.location.search;
   }
   $ const yachtURL = out.global.i18n.getLocalizedURL(`${out.global.moduleConfig.routes.yacht}/${yacht._id}${params}`);
   <div class="card-content z3-bm-card-content">

@@ -93,5 +93,9 @@
     "name": "Your name",
     "phone": "Phone",
     "captcha": "Captcha",
-    "mFormErr.yachtNotFound": "Requested yacht is not founds"
+    "mFormErr.yachtNotFound": "Requested yacht is not found",
+    "requestSent": "Your request has been sent. An operator will contact you shortly.",
+    "details": "Details",
+    "mainPage": "Main Page",
+    "yachts": "Yachts"
 }

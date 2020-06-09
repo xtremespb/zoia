@@ -2,6 +2,10 @@
     "schema": {
         "type": "object",
         "properties": {
+            "language": {
+                "type": "string",
+                "pattern": "^[a-z]{2}$"
+            },
             "limit": {
                 "type": "integer",
                 "minimum": 0,

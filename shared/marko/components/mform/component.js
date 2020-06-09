@@ -46,6 +46,7 @@ module.exports = class {
             this.extendedValidation = new ExtendedValidation(null, input.validation.root, input.validation.part, input.validation.files, tabs.map(t => t.id));
         }
         this.func = {
+            autoFocus: this.autoFocus.bind(this),
             loadData: this.loadData.bind(this),
             setProgress: this.setProgress.bind(this)
         };

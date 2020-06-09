@@ -57,7 +57,7 @@ export default () => ({
                 minLength: req.query.ml ? parseInt(req.query.ml, 10) : undefined,
                 skipper: req.query.sk === undefined ? undefined : Boolean(req.query.sk)
             }, 10, req.query.p || 1, sort, site.language);
-            let regions = await this.mongo.db.collection("regions").find({}).toArray();
+            let regions = (await this.mongo.db.collection("regions").find({}).toArray()).filter(r => r._id !== "17");
             let countries = (await this.mongo.db.collection("countries").find({}).toArray()).map(c => ({
                 _id: c._id,
                 name: c.name,
@@ -103,7 +103,7 @@ export default () => ({
                         minPrice: y.minPrice,
                         cabins: y.cabins,
                         berths: y.berths,
-                        engine: y.engine ? y.engine.replace(/hp/gm, ` ${data.i18nHP}`).replace(/\s\s+/g, " ") : undefined,
+                        engine: y.engine ? y.engine.replace(/hp/igm, ` ${data.i18nHP}`).replace(/\s\s+/g, " ") : undefined,
                         beam: y.beam,
                         length: y.length,
                         equipment: y.equipmentIds,

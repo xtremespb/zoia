@@ -37,7 +37,7 @@ export default () => ({
                 skipper: req.body.skipper,
                 product: req.body.product,
                 kinds: req.body.kinds
-            }, req.body.limit || 10, req.body.page || 1, sort);
+            }, req.body.limit || 10, req.body.page || 1, sort, req.body.language);
             rep.successJSON(rep, {
                 yachts: data.yachts.map(y => ({
                     _id: y._id,
@@ -52,7 +52,7 @@ export default () => ({
                     minPrice: y.minPrice,
                     cabins: y.cabins,
                     berths: y.berths,
-                    engine: y.engine ? y.engine.replace(/hp/gm, ` ${data.i18nHP}`).replace(/\s\s+/g, " ") : undefined,
+                    engine: y.engine ? y.engine.replace(/hp/igm, ` ${data.i18nHP}`).replace(/\s\s+/g, " ") : undefined,
                     beam: y.beam,
                     length: y.length,
                     equipment: y.equipmentIds

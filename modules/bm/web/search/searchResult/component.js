@@ -14,6 +14,7 @@ module.exports = class {
         };
         state.paginationData = this.generatePagination(state.page, state.pagesCount);
         this.state = state;
+        this.language = out.global.language;
         this.func = {
             loadData: this.loadData.bind(this),
             loadChangedData: this.loadChangedData.bind(this),
@@ -42,6 +43,7 @@ module.exports = class {
         try {
             const res = await axios.post("/api/bm/search", {
                 ...this.query,
+                language: this.language,
                 page,
                 sort: this.state.sort > 1 ? this.state.sort : undefined
             });

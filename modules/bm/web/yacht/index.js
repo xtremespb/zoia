@@ -125,7 +125,7 @@ export default () => ({
                         berths: yacht.berths,
                         wc: yacht.wc,
                         year: yacht.year,
-                        engine: yacht.engine ? yacht.engine.replace(/hp/gm, ` ${site.i18n.t("hp")}`).replace(/\s\s+/g, " ") : undefined,
+                        engine: yacht.engine ? yacht.engine.replace(/hp/igm, ` ${site.i18n.t("hp")}`).replace(/\s\s+/g, " ") : undefined,
                         length: yacht.length,
                         beam: yacht.beam,
                         equipment: yacht.equipment,

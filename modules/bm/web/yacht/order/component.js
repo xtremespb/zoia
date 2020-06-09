@@ -9,7 +9,9 @@ module.exports = class {
             dateTo: null,
             price: out.global.yacht.price,
             priceLoading: false,
-            priceError: null
+            priceError: null,
+            modalRequest: false,
+            modalSuccess: false
         };
         this.state = state;
         this.language = out.global.language;
@@ -73,6 +75,30 @@ module.exports = class {
     }
 
     onFormPostSuccess() {
-        console.log("OKAY");
+        this.sendRequestClose();
+        this.requestSuccessOpen();
+    }
+
+    sendRequestOpen() {
+        this.state.modalRequest = true;
+        // this.getComponent("requestForm").func.autoFocus();
+    }
+
+    sendRequestClose() {
+        this.state.modalRequest = false;
+    }
+
+    requestSuccessOpen() {
+        this.state.modalSuccess = true;
+    }
+
+    requestSuccessClose() {
+        this.state.modalSuccess = false;
+    }
+
+    onButtonClick(b) {
+        if (b.id === "btnCancel") {
+            this.sendRequestClose();
+        }
     }
 };
