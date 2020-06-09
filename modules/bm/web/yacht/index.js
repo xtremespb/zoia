@@ -111,7 +111,7 @@ export default () => ({
                         ...site.getSerializedGlobals()
                     },
                     template: req.zoiaTemplates.available[0],
-                    pageTitle: site.i18n.t("moduleTitle"),
+                    pageTitle: `${yacht.name || site.i18n.t("noNameYacht")} – ${site.i18n.t("moduleTitle")}`,
                     yacht: {
                         id: yacht._id,
                         name: yacht.name,
