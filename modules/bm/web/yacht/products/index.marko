@@ -2,40 +2,49 @@ $ const yacht = out.global.yacht;
 <hr/>
 <if(yacht.products && yacht.products.length)>
   <div class="columns">
-    <div class="column is-narrow">
-      <aside class="menu">
-        <p class="menu-label">${out.global.i18n.t("products")}</p>
-        <ul class="menu-list">
-          <for|product, index| of=yacht.products>
-            <li>
-              <a class=`${index === state.product ? "is-active" : ""}` data-id=index on-click("onProductClick")>${product.name}</a>
-            </li>
-          </for>
-        </ul>
-      </aside>
-    </div>
+    <if(yacht.products.length > 1)>
+      <div class="column is-narrow">
+        <aside class="menu">
+          <p class="menu-label">${out.global.i18n.t("products")}</p>
+          <ul class="menu-list">
+            <for|product, index| of=yacht.products>
+              <li>
+                <a class=`${index === state.product ? "is-active" : ""}` data-id=index on-click("onProductClick")>${product.name}</a>
+              </li>
+            </for>
+          </ul>
+        </aside>
+      </div>
+    </if>
     <div class="column is-auto">
-      <table class="table is-fullwidth z3-bm-v-products-table">
-        <tbody>
-          <for|extra, index| of=yacht.products[state.product].extras>
-            <tr>
-              <td>${extra.name}</td>
-              <td class="is-narrow">
-                <if(extra.obligatory)>
-                  <span class="icon has-text-warning tooltip" data-tooltip=out.global.i18n.t("obligatory")>
-                    <i class="fas fa-exclamation-circle"/>
-                  </span>
-                </if>
-              </td>
-              <td class="is-narrow">
-                <if(extra.price)>${extra.price}&nbsp;&euro;</if>
-                <else>${out.global.i18n.t("free")}</else>
-              </td>
-              <td>${extra.unit}</td>
-            </tr>
-          </for>
-        </tbody>
-      </table>
+      <p class="menu-label">${out.global.i18n.t("options")}</p>
+      <div class="z3-bm-v-obligatory">
+        <span class="icon has-text-warning">
+          <i class="fas fa-exclamation-circle"/>
+        </span>${out.global.i18n.t("obligatoryDesc")}
+      </div>
+      <div class="table-container">
+        <table class="table is-fullwidth z3-bm-v-products-table">
+          <tbody>
+            <for|extra, index| of=yacht.products[state.product].extras>
+              <tr>
+                <td>${extra.name}</td>
+                <td class="is-narrow">
+                  <if(extra.price)>
+                    ${extra.price}&nbsp;&euro;<if(extra.obligatory)>
+                      <span class="icon has-text-warning">
+                        <i class="fas fa-exclamation-circle"/>
+                      </span>
+                    </if>
+                  </if>
+                  <else>${out.global.i18n.t("free")}</else>
+                </td>
+                <td>${extra.unit}</td>
+              </tr>
+            </for>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </if>

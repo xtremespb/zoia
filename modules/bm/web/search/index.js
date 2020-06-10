@@ -17,8 +17,8 @@ export default () => ({
             if (req.validationError) {
                 // TODO: proper validation error page
                 rep.logError(req, req.validationError.message);
-                rep.validationError(rep, req.validationError);
-                return null;
+                rep.callNotFound();
+                return rep.code(204);
             }
             const moduleConfig = {
                 frontend: req.zoiaModulesConfig["bm"].frontend,
@@ -107,6 +107,7 @@ export default () => ({
                         beam: y.beam,
                         length: y.length,
                         equipment: y.equipmentIds,
+                        kind: y.kind,
                     })),
                     total: data.total,
                     pagesCount: Math.ceil(data.total / 10),

@@ -97,5 +97,7 @@
     "requestSent": "Your request has been sent. An operator will contact you shortly.",
     "details": "Details",
     "mainPage": "Main Page",
-    "yachts": "Yachts"
+    "yachts": "Yachts",
+    "options": "Options",
+    "obligatoryDesc": "Items marked with an exclamation mark are required when booking a charter"
 }

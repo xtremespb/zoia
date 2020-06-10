@@ -55,6 +55,7 @@ export default () => ({
                     engine: y.engine ? y.engine.replace(/hp/igm, ` ${data.i18nHP}`).replace(/\s\s+/g, " ") : undefined,
                     beam: y.beam,
                     length: y.length,
+                    kind: y.kind,
                     equipment: y.equipmentIds
                 })),
                 total: data.total,

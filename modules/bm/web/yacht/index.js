@@ -19,6 +19,9 @@ export default () => ({
     async handler(req, rep) {
         try {
             if (req.validationError || !req.params.id || typeof req.params.id !== "string" || !req.params.id.match(/^[a-f\d]{24}$/)) {
+                if (req.validationError) {
+                    rep.logError(req, req.validationError.message);
+                }
                 rep.callNotFound();
                 return rep.code(204);
             }
@@ -100,6 +103,8 @@ export default () => ({
                 frontend: req.zoiaModulesConfig["bm"].frontend,
                 routes: req.zoiaModulesConfig["bm"].routes
             };
+            yacht.products.map(p => p.name = i18nDb[site.language][p.name.toLowerCase()] || p.name);
+            const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran", "other"];
             // Render
             const render = await template.stream({
                 $global: {
@@ -111,7 +116,7 @@ export default () => ({
                         ...site.getSerializedGlobals()
                     },
                     template: req.zoiaTemplates.available[0],
-                    pageTitle: `${yacht.name || site.i18n.t("noNameYacht")} – ${site.i18n.t("moduleTitle")}`,
+                    pageTitle: `${site.i18n.t(`boatKind.${kinds[yacht.kind - 1]}`)} ${yacht.model} – ${site.i18n.t("moduleTitle")}`,
                     yacht: {
                         id: yacht._id,
                         name: yacht.name,

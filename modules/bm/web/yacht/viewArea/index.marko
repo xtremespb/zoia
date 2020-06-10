@@ -1,8 +1,8 @@
 $ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran", "other"];
 $ const yacht = out.global.yacht;
 <div class="z3-bm-v-yacht-title">
-  <div class="z3-bm-v-h1">${yacht.name || out.global.i18n.t("noNameYacht")}</div>
-  <div class="z3-bm-v-h2">${out.global.i18n.t(`boatKind.${kinds[yacht.kind - 1]}`)} ${yacht.model}</div>
+  <!-- <div class="z3-bm-v-h1">${yacht.name || out.global.i18n.t("noNameYacht")}</div> -->
+  <div class="z3-bm-v-h1">${out.global.i18n.t(`boatKind.${kinds[yacht.kind - 1]}`)} ${yacht.model}</div>
 </div>
 <div class="z3-bm-v-location has-text-grey">
   ${yacht.base}&nbsp;&nbsp;

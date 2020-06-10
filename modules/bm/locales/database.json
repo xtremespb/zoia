@@ -6,9 +6,17 @@
         "per day person": "per day, per person",
         "per week": "per week",
         "per week person": "per week, per person",
-        "hp": "HP"
+        "hp": "HP",
+        "allinclusive": "All Inclusive"
     },
     "ru": {
+        "bareboat": "Без команды",
+        "cabin": "Каюта",
+        "crewed": "С командой",
+        "flotilla": "Флотилия",
+        "power": "Гонки",
+        "regatta": "Регата",
+        "allinclusive": "Все включено",
         "per booking": "за поездку",
         "per booking person": "за поездку и человека",
         "per day": "за день",
@@ -308,7 +316,7 @@
         "Gennaker": "Генакер",
         "Heating": "Обогрев",
         "Holding tank": "Бак сточных вод",
-        "Hydraulic gangway:": "Гидравлический трап",
+        "Hydraulic gangway": "Гидравлический трап",
         "Ice maker": "Машина для изготовления льда",
         "Inverter": "Инвертор",
         "Lazy bag": "Сумка",

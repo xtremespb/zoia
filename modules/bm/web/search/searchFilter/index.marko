@@ -47,17 +47,19 @@
           </div>
         </div>
         <div class="field z3-bm-fullwidth">
-          <label class="label">${out.global.i18n.t("product")}:</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select on-change("onProductChange")>
-                $ const products = ["bareboat", "cabin", "crewed", "flotilla", "power", "regatta", "allinclusive"];
-                <option value=null>${out.global.i18n.t("product.any")}</option>
-                <for|product, index| of=products>
-                  <option value=(index + 1) selected=(state.product === index + 1)>${out.global.i18n.t(`product.${product}`)}</option>
-                </for>
-              </select>
-            </div>
+          <label class="label">${out.global.i18n.t("boatKind")}:</label>
+          <div class="control message message-body">
+            $ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran"];
+            <for|kind, index| of=kinds>
+              <div>
+                <div class="z3-pretty p-default">
+                  <input id="z3_bm_cabins_slider" type="checkbox" data-id=(index + 1) on-change("onBoatKindChange") checked=(state.kinds.indexOf(index + 1) > -1)/>
+                  <div class="state p-primary">
+                    <label>${out.global.i18n.t(`boatKind.${kind}`)}</label>
+                  </div>
+                </div>
+              </div>
+            </for>
           </div>
         </div>
         <div class="field z3-bm-fullwidth">
@@ -87,19 +89,17 @@
           </div>
         </div>
         <div class="field z3-bm-fullwidth">
-          <label class="label">${out.global.i18n.t("boatKind")}:</label>
-          <div class="control message message-body">
-            $ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran", "other"];
-            <for|kind, index| of=kinds>
-              <div>
-                <div class="z3-pretty p-default">
-                  <input id="z3_bm_cabins_slider" type="checkbox" data-id=(index + 1) on-change("onBoatKindChange") checked=(state.kinds.indexOf(index + 1) > -1)/>
-                  <div class="state p-primary">
-                    <label>${out.global.i18n.t(`boatKind.${kind}`)}</label>
-                  </div>
-                </div>
-              </div>
-            </for>
+          <label class="label">${out.global.i18n.t("product")}:</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select on-change("onProductChange")>
+                $ const products = ["bareboat", "cabin", "crewed", "flotilla", "power", "regatta", "allinclusive"];
+                <option value=null>${out.global.i18n.t("product.any")}</option>
+                <for|product, index| of=products>
+                  <option value=(index + 1) selected=(state.product === index + 1)>${out.global.i18n.t(`product.${product}`)}</option>
+                </for>
+              </select>
+            </div>
           </div>
         </div>
         <div class="field z3-bm-fullwidth">
