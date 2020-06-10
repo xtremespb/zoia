@@ -8,6 +8,7 @@ import {
 import template from "./index.marko";
 import searchQuery from "../data/searchQuery.json";
 import i18nDb from "../../locales/database.json";
+import constants from "../../data/constants.json";
 
 const moment = extendMoment(Moment);
 
@@ -104,7 +105,6 @@ export default () => ({
                 routes: req.zoiaModulesConfig["bm"].routes
             };
             yacht.products.map(p => p.name = i18nDb[site.language][p.name.toLowerCase()] || p.name);
-            const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran", "other"];
             // Render
             const render = await template.stream({
                 $global: {
@@ -116,7 +116,7 @@ export default () => ({
                         ...site.getSerializedGlobals()
                     },
                     template: req.zoiaTemplates.available[0],
-                    pageTitle: `${site.i18n.t(`boatKind.${kinds[yacht.kind - 1]}`)} ${yacht.model} – ${site.i18n.t("moduleTitle")}`,
+                    pageTitle: `${site.i18n.t(`boatKind.${constants.kinds[yacht.kind - 1]}`)} ${yacht.model} – ${site.i18n.t("moduleTitle")}`,
                     yacht: {
                         id: yacht._id,
                         name: yacht.name,

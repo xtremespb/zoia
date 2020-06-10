@@ -25,7 +25,7 @@
     "features": "Оборудование",
     "boatKind": "Тип яхты",
     "boatKind.sailBoat": "Парусная яхта",
-    "boatKind.catamaran": "Катамаран",
+    "boatKind.catamaran": "Парусный катамаран",
     "boatKind.powerCatamaran": "Моторный катамаран",
     "boatKind.motorBoat": "Катер",
     "boatKind.motorYacht": "Моторная яхта",

@@ -1,5 +1,6 @@
+import constants from "../../../data/constants.json"
+
 $ const placeholderURL = out.global.moduleConfig.frontend.placeholderURL;
-$ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thruster: 9, toilet: 27, racing: 43, solar: 46, radar: 10, winch: 6, wifi: 21 };
 <if(state.error)>
   <article class="message is-danger">
     <div class="message-header">
@@ -21,9 +22,8 @@ $ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thru
         <div class="field is-narrow">
           <div class="control">
             <div class="select is-fullwidth">
-              $ const sortOptions = ["title", "averagePriceAsc", "averagePriceDesc", "minPriceAsc", "minPriceDesc", "boatLengthAsc", "boatLengthDesc", "boatCabinsAsc", "boatCabinsDesc"];
               <select on-change("onSortChange") disabled=(state.total === 0)>
-                <for|option, index| of=sortOptions>
+                <for|option, index| of=constants.sortOptions>
                   <option value=(index + 1) selected=(state.sort === index + 1)>${out.global.i18n.t(`sort.${option}`)}</option>
                 </for>
               </select>
@@ -42,7 +42,6 @@ $ const eqData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thru
     <div class="message-body">${out.global.i18n.t("noYachtsText")}</div>
   </article>
 </if>
-$ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran", "other"];
 <for|yacht, index| of=state.yachts>
   $ let params = "";
   $ if (process.browser) {
@@ -58,15 +57,14 @@ $ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorY
       </div>
       <div class="column is-auto z3-bm-yacht-desc-wrap">
         <!-- ${yacht.name || out.global.i18n.t("noNameYacht")} -->
-        <div class="z3-bm-list-h1 has-text-black-ter">${out.global.i18n.t(`boatKind.${kinds[yacht.kind - 1]}`)} ${yacht.model} (${yacht.year})</div>
+        <div class="z3-bm-list-h1 has-text-black-ter">${out.global.i18n.t(`boatKind.${constants.kinds[yacht.kind - 1]}`)} ${yacht.model} (${yacht.year})</div>
         <div class="has-text-grey z3-bm-yacht-base-country">
           ${yacht.base}&nbsp;&nbsp;
           <span class="has-text-grey-light">•</span>
           &nbsp;&nbsp;${yacht.country}
         </div>
-        $ const chars = ["cabins", "berths", "engine", "beam", "length"];
         <div class="z3-bm-yacht-chars-wrap">
-          <for|char| of=chars>
+          <for|char| of=constants.chars>
             <div class="z3-bm-yacht-char">
               <div class=`z3-bm-char-icon z3-bm-char-icon-${char} tooltip` data-tooltip=out.global.i18n.t(`chars.${char}`)/>
               <div class=`z3-bm-char-text`>${yacht[char] || "-"}${(char === "beam" || char === "length") && yacht[char] ? ` ${out.global.i18n.t("metersShort")}` : ""}</div>
@@ -74,8 +72,8 @@ $ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorY
           </for>
         </div>
         <div class="z3-bm-yacht-eq-wrap">
-          <for|eqId, eqIndex| of=Object.keys(eqData)>
-            <if(yacht.equipment && yacht.equipment.indexOf(String(eqData[eqId])) > -1)>
+          <for|eqId, eqIndex| of=Object.keys(constants.iconsData)>
+            <if(yacht.equipment && yacht.equipment.indexOf(String(constants.iconsData[eqId])) > -1)>
               <div class=`z3-bm-feature-icon-list z3-bm-feature-icon-${eqId}-list tooltip` data-tooltip=out.global.i18n.t(`featureToolip.${eqId}`)/>
             </if>
           </for>

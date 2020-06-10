@@ -1,3 +1,5 @@
+import constants from "../../../data/constants.json"
+
 <div class="column is-hidden-tablet">
   <button class="button is-fullwidth is-medium is-link" on-click("onFilterTriggerClick")>${out.global.i18n.t("searchParameters")}</button>
 </div>
@@ -49,8 +51,7 @@
         <div class="field z3-bm-fullwidth">
           <label class="label">${out.global.i18n.t("boatKind")}:</label>
           <div class="control message message-body">
-            $ const kinds = ["sailBoat", "catamaran", "powerCatamaran", "motorBoat", "motorYacht", "gulet", "trimaran"];
-            <for|kind, index| of=kinds>
+            <for|kind, index| of=constants.kinds>
               <div>
                 <div class="z3-pretty p-default">
                   <input id="z3_bm_cabins_slider" type="checkbox" data-id=(index + 1) on-change("onBoatKindChange") checked=(state.kinds.indexOf(index + 1) > -1)/>
@@ -93,9 +94,8 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select on-change("onProductChange")>
-                $ const products = ["bareboat", "cabin", "crewed", "flotilla", "power", "regatta", "allinclusive"];
                 <option value=null>${out.global.i18n.t("product.any")}</option>
-                <for|product, index| of=products>
+                <for|product, index| of=constants.products>
                   <option value=(index + 1) selected=(state.product === index + 1)>${out.global.i18n.t(`product.${product}`)}</option>
                 </for>
               </select>
@@ -122,11 +122,9 @@
           <label class="label">${out.global.i18n.t("features")}:</label>
           <div class="message control message-body">
             <div class="z3-bm-features-wrap">
-              $ const icons = ["air", "water", "power", "engine", "autopilot", "thruster", "toilet", "racing", "solar", "radar", "winch", "wifi"];
-              $ const iconsData = { air: 29, water: 44, power: 12, engine: 18, autopilot: 1, thruster: 9, toilet: 27, racing: 43, solar: 46, radar: 10, winch: 6, wifi: 21 };
               <div class="z3-bm-feature-icons">
-                <for|icon| of=icons>
-                  <div class=`z3-bm-feature-icon z3-bm-feature-icon-${icon}${state.features.indexOf(iconsData[icon]) > -1 ? "-active" : ""} tooltip` data-tooltip=out.global.i18n.t(`featureToolip.${icon}`) data-id=iconsData[icon] on-click("onFeatureIconClick")/>
+                <for|icon| of=constants.icons>
+                  <div class=`z3-bm-feature-icon z3-bm-feature-icon-${icon}${state.features.indexOf(constants.iconsData[icon]) > -1 ? "-active" : ""} tooltip` data-tooltip=out.global.i18n.t(`featureToolip.${icon}`) data-id=constants.iconsData[icon] on-click("onFeatureIconClick")/>
                 </for>
               </div>
             </div>
