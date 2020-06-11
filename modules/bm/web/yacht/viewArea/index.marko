@@ -13,7 +13,7 @@ $ const yacht = out.global.yacht;
 <nav class="breadcrumb has-arrow-separator z3-bm-v-breadcrumb" aria-label="breadcrumbs">
   <ul>
     <li>
-      <a href=out.global.i18n.getLocalizedURL("/")>${out.global.i18n.t("mainPage")}</a>
+      <a href=out.global.i18n.getLocalizedURL(out.global.moduleConfig.routes.start)>${out.global.i18n.t("mainPage")}</a>
     </li>
     <li>
       $ let params = "";

@@ -36,7 +36,8 @@
         }
     },
     "routes": {
-        "search": "/bm",
+        "start": "/bm",
+        "search": "/bm/search",
         "yacht": "/bm/yacht"
     },
     "defaults": {},
@@ -44,5 +45,9 @@
     "frontend": {
         "placeholderURL": "/bm/placeholder.png",
         "picturesURL": "/bm/pictures"
+    },
+    "templates": {
+        "start": "jonacor-start",
+        "search": "jonacor-search"
     }
 }

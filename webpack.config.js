@@ -38,7 +38,7 @@ const configWebClient = {
                 ]
             },
             {
-                test: /\.(woff(2)?|ttf|eot|svg|otf)(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.(woff(2)?|ttf|eot|svg|otf|png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [{
                     loader: "file-loader",
                     options: {
@@ -166,7 +166,7 @@ const cleanUpWeb = () => {
 };
 
 const generateTemplatesJSON = () => {
-    const available = fs.readdirSync(path.resolve(`${__dirname}/shared/marko/zoia/templates`));
+    const available = fs.readdirSync(path.resolve(`${__dirname}/shared/marko/zoia/templates`)).filter(i => !i.match(/^\./));
     const templatesJSON = {
         available
     };

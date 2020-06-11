@@ -1,0 +1,46 @@
+import constants from "../../../data/constants.json"
+
+<div class="container z3-bm-s-head-wrap">
+  <div class="z3-bm-s-logo"/>
+</div>
+<div class="z3-bm-s-search-wrap">
+  <div class="z3-bm-s-search-area">
+    <div class="z3-bm-s-search-desc">${out.global.i18n.t("findAndBook")}</div>
+    <div class="columns is-variable is-1">
+      <div class="column z3-bm-s-search-ctl-country">
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select key="sCountry">
+              <option value="0">${out.global.i18n.t("anyCountry")}</option>
+              <for|country| of=out.global.countries>
+                <option value=country._id>${country.name}</option>
+              </for>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="column z3-bm-s-search-ctl-kind">
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select key="sKind">
+              <option value="0">${out.global.i18n.t("anyKind")}</option>
+              <for|kind, index| of=constants.kinds>
+                <option value=(index + 1)>${out.global.i18n.t(`boatKind.${kind}`)}</option>
+              </for>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="column z3-bm-s-search-ctl-date">
+        <div class="control">
+          <input type="date" class="input" id="z3_bm_s_selectDate"/>
+        </div>
+      </div>
+      <div class="column z3-bm-s-search-ctl-btn">
+        <div class="control">
+          <button class="button is-primary is-fullwidth" on-click("onSearchButtonClick")>${out.global.i18n.t("search")}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

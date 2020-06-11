@@ -115,7 +115,7 @@ export default () => ({
                         moduleConfig: true,
                         ...site.getSerializedGlobals()
                     },
-                    template: req.zoiaTemplates.available[0],
+                    template: req.zoiaModulesConfig["bm"].templates && req.zoiaModulesConfig["bm"].templates.search ? req.zoiaModulesConfig["bm"].templates.search : req.zoiaTemplates.available[0],
                     pageTitle: `${site.i18n.t(`boatKind.${constants.kinds[yacht.kind - 1]}`)} ${yacht.model} – ${site.i18n.t("moduleTitle")}`,
                     yacht: {
                         id: yacht._id,

@@ -1,0 +1,71 @@
+@import "../../../../shared/marko/zoia/templates/default/variables.scss";
+
+.z3-bm-s-logo {
+    display: inline-block;
+    width: 182px;
+    height: 40px;
+    background: url("./images/bm_start_logo.png");
+}
+
+.z3-bm-s-head-wrap {
+    padding-top: 50px;
+    padding-bottom: 25px;
+}
+
+.z3-bm-s-search-wrap {
+    min-height: 65%;
+    width: 100%;
+    background: url("./images/bm_start_background.jpg");
+    // background-attachment: fixed;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.z3-bm-s-search-area {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 20px 35px 40px 35px;
+    box-shadow: 0 28px 50px rgba(0, 0, 0, .26);
+    border-radius: 2px;
+}
+
+.z3-bm-s-search-ctl-country {
+    max-width: 230px;
+}
+
+.z3-bm-s-search-ctl-kind {
+    max-width: 150px;
+}
+
+.z3-bm-s-search-ctl-date {
+    max-width: 270px;
+}
+
+.z3-bm-s-search-ctl-btn {
+    max-width: 120px;
+}
+
+.z3-bm-s-search-desc {
+    text-align: center;
+    font-size: 150%;
+    font-weight: 200;
+    padding: 10px;
+}
+
+.datetimepicker-dummy-wrapper {
+    background-color: #fff;
+}
+
+@media (max-width: 1024px) {
+
+    .z3-bm-s-search-ctl-country,
+    .z3-bm-s-search-ctl-kind,
+    .z3-bm-s-search-ctl-date,
+    .z3-bm-s-search-ctl-btn {
+        max-width: unset;
+    }
+
+}
