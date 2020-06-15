@@ -1,4 +1,5 @@
-<div class=`columns`>
+<searchFilterButton on-trigger-filter("onTriggerFilter")/>
+<div class="columns is-desktop">
   <searchFilter key="bmSearchFilter" on-query-change("onQueryChange") on-data-request("onDataRequest")/>
   <div class="column is-auto">
     <searchResult key="bmSearchResult" on-query-change("onQueryChange") on-page-change("onPageChange") on-loading("onLoading")/>

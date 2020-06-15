@@ -1,30 +1,5 @@
 @import "../../../../shared/marko/zoia/templates/default/variables.scss";
 
-.z3-bm-s-logo {
-    display: inline-block;
-    width: 182px;
-    height: 40px;
-    background: url("./images/bm_start_logo.png");
-}
-
-.z3-bm-s-head-wrap {
-    padding-top: 50px;
-    padding-bottom: 25px;
-}
-
-.z3-bm-s-search-wrap {
-    min-height: 65%;
-    width: 100%;
-    background: url("./images/bm_start_background.jpg");
-    // background-attachment: fixed;
-    background-position: bottom;
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .z3-bm-s-search-area {
     background-color: rgba(255, 255, 255, 0.85);
     padding: 20px 35px 40px 35px;

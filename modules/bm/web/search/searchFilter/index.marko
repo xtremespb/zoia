@@ -1,9 +1,6 @@
 import constants from "../../../data/constants.json"
 
-<div class="column is-hidden-tablet">
-  <button class="button is-fullwidth is-medium is-link" on-click("onFilterTriggerClick")>${out.global.i18n.t("searchParameters")}</button>
-</div>
-<div class=`column is-narrow${!state.filterOpen ? " is-hidden-mobile" : ""}`>
+<div class=`column is-narrow${!state.filterOpen ? " is-hidden-touch" : ""}`>
   <aside class="z3-bm-side-menu">
     <nav class="panel panel-block">
       <div class="z3-bm-noselect z3-bm-filter-main-wrap">

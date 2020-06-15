@@ -26,6 +26,7 @@ export default class {
             siteMetadata: true,
             siteOptions: true,
             path: true,
+            query: true,
             cookieOptions: true,
             authData: true,
             logout: true
@@ -67,6 +68,7 @@ export default class {
             siteMetadata: config.siteMetadata[this.language],
             siteOptions: config.siteOptions,
             path: this.path,
+            query: this.query,
             cookieOptions: config.cookieOptions,
             authData: this.authData,
             logout: this.moduleConfigUsers.routes.logout

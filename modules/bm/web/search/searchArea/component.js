@@ -31,6 +31,10 @@ module.exports = class {
         this.getComponent("bmSearchFilter").func.hideFilter();
     }
 
+    onTriggerFilter() {
+        this.getComponent("bmSearchFilter").func.triggerFilter();
+    }
+
     onLoading(loading) {
         this.state.loading = loading;
     }

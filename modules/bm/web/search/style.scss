@@ -380,6 +380,10 @@ $feature-list-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, 
     background: rgba(255, 255, 255, 0) !important;
 }
 
+.z3-bm-side-menu {
+    background-color: #fdfdfd;
+}
+
 @media (min-width: 768px) {
     .z3-bm-filter-main-wrap {
         max-width: 300px;

@@ -8,6 +8,9 @@ const TerserPlugin = require("terser-webpack-plugin");
 const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MarkoPlugin = require("@marko/webpack/plugin").default;
+const {
+    minify
+} = require("html-minifier");
 const config = require("./etc/zoia.json");
 
 const languages = Object.keys(config.languages);
@@ -166,10 +169,24 @@ const cleanUpWeb = () => {
 };
 
 const generateTemplatesJSON = () => {
-    const available = fs.readdirSync(path.resolve(`${__dirname}/shared/marko/zoia/templates`)).filter(i => !i.match(/^\./));
+    const available = fs.readdirSync(path.resolve(`${__dirname}/shared/marko/zoia/templates`));
     const templatesJSON = {
-        available
+        available: available.filter(i => !i.match(/^\./) && !i.match(/-shared$/))
     };
+    available.map(t => {
+        if (fs.existsSync(path.resolve(`${__dirname}/shared/marko/zoia/templates/${t}/minify.json`))) {
+            const files = fs.readJSONSync(path.resolve(`${__dirname}/shared/marko/zoia/templates/${t}/minify.json`));
+            files.map(f => {
+                const htmlRaw = fs.readFileSync(path.resolve(`${__dirname}/shared/marko/zoia/templates/${t}/${f.src}`), "utf8");
+                const htmlMinified = minify(htmlRaw, {
+                    removeAttributeQuotes: true,
+                    collapseWhitespace: true,
+                    html5: true
+                });
+                fs.writeFileSync(path.resolve(`${__dirname}/shared/marko/zoia/templates/${t}/${f.dest}`), htmlMinified);
+            });
+        }
+    });
     fs.writeJSONSync(path.resolve(`${__dirname}/etc/templates.json`), templatesJSON);
 };
 

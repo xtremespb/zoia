@@ -26,7 +26,8 @@ module.exports = class {
         this.language = out.global.language;
         this.i18n = out.global.i18n;
         this.func = {
-            hideFilter: this.hideFilter.bind(this)
+            hideFilter: this.hideFilter.bind(this),
+            triggerFilter: this.triggerFilter.bind(this),
         };
     }
 
@@ -261,7 +262,7 @@ module.exports = class {
         this.state.filterOpen = false;
     }
 
-    onFilterTriggerClick() {
+    triggerFilter() {
         this.state.filterOpen = !this.state.filterOpen;
     }
 };
