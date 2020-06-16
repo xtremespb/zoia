@@ -45,7 +45,7 @@ const configWebClient = {
                 use: [{
                     loader: "file-loader",
                     options: {
-                        name: "[name].[ext]",
+                        name: "[name]_[contenthash:8].[ext]",
                     }
                 }]
             },

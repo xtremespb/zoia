@@ -1,4 +1,5 @@
 {
     "id": "users",
-    "icon": "users"
+    "icon": "users",
+    "admin": "/admin/users"
 }
