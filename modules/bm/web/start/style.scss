@@ -8,18 +8,22 @@
 
 .z3-bm-s-search-ctl-country {
     max-width: 230px;
+    min-width: 230px;
 }
 
 .z3-bm-s-search-ctl-kind {
     max-width: 150px;
+    min-width: 150px;
 }
 
 .z3-bm-s-search-ctl-date {
     max-width: 270px;
+    min-width: 270px;
 }
 
 .z3-bm-s-search-ctl-btn {
     max-width: 120px;
+    min-width: 120px;
 }
 
 .z3-bm-s-search-desc {
@@ -48,6 +52,7 @@
     .z3-bm-s-search-ctl-date,
     .z3-bm-s-search-ctl-btn {
         max-width: unset;
+        min-width: unset;
     }
 
 }

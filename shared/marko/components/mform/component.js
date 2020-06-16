@@ -37,7 +37,10 @@ module.exports = class {
             state.data[tab.id] = {};
             state.errors[tab.id] = {};
         });
-        this.fieldsFlat = input.fields.flat();
+        // this.fieldsFlat = input.fields.flat();
+        // This is an ugly workaround to make this work in IE/EDGE
+        // You know it's a pain
+        this.fieldsFlat = input.fields.reduce((acc, val) => acc.concat(val), []);
         if (input.fields) {
             tabs.map(tab => this.fieldsFlat.map(i => state.data[tab.id][i.id] = this.getDefaultValue(i)));
         }

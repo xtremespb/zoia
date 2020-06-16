@@ -26,7 +26,7 @@ const configWebClient = {
     module: {
         rules: [{
                 test: /\.marko$/,
-                loader: "@marko/webpack/loader"
+                use: ["babel-loader", "@marko/webpack/loader"],
             },
             {
                 test: /\.s?css$/,
