@@ -206,6 +206,9 @@ const generateModulesConfig = () => {
         // if (!fs.existsSync(path.resolve(`${__dirname}/etc/modules/${dir}.json`)) && fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`))) {
         //     fs.copyFileSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`), path.resolve(`${__dirname}/etc/modules/${dir}.json`));
         // }
+        if (dir.match(/^\./)) {
+            return;
+        }
         const moduleData = require(path.resolve(`${__dirname}/modules/${dir}/module.json`));
         const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/etc/modules/${dir}.json`)) ? require(path.resolve(`${__dirname}/etc/modules/${dir}.json`)) : require(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`));
         moduleData.title = {};
