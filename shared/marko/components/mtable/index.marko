@@ -33,8 +33,8 @@ style.scss {
     <div class="notification is-danger">${state.error}</div>
   </if>
   <else>
-    <div class="table-container" id=`${input.id}_tableContainer`>
-      <table class=input.css>
+    <div class="table-container" >
+      <table class=input.css id=`${input.id}_tableWrap`>
         <thead class="z3-mt-noselect">
           <tr>
             <if(input.checkboxColumn)>
