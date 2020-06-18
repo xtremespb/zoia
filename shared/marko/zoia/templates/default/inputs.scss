@@ -115,6 +115,18 @@ input[type=range]:focus::-ms-fill-upper {
     background-color: $primary !important;
 }
 
+.datetimepicker-dummy .datetimepicker-dummy-wrapper {
+    border-radius: $radius;
+    border: 1px solid $border !important;
+    background-color: $white;
+}
+
+.datetimepicker-dummy:hover .datetimepicker-dummy-wrapper:hover,
+.datetimepicker-dummy:focus .datetimepicker-dummy-wrapper:focus,
+.datetimepicker-dummy:active .datetimepicker-dummy-wrapper:active {
+    border: 1px solid $border-hover !important;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Checkbox & Radio

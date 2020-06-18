@@ -1,7 +1,7 @@
-<div class="columns is-desktop is-gapless" style=(process.browser ? "" : "display:none")>
-  <div class="column is-narrow is-hidden-touch z3-ap-noselect">
+<div class="columns is-desktop is-gapless z3-ap-content-area" style=(process.browser ? "" : "display:none")>
+  <div class="column is-narrow is-hidden-touch z3-ap-noselect z3-ap-side-menu-area" id="z3_ap_side_menu_area">
     <div class="z3-ap-side-menu-wrap">
-      <nav class="panel panel-block z3-ap-side-menu">
+      <nav class="panel panel-block z3-ap-side-menu" id="z3_ap_side_menu">
         <ul class="menu-list z3-ap-side-menu-list">
           <for|module| of=input.modules>
             <if(module.admin)>
@@ -22,4 +22,4 @@
     </div>
   </div>
 </div>
-<div style=`padding:10px;display:${process.browser ? "none" : "block"}`>${out.global.i18n.t("loading")}</div>
+<div style=`padding:55px 10px;display:${process.browser ? "none" : "block"}`>${out.global.i18n.t("loading")}</div>

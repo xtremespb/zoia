@@ -7,6 +7,11 @@ $link: #35525f;
 @import "~bulma/bulma";
 @import '~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass';
 
+.z3-ap-html,
+.z3-ap-body {
+    min-height: 100%;
+}
+
 .z3-ap-noselect {
     -moz-user-select: none;
     -ms-user-select: none;
@@ -17,12 +22,23 @@ $link: #35525f;
     padding: 10px;
 }
 
+.z3-ap-side-menu-area {
+    min-height: 100%;
+    background-color: $white-bis;
+}
+
 .z3-ap-side-menu {
-    width: 200px;
+    width: 250px;
 }
 
 .z3-ap-side-menu-list {
     min-width: 100%;
+}
+
+.z3-ap-navbar {
+    position: fixed;
+    min-width: 100%;
+    transition: top 0.3s;
 }
 
 .z3-ap-navbar-link {
@@ -36,6 +52,12 @@ $link: #35525f;
     height: 26px;
 }
 
+.z3-ap-content-area {
+    padding-top: 52px;
+    min-height: 100vh;
+    margin-bottom: 0 !important;
+}
+
 .z3-ap-content-wrap {
     padding: 10px;
 }
@@ -46,5 +68,10 @@ $link: #35525f;
     margin-bottom: 10px;
 }
 
-@media (max-width: 1024px) {
+.z3-ap-navbar-gap {
+    width: 100%;
+    height: 55px;
+    transition: top 0.3s;
 }
+
+@media (max-width: 1024px) {}
