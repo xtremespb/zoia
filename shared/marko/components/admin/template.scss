@@ -25,10 +25,20 @@ $link: #35525f;
 .z3-ap-side-menu-area {
     min-height: 100%;
     background-color: $white-bis;
+    box-shadow: 1px 0 5px -2px $grey;
+    z-index: 10;
 }
 
 .z3-ap-side-menu {
     width: 250px;
+    background-color: $white;
+}
+
+.z3-ap-side-menu-head {
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 12px;
+    background-color: $grey-lighter;
 }
 
 .z3-ap-side-menu-list {
@@ -59,13 +69,16 @@ $link: #35525f;
 }
 
 .z3-ap-content-wrap {
-    padding: 10px;
+    padding: 10px 20px;
 }
 
 .z3-ap-head-thin {
-    font-size: 210%;
+    font-size: 183%;
     font-weight: 200;
-    margin-bottom: 10px;
+    border-bottom: 1px solid $grey-lighter;
+    margin: -10px -20px 20px;
+    padding-left: 20px;
+    z-index: 9;
 }
 
 .z3-ap-navbar-gap {
