@@ -99,7 +99,7 @@ style.scss {
       </table>
     </div>
     <if(state.paginationData.length)>
-      <nav class="pagination is-small" role="navigation" aria-label="pagination">
+      <nav class="pagination is-small z3-mt-pagination" role="navigation" aria-label="pagination">
         <ul class="pagination-list">
           <for|pi| of=state.paginationData>
             <if(pi.type === "page")>
