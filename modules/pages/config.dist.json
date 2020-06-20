@@ -1,0 +1,10 @@
+{
+    "collectionPages": "pages",
+    "database": {
+        "collections": {}
+    },
+    "routes": {
+        "admin": "/admin/pages"
+    },
+    "setup": false
+}

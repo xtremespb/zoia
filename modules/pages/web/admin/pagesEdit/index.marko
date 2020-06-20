@@ -1,0 +1,81 @@
+import cloneDeep from "lodash/cloneDeep"
+import Cookies from "../../../../../shared/lib/cookies"
+import pageEdit from "../../../api/data/pageEdit.json"
+
+style.scss {
+}
+
+$ const cookies = new Cookies(out.global.cookieOptions);
+$ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.authToken`);
+<div>
+  <h1 class="z3-ap-head-thin">${input.id === "new" ? out.global.i18n.t("pageAdd") : out.global.i18n.t("pageEdit")}</h1>
+  <mform key="pageEditForm" id="pageEditForm" save={
+    url: "/api/pages/edit/save",
+    extras: {
+      id: input.id === "new" ? undefined : input.id
+    },
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  } load={
+    url: "/api/pages/edit/load",
+    extras: {
+      id: input.id
+    },
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  } fields=[
+    [
+      {
+        id: "path",
+        type: "text",
+        label: out.global.i18n.t("path"),
+        helpText: out.global.i18n.t("pathHelpText"),
+        wrapCSS: "z3-is-medium",
+        autoFocus: true,
+        mandatory: true
+      },
+      {
+        id: "title",
+        type: "text",
+        label: out.global.i18n.t("title"),
+        helpText: out.global.i18n.t("titleHelpText"),
+        wrapCSS: "z3-is-large",
+        mandatory: true
+      }
+    ],
+    {
+      id: "div1",
+      type: "divider"
+    },
+    {
+      id: "bg1",
+      type: "buttons",
+      data: [
+        {
+          id: "btnSave",
+          type: "button",
+          buttonType: "submit",
+          label: out.global.i18n.t("save"),
+          css: "is-primary"
+        },
+        {
+          id: "btnCancel",
+          type: "button",
+          buttonType: "button",
+          label: out.global.i18n.t("cancel")
+        }
+      ]
+    }
+  ] validation=input.pathEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=[
+    {
+      id: "en",
+      label: "English"
+    },
+    {
+      id: "ru",
+      label: "Русский"
+    }
+  ]/>
+</div>

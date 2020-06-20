@@ -1,0 +1,17 @@
+<router routes=[
+  {
+    name: "pages",
+    path: out.global.routes.admin
+  },
+  {
+    name: "pages.edit",
+    path: "/edit/:id"
+  }
+] on-state-change("onStateChange")>
+  <if(state.route.name === "pages")>
+    <pagesList ...state.route.params/>
+  </if>
+  <if(state.route.name === "pages.edit")>
+    <pagesEdit ...state.route.params/>
+  </if>
+</router>

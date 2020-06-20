@@ -1,0 +1,16 @@
+{
+    "moduleTitle": "Pages",
+    "path": "Path",
+    "title": "Title",
+    "actions": "Actions",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reload": "Reload",
+    "pageAdd": "Add Page",
+    "pageEdit": "Edit Page",
+    "save": "Save",
+    "cancel": "Cancel",
+    "pathHelpText": "pathHelpText",
+    "titleHelpText": "titleHelpText"
+}
