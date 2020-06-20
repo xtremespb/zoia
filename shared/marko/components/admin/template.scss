@@ -75,7 +75,7 @@ $link: #35525f;
 .z3-ap-head-thin {
     font-size: 220%;
     font-weight: 200;
-    border-bottom: 1px solid $grey-lighter;
+    border-bottom: 1px solid $white-bis;
     margin: -10px -20px 20px;
     padding-left: 20px;
     z-index: 9;
@@ -87,4 +87,32 @@ $link: #35525f;
     transition: top 0.3s;
 }
 
-@media (max-width: 1024px) {}
+.z3-ap-menu-icon-wrap {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.z3-ap-menu-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.z3-ap-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Checkbox & Radio
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$pretty--class-name: z3-pretty;
+$pretty--color-primary: $primary;
+@import '~pretty-checkbox/src/pretty-checkbox.scss';

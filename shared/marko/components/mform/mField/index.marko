@@ -130,13 +130,15 @@ Checkboxes
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
-  <div>
-    <for|option, index| of=input.item.options>
-      <label class=`checkbox ${input.item.css || ""}`>
-        <input type="checkbox" key=`${input.item.id}_${index}` on-change("onArrInputChange") data-id=input.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>&nbsp;${option.label}&nbsp;&nbsp;
-      </label>
-    </for>
-  </div>
+  <for|option, index| of=input.item.options>
+    <div class="z3-pretty p-icon">
+      <input type="checkbox" key=`${input.item.id}_${index}` on-change("onArrInputChange") data-id=input.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
+      <div class="state">
+        <i class="icon fas fa-check"/>
+        <label>${option.label}</label>
+      </div>
+    </div>
+  </for>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>
   </if>
@@ -155,10 +157,11 @@ Checkbox
       </if>
     </label>
   </if>
-  <div>
-    <label class=`checkbox ${input.item.css || ""}`>
-      <input type="checkbox" key=input.item.id on-change("onBooleanInputChange") data-id=input.item.id checked=input.value/>&nbsp;${input.item.labelCheckbox}&nbsp;
-    </label>
+  <div class="z3-pretty p-default">
+    <input type="checkbox" key=input.item.id on-change("onBooleanInputChange") data-id=input.item.id checked=input.value/>
+    <div class="state p-primary">
+      <label>${input.item.labelCheckbox}</label>
+    </div>
   </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>

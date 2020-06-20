@@ -33,15 +33,18 @@ style.scss {
     <div class="notification is-danger">${state.error}</div>
   </if>
   <else>
-    <div class="table-container" >
+    <div class="table-container">
       <table class=input.css id=`${input.id}_tableWrap`>
         <thead class="z3-mt-noselect">
           <tr>
             <if(input.checkboxColumn)>
               <th style="width:10px">
-                <label class="checkbox">
+                <div class="z3-pretty p-default">
                   <input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
-                </label>
+                  <div class="state p-primary">
+                    <label/>
+                  </div>
+                </div>
               </th>
             </if>
             <for|column| of=input.columns>
@@ -60,9 +63,13 @@ style.scss {
               <tr>
                 <if(input.checkboxColumn)>
                   <td style="width:10px">
-                    <label class="checkbox">
+                    <div class="z3-pretty p-icon">
                       <input data-id=(row.id || row._id) type="checkbox" checked=state.checkboxes[`i${row.id || row._id}`] on-change("setCheckbox")/>
-                    </label>
+                      <div class="state">
+                        <i class="icon fas fa-check"/>
+                        <label/>
+                      </div>
+                    </div>
                   </td>
                 </if>
                 <for|column| of=input.columns.map(c => c.id)>

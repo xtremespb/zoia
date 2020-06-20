@@ -9,7 +9,11 @@
               <if(module.admin)>
                 <li>
                   <a href=out.global.i18n.getLocalizedURL(module.admin, out.global.language) class=(module.id === input.moduleId ? "is-active" : "")>
-                    <i class=`fas fa-${module.icon}`/>&nbsp;&nbsp;${module.title[out.global.language]}
+                    <div class="z3-ap-menu-icon-wrap">
+                      <div class="z3-ap-menu-icon">
+                        <i class=`fas fa-${module.icon}`/>
+                      </div>
+                    </div>${module.title[out.global.language]}
                   </a>
                 </li>
               </if>
@@ -25,4 +29,4 @@
     </div>
   </div>
 </div>
-<div style=`padding:55px 10px;display:${process.browser ? "none" : "block"}`>${out.global.i18n.t("loading")}</div>
+<div class="z3-ap-loading" style=`display:${process.browser ? "none" : "flex"}`>${out.global.i18n.t("loading")}</div>
