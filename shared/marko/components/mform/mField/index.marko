@@ -196,3 +196,22 @@ Captcha
     <p class="help is-danger">${input.errors[input.item.id]}</p>
   </if>
 </if>
+<!--
+Textarea
+-->
+<if(input.item.type === "textarea")>
+  <label class="label">
+    ${input.item.label}:<if(input.item.mandatory)>
+      &nbsp;<span class="has-text-danger">*</span>
+    </if>
+  </label>
+  <div class="control">
+    <textarea class=`textarea${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=input.item.id placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+  </div>
+  <if(input.item.helpText)>
+    <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  </if>
+</if>

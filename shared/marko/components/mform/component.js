@@ -5,7 +5,7 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea"];
 
 module.exports = class {
     onCreate(input) {
@@ -528,6 +528,15 @@ module.exports = class {
             if (result && result.data && result.data.data) {
                 const data = this.deserialize(result.data.data);
                 this.setState("data", data);
+                if (this.input.tabsAvail && this.input.tabsActive) {
+                    const tabs = this.input.tabsAvail.map(t => {
+                        if (result.data.data[t.id]) {
+                            return t;
+                        }
+                        return null;
+                    }).filter(t => t);
+                    this.setState("tabs", tabs);
+                }
                 setTimeout(this.autoFocus.bind(this), 0);
             }
         } catch (e) {

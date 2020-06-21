@@ -11,6 +11,9 @@
     "pageEdit": "Edit Page",
     "save": "Save",
     "cancel": "Cancel",
-    "pathHelpText": "pathHelpText",
-    "titleHelpText": "titleHelpText"
+    "pathHelpText": "Should start with a slash, e.g. /index",
+    "titleHelpText": "Displayed in browser window",
+    "mFormErr.pathAlreadyExists": "Page with this path already exists",
+    "content": "Content",
+    "contentHelpText": "HTML displayed on a page"
 }

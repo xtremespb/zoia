@@ -99,6 +99,7 @@ module.exports = class {
         const source = this.state.dataSource;
         source.data = source.data || {};
         source.data = {
+            ...source.data,
             page: this.state.page,
             sortId: this.state.sortId,
             sortDirection: this.state.sortDirection,
@@ -276,10 +277,12 @@ module.exports = class {
     async onDeleteDialogSubmit() {
         this.setState("deleteDialogProgress", true);
         try {
-            await axios.post(this.input.genericDelete.url, {
-                ids: this.state.deleteDialogIds,
-                ...this.input.genericDelete.extras
-            });
+            const {
+                source
+            } = this.input.genericDelete;
+            source.data = source.data || {};
+            source.data.ids = this.state.deleteDialogIds;
+            await axios(source);
             this.setState("deleteDialogActive", false);
             this.setState("deleteDialogProgress", false);
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTable.deleteSuccess`), "is-success");

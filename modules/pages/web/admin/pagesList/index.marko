@@ -11,7 +11,9 @@ $ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.a
   <mtable css="table is-striped is-hoverable is-fullwidth" dataSource={
     method: "post",
     url: "/api/pages/list",
-    data: {},
+    data: {
+      language: out.global.language
+    },
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -70,9 +72,15 @@ $ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.a
       tooltip: false
     }
   ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="path" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
-    title: "title",
-    url: "/api/pages/edit/delete",
-    extras: {}
+    title: "path",
+    source: {
+      method: "post",
+      url: "/api/pages/edit/delete",
+      data: {},
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
   } on-unauthorized("onUnauthorized") autoItemsPerPage=true/>
   <mnotify key=`pagesList_mnotify`/>
 </div>

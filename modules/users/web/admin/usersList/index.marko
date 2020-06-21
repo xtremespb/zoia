@@ -76,8 +76,14 @@ $ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.a
     }
   ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="username" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
     title: "username",
-    url: "/api/users/edit/delete",
-    extras: {}
+    source: {
+      method: "post",
+      url: "/api/users/edit/delete",
+      data: {},
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
   } on-unauthorized("onUnauthorized") autoItemsPerPage=true/>
   <mnotify key=`usersList_mnotify`/>
 </div>

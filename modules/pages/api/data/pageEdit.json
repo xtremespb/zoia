@@ -1,24 +1,46 @@
 {
+    "schema": {
+        "type": "object",
+        "properties": {
+            "__form": {
+                "type": "string"
+            }
+        },
+        "required": ["__form"]
+    },
     "root": {
         "type": "object",
         "properties": {
-            "id": {
-                "type": "string",
-                "minLength": 24,
-                "maxLength": 24,
-                "pattern": "^[a-f0-9]+$"
-            },
             "path": {
                 "type": "string",
-                "pattern": "^[a-zA-Z0-9_-]+$",
+                "pattern": "^\\/([a-zA-Z0-9_\\-/\\.]+)?$",
                 "minLength": 1,
-                "maxLength": 32
-            },
-            "title": {
-                "type": "string",
-                "maxLength": 254
+                "maxLength": 64
             }
         },
-        "required": ["path", "title"]
+        "required": ["path"]
+    },
+    "part": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 128
+            },
+            "content": {
+                "type": "string"
+            }
+        },
+        "required": []
+    },
+    "files": {
+        "attachments": {
+            "minAmount": 0,
+            "maxAmount": 10,
+            "minSizeBytes": 0,
+            "maxSizeBytes": 5242880
+        }
     }
+
 }

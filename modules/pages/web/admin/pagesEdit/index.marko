@@ -2,11 +2,9 @@ import cloneDeep from "lodash/cloneDeep"
 import Cookies from "../../../../../shared/lib/cookies"
 import pageEdit from "../../../api/data/pageEdit.json"
 
-style.scss {
-}
-
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.authToken`);
+$ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, label: out.global.languages[k] }));
 <div>
   <h1 class="z3-ap-head-thin">${input.id === "new" ? out.global.i18n.t("pageAdd") : out.global.i18n.t("pageEdit")}</h1>
   <mform key="pageEditForm" id="pageEditForm" save={
@@ -34,17 +32,23 @@ $ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.a
         helpText: out.global.i18n.t("pathHelpText"),
         wrapCSS: "z3-is-medium",
         autoFocus: true,
-        mandatory: true
+        mandatory: true,
+        shared: true
       },
       {
         id: "title",
         type: "text",
         label: out.global.i18n.t("title"),
         helpText: out.global.i18n.t("titleHelpText"),
-        wrapCSS: "z3-is-large",
-        mandatory: true
+        wrapCSS: "z3-is-large"
       }
     ],
+    {
+      id: "content",
+      type: "textarea",
+      label: out.global.i18n.t("content"),
+      helpText: out.global.i18n.t("contentHelpText")
+    },
     {
       id: "div1",
       type: "divider"
@@ -68,14 +72,5 @@ $ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.a
         }
       ]
     }
-  ] validation=input.pathEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=[
-    {
-      id: "en",
-      label: "English"
-    },
-    {
-      id: "ru",
-      label: "Русский"
-    }
-  ]/>
+  ] formType="formData" validation=pageEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=languageTabs tabsActive=[languageTabs[0].id]/>
 </div>

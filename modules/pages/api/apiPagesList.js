@@ -21,10 +21,18 @@ export default fastify => ({
             return;
         }
         try {
+            const langProjection = {};
+            Object.keys(req.zoiaConfig.languages).map(i => {
+                langProjection[`${i}.title`] = 1;
+            });
             const options = {
                 sort: {},
-                projection: pagesListData.projection
+                projection: {
+                    ...pagesListData.projection,
+                    ...langProjection
+                }
             };
+            req.body.sortId = req.body.sortId === "title" ? `${req.body.language}.${req.body.sortId}` : req.body.sortId;
             const query = {};
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = pagesListData.search.map(c => {
@@ -41,7 +49,11 @@ export default fastify => ({
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const data = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).toArray();
+            const data = (await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).toArray()).map(i => ({
+                _id: i._id,
+                path: i.path,
+                title: i[req.body.language] ? i[req.body.language].title : ""
+            }));
             // Send response
             rep.successJSON(rep, {
                 data,

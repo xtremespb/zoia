@@ -24,14 +24,19 @@
                 "type": "number",
                 "minimum": 0,
                 "maximum": 1000
+            },
+            "language": {
+                "type": "string",
+                "pattern": "^[a-z]{2}$",
+                "minLength": 2,
+                "maxLength": 2
             }
         },
-        "required": ["page", "sortId", "sortDirection"]
+        "required": ["page", "sortId", "sortDirection", "language"]
     },
     "projection": {
         "_id": 1,
-        "path": 1,
-        "title": 1
+        "path": 1
     },
     "search": ["path", "title"]
 }

@@ -172,7 +172,8 @@ export default class {
 
     validate(data) {
         try {
-            const formData = this.body || data || JSON.parse(this.body.__form);
+            const formData = this.body && this.body.__form ? JSON.parse(this.body.__form) : this.body || data;
+            // const formData = this.body || data || JSON.parse(this.body.__form);
             let errors = [];
             if (this.schemas.part) {
                 this.parts.map(part => {
@@ -216,9 +217,9 @@ export default class {
 
     getData() {
         const data = {};
-        const formData = this.body || JSON.parse(this.body.__form);
+        const formData = this.body && this.body.__form ? JSON.parse(this.body.__form) : this.body || {};
         this.parts.map(part => {
-            if (this.body[part]) {
+            if (formData[part]) {
                 data[part] = {};
                 Object.keys(this.schemas.part.properties).map(field => {
                     data[part][field] = formData[part][field];
