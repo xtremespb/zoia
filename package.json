@@ -14,6 +14,7 @@
         "url": "https://github.com/xtremespb/zoia3"
     },
     "dependencies": {
+        "ace-builds": "^1.4.11",
         "axios": "^0.19.2",
         "colors": "^1.4.0",
         "command-line-args": "^5.1.1",

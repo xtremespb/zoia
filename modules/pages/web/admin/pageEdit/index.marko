@@ -45,9 +45,16 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
     ],
     {
       id: "content",
-      type: "textarea",
+      type: "ace",
       label: out.global.i18n.t("content"),
       helpText: out.global.i18n.t("contentHelpText")
+    },
+    {
+      id: "attachments",
+      type: "file",
+      label: out.global.i18n.t("attachments"),
+      multiple: true,
+      buttonLabel: out.global.i18n.t("selectFiles")
     },
     {
       id: "div1",

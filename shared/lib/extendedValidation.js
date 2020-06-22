@@ -1,4 +1,5 @@
 import Ajv from "ajv";
+import cloneDeep from "lodash/cloneDeep";
 
 export default class {
     constructor(body, root = {}, part = {}, files = {}, parts = []) {
@@ -96,7 +97,7 @@ export default class {
         Object.keys(data).map(i => {
             const item = data[i];
             if (item && typeof item === "object" && Array.isArray(item)) {
-                item.map(ai => {
+                (item || []).map(ai => {
                     if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
                         gotFiles[i] = gotFiles[i] || [];
                         gotFiles[i].push(ai.id);
@@ -177,18 +178,20 @@ export default class {
             let errors = [];
             if (this.schemas.part) {
                 this.parts.map(part => {
-                    const valid = this.ajv.validate(this.schemas.part, formData[part]);
-                    if (!valid) {
-                        errors = [...errors, ...this.ajv.errors.map(e => ({
-                            ...e,
-                            part
-                        }))];
+                    if (formData[part]) {
+                        const valid = this.ajv.validate(this.schemas.part, formData[part]);
+                        if (!valid) {
+                            errors = [...errors, ...this.ajv.errors.map(e => ({
+                                ...e,
+                                part
+                            }))];
+                        }
+                        const fileErrors = this._validateFiles(formData[part], part);
+                        if (fileErrors.length) {
+                            errors = [...errors, ...fileErrors];
+                        }
+                        delete formData[part];
                     }
-                    const fileErrors = this._validateFiles(formData[part], part);
-                    if (fileErrors.length) {
-                        errors = [...errors, ...fileErrors];
-                    }
-                    delete formData[part];
                 });
             }
             if (this.schemas.root) {
@@ -232,5 +235,113 @@ export default class {
             });
         }
         return data;
+    }
+
+    getFiles() {
+        const formData = this.body && this.body.__form ? JSON.parse(this.body.__form) : null;
+        if (!formData) {
+            return [];
+        }
+        const files = [];
+        if (this.schemas.part) {
+            this.parts.map(part => {
+                if (formData[part]) {
+                    Object.keys(formData[part]).map(i => {
+                        const item = formData[part][i];
+                        if (item && typeof item === "object" && Array.isArray(item)) {
+                            (item || []).map(ai => {
+                                if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
+                                    delete ai.upload;
+                                    delete ai.type;
+                                    files.push(ai);
+                                }
+                            });
+                        }
+                    });
+                    delete formData[part];
+                }
+            });
+        }
+        if (this.schemas.root) {
+            Object.keys(formData).map(i => {
+                const item = formData[i];
+                if (item && typeof item === "object" && Array.isArray(item)) {
+                    (item || []).map(ai => {
+                        if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
+                            delete ai.upload;
+                            delete ai.type;
+                            files.push(ai);
+                        }
+                    });
+                }
+            });
+        }
+        return files;
+    }
+
+    filterDataFiles(formData) {
+        const data = cloneDeep(formData);
+        if (this.schemas.part) {
+            this.parts.map(part => {
+                if (data[part]) {
+                    Object.keys(data[part]).map(i => {
+                        const item = data[part][i];
+                        if (item && typeof item === "object" && Array.isArray(item)) {
+                            (item || []).map(ai => {
+                                if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
+                                    delete ai.upload;
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        if (this.schemas.root) {
+            Object.keys(formData).map(i => {
+                const item = formData[i];
+                if (item && typeof item === "object" && Array.isArray(item)) {
+                    (item || []).map(ai => {
+                        if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
+                            delete ai.upload;
+                        }
+                    });
+                }
+            });
+        }
+        return data;
+    }
+
+    extractFiles(data) {
+        const files = [];
+        if (this.schemas.part) {
+            this.parts.map(part => {
+                if (data[part]) {
+                    Object.keys(data[part]).map(i => {
+                        const item = data[part][i];
+                        if (item && typeof item === "object" && Array.isArray(item)) {
+                            (item || []).map(ai => {
+                                if (ai && typeof ai === "object" && ai.type === "file") {
+                                    files.push(ai.id);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        if (this.schemas.root) {
+            Object.keys(data).map(i => {
+                const item = data[i];
+                if (item && typeof item === "object" && Array.isArray(item)) {
+                    (item || []).map(ai => {
+                        if (ai && typeof ai === "object" && ai.type === "file") {
+                            files.push(ai.id);
+                        }
+                    });
+                }
+            });
+        }
+        return files;
     }
 }

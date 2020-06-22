@@ -141,11 +141,7 @@ style.scss {
         </header>
         <section class="modal-card-body">
           <p>${input.i18n.t("mTable.deleteDesc")}:</p>
-          <div class="list z3-margin-top">
-            <for|title| of=state.deleteDialogTitles>
-              <span class="list-item">${title}</span>
-            </for>
-          </div>
+          <div class="z3-margin-top">${state.deleteDialogTitles.map(i => `"${i}"`).join(", ")}</div>
         </section>
         <footer class="modal-card-foot">
           <fieldset disabled=state.deleteDialogProgress>

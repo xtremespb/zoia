@@ -27,22 +27,22 @@ style.scss {
   <if(state.error)>
     <div class="notification is-danger">${state.error}</div>
   </if>
-  <form on-submit("onFormSubmit")>
+  <form on-submit("onFormSubmit") key=`${input.id}_mForm_Wrap`>
     <fieldset disabled=state.disabled class=`z3-mf-fields-wrap z3-mf-noselect${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-fields-border" : ""}`>
       <if(state.activeTabId)>
         <for|tItem, tIndex| of=input.fields>
           <if(typeof tItem === "object" && tItem.type)>
-            <div class="field columns z3-mf-field-columns">
+            <div class="field columns z3-mf-field-columns" key=`control_component_${tItem.id}_wrap`>
               <div class=`control column ${tItem.wrapCSS || ""}`>
-                <mField key=tItem.id item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
+                <mField key=`control_component_${tItem.id}` item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
               </div>
             </div>
           </if>
           <if(Array.isArray(tItem))>
             <div class="field columns is-gapless z3-mf-field-columns-group">
               <for|sItem, sIndex| of=tItem>
-                <div class=`control column ${sItem.wrapCSS || ""}`>
-                  <mField key=sItem.id item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
+                <div class=`control column ${sItem.wrapCSS || ""}` key=`control_component_${sItem.id}_wrap`>
+                  <mField key=`control_component_${sItem.id}` item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
                 </div>
               </for>
             </div>
@@ -62,9 +62,13 @@ style.scss {
         <section class="modal-card-body">
           <for|tab| of=state.tabsSelect>
             <div>
-              <label class="checkbox">
-                <input type="checkbox" checked=tab.selected data-id=tab.id on-change("onTabsSelectChange")/>&nbsp;&nbsp;${tab.label}
-              </label>
+              <div class="z3-pretty p-icon">
+                <input type="checkbox" checked=tab.selected data-id=tab.id on-change("onTabsSelectChange")/>
+                <div class="state">
+                  <i class="icon fas fa-check"/>
+                  <label>${tab.label}</label>
+                </div>
+              </div>
             </div>
           </for>
         </section>

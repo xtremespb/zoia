@@ -5,11 +5,6 @@
             "users": {
                 "indexesAsc": ["username", "email"],
                 "indexesDesc": ["username", "email"]
-            },
-            "captcha": {
-                "indexesAsc": [],
-                "indexesDesc": [],
-                "expires": 3600
             }
         }
     },

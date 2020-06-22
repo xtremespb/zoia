@@ -8,7 +8,7 @@ Text Input
     </if>
   </label>
   <div class="control">
-    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=input.item.id type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`control_${input.item.id}` type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
   </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>
@@ -29,7 +29,7 @@ File Input
   <div class=`file${input.errors[input.item.id] ? " is-danger" : ""}`>
     <label class="file-label">
       <input class="file-input" type="file" multiple=input.item.multiple on-change("onFileInputChange") data-id=input.item.id/>
-      <a class="file-cta" key=input.item.id tabindex="0">
+      <a class="file-cta" key=`control_${input.item.id}` tabindex="0">
         <span class="file-icon">
           <i class="fas fa-upload"/>
         </span>
@@ -57,7 +57,7 @@ File Input
 Button
 -->
 <if(input.item.type === "button")>
-  <button class=`button ${input.item.css || ""} ${input.progress && input.progressButtonId === input.item.id ? "is-loading" : ""}` type=input.item.buttonType data-id=input.item.id key=input.item.id on-click("onButtonClick")>${input.item.label}</button>
+  <button class=`button ${input.item.css || ""} ${input.progress && input.progressButtonId === input.item.id ? "is-loading" : ""}` type=input.item.buttonType data-id=input.item.id key=`control_${input.item.id}` on-click("onButtonClick")>${input.item.label}</button>
 </if>
 <!--
 Button group
@@ -65,7 +65,7 @@ Button group
 <if(input.item.type === "buttons")>
   <div class="buttons">
     <for|btn| of=input.item.data>
-      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` type=btn.buttonType data-id=btn.id key=btn.id on-click("onButtonClick")>${btn.label}</button>
+      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` type=btn.buttonType data-id=btn.id key=`control_${btn.id}` on-click("onButtonClick")>${btn.label}</button>
     </for>
   </div>
 </if>
@@ -85,7 +85,7 @@ Select
     </if>
   </label>
   <div class=`select ${input.item.css || ""}${input.errors[input.item.id] ? " is-danger" : ""}`>
-    <select data-id=input.item.id key=input.item.id value=input.value on-change("onFieldValueChange")>
+    <select data-id=input.item.id key=`control_${input.item.id}` value=input.value on-change("onFieldValueChange")>
       <for|option| of=input.item.options>
         <option value=option.value selected=(input.value === String(option.value))>${option.label}</option>
       </for>
@@ -110,7 +110,7 @@ Radio
   <div>
     <for|option, index| of=input.item.options>
       <label class=`radio ${input.item.css || ""}`>
-        <input type="radio" key=`${input.item.id}_${index}` data-id=input.item.id name=input.item.id value=option.value checked=(input.value === String(option.value)) on-change("onFieldValueChange")/>&nbsp;${option.label}
+        <input type="radio" key=`control_${input.item.id}_${index}` data-id=input.item.id name=input.item.id value=option.value checked=(input.value === String(option.value)) on-change("onFieldValueChange")/>&nbsp;${option.label}
       </label>
     </for>
   </div>
@@ -132,7 +132,7 @@ Checkboxes
   </label>
   <for|option, index| of=input.item.options>
     <div class="z3-pretty p-icon">
-      <input type="checkbox" key=`${input.item.id}_${index}` on-change("onArrInputChange") data-id=input.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
+      <input type="checkbox" key=`control_${input.item.id}_${index}` on-change("onArrInputChange") data-id=input.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
       <div class="state">
         <i class="icon fas fa-check"/>
         <label>${option.label}</label>
@@ -158,7 +158,7 @@ Checkbox
     </label>
   </if>
   <div class="z3-pretty p-default">
-    <input type="checkbox" key=input.item.id on-change("onBooleanInputChange") data-id=input.item.id checked=input.value/>
+    <input type="checkbox" key=`control_${input.item.id}` on-change("onBooleanInputChange") data-id=input.item.id checked=input.value/>
     <div class="state p-primary">
       <label>${input.item.labelCheckbox}</label>
     </div>
@@ -182,7 +182,7 @@ Captcha
   <div class="control">
     <div class="z3-mf-captcha-wrap">
       <div>
-        <input class=`z3-mf-captcha-input input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=input.item.id type="text" placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+        <input class=`z3-mf-captcha-input input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`control_${input.item.id}` type="text" placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
       </div>
       <div>
         <img src=state.captchaData class="z3-mf-captcha-img" on-click("reloadCaptcha")/>
@@ -206,7 +206,7 @@ Textarea
     </if>
   </label>
   <div class="control">
-    <textarea class=`textarea${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=input.item.id placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+    <textarea class=`textarea${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`control_${input.item.id}` placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
   </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>
@@ -214,4 +214,23 @@ Textarea
   <if(input.errors[input.item.id])>
     <p class="help is-danger">${input.errors[input.item.id]}</p>
   </if>
+</if>
+<!--
+ACE
+-->
+<if(input.item.type === "ace")>
+  <label class="label">
+      ${input.item.label}:<if(input.item.mandatory)>
+        &nbsp;<span class="has-text-danger">*</span>
+      </if>
+    </label>
+    <div class="control" id=input.item.id key=`control_${input.item.id}`>
+      <div style="width:100%;height:300px"/>
+    </div>
+    <if(input.item.helpText)>
+      <p class="help">${input.item.helpText}</p>
+    </if>
+    <if(input.errors[input.item.id])>
+      <p class="help is-danger">${input.errors[input.item.id]}</p>
+    </if>
 </if>

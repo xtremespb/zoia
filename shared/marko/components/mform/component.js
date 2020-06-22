@@ -5,7 +5,7 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace"];
 
 module.exports = class {
     onCreate(input) {
@@ -332,6 +332,9 @@ module.exports = class {
         if (field.convert) {
             valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value) : String(value);
         }
+        if (field.type === "file" && !Array.isArray(value)) {
+            valueProcess = [];
+        }
         return valueProcess;
     }
 
@@ -343,11 +346,17 @@ module.exports = class {
             if (field.shared) {
                 const value = this.processSerializedValue(field, data[this.state.activeTabId][field.id]);
                 serialized[field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
+                // if (field.type === "file" && !Array.isArray(serialized[field.id])) {
+                //     serialized[field.id] = [];
+                // }
             } else {
                 this.state.tabs.map(tab => {
                     serialized[tab.id] = serialized[tab.id] || {};
                     const value = this.processSerializedValue(field, data[tab.id][field.id]);
                     serialized[tab.id][field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
+                    // if (field.type === "file" && !Array.isArray(serialized[tab.id][field.id])) {
+                    //     serialized[tab.id][field.id] = [];
+                    // }
                 });
             }
         });
@@ -372,7 +381,7 @@ module.exports = class {
             Object.keys(data[tab.id]).map(i => {
                 if (data[tab.id][i] && Array.isArray(data[tab.id][i])) {
                     data[tab.id][i].map(f => {
-                        if (typeof f === "object" && f.type === "file") {
+                        if (typeof f === "object" && f.type === "file" && f.data) {
                             delete f.data;
                             f.upload = true;
                         }
@@ -387,7 +396,7 @@ module.exports = class {
         Object.keys(data).map(i => {
             if (data[i] && Array.isArray(data[i])) {
                 data[i].map(f => {
-                    if (typeof f === "object" && f.type === "file") {
+                    if (typeof f === "object" && f.type === "file" && f.data) {
                         delete f.data;
                         f.upload = true;
                     }
@@ -526,8 +535,6 @@ module.exports = class {
             this.setState("loading", false);
             this.setState("disabled", false);
             if (result && result.data && result.data.data) {
-                const data = this.deserialize(result.data.data);
-                this.setState("data", data);
                 if (this.input.tabsAvail && this.input.tabsActive) {
                     const tabs = this.input.tabsAvail.map(t => {
                         if (result.data.data[t.id]) {
@@ -536,7 +543,17 @@ module.exports = class {
                         return null;
                     }).filter(t => t);
                     this.setState("tabs", tabs);
+                    const errors = {};
+                    tabs.map(tab => {
+                        errors[tab.id] = {};
+                    });
+                    if (tabs.length) {
+                        this.setState("activeTabId", tabs[0].id);
+                    }
+                    this.setState("errors", errors);
                 }
+                const data = this.deserialize(result.data.data);
+                this.setState("data", data);
                 setTimeout(this.autoFocus.bind(this), 0);
             }
         } catch (e) {

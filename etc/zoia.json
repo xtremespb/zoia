@@ -48,5 +48,7 @@
         "globalPrefix": "z3"
     },
     "commonTableItemsLimit": 20,
-    "captchaValidity": 3600
+    "captchaValidity": 3600,
+    "collectionFiles": "files",
+    "directoryFiles": "dist/files"
 }

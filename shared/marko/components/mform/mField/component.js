@@ -1,7 +1,13 @@
+const ace = process.browser ? require("ace-builds") : null;
+const debounce = require("lodash.debounce");
 const {
     v4: uuidv4
 } = require("uuid");
 const axios = require("axios");
+
+if (process.browser) {
+    require("ace-builds/webpack-resolver");
+}
 
 module.exports = class {
     onCreate(input) {
@@ -15,6 +21,16 @@ module.exports = class {
             setFocus: this.setFocus.bind(this),
             reloadCaptcha: this.reloadCaptcha.bind(this)
         };
+    }
+
+    onUpdate() {
+        switch (this.item.type) {
+        case "ace":
+            if (this.input.value !== this.aceEditor.getSession().getValue()) {
+                this.aceEditor.getSession().setValue(this.input.value);
+            }
+            break;
+        }
     }
 
     async reloadCaptcha() {
@@ -32,16 +48,30 @@ module.exports = class {
 
     async onMount() {
         await this.reloadCaptcha();
+        switch (this.item.type) {
+        case "ace":
+            [this.aceEditorElement] = document.getElementById(this.item.id).getElementsByTagName("div");
+            this.aceEditor = ace.edit(this.aceEditorElement);
+            this.aceEditor.getSession().on("change", () => {
+                const value = this.aceEditor.getSession().getValue();
+                this.emit("value-change", {
+                    type: "input",
+                    id: this.item.id,
+                    value
+                });
+            });
+            break;
+        }
     }
 
     setFocus() {
         let field;
         switch (this.item.type) {
         case "radio":
-            field = this.getEl(`${this.item.id}_0`);
+            field = this.getEl(`control_${this.item.id}_0`);
             break;
         default:
-            field = this.getEl(this.item.id);
+            field = this.getEl(`control_${this.item.id}`);
         }
         if (field) {
             field.focus();

@@ -2,6 +2,7 @@ import {
     ObjectId
 } from "mongodb";
 import Auth from "../../../shared/lib/auth";
+import utils from "../../../shared/lib/utils";
 import pageEdit from "./data/pageEdit.json";
 import C from "../../../shared/lib/constants";
 
@@ -25,9 +26,23 @@ export default fastify => ({
         }
         // Get ID from body
         const id = req.body.id && typeof req.body.id === "string" && req.body.id.match(/^[a-f0-9]{24}$/) ? req.body.id : undefined;
-        // Get data from form body
-        const data = extendedValidation.getData();
         try {
+            // Get data from form body
+            const dataRaw = extendedValidation.getData();
+            const data = extendedValidation.filterDataFiles(dataRaw);
+            // Get files from body
+            const uploadFiles = extendedValidation.getFiles();
+            // Delete files which are removed
+            if (id) {
+                const dbItem = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).findOne({
+                    _id: new ObjectId(id)
+                });
+                await utils.cleanRemovedFiles(req, this.mongo.db, extendedValidation, dbItem, data);
+            }
+            // Upload files
+            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles, C.UPLOAD_AUTH, C.UPLOAD_ADMIN))) {
+                return;
+            }
             // Process case and trim
             data.path = data.path.trim().toLowerCase();
             // Check for path duplicates
@@ -45,7 +60,12 @@ export default fastify => ({
                 updateExtras.createdAt = new Date();
             }
             // Update database
-            const update = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).updateOne(data.id ? {
+            Object.keys(req.zoiaConfig.languages).map(k => {
+                if (!data[k]) {
+                    data[k] = undefined;
+                }
+            });
+            const update = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).updateOne(id ? {
                 _id: new ObjectId(id)
             } : {
                 path: data.path

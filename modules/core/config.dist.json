@@ -1,0 +1,17 @@
+{
+    "database": {
+        "collections": {
+            "captcha": {
+                "indexesAsc": [],
+                "indexesDesc": [],
+                "expires": 3600
+            },
+            "files": {
+                "indexesAsc": [],
+                "indexesDesc": []
+            }
+        }
+    },
+    "routes": {},
+    "setup": false
+}

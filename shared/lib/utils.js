@@ -1,3 +1,6 @@
+import fs from "fs-extra";
+import path from "path";
+
 export default {
     checkDatabaseDuplicates: async (rep, db, collection, query, errorKeyword, field) => {
         try {
@@ -33,5 +36,70 @@ export default {
             return 1;
         }
         return 0;
+    },
+    async cleanRemovedFiles(req, db, extendedValidation, dbItem, data) {
+        if (dbItem) {
+            const dbFiles = extendedValidation.extractFiles(dbItem);
+            const formFiles = extendedValidation.extractFiles(data);
+            const removedFiles = dbFiles.filter(f => formFiles.indexOf(f) === -1);
+            await Promise.allSettled(removedFiles.map(async f => {
+                try {
+                    const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directoryFiles}/${f}`);
+                    await fs.remove(filename);
+                    await db.collection(req.zoiaConfig.collectionFiles).deleteOne({
+                        _id: f
+                    });
+                } catch (e) {
+                    // Ignore
+                }
+            }));
+        }
+    },
+    async saveFiles(req, rep, db, uploadFiles, auth = false, admin = false) {
+        const duplicates = await db.collection(req.zoiaConfig.collectionFiles).find({
+            $or: uploadFiles.map(f => ({
+                _id: f.id
+            }))
+        }).count();
+        if (duplicates) {
+            rep.requestError(rep, {
+                failed: true,
+                error: "Some files are duplicated",
+                errorKeyword: "duplicateFiles",
+                errorData: []
+            });
+            return false;
+        }
+        let uploadError;
+        await Promise.allSettled(uploadFiles.map(async f => {
+            try {
+                const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directoryFiles}/${f.id}`);
+                await fs.writeFile(filename, req.body[f.id][0].data);
+                await db.collection(req.zoiaConfig.collectionFiles).updateOne({
+                    _id: f.id
+                }, {
+                    $set: {
+                        name: f.name,
+                        size: req.body[f.id][0].data.length,
+                        admin,
+                        auth
+                    }
+                }, {
+                    upsert: true
+                });
+            } catch (e) {
+                uploadError = true;
+            }
+        }));
+        if (uploadError) {
+            rep.requestError(rep, {
+                failed: true,
+                error: "Some files are not saved",
+                errorKeyword: "uploadError",
+                errorData: []
+            });
+            return false;
+        }
+        return true;
     }
 };

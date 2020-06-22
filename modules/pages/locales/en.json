@@ -15,5 +15,7 @@
     "titleHelpText": "Displayed in browser window",
     "mFormErr.pathAlreadyExists": "Page with this path already exists",
     "content": "Content",
-    "contentHelpText": "HTML displayed on a page"
+    "contentHelpText": "HTML displayed on a page",
+    "attachments": "Attachments",
+    "selectFiles": "Select file(s)"
 }
