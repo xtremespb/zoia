@@ -1,5 +1,5 @@
 const ace = process.browser ? require("ace-builds") : null;
-const debounce = require("lodash.debounce");
+const throttle = require("lodash.throttle");
 const {
     v4: uuidv4
 } = require("uuid");
@@ -26,10 +26,15 @@ module.exports = class {
     onUpdate() {
         switch (this.item.type) {
         case "ace":
-            if (this.input.value !== this.aceEditor.getSession().getValue()) {
-                this.aceEditor.getSession().setValue(this.input.value);
-            }
+            throttle(this.updateAce.bind(this), 100)();
             break;
+        }
+    }
+
+    updateAce() {
+        console.log(`${this.aceEditor.getSession().getValue()} -> ${this.input.value}`);
+        if (this.input.value !== this.aceEditor.getSession().getValue()) {
+            this.aceEditor.getSession().setValue(this.input.value);
         }
     }
 
