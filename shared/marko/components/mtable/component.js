@@ -39,10 +39,6 @@ module.exports = class {
     onMount() {
         // Do we need to auto-set itemsPerPage?
         // On mobile device, we shall not
-        // if (this.input.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches) {
-        //     const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_tableWrap`).getBoundingClientRect().top - 103) / 49, 10);
-        //     this.state.itemsPerPage = itemsCount > 0 ? itemsCount : 1;
-        // }
         this.onWindowResize();
         window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 310));
         // Define inputs
@@ -69,6 +65,7 @@ module.exports = class {
         if (this.input.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches) {
             const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_tableWrap`).getBoundingClientRect().top - 103) / 49, 10);
             if (itemsCount && this.state.itemsPerPage !== itemsCount) {
+                console.log(`${itemsCount} && ${this.state.itemsPerPage} !== ${itemsCount}`);
                 this.state.itemsPerPage = itemsCount > 0 ? itemsCount : 1;
                 if (reload) {
                     this.loadData();

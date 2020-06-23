@@ -32,17 +32,17 @@ style.scss {
       <if(state.activeTabId)>
         <for|tItem, tIndex| of=input.fields>
           <if(typeof tItem === "object" && tItem.type)>
-            <div class="field columns z3-mf-field-columns" key=`control_component_${tItem.id}_wrap`>
+            <div class="field columns z3-mf-field-columns" key=`mf_cmp_${tItem.id}_wrap`>
               <div class=`control column ${tItem.wrapCSS || ""}`>
-                <mField key=`control_component_${tItem.id}` item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
+                <mField key=`mf_cmp_${tItem.id}` item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
               </div>
             </div>
           </if>
           <if(Array.isArray(tItem))>
             <div class="field columns is-gapless z3-mf-field-columns-group">
               <for|sItem, sIndex| of=tItem>
-                <div class=`control column ${sItem.wrapCSS || ""}` key=`control_component_${sItem.id}_wrap`>
-                  <mField key=`control_component_${sItem.id}` item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
+                <div class=`control column ${sItem.wrapCSS || ""}` key=`mf_cmp_${sItem.id}_wrap`>
+                  <mField key=`mf_cmp_${sItem.id}` item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId/>
                 </div>
               </for>
             </div>

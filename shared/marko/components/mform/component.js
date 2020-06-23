@@ -76,9 +76,18 @@ module.exports = class {
 
     autoFocus() {
         const autoFocusField = this.fieldsFlat.find(i => i.autoFocus);
-        if (autoFocusField && this.getComponent(autoFocusField.id)) {
-            this.getComponent(autoFocusField.id).func.setFocus();
+        if (autoFocusField && this.getComponent(`mf_cmp_${autoFocusField.id}`)) {
+            this.getComponent(`mf_cmp_${autoFocusField.id}`).func.setFocus();
         }
+    }
+
+    emitFieldsUpdate() {
+        this.fieldsFlat.map(f => {
+            const component = this.getComponent(`mf_cmp_${f.id}`);
+            if (component && component.func.performUpdate) {
+                component.func.performUpdate();
+            }
+        });
     }
 
     onMount() {
@@ -98,7 +107,8 @@ module.exports = class {
             id
         } = e.target.dataset;
         this.setState("activeTabId", id);
-        this.autoFocus();
+        setTimeout(this.emitFieldsUpdate.bind(this), 0);
+        setTimeout(this.autoFocus.bind(this), 0);
     }
 
     onTabSettingsClick() {
@@ -123,6 +133,7 @@ module.exports = class {
             tab.selected = checked;
         }
         this.setState("tabsSelect", tabsSelect);
+        setTimeout(this.emitFieldsUpdate.bind(this), 0);
     }
 
     onTabSettingsDialogCloseClick() {
@@ -173,6 +184,7 @@ module.exports = class {
         this.setState("tabs", tabs);
         this.setState("tabSettingsDialogActive", false);
         this.setState("activeTabId", activeTabId);
+        setTimeout(this.emitFieldsUpdate.bind(this), 0);
         if (activeTabId) {
             this.autoFocus();
         }
@@ -555,8 +567,10 @@ module.exports = class {
                 const data = this.deserialize(result.data.data);
                 this.setState("data", data);
                 setTimeout(this.autoFocus.bind(this), 0);
+                setTimeout(this.emitFieldsUpdate.bind(this), 0);
             }
         } catch (e) {
+            console.error(e);
             if (e && e.response && e.response.status === 401) {
                 this.emit("unauthorized", {});
             }

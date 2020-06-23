@@ -19,23 +19,21 @@ module.exports = class {
         this.item = input.item;
         this.func = {
             setFocus: this.setFocus.bind(this),
-            reloadCaptcha: this.reloadCaptcha.bind(this)
+            reloadCaptcha: this.reloadCaptcha.bind(this),
+            performUpdate: this.performUpdate.bind(this)
         };
     }
 
-    onUpdate() {
+    performUpdate() {
         switch (this.item.type) {
         case "ace":
-            throttle(this.updateAce.bind(this), 100)();
+            throttle(this.updateAce.bind(this), 300)();
             break;
         }
     }
 
     updateAce() {
-        console.log(`${this.aceEditor.getSession().getValue()} -> ${this.input.value}`);
-        if (this.input.value !== this.aceEditor.getSession().getValue()) {
-            this.aceEditor.getSession().setValue(this.input.value);
-        }
+        this.aceEditor.getSession().setValue(this.input.value || "");
     }
 
     async reloadCaptcha() {
@@ -57,6 +55,14 @@ module.exports = class {
         case "ace":
             [this.aceEditorElement] = document.getElementById(this.item.id).getElementsByTagName("div");
             this.aceEditor = ace.edit(this.aceEditorElement);
+            this.aceEditor.setOptions(this.item.aceOptions || {
+                mode: "ace/mode/html",
+                theme: "ace/theme/chrome",
+                fontSize: "16px",
+                wrap: true,
+                useSoftTabs: true,
+                tabSize: 2
+            });
             this.aceEditor.getSession().on("change", () => {
                 const value = this.aceEditor.getSession().getValue();
                 this.emit("value-change", {
@@ -64,6 +70,15 @@ module.exports = class {
                     id: this.item.id,
                     value
                 });
+            });
+            // Remove annotations, e.g.
+            // "Non-space characters found without seeing a doctype first. Expected e.g. <!DOCTYPE html>."
+            this.aceEditor.getSession().on("changeAnnotation", () => {
+                const annotations = this.aceEditor.getSession().getAnnotations();
+                const annotationsFiltered = annotations.filter(a => a && !a.text.match(/DOCTYPE html/));
+                if (annotations.length > annotationsFiltered.length) {
+                    this.aceEditor.getSession().setAnnotations(annotationsFiltered);
+                }
             });
             break;
         }
@@ -73,10 +88,10 @@ module.exports = class {
         let field;
         switch (this.item.type) {
         case "radio":
-            field = this.getEl(`control_${this.item.id}_0`);
+            field = this.getEl(`mf_ctl_${this.item.id}_0`);
             break;
         default:
-            field = this.getEl(`control_${this.item.id}`);
+            field = this.getEl(`mf_ctl_${this.item.id}`);
         }
         if (field) {
             field.focus();

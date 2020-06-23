@@ -101,6 +101,13 @@
     display: flex;
 }
 
+.z3-mf-ace {
+    width: 100%;
+    height: 300px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px
+}
+
 @media (max-width: 1024px) {
 
     .z3-mf-captcha-input,
