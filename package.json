@@ -34,6 +34,7 @@
         "lodash.debounce": "^4.0.8",
         "lodash.throttle": "^4.1.1",
         "marko": "^4.21.10",
+        "mime-types": "^2.1.27",
         "moment": "^2.26.0",
         "moment-range": "^4.0.2",
         "mongodb": "^3.5.9",

@@ -50,5 +50,6 @@
     "commonTableItemsLimit": 20,
     "captchaValidity": 3600,
     "collectionFiles": "files",
-    "directoryFiles": "dist/files"
+    "directoryFiles": "dist/files",
+    "downloadRoute": "/core/download"
 }

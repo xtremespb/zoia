@@ -290,6 +290,9 @@ export default class {
                             (item || []).map(ai => {
                                 if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
                                     delete ai.upload;
+                                    if (this.body && this.body[ai.id] && this.body[ai.id][0] && this.body[ai.id][0].data) {
+                                        ai.size = this.body[ai.id][0].data.length;
+                                    }
                                 }
                             });
                         }
@@ -304,6 +307,9 @@ export default class {
                     (item || []).map(ai => {
                         if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
                             delete ai.upload;
+                            if (this.body && this.body[ai.id] && this.body[ai.id][0] && this.body[ai.id][0].data) {
+                                ai.size = this.body[ai.id][0].data.length;
+                            }
                         }
                     });
                 }

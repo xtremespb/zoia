@@ -37,7 +37,7 @@ File Input
       </a>
     </label>
   </div>
-  <if(input.value)>
+  <if(input.value && input.value.length)>
     <div class="z3-mf-margin-small-top">
       <for|file, index| of=input.value>
         <div>

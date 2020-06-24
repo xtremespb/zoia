@@ -17,7 +17,6 @@ import loggerHelpers from "../../lib/loggerHelpers";
 import site from "../../lib/site";
 import internalServerErrorHandler from "./internalServerErrorHandler";
 import notFoundErrorHandler from "./notFoundErrorHandler";
-import captchaHandler from "./captchaHandler";
 import response from "../../lib/response";
 import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
@@ -145,8 +144,6 @@ import extendedValidation from "../../lib/extendedValidation";
                 pino.info(e.stack);
             }
         }));
-        // Captcha
-        fastify.post("/api/core/captcha", (req, rep) => captchaHandler(req, rep));
         // Start server
         await fastify.listen(config.webServer.port, config.webServer.ip);
     } catch (e) {

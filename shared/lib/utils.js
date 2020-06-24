@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
+import mime from "mime-types";
 
 export default {
     checkDatabaseDuplicates: async (rep, db, collection, query, errorKeyword, field) => {
@@ -80,6 +81,7 @@ export default {
                 }, {
                     $set: {
                         name: f.name,
+                        mime: mime.lookup(f.name) || "application/octet-stream",
                         size: req.body[f.id][0].data.length,
                         admin,
                         auth
@@ -101,5 +103,21 @@ export default {
             return false;
         }
         return true;
+    },
+    formatBytes(bytes, decimals = 2) {
+        const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+        if (bytes === 0) {
+            return {
+                size: 0,
+                unit: sizes[0]
+            };
+        }
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return {
+            size: parseFloat((bytes / (k ** i)).toFixed(dm)),
+            unit: sizes[i]
+        };
     }
 };

@@ -570,6 +570,7 @@ module.exports = class {
                 setTimeout(this.emitFieldsUpdate.bind(this), 0);
             }
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error(e);
             if (e && e.response && e.response.status === 401) {
                 this.emit("unauthorized", {});

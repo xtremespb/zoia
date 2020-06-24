@@ -40,7 +40,7 @@ module.exports = class {
         // Do we need to auto-set itemsPerPage?
         // On mobile device, we shall not
         this.onWindowResize();
-        window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 310));
+        window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
         // Define inputs
         this.state.sortId = this.input.sortId;
         this.state.sortDirection = this.input.sortDirection;
@@ -65,11 +65,10 @@ module.exports = class {
         if (this.input.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches) {
             const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_tableWrap`).getBoundingClientRect().top - 103) / 49, 10);
             if (itemsCount && this.state.itemsPerPage !== itemsCount) {
-                console.log(`${itemsCount} && ${this.state.itemsPerPage} !== ${itemsCount}`);
                 this.state.itemsPerPage = itemsCount > 0 ? itemsCount : 1;
-                if (reload) {
-                    this.loadData();
-                }
+            }
+            if (reload) {
+                this.loadData();
             }
         }
     }

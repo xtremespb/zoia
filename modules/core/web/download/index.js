@@ -1,17 +1,18 @@
-import {
-    ObjectId
-} from "mongodb";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
+import fs from "fs-extra";
+import path from "path";
+import Auth from "../../../../shared/lib/auth";
+import C from "../../../../shared/lib/constants";
 
 export default fastify => ({
     // eslint-disable-next-line consistent-return
     async handler(req, rep) {
+        // const auth = new Auth(this.mongo.db, fastify, req, rep);
         if (!req.query.id || typeof req.query.id !== "string" || !req.query.id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)) {
             rep.callNotFound();
             return rep.code(204);
         }
         try {
+            // const site = new req.ZoiaSite(req, "core");
             const file = await this.mongo.db.collection(req.zoiaConfig.collectionFiles).findOne({
                 _id: req.query.id
             });
@@ -26,10 +27,13 @@ export default fastify => ({
                     return rep.code(204);
                 }
             }
-            rep.successJSON(rep, {});
+            const stream = fs.createReadStream(path.resolve(`${__dirname}/../../${req.zoiaConfig.directoryFiles}/${file._id}`));
+            rep.code(200).headers({
+                "Content-Disposition": `attachment; filename="${file.name}"`,
+                "Content-Type": file.mime
+            }).send(stream);
         } catch (e) {
-            rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            return Promise.reject(e);
         }
     }
 });

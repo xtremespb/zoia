@@ -19,9 +19,9 @@ export default class {
         this.collectionUsers = req.zoiaModulesConfig["users"].collectionUsers;
         this.ip = crypto.createHmac("md5", this.zoiaConfig.secret).update(req.ip).digest("hex");
         if (useBearer === C.USE_EVERYTHING_FOR_TOKEN) {
-            this.token = req.cookies[`${this.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`] || req.headers.authorization.replace(/^Bearer /, "");
+            this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : req.cookies[`${this.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`];
         } else if (useBearer && req.headers.authorization) {
-            this.token = req.headers.authorization.replace(/^Bearer /, "");
+            this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : null;
         } else if (!useBearer) {
             this.token = req.cookies[`${this.zoiaConfig.siteOptions.globalPrefix || "zoia3"}.authToken`];
         }
