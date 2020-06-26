@@ -16,6 +16,7 @@ const config = require("./etc/zoia.json");
 const languages = Object.keys(config.languages);
 const markoPlugin = new MarkoPlugin();
 const webpackConfig = [];
+const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/modules`)).filter(d => !d.match(/^\./));
 
 const configWebClient = {
     name: "Web Server - Client Part",
@@ -65,7 +66,7 @@ const configWebClient = {
                     name: "styles",
                     test: /\.(s?css|sass)$/,
                     chunks: "all",
-                    minChunks: 3,
+                    minChunks: moduleDirs.length,
                     enforce: true
                 },
                 vendor: {
@@ -187,18 +188,17 @@ const generateTemplatesJSON = () => {
             });
         }
     });
-    fs.writeJSONSync(path.resolve(`${__dirname}/etc/templates.json`), templatesJSON);
+    fs.writeJSONSync(path.resolve(`${__dirname}/etc/auto/templates.json`), templatesJSON);
 };
 
 const rebuildMarkoTemplates = () => {
-    const templates = require(`${__dirname}/etc/templates.json`);
+    const templates = require(`${__dirname}/etc/auto/templates.json`);
     console.log("Re-building Marko templates macro...");
     const root = `<!-- This file is auto-generated, do not modify -->\n${templates.available.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
     fs.writeFileSync(path.resolve(`${__dirname}/shared/marko/zoia/index.marko`), root);
 };
 
 const generateModulesConfig = () => {
-    const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/modules`));
     const modules = [];
     fs.ensureDirSync(path.resolve(`${__dirname}/etc/modules`));
     fs.ensureDirSync(path.resolve(`${__dirname}/etc/scripts`));
@@ -206,9 +206,6 @@ const generateModulesConfig = () => {
         // if (!fs.existsSync(path.resolve(`${__dirname}/etc/modules/${dir}.json`)) && fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`))) {
         //     fs.copyFileSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`), path.resolve(`${__dirname}/etc/modules/${dir}.json`));
         // }
-        if (dir.match(/^\./)) {
-            return;
-        }
         const moduleData = require(path.resolve(`${__dirname}/modules/${dir}/module.json`));
         const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/etc/modules/${dir}.json`)) ? require(path.resolve(`${__dirname}/etc/modules/${dir}.json`)) : require(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`));
         moduleData.title = {};
@@ -226,11 +223,12 @@ const generateModulesConfig = () => {
         }
     });
     console.log("Writing modules.json...");
-    fs.writeJSONSync(`${__dirname}/etc/modules.json`, modules);
+    fs.writeJSONSync(`${__dirname}/etc/auto/modules.json`, modules);
 };
 
 const ensureDirectories = () => {
     console.log("Ensuring directories and copying statics...");
+    fs.ensureDirSync(path.resolve(`${__dirname}/etc/auto`));
     fs.ensureDirSync(path.resolve(`${__dirname}/dist/bin`));
     fs.ensureDirSync(path.resolve(`${__dirname}/dist/public`));
 };

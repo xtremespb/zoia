@@ -8,12 +8,14 @@ import fastifyFormbody from "fastify-formbody";
 import fastifyMultipart from "fastify-multipart";
 import fastifyCookie from "fastify-cookie";
 import Pino from "pino";
+import Telegraf from "telegraf";
 import Fastify from "fastify";
 import {
     MongoClient
 } from "mongodb";
 import logger from "../../lib/logger";
 import loggerHelpers from "../../lib/loggerHelpers";
+import telegramHelpers from "../../lib/telegramHelpers";
 import site from "../../lib/site";
 import internalServerErrorHandler from "./internalServerErrorHandler";
 import notFoundErrorHandler from "./notFoundErrorHandler";
@@ -31,8 +33,8 @@ import extendedValidation from "../../lib/extendedValidation";
     try {
         packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
         config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
-        templates = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/templates.json`));
-        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/modules.json`));
+        templates = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/templates.json`));
+        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/modules.json`));
         pino = Pino({
             level: config.logLevel
         });
@@ -97,8 +99,10 @@ import extendedValidation from "../../lib/extendedValidation";
         fastify.decorate("zoiaPackageJson", packageJson);
         fastify.decorateRequest("zoiaPackageJson", packageJson);
         Object.keys(loggerHelpers).map(i => fastify.decorateReply(i, loggerHelpers[i]));
+        Object.keys(loggerHelpers).map(i => fastify.decorate(i, loggerHelpers[i]));
         Object.keys(response).map(i => fastify.decorateReply(i, response[i]));
         Object.keys(utils).map(i => fastify.decorateReply(i, utils[i]));
+        Object.keys(telegramHelpers).map(i => fastify.decorate(i, telegramHelpers[i]));
         // Register FormBody and Multipart
         fastify.register(fastifyFormbody);
         fastify.register(fastifyMultipart, {
@@ -144,6 +148,24 @@ import extendedValidation from "../../lib/extendedValidation";
                 pino.info(e.stack);
             }
         }));
+        // Create Telegraf instance if necessary
+        if (config.telegram && config.telegram.enabled) {
+            const bot = new Telegraf(config.telegram.token);
+            fastify.decorate("telegramBot", bot);
+            fastify.decorateRequest("telegramBot", bot);
+            pino.info(`Launching Telegram bot`);
+            // Load all Telegram Modules
+            await Promise.all(modules.map(async m => {
+                try {
+                    const moduleTelegram = await import(`../../../modules/${m.id}/telegram/index.js`);
+                    moduleTelegram.default(fastify);
+                    pino.info(`Telegram Module loaded: ${m.id}`);
+                } catch (e) {
+                    pino.info(`Cannot load Telegram Module: ${m.id}`);
+                }
+            }));
+            bot.launch();
+        }
         // Start server
         await fastify.listen(config.webServer.port, config.webServer.ip);
     } catch (e) {

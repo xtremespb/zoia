@@ -6,7 +6,7 @@ const {
 } = require("mongodb");
 
 const config = fs.readJSONSync(path.resolve(`${__dirname}/../etc/zoia.json`));
-const modules = fs.readJSONSync(path.resolve(`${__dirname}/../etc/modules.json`));
+const modules = fs.readJSONSync(path.resolve(`${__dirname}/../etc/auto/modules.json`));
 const languages = Object.keys(config.languages);
 
 const main = async () => {

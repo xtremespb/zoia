@@ -24,4 +24,5 @@ typings/
 /etc/modules
 /etc/scripts
 /etc/bm_*
-/etc/*.json
+/etc/zoia.json
+/etc/auto

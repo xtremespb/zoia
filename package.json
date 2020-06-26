@@ -40,6 +40,7 @@
         "mongodb": "^3.5.9",
         "nodemailer": "^6.4.8",
         "pino": "^6.3.2",
+        "telegraf": "^3.38.0",
         "uuid-random": "^1.3.0",
         "zoia-captcha": "^1.0.6"
     },
