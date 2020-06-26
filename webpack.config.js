@@ -238,7 +238,8 @@ module.exports = (env, argv) => {
     };
 
     const ensureDirectories = () => {
-        console.log("Ensuring directories and copying statics...");
+        console.log("Ensuring directories...");
+        fs.ensureDirSync(path.resolve(`${__dirname}/logs`));
         fs.ensureDirSync(path.resolve(`${__dirname}/etc/auto`));
         fs.ensureDirSync(path.resolve(`${__dirname}/dist/bin`));
         fs.ensureDirSync(path.resolve(`${__dirname}/dist/public`));
