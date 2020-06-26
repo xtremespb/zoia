@@ -45,9 +45,9 @@ export default {
             const removedFiles = dbFiles.filter(f => formFiles.indexOf(f) === -1);
             await Promise.allSettled(removedFiles.map(async f => {
                 try {
-                    const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directoryFiles}/${f}`);
+                    const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${f}`);
                     await fs.remove(filename);
-                    await db.collection(req.zoiaConfig.collectionFiles).deleteOne({
+                    await db.collection(req.zoiaConfig.collections.files).deleteOne({
                         _id: f
                     });
                 } catch (e) {
@@ -57,7 +57,7 @@ export default {
         }
     },
     async saveFiles(req, rep, db, uploadFiles, auth = false, admin = false) {
-        const duplicates = await db.collection(req.zoiaConfig.collectionFiles).find({
+        const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
             $or: uploadFiles.map(f => ({
                 _id: f.id
             }))
@@ -74,9 +74,9 @@ export default {
         let uploadError;
         await Promise.allSettled(uploadFiles.map(async f => {
             try {
-                const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directoryFiles}/${f.id}`);
+                const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${f.id}`);
                 await fs.writeFile(filename, req.body[f.id][0].data);
-                await db.collection(req.zoiaConfig.collectionFiles).updateOne({
+                await db.collection(req.zoiaConfig.collections.files).updateOne({
                     _id: f.id
                 }, {
                     $set: {

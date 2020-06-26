@@ -49,6 +49,6 @@ export default {
         return rep.code(302).redirect(url);
     },
     redirectToRoot: (req, rep, site) => rep.code(302).redirect(site.i18n.getLocalizedURL(`/?_=${uuid()}`)),
-    redirectToLogin: (req, rep, site, url) => rep.code(302).redirect(`${site.i18n.getLocalizedURL(`${req.zoiaModulesConfig["users"].routes.login}?redirect=`)}${site.i18n.getLocalizedURL(url)}`),
+    redirectToLogin: (req, rep, site, url) => rep.code(302).redirect(`${site.i18n.getLocalizedURL(`${req.zoiaConfig.routes.login}?redirect=`)}${site.i18n.getLocalizedURL(url)}`),
     sendHTML: (rep, data) => rep.code(200).type("text/html").send(data)
 };

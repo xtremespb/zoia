@@ -27,7 +27,10 @@ export default (fastify, routeId) => ({
                     pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
                     routeId,
                     routeParams: req.params || {},
-                    routes: req.zoiaModulesConfig["pages"].routes,
+                    routes: {
+                        ...req.zoiaModulesConfig["pages"].routes,
+                        ...req.zoiaConfig.routes
+                    },
                     ...site.getGlobals()
                 },
                 modules: req.zoiaModules,

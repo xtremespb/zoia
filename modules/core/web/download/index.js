@@ -13,7 +13,7 @@ export default fastify => ({
         }
         try {
             // const site = new req.ZoiaSite(req, "core");
-            const file = await this.mongo.db.collection(req.zoiaConfig.collectionFiles).findOne({
+            const file = await this.mongo.db.collection(req.zoiaConfig.collections.files).findOne({
                 _id: req.query.id
             });
             if (!file) {
@@ -27,7 +27,7 @@ export default fastify => ({
                     return rep.code(204);
                 }
             }
-            const stream = fs.createReadStream(path.resolve(`${__dirname}/../../${req.zoiaConfig.directoryFiles}/${file._id}`));
+            const stream = fs.createReadStream(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${file._id}`));
             rep.code(200).headers({
                 "Content-Disposition": `attachment; filename="${file.name}"`,
                 "Content-Type": file.mime

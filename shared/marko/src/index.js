@@ -24,6 +24,7 @@ import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
 
 (async () => {
+    let buildJson;
     let config;
     let templates;
     let pino;
@@ -31,14 +32,17 @@ import extendedValidation from "../../lib/extendedValidation";
     let packageJson;
     const modulesConfig = {};
     try {
-        packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
+        buildJson = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/build.json`));
         config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
-        templates = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/templates.json`));
-        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/modules.json`));
         pino = Pino({
             level: config.logLevel
         });
-        pino.info(`Starting`);
+        pino.info(`Starting ZOIA ${buildJson.version} / ${buildJson.mode} (built at: ${buildJson.date})`);
+        packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
+        templates = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/templates.json`));
+        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/modules.json`));
+        const defaultConfigs = [];
+        pino.info(`Built-in templates: ${templates.available.join(", ")}`);
         modules.map(m => {
             try {
                 modulesConfig[m.id] = require(`../../../modules/${m.id}/config.dist.json`);
@@ -51,9 +55,12 @@ import extendedValidation from "../../lib/extendedValidation";
                 m.admin = modulesConfig[m.id] && modulesConfig[m.id].routes && modulesConfig[m.id].routes.admin ? modulesConfig[m.id].routes.admin : undefined;
             } catch (e) {
                 // Ignore
-                pino.info(`Using default config for ${m.id}`);
+                defaultConfigs.push(m.id);
             }
         });
+        if (defaultConfigs.length) {
+            pino.warn(`Warning: using default configs for modules: ${[...new Set(defaultConfigs)].join(", ")}`);
+        }
     } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
@@ -124,14 +131,18 @@ import extendedValidation from "../../lib/extendedValidation";
         fastify.setNotFoundHandler((req, rep) => notFoundErrorHandler(req, rep));
         // Set handler for error 500
         fastify.setErrorHandler((err, req, rep) => internalServerErrorHandler(err, req, rep));
+        // Load modules
+        let moduleErrors;
+        const modulesLoaded = [];
         // Load all web server modules
         await Promise.all(modules.map(async m => {
             try {
                 const moduleWeb = await import(`../../../modules/${m.id}/web/index.js`);
                 moduleWeb.default(fastify);
-                pino.info(`Web Module loaded: ${m.id}`);
+                modulesLoaded.push(m.id);
             } catch (e) {
-                pino.info(`Cannot load module: ${m.id}`);
+                moduleErrors = true;
+                pino.error(`Cannot load Web part for module: ${m.id}`);
                 if (config.stackTrace && e.stack) {
                     pino.info(e.stack);
                 }
@@ -142,9 +153,10 @@ import extendedValidation from "../../lib/extendedValidation";
             try {
                 const moduleAPI = await import(`../../../modules/${m.id}/api/index.js`);
                 moduleAPI.default(fastify);
-                pino.info(`API Module loaded: ${m.id}`);
+                modulesLoaded.push(m.id);
             } catch (e) {
-                pino.info(`Cannot load API module: ${m.id}`);
+                moduleErrors = true;
+                pino.error(`Cannot load API part for module: ${m.id}`);
                 pino.info(e.stack);
             }
         }));
@@ -159,12 +171,16 @@ import extendedValidation from "../../lib/extendedValidation";
                 try {
                     const moduleTelegram = await import(`../../../modules/${m.id}/telegram/index.js`);
                     moduleTelegram.default(fastify);
-                    pino.info(`Telegram Module loaded: ${m.id}`);
+                    modulesLoaded.push(m.id);
                 } catch (e) {
-                    pino.info(`Cannot load Telegram Module: ${m.id}`);
+                    moduleErrors = true;
+                    pino.error(`Cannot load Telegram part for module: ${m.id}`);
                 }
             }));
             bot.launch();
+        }
+        if (!moduleErrors) {
+            pino.info(`Modules loaded: ${[...new Set(modulesLoaded)].join(", ")}`);
         }
         // Start server
         await fastify.listen(config.webServer.port, config.webServer.ip);

@@ -2,8 +2,9 @@
     "name": "zoia3",
     "version": "3.0.0",
     "description": "Zoia CMS",
-    "main": "index.js",
     "scripts": {
+        "config": "node ./scripts/config.js",
+        "install": "node ./scripts/install.js",
         "build-dev": "webpack --display minimal --progress --mode development --config ./webpack.config.js",
         "build": "webpack --display minimal --progress --mode production --config ./webpack.config.js"
     },

@@ -4,27 +4,83 @@ const path = require("path");
 const {
     MongoClient
 } = require("mongodb");
+const commandLineArgs = require("command-line-args");
+const colors = require("colors/safe");
 
-const config = fs.readJSONSync(path.resolve(`${__dirname}/../etc/zoia.json`));
-const modules = fs.readJSONSync(path.resolve(`${__dirname}/../etc/auto/modules.json`));
+let packageJson;
+try {
+    packageJson = require(path.resolve(`${__dirname}/../package.json`));
+} catch {
+    console.log(colors.brightRed("Could not load ../package.json"));
+    console.log(colors.grey(`Please get this file from Github, you won't be able to run ZOIA otherwise.\n`));
+    process.exit(1);
+}
+
+const options = commandLineArgs([{
+    name: "module",
+    alias: "m",
+    type: String
+}, {
+    name: "all",
+    alias: "a",
+    type: Boolean
+}, {
+    name: "defaults",
+    alias: "d",
+    type: Boolean
+}]);
+
+console.log(colors.bgGrey(colors.black(`                            \n  ZOIA Installation Script  \n                            \n`)));
+console.log(`${colors.cyan("Version")}: ${colors.brightWhite(packageJson.version)}\n`);
+
+if (!Object.keys(options).length || (!options.module && !options.all)) {
+    console.log(`   Usage: ${colors.brightWhite("npm run install -- [--all] [--module name] [--defaults]")}\n\n       --all (-a): install all modules\n       --module (-m): install specified module\n       --defaults (-d): install default(s) for specified module(s)\n\nExamples: ${colors.brightWhite("npm run install -- -ad")} (install all modules and defaults)\n          ${colors.brightWhite(`npm run install -- --module ${colors.grey("users")} --defaults`)} (install "users" module and its defaults)`);
+    process.exit(0);
+}
+
+let config;
+let modules;
+try {
+    config = fs.readJSONSync(path.resolve(`${__dirname}/../etc/zoia.json`));
+} catch {
+    console.log(colors.brightRed("Could not load ../etc/zoia.json"));
+    console.log(colors.grey(`Please run the following command to generate the configuration file: npm run config\n`));
+    process.exit(1);
+}
+try {
+    modules = fs.readJSONSync(path.resolve(`${__dirname}/../etc/auto/modules.json`)).filter(m => options.module ? m.id === options.module : true);
+} catch {
+    console.log(colors.brightRed("Could not load ../etc/auto/modules.json"));
+    console.log(colors.grey(`Please run the following command to generate the configuration file: npm run build\n`));
+    process.exit(1);
+}
 const languages = Object.keys(config.languages);
 
-const main = async () => {
+console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", ")}${options.defaults ? " (including defaults)" : ""}\n`));
+
+(async () => {
     try {
+        console.log("* Connecting to the database");
         const mongoClient = new MongoClient(config.mongo.url, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
         await mongoClient.connect();
         const db = mongoClient.db(config.mongo.dbName);
-        await Promise.all(modules.map(async m => {
+        console.log("* Connected.");
+        await Promise.allSettled(modules.map(async m => {
             try {
+                console.log(colors.cyan(`\nInstalling module: ${colors.brightWhite(m.id)}\n`));
+                console.log(`* Loading configuration file: ${fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) ? `../etc/modules/${m.id}.json` : `../modules/${m.id}/config.dist.json`}`);
                 const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) : require(path.resolve(`${__dirname}/../modules/${m.id}/config.dist.json`));
+                console.log(`* Configuration file loaded.`);
                 // Process database routines
                 if (moduleConfig.database) {
+                    console.log(`* Processing database collections`);
                     const collections = Object.keys(moduleConfig.database.collections);
                     await Promise.all(collections.map(async c => {
                         try {
+                            console.log(`* Creating collection: "${c}"`);
                             await db.createCollection(c);
                             const {
                                 indexesAsc,
@@ -43,6 +99,7 @@ const main = async () => {
                                         indexes[i] = 1;
                                     }
                                 });
+                                console.log(`* Creating indexes: "${m.id}_${c}_asc"`);
                                 await db.collection(c).createIndex(indexes, {
                                     name: `${m.id}_${c}_asc`
                                 });
@@ -59,11 +116,13 @@ const main = async () => {
                                         indexes[i] = -1;
                                     }
                                 });
+                                console.log(`* Creating indexes: "${m.id}_${c}_desc"`);
                                 await db.collection(c).createIndex(indexes, {
                                     name: `${m.id}_${c}_desc`
                                 });
                             }
                             if (expires) {
+                                console.log(`* Creating indexes: "${m.id}_${c}_exp"`);
                                 await db.collection(c).createIndex({
                                     createdAt: 1
                                 }, {
@@ -77,23 +136,25 @@ const main = async () => {
                         }
                     }));
                 }
-                if (moduleConfig.setup) {
+                if (options.defaults && moduleConfig.setup) {
+                    console.log(`* Running setup script (../etc/scripts/${m.id}.js)`);
                     try {
                         const setupScript = require(path.resolve(`${__dirname}/../etc/scripts/${m.id}.js`));
                         await setupScript(config, moduleConfig, db);
                     } catch (e) {
                         console.error(e);
                     }
+                    console.log(`* Script execution complete`);
                 }
             } catch (e) {
                 console.error(e);
             }
         }));
+        console.log("* Closing database connection");
         mongoClient.close();
+        console.log(colors.green("\nDone."));
     } catch (e) {
-        console.error(e);
+        console.error(` ${colors.brightRed(e.message)}`);
         process.exit(1);
     }
-};
-
-main();
+})();
