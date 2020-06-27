@@ -2,7 +2,7 @@ const fs = require("fs-extra");
 const path = require("path");
 
 const config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
-const modules = require("../../etc/auto/modules.json");
+const modules = require("../../build/etc/modules.json");
 
 const languages = Object.keys(config.languages);
 const catalogs = {};

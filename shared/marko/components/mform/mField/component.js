@@ -1,3 +1,4 @@
+/* eslint-disable import/no-webpack-loader-syntax */
 const ace = process.browser ? require("ace-builds") : null;
 const throttle = require("lodash.throttle");
 const {
@@ -6,7 +7,10 @@ const {
 const axios = require("axios");
 
 if (process.browser) {
-    require("ace-builds/webpack-resolver");
+    // require("ace-builds/webpack-resolver");
+    ace.config.setModuleUrl("ace/mode/html_worker", require("file-loader?name=npm.ace-builds.worker-html.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/worker-html.js"));
+    ace.config.setModuleUrl("ace/mode/html", require("file-loader?name=npm.ace-builds.mode-html.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/mode-html.js"));
+    ace.config.setModuleUrl("ace/theme/chrome", require("file-loader?name=npm.ace-builds.theme-chrome.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/theme-chrome.js"));
 }
 
 module.exports = class {

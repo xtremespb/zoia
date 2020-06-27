@@ -1,5 +1,3 @@
-/* eslint-disable arrow-body-style */
-
 const {
     v4: uuidv4
 } = require("uuid");
@@ -15,18 +13,17 @@ module.exports = class {
     }
 
     onMount() {
-        // eslint-disable-next-line no-unused-vars
         this.state.processValue = (id, value, column, row) => {
             switch (column) {
             case "status":
                 const statusText = [];
                 if (row.status.indexOf("active") > -1) {
-                    statusText.push(`<i class="fas fa-user"/>`);
+                    statusText.push(`<span class="icon"><i class="mdi mdi-24px mdi-account-circle-outline"></i></span>`);
                 }
                 if (row.status.indexOf("admin") > -1) {
-                    statusText.push(`<i class="fas fa-crown"/>`);
+                    statusText.push(`<span class="icon"><i class="mdi mdi-24px mdi-account-circle"></i></span>`);
                 }
-                return statusText.join("&nbsp;");
+                return `<div>${statusText.join("")}</div>`;
             default:
                 return value;
             }
@@ -36,7 +33,6 @@ module.exports = class {
         }
     }
 
-    // eslint-disable-next-line class-methods-use-this
     onActionClick(data) {
         switch (data.action) {
         case "btnEdit":

@@ -14,8 +14,8 @@ style.scss {
         <if(input.tabsActive)>
           <li>
             <a on-click("onTabSettingsClick")>
-              <span class="icon is-small">
-                <i class="fas fa-cog" aria-hidden="true"/>
+              <span class="icon">
+                <i class="mdi mdi-cog" aria-hidden="true"/>
               </span>
               <span>${input.i18n.t("mForm.settings")}</span>
             </a>
@@ -65,7 +65,7 @@ style.scss {
               <div class="z3-pretty p-icon">
                 <input type="checkbox" checked=tab.selected data-id=tab.id on-change("onTabsSelectChange")/>
                 <div class="state">
-                  <i class="icon fas fa-check"/>
+                  <i class="icon mdi mdi-check"/>
                   <label>${tab.label}</label>
                 </div>
               </div>

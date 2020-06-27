@@ -1,5 +1,5 @@
 {
     "id": "pages",
-    "icon": "file-alt",
+    "icon": "text-box-outline",
     "admin": "/admin/pages"
 }

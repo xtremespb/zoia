@@ -2,7 +2,8 @@ $family-sans-serif: "Source Sans Pro",
 sans-serif;
 $primary: #35525f;
 $link: #35525f;
-@import "~@fortawesome/fontawesome-free/css/all.min.css";
+$mdi-font-path: "~@mdi/font/fonts";
+@import "~@mdi/font/scss/materialdesignicons.scss";
 @import "../../../fonts/source-sans-pro/source-sans-pro.css";
 @import "~bulma/bulma";
 @import '~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass';
@@ -94,15 +95,9 @@ $link: #35525f;
 
 .z3-ap-menu-icon-wrap {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     margin-right: 10px;
-}
-
-.z3-ap-menu-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .z3-ap-loading {

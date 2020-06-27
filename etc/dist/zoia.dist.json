@@ -1,5 +1,17 @@
 {
-    "secret": "e140693fa4c4ce97e0fd4eee37d14a45f8807d44894a650b1ae49776361a8b7e",
+    "webServer": {
+        "ip": "127.0.0.1",
+        "port": 3001,
+        "user": "",
+        "group": ""
+    },
+    "serverName": "localhost",
+    "siteOptions": {
+        "server": "localhost",
+        "id": "z3",
+        "globalPrefix": "z3"
+    },
+    "secret": "",
     "token": {
         "expires": "7 days",
         "ip": true
@@ -25,11 +37,8 @@
         "secure": null,
         "sameSite": null
     },
+    "captchaValidity": 3600,
     "originCORS": "*",
-    "webServer": {
-        "ip": "127.0.0.1",
-        "port": 3001
-    },
     "languages": {
         "en": "English",
         "ru": "Русский"
@@ -44,16 +53,12 @@
             "titleShort": "Сайт на Zoia"
         }
     },
-    "siteOptions": {
-        "globalPrefix": "z3"
-    },
     "commonTableItemsLimit": 20,
-    "captchaValidity": 3600,
     "collections": {
         "files": "files"
     },
     "directories": {
-        "files": "dist/files"
+        "files": "build/files"
     },
     "routes": {
         "download": "/core/download",

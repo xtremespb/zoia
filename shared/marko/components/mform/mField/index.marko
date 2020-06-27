@@ -31,7 +31,7 @@ File Input
       <input class="file-input" type="file" multiple=input.item.multiple on-change("onFileInputChange") data-id=input.item.id/>
       <a class="file-cta" key=`mf_ctl_${input.item.id}` tabindex="0">
         <span class="file-icon">
-          <i class="fas fa-upload"/>
+          <i class="mdi mdi-upload"/>
         </span>
         <span class="file-label">${input.item.buttonLabel}</span>
       </a>
@@ -46,7 +46,7 @@ File Input
             <a href=`/api/core/download?id=${file.id}` target="_blank">${file.name}</a>
           </else>
           &nbsp;
-          <a class="fas fa-times" data-id=input.item.id data-itemid=file.id on-click("onFileRemove")/>
+          <a class="mdi mdi-close" data-id=input.item.id data-itemid=file.id on-click("onFileRemove")/>
         </div>
       </for>
     </div>
@@ -139,7 +139,7 @@ Checkboxes
     <div class="z3-pretty p-icon">
       <input type="checkbox" key=`mf_ctl_${input.item.id}_${index}` on-change("onArrInputChange") data-id=input.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
       <div class="state">
-        <i class="icon fas fa-check"/>
+        <i class="icon mdi mdi-check"/>
         <label>${option.label}</label>
       </div>
     </div>

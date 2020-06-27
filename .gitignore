@@ -20,9 +20,8 @@ typings/
 .node_repl_history
 .yarn-integrity
 .env
-/dist/
+/build/
 /etc/modules
-/etc/scripts
+/build/scripts
 /etc/bm_*
 /etc/zoia.json
-/etc/auto

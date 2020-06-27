@@ -21,7 +21,11 @@ import {
           <for|module| of=input.modules>
             <if(module.admin)>
               <a href=out.global.i18n.getLocalizedURL(module.admin, out.global.language) class="navbar-item">
-                <i class=`fas fa-${module.icon}`/>&nbsp;&nbsp;${module.title[out.global.language]}
+                <div class="z3-ap-menu-icon-wrap">
+                  <span class="icon">
+                    <i class=`mdi mdi-18px mdi-${module.icon}`/>
+                  </span>
+                </div>${module.title[out.global.language]}
               </a>
             </if>
           </for>

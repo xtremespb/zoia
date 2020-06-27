@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const fs = require("fs-extra");
 const path = require("path");
 const {
@@ -5,7 +6,7 @@ const {
 } = require("uuid");
 const crypto = require("crypto");
 
-const source = path.resolve(`${__dirname}/zoia.dist.json`);
+const source = path.resolve(`${__dirname}/../etc/dist/zoia.dist.json`);
 const dest = path.resolve(`${__dirname}/../etc/zoia.json`);
 const configData = fs.readJSONSync(source);
 configData.secret = crypto.createHmac("sha256", uuidv4()).update(uuidv4()).digest("hex");

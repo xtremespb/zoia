@@ -11,9 +11,13 @@ style.scss {
             <p class="control">
               <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id type="button" on-click("onTopButtonClick") data-tooltip=btn.text>
                 <if(btn.icon)>
-                  <i class=btn.icon data-button=btn.id/>
+                  <div class="z3-mt-icon-wrap">
+                    <span class="icon">
+                      <i class=btn.icon data-button=btn.id/>
+                    </span>
+                  </div>
                 </if>
-                <if(btn.displayText && btn.text)>&nbsp;${btn.text}</if>
+                <if(btn.displayText && btn.text)>${btn.text}</if>
               </button>
             </p>
           </for>
@@ -24,7 +28,7 @@ style.scss {
       <div class="control has-icons-right">
         <input class="input" type="text" on-input("onSearchFieldInput") value=state.searchText/>
         <span class="icon is-small is-right">
-          <i class="fas fa-search"/>
+          <i class="mdi mdi-magnify"/>
         </span>
       </div>
     </div>
@@ -49,7 +53,7 @@ style.scss {
             </if>
             <for|column| of=input.columns>
               <th data-id=column.id data-sortable=column.sortable class=`${column.css || ""}${column.sortable ? " z3-mt-sortable" : ""}` on-click("onColumnClick")>
-                ${column.title}&nbsp;<i class=`fas ${state.sortDirection === "asc" ? "fa-angle-up" : "fa-angle-down"}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
+                ${column.title}&nbsp;<i class=`mdi ${state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
               </th>
             </for>
             <if(input.actions && input.actions.length)>
@@ -66,7 +70,7 @@ style.scss {
                     <div class="z3-pretty p-icon">
                       <input data-id=(row.id || row._id) type="checkbox" checked=state.checkboxes[`i${row.id || row._id}`] on-change("setCheckbox")/>
                       <div class="state">
-                        <i class="icon fas fa-check"/>
+                        <i class="icon mdi mdi-check"/>
                         <label/>
                       </div>
                     </div>
@@ -80,7 +84,9 @@ style.scss {
                     <for|action| of=input.actions>
                       <button class=`${action.css} z3-mt-action-button${action.tooltip ? " tooltip" : ""}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tooltip=action.text>
                         <if(action.icon)>
-                          <i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
+                          <span class="icon">
+                            <i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
+                          </span>
                         </if>
                         <if(action.displayText && action.text)>&nbsp;${action.text}</if>
                       </button>

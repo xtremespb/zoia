@@ -1,5 +1,5 @@
 {
     "id": "admin",
-    "icon": "tools",
+    "icon": "cog",
     "admin": "/admin"
 }

@@ -65,6 +65,7 @@ module.exports = (env, argv) => {
         optimization: {
             splitChunks: {
                 chunks: "all",
+                automaticNameDelimiter: "_",
                 cacheGroups: {
                     styles: {
                         name: "styles",
@@ -93,7 +94,7 @@ module.exports = (env, argv) => {
         },
         output: {
             filename: "[name].[contenthash:8].js",
-            path: path.resolve(`${__dirname}/dist/public/web`),
+            path: path.resolve(`${__dirname}/build/public/web`),
             publicPath: "/web/",
         },
         plugins: [
@@ -147,7 +148,7 @@ module.exports = (env, argv) => {
         },
         output: {
             libraryTarget: "commonjs2",
-            path: path.resolve(`${__dirname}/dist/bin`),
+            path: path.resolve(`${__dirname}/build/bin`),
             filename: "server.js",
             publicPath: "/web/",
         },
@@ -167,10 +168,16 @@ module.exports = (env, argv) => {
     };
 
     const cleanUpWeb = () => {
-        console.log("Cleaning up dist/public/web...");
-        const pathWeb = path.resolve(`${__dirname}/dist/public/web`);
-        fs.removeSync(pathWeb);
-        fs.ensureDirSync(pathWeb);
+        ["build/public/web", "build/bin", "build/etc", "build/scripts"].map(d => {
+            console.log(`Cleaning up directory: "${d}"`);
+            const pathWeb = path.resolve(`${__dirname}/${d}`);
+            try {
+                fs.removeSync(pathWeb);
+                fs.ensureDirSync(pathWeb);
+            } catch (e) {
+                console.log(`Unable to clean "${d}": ${e.message}`);
+            }
+        });
     };
 
     const generateTemplatesJSON = () => {
@@ -192,11 +199,11 @@ module.exports = (env, argv) => {
                 });
             }
         });
-        fs.writeJSONSync(path.resolve(`${__dirname}/etc/auto/templates.json`), templatesJSON);
+        fs.writeJSONSync(path.resolve(`${__dirname}/build/etc/templates.json`), templatesJSON);
     };
 
     const rebuildMarkoTemplates = () => {
-        const templates = require(`${__dirname}/etc/auto/templates.json`);
+        const templates = require(`${__dirname}/build/etc/templates.json`);
         console.log("Re-building Marko templates macro...");
         const root = `<!-- This file is auto-generated, do not modify -->\n${templates.available.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
         fs.writeFileSync(path.resolve(`${__dirname}/shared/marko/zoia/index.marko`), root);
@@ -204,8 +211,9 @@ module.exports = (env, argv) => {
 
     const generateModulesConfig = () => {
         const modules = [];
+        fs.ensureDirSync(path.resolve(`${__dirname}/logs`));
         fs.ensureDirSync(path.resolve(`${__dirname}/etc/modules`));
-        fs.ensureDirSync(path.resolve(`${__dirname}/etc/scripts`));
+        fs.ensureDirSync(path.resolve(`${__dirname}/build/scripts`));
         moduleDirs.map(dir => {
             // In production mode, copy the configs of each module to etc/modules
             if (argv.mode === "production" && !fs.existsSync(path.resolve(`${__dirname}/etc/modules/${dir}.json`)) && fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/config.dist.json`))) {
@@ -224,13 +232,13 @@ module.exports = (env, argv) => {
             });
             modules.push(moduleData);
             if (moduleConfig.setup && fs.existsSync(path.resolve(`${__dirname}/modules/${dir}/setup.js`))) {
-                fs.copyFileSync(path.resolve(`${__dirname}/modules/${dir}/setup.js`), path.resolve(`${__dirname}/etc/scripts/${dir}.js`));
+                fs.copyFileSync(path.resolve(`${__dirname}/modules/${dir}/setup.js`), path.resolve(`${__dirname}/build/scripts/${dir}.js`));
             }
         });
         console.log("Writing modules.json...");
-        fs.writeJSONSync(`${__dirname}/etc/auto/modules.json`, modules);
+        fs.writeJSONSync(`${__dirname}/build/etc/modules.json`, modules);
         console.log("Writing build.json...");
-        fs.writeJSONSync(`${__dirname}/etc/auto/build.json`, {
+        fs.writeJSONSync(`${__dirname}/build/etc/build.json`, {
             date: new Date(),
             mode: argv.mode,
             version: packageJson.version
@@ -240,9 +248,9 @@ module.exports = (env, argv) => {
     const ensureDirectories = () => {
         console.log("Ensuring directories...");
         fs.ensureDirSync(path.resolve(`${__dirname}/logs`));
-        fs.ensureDirSync(path.resolve(`${__dirname}/etc/auto`));
-        fs.ensureDirSync(path.resolve(`${__dirname}/dist/bin`));
-        fs.ensureDirSync(path.resolve(`${__dirname}/dist/public`));
+        fs.ensureDirSync(path.resolve(`${__dirname}/build/etc`));
+        fs.ensureDirSync(path.resolve(`${__dirname}/build/bin`));
+        fs.ensureDirSync(path.resolve(`${__dirname}/build/public`));
     };
 
     cleanUpWeb();

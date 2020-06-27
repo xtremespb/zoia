@@ -32,15 +32,15 @@ import extendedValidation from "../../lib/extendedValidation";
     let packageJson;
     const modulesConfig = {};
     try {
-        buildJson = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/build.json`));
+        buildJson = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/build.json`));
         config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
         pino = Pino({
             level: config.logLevel
         });
         pino.info(`Starting ZOIA ${buildJson.version} / ${buildJson.mode} (built at: ${buildJson.date})`);
         packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
-        templates = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/templates.json`));
-        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/auto/modules.json`));
+        templates = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/templates.json`));
+        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
         const defaultConfigs = [];
         pino.info(`Built-in templates: ${templates.available.join(", ")}`);
         modules.map(m => {

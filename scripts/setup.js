@@ -34,7 +34,7 @@ console.log(colors.bgGrey(colors.black(`                            \n  ZOIA Ins
 console.log(`${colors.cyan("Version")}: ${colors.brightWhite(packageJson.version)}\n`);
 
 if (!Object.keys(options).length || (!options.module && !options.all)) {
-    console.log(`   Usage: ${colors.brightWhite("npm run install -- [--all] [--module name] [--defaults]")}\n\n       --all (-a): install all modules\n       --module (-m): install specified module\n       --defaults (-d): install default(s) for specified module(s)\n\nExamples: ${colors.brightWhite("npm run install -- -ad")} (install all modules and defaults)\n          ${colors.brightWhite(`npm run install -- --module ${colors.grey("users")} --defaults`)} (install "users" module and its defaults)`);
+    console.log(`   Usage: ${colors.brightWhite("npm run setup -- [--all] [--module name] [--defaults]")}\n\n          --all (-a): install all modules\n          --module (-m): install specified module\n          --defaults (-d): install default(s) for specified module(s)\n\nExamples: ${colors.brightWhite("npm run setup -- -ad")} (install all modules and defaults)\n          ${colors.brightWhite(`npm run setup -- --module ${colors.grey("users")} --defaults`)} (install "users" module and its defaults)`);
     process.exit(0);
 }
 
@@ -48,9 +48,9 @@ try {
     process.exit(1);
 }
 try {
-    modules = fs.readJSONSync(path.resolve(`${__dirname}/../etc/auto/modules.json`)).filter(m => options.module ? m.id === options.module : true);
+    modules = fs.readJSONSync(path.resolve(`${__dirname}/../build/etc/modules.json`)).filter(m => options.module ? m.id === options.module : true);
 } catch {
-    console.log(colors.brightRed("Could not load ../etc/auto/modules.json"));
+    console.log(colors.brightRed("Could not load ../build/etc/modules.json"));
     console.log(colors.grey(`Please run the following command to generate the configuration file: npm run build\n`));
     process.exit(1);
 }
@@ -137,9 +137,9 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
                     }));
                 }
                 if (options.defaults && moduleConfig.setup) {
-                    console.log(`* Running setup script (../etc/scripts/${m.id}.js)`);
+                    console.log(`* Running setup script (../build/scripts/${m.id}.js)`);
                     try {
-                        const setupScript = require(path.resolve(`${__dirname}/../etc/scripts/${m.id}.js`));
+                        const setupScript = require(path.resolve(`${__dirname}/../build/scripts/${m.id}.js`));
                         await setupScript(config, moduleConfig, db);
                     } catch (e) {
                         console.error(e);
