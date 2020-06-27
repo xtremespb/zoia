@@ -8,7 +8,9 @@
         "setup": "node ./scripts/setup.js",
         "setup-all": "node ./scripts/setup.js --all --defaults",
         "build-dev": "webpack --display minimal --progress --mode development --config ./webpack.config.js",
-        "build": "webpack --display minimal --progress --mode production --config ./webpack.config.js"
+        "build": "webpack --display minimal --progress --mode production --config ./webpack.config.js",
+        "start": "node ./build/bin/server.js",
+        "start-dev": "node ./scripts/dev.js"
     },
     "author": "Michael Matveev <xtreme@rh1.ru> (re-hash.ru)",
     "license": "MIT",
@@ -48,9 +50,6 @@
         "zoia-captcha": "^1.0.6"
     },
     "devDependencies": {
-        "@mdi/font": "^5.3.45",
-        "imask": "^6.0.5",
-        "pretty-checkbox": "^3.0.3",
         "@babel/core": "^7.10.3",
         "@babel/plugin-proposal-class-properties": "^7.10.1",
         "@babel/plugin-proposal-object-rest-spread": "^7.10.3",
@@ -58,6 +57,7 @@
         "@babel/plugin-transform-runtime": "^7.10.3",
         "@babel/preset-env": "^7.10.3",
         "@marko/webpack": "^6.0.0",
+        "@mdi/font": "^5.3.45",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.1.0",
         "bulma": "^0.9.0",
@@ -67,10 +67,14 @@
         "eslint-config-airbnb-base": "^14.2.0",
         "eslint-plugin-import": "^2.22.0",
         "extract-css-chunks-webpack-plugin": "^4.7.5",
+        "fastify-http-proxy": "^3.2.0",
+        "fastify-static": "^2.7.0",
         "file-loader": "^6.0.0",
         "html-minifier": "^4.0.0",
+        "imask": "^6.0.5",
         "node-sass": "^4.14.1",
         "optimize-css-assets-webpack-plugin": "^5.0.3",
+        "pretty-checkbox": "^3.0.3",
         "router5": "^8.0.1",
         "router5-plugin-browser": "^8.0.1",
         "sass-loader": "^8.0.2",

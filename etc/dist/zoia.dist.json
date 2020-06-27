@@ -5,6 +5,10 @@
         "user": "",
         "group": ""
     },
+    "devServer": {
+        "ip": "127.0.0.1",
+        "port": 8080
+    },
     "serverName": "localhost",
     "siteOptions": {
         "server": "localhost",
