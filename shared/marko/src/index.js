@@ -107,11 +107,6 @@ import fastifyRateLimit from "../../lib/rateLimit";
         }
         // Rate Limiting
         if (config.rateLimit && config.rateLimit.enabled) {
-            //     config.rateLimit.store = RateLimitMongoStore;
-            //     config.rateLimit.keyGenerator = req => {
-            //         const hash = xxhash.h64(`${req.ip}${req.urlData().path}`, config.secretInt).toString(16);
-            //         return `${config.siteOptions.id}_${hash}`;
-            //     };
             fastify.register(fastifyRateLimit, config.rateLimit);
         }
         // Decorate Fastify with configuration and helpers

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html class="z3-e-500-html">
+<html class="z3-e-int-html">
   <head>
     <title>${out.global.pageTitle} | ${out.global.siteMetadata.title}</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
   </head>
-  <body class="z3-e-500-body">
+  <body class="z3-e-int-body">
     <div>
-      <h1 class="z3-e-500-h1 z3-e-500-title">${out.global.i18n.t("internalError")}</h1>
-      <p>${out.global.i18n.t("internalErrorMsg")}</p>
+      <h1 class="z3-e-int-h1 z3-e-int-title">${input.errorTitle}</h1>
+      <p>${input.errorMessage}</p>
     </div>
   </body>
 </html>

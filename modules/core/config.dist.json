@@ -18,6 +18,11 @@
                 "indexesAsc": [],
                 "indexesDesc": [],
                 "expires": 3600
+            },
+            "rateBan": {
+                "indexesAsc": [],
+                "indexesDesc": [],
+                "expires": 86400
             }
         }
     },

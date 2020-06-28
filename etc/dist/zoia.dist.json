@@ -40,6 +40,8 @@
     },
     "rateLimit": {
         "enabled": false,
+        "redis": false,
+        "ban": false,
         "addHeaders": {
             "x-ratelimit-limit": true,
             "x-ratelimit-remaining": true,

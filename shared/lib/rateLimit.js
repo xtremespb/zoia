@@ -1,54 +1,122 @@
 import xxhash from "xxhashjs";
 import fastifyPlugin from "fastify-plugin";
-import {
-    Long
-} from "mongodb";
 
-const buildRate = async (fastify, settings, routeOptions) => {
-    const preHandler = async (req, rep, next) => {
-        console.log(`Pre-handler is called`);
-        const hash = xxhash.h64(`${req.ip}${req.urlData().path}`, fastify.zoiaConfig.secretInt).toString(16);
-        const data = (await fastify.mongo.db.collection("rateLimit").findOne({
-            _id: hash
-        })) || {
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            max: 0
-        };
-        data.max += 1;
-        const timestampNow = new Date().getTime();
-        const timestampUpdated = data.updatedAt.getTime();
-        if (timestampNow - timestampUpdated <= routeOptions.config.rateLimit.timeWindow && data.max >= routeOptions.config.rateLimit.max) {
-            // Limit reached
-            console.log("L I M I T");
-            await fastify.mongo.db.collection("rateLimit").updateOne({
-                _id: hash
-            }, {
-                $set: {
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    max: routeOptions.config.rateLimit.max
-                }
-            }, {
-                upsert: true
-            });
-            next();
-            return rep.code(204);
-        }
-        if (timestampNow - timestampUpdated > routeOptions.config.rateLimit.timeWindow) {
-            data.max = 0;
-        }
+const getLimitData = async (fastify, settings, hashFull) => {
+    const defaults = {
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        max: 0
+    };
+    if (settings.redis && fastify.redis) {
+        const dataLimit = await fastify.redis.get(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`);
+        const dataLimitObj = dataLimit ? JSON.parse(dataLimit) : defaults;
+        dataLimitObj.updatedAt = typeof dataLimitObj.updatedAt === "string" ? new Date(dataLimitObj.updatedAt) : dataLimitObj.updatedAt;
+        return dataLimitObj;
+    }
+    const dataLimit = (await fastify.mongo.db.collection("rateLimit").findOne({
+        _id: hashFull
+    })) || defaults;
+    return dataLimit;
+};
+
+const getBanData = async (fastify, settings, hashIP) => {
+    if (settings.redis && fastify.redis) {
+        const dataBan = await fastify.redis.get(`${fastify.zoiaConfig.siteOptions.id}_rateBan_${hashIP}`);
+        return dataBan ? JSON.parse(dataBan) : null;
+    }
+    const dataBan = await fastify.mongo.db.collection("rateBan").findOne({
+        _id: hashIP
+    });
+    return dataBan;
+};
+
+const updateOnLimitExceeded = async (fastify, settings, hashFull, max) => {
+    const data = {
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        max
+    };
+    if (settings.redis && fastify.redis) {
+        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`, JSON.stringify(data), "ex", 3600);
+    } else {
         await fastify.mongo.db.collection("rateLimit").updateOne({
-            _id: hash
+            _id: hashFull
         }, {
-            $set: {
-                createdAt: data.createdAt,
-                updatedAt: new Date(),
-                max: data.max
-            }
+            $set: data
         }, {
             upsert: true
         });
+    }
+};
+
+const updateOnBan = async (fastify, settings, hashIP) => {
+    const data = {
+        createdAt: new Date(),
+    };
+    if (settings.redis && fastify.redis) {
+        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateBan_${hashIP}`, JSON.stringify(data), "ex", 86400);
+    } else {
+        await fastify.mongo.db.collection("rateBan").updateOne({
+            _id: hashIP
+        }, {
+            $set: data
+        }, {
+            upsert: true
+        });
+    }
+};
+
+const updateDataLimit = async (fastify, settings, hashFull, createdAt, max) => {
+    const data = {
+        createdAt,
+        updatedAt: new Date(),
+        max
+    };
+    if (settings.redis && fastify.redis) {
+        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`, JSON.stringify(data), "ex", 3600);
+    } else {
+        await fastify.mongo.db.collection("rateLimit").updateOne({
+            _id: hashFull
+        }, {
+            $set: data
+        }, {
+            upsert: true
+        });
+    }
+};
+
+const buildRate = async (fastify, settings, routeOptions) => {
+    const preHandler = async (req, rep, next) => {
+        const hashFull = xxhash.h64(`${req.ip}${req.urlData().path}`, fastify.zoiaConfig.secretInt).toString(16);
+        const hashIP = xxhash.h64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
+        if (settings.ban) {
+            const dataBan = await getBanData(fastify, settings, hashIP);
+            if (dataBan) {
+                const error = new Error("Forbidden");
+                error.code = 403;
+                rep.send(error);
+                return rep.code(204);
+            }
+        }
+        const dataLimit = await getLimitData(fastify, settings, hashFull);
+        dataLimit.max += 1;
+        const timestampNow = new Date().getTime();
+        const timestampUpdated = dataLimit.updatedAt.getTime();
+        if (timestampNow - timestampUpdated <= routeOptions.config.rateLimit.timeWindow && dataLimit.max >= routeOptions.config.rateLimit.max) {
+            // Limit reached
+            await updateOnLimitExceeded(fastify, settings, hashFull, dataLimit.max);
+            if (settings.ban && routeOptions.config.rateLimit.ban && dataLimit.max >= routeOptions.config.rateLimit.ban) {
+                await updateOnBan(fastify, settings, hashIP);
+            }
+            const error = new Error("Rate Limit Exceeded");
+            error.code = 429;
+            rep.send(error);
+            return rep.code(204);
+        }
+        if (timestampNow - timestampUpdated > routeOptions.config.rateLimit.timeWindow) {
+            dataLimit.max = 0;
+        }
+        await updateDataLimit(fastify, settings, hashFull, dataLimit.createdAt, dataLimit.max);
         next();
         return rep.code(204);
     };

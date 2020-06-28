@@ -24,7 +24,6 @@
         "colors": "^1.4.0",
         "command-line-args": "^5.1.1",
         "cryptr": "^6.0.2",
-        "fast-json-stringify": "^2.2.0",
         "fastify": "^2.15.0",
         "fastify-cookie": "^3.6.1",
         "fastify-cors": "^3.0.3",
