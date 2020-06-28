@@ -13,6 +13,11 @@
             "registry": {
                 "indexesAsc": [],
                 "indexesDesc": []
+            },
+            "rateLimit": {
+                "indexesAsc": [],
+                "indexesDesc": [],
+                "expires": 3600
             }
         }
     },

@@ -9,10 +9,12 @@ import fastifyMultipart from "fastify-multipart";
 import fastifyCookie from "fastify-cookie";
 import Pino from "pino";
 import Telegraf from "telegraf";
+import Redis from "ioredis";
 import Fastify from "fastify";
 import {
     MongoClient
 } from "mongodb";
+import crypto from "crypto";
 import logger from "../../lib/logger";
 import loggerHelpers from "../../lib/loggerHelpers";
 import telegramHelpers from "../../lib/telegramHelpers";
@@ -22,6 +24,7 @@ import notFoundErrorHandler from "./notFoundErrorHandler";
 import response from "../../lib/response";
 import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
+import fastifyRateLimit from "../../lib/rateLimit";
 
 (async () => {
     let buildJson;
@@ -34,6 +37,7 @@ import extendedValidation from "../../lib/extendedValidation";
     try {
         buildJson = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/build.json`));
         config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
+        config.secretInt = parseInt(crypto.createHash("md5").update(config.secret).digest("hex"), 16);
         pino = Pino({
             level: config.logLevel
         });
@@ -90,6 +94,26 @@ import extendedValidation from "../../lib/extendedValidation";
             });
             next();
         });
+        // Redis
+        if (config.redis && config.redis.enabled) {
+            const redis = new Redis(config.redis);
+            redis.on("error", e => {
+                pino.error(`Redis: ${e}`);
+                process.exit(1);
+            });
+            fastify.decorate("redis", redis);
+            fastify.decorateRequest("redis", redis);
+            pino.info(`Connected to Redis Server (${config.redis.host}:${config.redis.port})`);
+        }
+        // Rate Limiting
+        if (config.rateLimit && config.rateLimit.enabled) {
+            //     config.rateLimit.store = RateLimitMongoStore;
+            //     config.rateLimit.keyGenerator = req => {
+            //         const hash = xxhash.h64(`${req.ip}${req.urlData().path}`, config.secretInt).toString(16);
+            //         return `${config.siteOptions.id}_${hash}`;
+            //     };
+            fastify.register(fastifyRateLimit, config.rateLimit);
+        }
         // Decorate Fastify with configuration and helpers
         fastify.decorate("ZoiaSite", site);
         fastify.decorateRequest("ZoiaSite", site);

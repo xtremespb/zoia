@@ -24,7 +24,7 @@ module.exports = class {
         const {
             token
         } = response.data;
-        this.cookies.set(`${this.siteOptions.globalPrefix || "zoia3"}.authToken`, token);
+        this.cookies.set(`${this.siteOptions.id || "zoia3"}.authToken`, token);
         this.getComponent("userLoginForm").func.setProgress(true);
         this.setState("unauthorized", false);
         window.location.href = `${this.query.get("redirect") || this.i18n.getLocalizedURL("/")}?_=${uuidv4()}`;

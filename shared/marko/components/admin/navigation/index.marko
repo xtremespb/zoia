@@ -44,7 +44,7 @@ import {
       <div class=`navbar-item has-dropdown${state.activeUserMenu ? " is-active" : ""}` style="margin-right:5px">
         <a class="navbar-link z3-ap-navbar-link" id="za_ap_username_dropdown" on-click("onUserMenuClick")>${out.global.authData.username}</a>
         <div class="navbar-dropdown is-right">
-          <a class="navbar-item" href=out.global.i18n.getLocalizedURL(`${out.global.logout}?_=${uuid()}}`, out.global.language)>${out.global.i18n.t("logOut")}</a>
+          <a class="navbar-item" href=out.global.i18n.getLocalizedURL(`${out.global.logout}?_=${uuid()}`, out.global.language)>${out.global.i18n.t("logOut")}</a>
         </div>
       </div>
     </div>

@@ -46,9 +46,18 @@ export default {
             url = redirect.replace(/([^:]\/)\/+/g, "$1");
             url = `${url}?_=${uuid()}`;
         }
+        if (req.zoiaConfig.devServer && req.zoiaConfig.devServer.active) {
+            url = url.match(/^\//) ? url.replace(/^\//, "") : url;
+        }
         return rep.code(302).redirect(url);
     },
-    redirectToRoot: (req, rep, site) => rep.code(302).redirect(site.i18n.getLocalizedURL(`/?_=${uuid()}`)),
-    redirectToLogin: (req, rep, site, url) => rep.code(302).redirect(`${site.i18n.getLocalizedURL(`${req.zoiaConfig.routes.login}?redirect=`)}${site.i18n.getLocalizedURL(url)}`),
+    redirectToRoot: (req, rep, site) => rep.code(302).redirect(site.i18n.getLocalizedURL(`/?_=${uuid()}`).replace(/^\//, "")),
+    redirectToLogin: (req, rep, site, url) => {
+        let newURL = `${site.i18n.getLocalizedURL(`${req.zoiaConfig.routes.login}?redirect=`)}${site.i18n.getLocalizedURL(url)}`;
+        if (req.zoiaConfig.devServer && req.zoiaConfig.devServer.active) {
+            newURL = newURL.match(/^\//) ? newURL.replace(/^\//, "") : newURL;
+        }
+        rep.code(302).redirect(newURL);
+    },
     sendHTML: (rep, data) => rep.code(200).type("text/html").send(data)
 };

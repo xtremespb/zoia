@@ -10,7 +10,7 @@ $ if (input.id === "new") {
   input.userEditData.root.required = [...input.userEditData.root.required, "password", "passwordRepeat"];
 }
 $ const cookies = new Cookies(out.global.cookieOptions);
-$ const token = cookies.get(`${out.global.siteOptions.globalPrefix || "zoia3"}.authToken`);
+$ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
 <div>
   <h1 class="z3-ap-head-thin">${input.id === "new" ? out.global.i18n.t("userAdd") : out.global.i18n.t("userEdit")}</h1>
   <mform key="userEditForm" id="userEditForm" save={
