@@ -92,10 +92,8 @@ const buildRate = async (fastify, settings, routeOptions) => {
         if (settings.ban) {
             const dataBan = await getBanData(fastify, settings, hashIP);
             if (dataBan) {
-                const error = new Error("Forbidden");
-                error.code = 403;
-                rep.send(error);
-                return rep.code(204);
+                rep.sendError(rep, "Forbidden", 403);
+                return rep.getCode204(rep);
             }
         }
         const dataLimit = await getLimitData(fastify, settings, hashFull);
@@ -108,17 +106,15 @@ const buildRate = async (fastify, settings, routeOptions) => {
             if (settings.ban && routeOptions.config.rateLimit.ban && dataLimit.max >= routeOptions.config.rateLimit.ban) {
                 await updateOnBan(fastify, settings, hashIP);
             }
-            const error = new Error("Rate Limit Exceeded");
-            error.code = 429;
-            rep.send(error);
-            return rep.code(204);
+            rep.sendError(rep, "Rate Limit Exceeded", 429);
+            return rep.getCode204(rep);
         }
         if (timestampNow - timestampUpdated > routeOptions.config.rateLimit.timeWindow) {
             dataLimit.max = 0;
         }
         await updateDataLimit(fastify, settings, hashFull, dataLimit.createdAt, dataLimit.max);
         next();
-        return rep.code(204);
+        return rep.getCode204(rep);
     };
     // Add pre-handler to the route
     if (Array.isArray(routeOptions.preHandler)) {

@@ -59,5 +59,11 @@ export default {
         }
         rep.code(302).redirect(newURL);
     },
-    sendHTML: (rep, data) => rep.code(200).type("text/html").send(data)
+    sendHTML: (rep, data) => rep.code(200).type("text/html").send(data),
+    sendError: (rep, msg, code) => {
+        const error = new Error(msg);
+        error.code = code;
+        rep.send(error);
+    },
+    getCode204: rep => rep.code(204)
 };
