@@ -1,6 +1,3 @@
-const {
-    v4: uuidv4
-} = require("uuid");
 const Cookies = require("../../../../../shared/lib/cookies").default;
 const Query = require("../../../../../shared/lib/query").default;
 
@@ -27,6 +24,6 @@ module.exports = class {
         this.cookies.set(`${this.siteOptions.id || "zoia3"}.authToken`, token);
         this.getComponent("userLoginForm").func.setProgress(true);
         this.setState("unauthorized", false);
-        window.location.href = `${this.query.get("redirect") || this.i18n.getLocalizedURL("/")}?_=${uuidv4()}`;
+        window.location.href = `${this.query.get("redirect") || this.i18n.getLocalizedURL("/")}?_=${new Date().getTime()}`;
     }
 };

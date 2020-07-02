@@ -50,6 +50,24 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
       helpText: out.global.i18n.t("contentHelpText")
     },
     {
+      id: "css",
+      type: "ace",
+      label: out.global.i18n.t("css"),
+      helpText: out.global.i18n.t("cssHelpText"),
+      aceOptions: {
+        mode: "ace/mode/css"
+      }
+    },
+    {
+      id: "js",
+      type: "ace",
+      label: out.global.i18n.t("js"),
+      helpText: out.global.i18n.t("jsHelpText"),
+      aceOptions: {
+        mode: "ace/mode/javascript"
+      }
+    },
+    {
       id: "attachments",
       type: "file",
       label: out.global.i18n.t("attachments"),

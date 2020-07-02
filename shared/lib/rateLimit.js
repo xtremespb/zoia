@@ -1,5 +1,23 @@
 import xxhash from "xxhashjs";
 import fastifyPlugin from "fastify-plugin";
+import ipAddr from "ipaddr.js";
+
+const checkIp = (addr, cidr) => {
+    try {
+        const parsedAddr = ipAddr.process(addr);
+        if (cidr.indexOf("/") === -1) {
+            const parsedCidrIp = ipAddr.process(cidr);
+            if ((parsedAddr.kind() === "ipv6") && (parsedCidrIp.kind() === "ipv6")) {
+                return parsedAddr.toNormalizedString() === parsedCidrIp.toNormalizedString();
+            }
+            return parsedAddr.toString() === parsedCidrIp.toString();
+        }
+        const parsedRange = ipAddr.parseCIDR(cidr);
+        return parsedAddr.match(parsedRange);
+    } catch (e) {
+        return false;
+    }
+};
 
 const getLimitData = async (fastify, settings, hashFull) => {
     const defaults = {
@@ -9,9 +27,13 @@ const getLimitData = async (fastify, settings, hashFull) => {
     };
     if (settings.redis && fastify.redis) {
         const dataLimit = await fastify.redis.get(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`);
-        const dataLimitObj = dataLimit ? JSON.parse(dataLimit) : defaults;
-        dataLimitObj.updatedAt = typeof dataLimitObj.updatedAt === "string" ? new Date(dataLimitObj.updatedAt) : dataLimitObj.updatedAt;
-        return dataLimitObj;
+        const data = dataLimit ? dataLimit.split(",") : [defaults.updatedAt, defaults.max];
+        data[0] = typeof data[0] === "string" ? new Date(data[0] * 1000) : data[0];
+        return {
+            createdAt: defaults.createdAt,
+            updatedAt: data[0],
+            max: parseInt(data[1], 10)
+        };
     }
     const dataLimit = (await fastify.mongo.db.collection("rateLimit").findOne({
         _id: hashFull
@@ -22,12 +44,12 @@ const getLimitData = async (fastify, settings, hashFull) => {
 const getBanData = async (fastify, settings, hashIP) => {
     if (settings.redis && fastify.redis) {
         const dataBan = await fastify.redis.get(`${fastify.zoiaConfig.siteOptions.id}_rateBan_${hashIP}`);
-        return dataBan ? JSON.parse(dataBan) : null;
+        return !!dataBan;
     }
     const dataBan = await fastify.mongo.db.collection("rateBan").findOne({
         _id: hashIP
     });
-    return dataBan;
+    return !!dataBan;
 };
 
 const updateOnLimitExceeded = async (fastify, settings, hashFull, max) => {
@@ -37,7 +59,7 @@ const updateOnLimitExceeded = async (fastify, settings, hashFull, max) => {
         max
     };
     if (settings.redis && fastify.redis) {
-        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`, JSON.stringify(data), "ex", 3600);
+        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`, `${parseInt(data.updatedAt.getTime() / 1000, 10)},${data.max}`, "ex", 3600);
     } else {
         await fastify.mongo.db.collection("rateLimit").updateOne({
             _id: hashFull
@@ -54,7 +76,7 @@ const updateOnBan = async (fastify, settings, hashIP) => {
         createdAt: new Date(),
     };
     if (settings.redis && fastify.redis) {
-        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateBan_${hashIP}`, JSON.stringify(data), "ex", 86400);
+        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateBan_${hashIP}`, 1, "ex", 86400);
     } else {
         await fastify.mongo.db.collection("rateBan").updateOne({
             _id: hashIP
@@ -73,7 +95,7 @@ const updateDataLimit = async (fastify, settings, hashFull, createdAt, max) => {
         max
     };
     if (settings.redis && fastify.redis) {
-        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`, JSON.stringify(data), "ex", 3600);
+        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`, `${parseInt(data.updatedAt.getTime() / 1000, 10)},${data.max}`, "ex", 3600);
     } else {
         await fastify.mongo.db.collection("rateLimit").updateOne({
             _id: hashFull
@@ -85,52 +107,102 @@ const updateDataLimit = async (fastify, settings, hashFull, createdAt, max) => {
     }
 };
 
+const checkWhiteList = (settings, req) => {
+    let whiteListed = false;
+    if (settings.whiteList && Array.isArray(settings.whiteList)) {
+        settings.whiteList.map(ip => {
+            if (checkIp(req.ip, ip)) {
+                whiteListed = true;
+            }
+        });
+    }
+    return whiteListed;
+};
+
+const checkBlackList = (settings, req) => {
+    let blackListed = false;
+    if (settings.blackList && Array.isArray(settings.blackList)) {
+        settings.blackList.map(ip => {
+            if (checkIp(req.ip, ip)) {
+                blackListed = true;
+            }
+        });
+    }
+    return blackListed;
+};
+
 const buildRate = async (fastify, settings, routeOptions) => {
-    const preHandler = async (req, rep, next) => {
+    routeOptions.rateLimit = routeOptions.rateLimit || settings.global;
+    const preHandlerRate = async (req, rep, next) => {
+        if (checkWhiteList(settings, req)) {
+            next();
+            return rep.getCode204(rep);
+        }
         const hashFull = xxhash.h64(`${req.ip}${req.urlData().path}`, fastify.zoiaConfig.secretInt).toString(16);
         const hashIP = xxhash.h64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
-        if (settings.ban) {
-            const dataBan = await getBanData(fastify, settings, hashIP);
-            if (dataBan) {
-                rep.sendError(rep, "Forbidden", 403);
-                return rep.getCode204(rep);
-            }
-        }
         const dataLimit = await getLimitData(fastify, settings, hashFull);
         dataLimit.max += 1;
         const timestampNow = new Date().getTime();
         const timestampUpdated = dataLimit.updatedAt.getTime();
-        if (timestampNow - timestampUpdated <= routeOptions.config.rateLimit.timeWindow && dataLimit.max >= routeOptions.config.rateLimit.max) {
+        if (timestampNow - timestampUpdated <= routeOptions.rateLimit.timeWindow && dataLimit.max >= routeOptions.rateLimit.max) {
             // Limit reached
             await updateOnLimitExceeded(fastify, settings, hashFull, dataLimit.max);
-            if (settings.ban && routeOptions.config.rateLimit.ban && dataLimit.max >= routeOptions.config.rateLimit.ban) {
+            if (settings.ban && routeOptions.rateLimit.ban && dataLimit.max >= routeOptions.rateLimit.ban) {
                 await updateOnBan(fastify, settings, hashIP);
+            }
+            if (settings.addHeaders) {
+                if (settings.addHeaders["x-ratelimit-limit"]) {
+                    rep.header("x-ratelimit-limit", routeOptions.rateLimit.max);
+                }
+                if (settings.addHeaders["x-ratelimit-remaining"]) {
+                    rep.header("x-ratelimit-remaining", 0);
+                }
+                if (settings.addHeaders["x-ratelimit-reset"]) {
+                    rep.header("x-ratelimit-reset", 3600);
+                }
+                if (settings.addHeaders["retry-after"]) {
+                    rep.header("retry-after", routeOptions.rateLimit.timeWindow);
+                }
             }
             rep.sendError(rep, "Rate Limit Exceeded", 429);
             return rep.getCode204(rep);
         }
-        if (timestampNow - timestampUpdated > routeOptions.config.rateLimit.timeWindow) {
+        if (timestampNow - timestampUpdated > routeOptions.rateLimit.timeWindow) {
             dataLimit.max = 0;
         }
         await updateDataLimit(fastify, settings, hashFull, dataLimit.createdAt, dataLimit.max);
         next();
         return rep.getCode204(rep);
     };
+    const preHandlerBan = async (req, rep, next) => {
+        if (checkBlackList(settings, req)) {
+            rep.sendError(rep, "Forbidden (blacklisted)", 403);
+            return rep.getCode204(rep);
+        }
+        const hashIP = xxhash.h64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
+        const dataBan = await getBanData(fastify, settings, hashIP);
+        if (dataBan) {
+            rep.sendError(rep, "Forbidden", 403);
+            return rep.getCode204(rep);
+        }
+        next();
+        return rep.getCode204(rep);
+    };
     // Add pre-handler to the route
-    if (Array.isArray(routeOptions.preHandler)) {
-        routeOptions.preHandler.push(preHandler);
-    } else if (typeof routeOptions.preHandler === "function") {
-        routeOptions.preHandler = [routeOptions.preHandler, preHandler];
-    } else {
-        routeOptions.preHandler = [preHandler];
+    if (!Array.isArray(routeOptions.preHandler)) {
+        routeOptions.preHandler = routeOptions.preHandler ? [routeOptions.preHandler] : [];
+    }
+    if (settings.ban) {
+        routeOptions.preHandler.push(preHandlerBan);
+    }
+    if (routeOptions.rateLimit || (settings.global && Object.keys(settings.global).length)) {
+        routeOptions.preHandler.push(preHandlerRate);
     }
 };
 
 const rateLimitPlugin = (fastify, settings, next) => {
     fastify.addHook("onRoute", async routeOptions => {
-        if (routeOptions.config && routeOptions.config.rateLimit) {
-            await buildRate(fastify, settings, routeOptions);
-        }
+        await buildRate(fastify, settings, routeOptions);
     });
     next();
 };

@@ -72,6 +72,26 @@ export default class {
         return newURL;
     }
 
+    getNonLocalizedURL(req) {
+        const languages = Object.keys(req.zoiaConfig.languages);
+        const data = {};
+        if (req && req.urlData()) {
+            const url = req.urlData().path;
+            const urlParts = url.split(/\//);
+            if (urlParts.length > 1) {
+                const firstPartOfURL = urlParts[1];
+                if (languages.indexOf(firstPartOfURL) > -1) {
+                    [data.language] = urlParts.splice(1, 1);
+                } else {
+                    [data.language] = languages;
+                }
+                data.url = urlParts.join("/") || "/";
+                data.url = data.url.length > 1 ? data.url.replace(/\/$/, "") : data.url;
+            }
+        }
+        return data;
+    }
+
     t(str, num, params = {}) {
         let strTranslated = this._strings[this._language][str];
         Object.keys(params).map(i => strTranslated = strTranslated.replace(new RegExp(`\${${i}}`, "g"), params[i]));

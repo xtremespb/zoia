@@ -8,6 +8,9 @@ style.scss {
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>${out.global.pageTitle} | ${out.global.siteMetadata.title}</title>
+    <if(out.global.extraCSS)>
+      <style type="text/css">$!{out.global.extraCSS}</style>
+    </if>
   </head>
   <body>
     <section class="section">
@@ -15,5 +18,8 @@ style.scss {
         <${input.renderBody}/>
       </div>
     </section>
+    <if(out.global.extraJS)>
+      <script type="text/javascript">$!{out.global.extraJS}</script>
+    </if>
   </body>
 </html>

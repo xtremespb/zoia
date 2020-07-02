@@ -3,6 +3,11 @@ import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
 
 export default fastify => ({
+    rateLimit: {
+        max: 10,
+        ban: 50,
+        timeWindow: 10000
+    },
     schema: {
         body: userLogin.root
     },

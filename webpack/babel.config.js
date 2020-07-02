@@ -1,5 +1,7 @@
 module.exports = api => {
-    api.cache(true);
+    if (api) {
+        api.cache(true);
+    }
     return {
         sourceType: "unambiguous",
         plugins: [

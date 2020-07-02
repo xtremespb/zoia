@@ -17,5 +17,9 @@
     "content": "Content",
     "contentHelpText": "HTML displayed on a page",
     "attachments": "Attachments",
-    "selectFiles": "Select file(s)"
+    "selectFiles": "Select file(s)",
+    "css": "CSS",
+    "cssHelpText": "Additional cascading style sheets for this page",
+    "js": "JavaScript",
+    "jsHelpText": "Additional JavaScript code for this page"
 }

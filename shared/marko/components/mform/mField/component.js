@@ -9,7 +9,11 @@ const axios = require("axios");
 if (process.browser) {
     // require("ace-builds/webpack-resolver");
     ace.config.setModuleUrl("ace/mode/html_worker", require("file-loader?name=npm.ace-builds.worker-html.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/worker-html.js"));
+    ace.config.setModuleUrl("ace/mode/css_worker", require("file-loader?name=npm.ace-builds.worker-css.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/worker-css.js"));
+    ace.config.setModuleUrl("ace/mode/javascript_worker", require("file-loader?name=npm.ace-builds.worker-javascript.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/worker-javascript.js"));
     ace.config.setModuleUrl("ace/mode/html", require("file-loader?name=npm.ace-builds.mode-html.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/mode-html.js"));
+    ace.config.setModuleUrl("ace/mode/javascript", require("file-loader?name=npm.ace-builds.mode-javascript.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/mode-javascript.js"));
+    ace.config.setModuleUrl("ace/mode/css", require("file-loader?name=npm.ace-builds.mode-css.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/mode-css.js"));
     ace.config.setModuleUrl("ace/theme/chrome", require("file-loader?name=npm.ace-builds.theme-chrome.[contenthash:8].js&esModule=false!../../../../../node_modules/ace-builds/src-noconflict/theme-chrome.js"));
 }
 
@@ -59,14 +63,18 @@ module.exports = class {
         case "ace":
             [this.aceEditorElement] = document.getElementById(this.item.id).getElementsByTagName("div");
             this.aceEditor = ace.edit(this.aceEditorElement);
-            this.aceEditor.setOptions(this.item.aceOptions || {
+            const aceDefaults = {
                 mode: "ace/mode/html",
                 theme: "ace/theme/chrome",
                 fontSize: "16px",
                 wrap: true,
                 useSoftTabs: true,
                 tabSize: 2
-            });
+            };
+            this.aceEditor.setOptions(this.item.aceOptions ? {
+                ...aceDefaults,
+                ...this.item.aceOptions
+            } : aceDefaults);
             this.aceEditor.getSession().on("change", () => {
                 const value = this.aceEditor.getSession().getValue();
                 this.emit("value-change", {

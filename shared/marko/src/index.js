@@ -7,6 +7,7 @@ import fastifyJWT from "fastify-jwt";
 import fastifyFormbody from "fastify-formbody";
 import fastifyMultipart from "fastify-multipart";
 import fastifyCookie from "fastify-cookie";
+import fastifyStatic from "fastify-static";
 import Pino from "pino";
 import Telegraf from "telegraf";
 import Redis from "ioredis";
@@ -46,7 +47,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
         templates = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/templates.json`));
         modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
         const defaultConfigs = [];
-        pino.info(`Built-in templates: ${templates.available.join(", ")}`);
+        pino.info(`Built-in template(s): ${templates.available.join(", ")}`);
         modules.map(m => {
             try {
                 modulesConfig[m.id] = require(`../../../modules/${m.id}/config.dist.json`);
@@ -63,7 +64,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
             }
         });
         if (defaultConfigs.length) {
-            pino.warn(`Warning: using default configs for modules: ${[...new Set(defaultConfigs)].join(", ")}`);
+            pino.warn(`Warning: using default config(s) for: ${[...new Set(defaultConfigs)].join(", ")}`);
         }
     } catch (e) {
         // eslint-disable-next-line no-console
@@ -77,6 +78,23 @@ import fastifyRateLimit from "../../lib/rateLimit";
             trustProxy: config.trustProxy,
             ignoreTrailingSlash: true
         });
+        // Serve static routes
+        if (config.serveStatic) {
+            const staticFolders = ["web"];
+            fastify.register(fastifyStatic, {
+                root: path.resolve(__dirname, `../public/web`),
+                prefix: `/web`
+            });
+            fs.readdirSync(path.resolve(__dirname, "../public")).filter(f => f !== "web" && fs.lstatSync(path.resolve(__dirname, `../public/${f}`)).isDirectory()).map(dir => {
+                fastify.register(fastifyStatic, {
+                    root: path.resolve(__dirname, `../public/${dir}`),
+                    prefix: `/${dir}`,
+                    decorateReply: false
+                });
+                staticFolders.push(dir);
+            });
+            pino.info(`Serving static folder(s): ${staticFolders.join(", ")}`);
+        }
         // Create MongoDB client and connect
         const mongoClient = new MongoClient(config.mongo.url, {
             useNewUrlParser: true,
@@ -92,6 +110,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
                 pino.error("Connection to MongoDB is broken");
                 process.exit(1);
             });
+            pino.info(`Connected to Mongo Server: (${config.mongo.url}/${config.mongo.dbName})`);
             next();
         });
         // Redis
@@ -199,9 +218,9 @@ import fastifyRateLimit from "../../lib/rateLimit";
             bot.launch();
         }
         if (!moduleErrors) {
-            pino.info(`Modules loaded: ${[...new Set(modulesLoaded)].join(", ")}`);
+            pino.info(`Module(s) loaded: ${[...new Set(modulesLoaded)].join(", ")}`);
         }
-        // Start server
+        // Start Web Server
         await fastify.listen(config.webServer.port, config.webServer.ip);
     } catch (e) {
         pino.error(e);

@@ -5,11 +5,7 @@
         "user": "",
         "group": ""
     },
-    "devServer": {
-        "active": false,
-        "ip": "127.0.0.1",
-        "port": 8080
-    },
+    "serveStatic": true,
     "siteOptions": {
         "server": "localhost",
         "id": "z3"
@@ -42,6 +38,9 @@
         "enabled": false,
         "redis": false,
         "ban": false,
+        "global": false,
+        "whiteList": [],
+        "blackList": [],
         "addHeaders": {
             "x-ratelimit-limit": true,
             "x-ratelimit-remaining": true,

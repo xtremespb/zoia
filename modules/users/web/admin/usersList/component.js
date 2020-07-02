@@ -1,7 +1,3 @@
-const {
-    v4: uuidv4
-} = require("uuid");
-
 module.exports = class {
     onCreate(input, out) {
         this.state = {
@@ -57,6 +53,6 @@ module.exports = class {
     }
 
     onUnauthorized() {
-        window.location.href = this.i18n.getLocalizedURL(`${this.routes.login}?_=${uuidv4()}`, this.language);
+        window.location.href = this.i18n.getLocalizedURL(`${this.routes.login}?_=${new Date().getTime()}`, this.language);
     }
 };

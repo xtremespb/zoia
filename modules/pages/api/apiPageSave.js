@@ -1,6 +1,11 @@
 import {
     ObjectId
 } from "mongodb";
+import minify from "@node-minify/core";
+import csso from "@node-minify/csso";
+import terser from "@node-minify/terser";
+import htmlMinifier from "@node-minify/html-minifier";
+import webpack from "webpack";
 import Auth from "../../../shared/lib/auth";
 import utils from "../../../shared/lib/utils";
 import pageEdit from "./data/pageEdit.json";
@@ -59,12 +64,47 @@ export default fastify => ({
             if (!id) {
                 updateExtras.createdAt = new Date();
             }
-            // Update database
-            Object.keys(req.zoiaConfig.languages).map(k => {
+            // Compile contents
+            await Promise.allSettled(Object.keys(req.zoiaConfig.languages).map(async k => {
                 if (!data[k]) {
                     data[k] = undefined;
+                } else {
+                    data[k].contentMin = data[k].content;
+                    data[k].cssMin = data[k].css;
+                    data[k].jsMin = data[k].js;
+                    try {
+                        data[k].contentMin = await minify({
+                            compressor: htmlMinifier,
+                            options: {
+                                removeAttributeQuotes: true,
+                                collapseWhitespace: true,
+                                html5: true
+                            },
+                            content: data[k].content
+                        });
+                        data[k].cssMin = await minify({
+                            compressor: csso,
+                            content: data[k].css
+                        });
+                        data[k].jsMin = await minify({
+                            compressor: terser,
+                            content: data[k].js
+                        });
+                    } catch {
+                        // Ignore
+                    }
+                    const config = webpackConfig({}, {
+                        mode: "development"
+                    });
+                    webpack(config, (err, stats) => { // Stats Object
+                        if (err || stats.hasErrors()) {
+                            console.log(err);
+                        }
+                        console.log("-------- Webpack Done --------");
+                    });
                 }
-            });
+            }));
+            // Update database
             const update = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).updateOne(id ? {
                 _id: new ObjectId(id)
             } : {

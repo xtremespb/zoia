@@ -4,13 +4,6 @@ import C from "../../../../shared/lib/constants";
 import moduleData from "../../module.json";
 
 export default fastify => ({
-    // config: {
-    //     rateLimit: {
-    //         max: 10,
-    //         ban: 50,
-    //         timeWindow: 10000
-    //     }
-    // },
     async handler(req, rep) {
         const auth = new Auth(this.mongo.db, fastify, req, rep, C.USE_COOKIE_FOR_TOKEN);
         try {
