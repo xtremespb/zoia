@@ -23,5 +23,4 @@ typings/
 /build/
 /etc/modules
 /build/scripts
-/etc/bm_*
-/etc/zoia.json
+/etc/*.json

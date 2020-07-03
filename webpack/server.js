@@ -2,7 +2,7 @@ const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
 
-module.exports = markoPlugin => ({
+module.exports = (markoPlugin, argv) => ({
     name: "Server Part",
     context: path.resolve(`${__dirname}/../shared/marko`),
     resolve: {
@@ -39,8 +39,8 @@ module.exports = markoPlugin => ({
     output: {
         libraryTarget: "commonjs2",
         path: path.resolve(`${__dirname}/../build/bin`),
-        filename: "server.js",
-        publicPath: "/web/",
+        filename: argv.type === "update" ? "update.js" : "zoia.js",
+        publicPath: `/${argv.type === "update" ? "update" : "zoia"}/`,
     },
     node: {
         __dirname: false

@@ -7,10 +7,10 @@
         "config-server": "node ./scripts/sconfig.js",
         "setup": "node ./scripts/setup.js",
         "setup-all": "node ./scripts/setup.js --all --defaults",
-        "build-dev": "webpack --display minimal --progress --mode development --config ./webpack/webpack.config.js",
-        "build": "webpack --display minimal --progress --mode production --config ./webpack/webpack.config.js",
-        "start": "node ./build/bin/server.js",
-        "start-dev": "node ./scripts/dev.js"
+        "build-dev": "webpack --display minimal --progress --mode development --config ./webpack/config.js",
+        "build": "webpack --display minimal --progress --mode production --config ./webpack/config.js",
+        "rebuild": "webpack --display minimal --progress --mode production --config ./webpack/config.js --type update",
+        "start": "node ./build/bin/zoia.js"
     },
     "author": "Michael Matveev <xtreme@rh1.ru> (re-hash.ru)",
     "license": "MIT",

@@ -80,12 +80,12 @@ import fastifyRateLimit from "../../lib/rateLimit";
         });
         // Serve static routes
         if (config.serveStatic) {
-            const staticFolders = ["web"];
+            const staticFolders = ["zoia"];
             fastify.register(fastifyStatic, {
-                root: path.resolve(__dirname, `../public/web`),
-                prefix: `/web`
+                root: path.resolve(__dirname, `../public/zoia`),
+                prefix: `/zoia`
             });
-            fs.readdirSync(path.resolve(__dirname, "../public")).filter(f => f !== "web" && fs.lstatSync(path.resolve(__dirname, `../public/${f}`)).isDirectory()).map(dir => {
+            fs.readdirSync(path.resolve(__dirname, "../public")).filter(f => f !== "zoia" && fs.lstatSync(path.resolve(__dirname, `../public/${f}`)).isDirectory()).map(dir => {
                 fastify.register(fastifyStatic, {
                     root: path.resolve(__dirname, `../public/${dir}`),
                     prefix: `/${dir}`,

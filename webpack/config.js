@@ -4,7 +4,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const MarkoPlugin = require("@marko/webpack/plugin").default;
 const config = require("../etc/zoia.json");
-const utils = require("./webpack.config.utils");
+const utils = require("./utils");
 
 const languages = Object.keys(config.languages);
 const webpackConfig = [];
@@ -12,10 +12,10 @@ const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/../modules`)).filte
 const markoPlugin = new MarkoPlugin();
 
 module.exports = (env, argv) => {
-    console.log(`Building Zoia, mode: ${argv.mode}`);
-    const configWebClient = require("./webpack.config.client")(moduleDirs, markoPlugin);
-    const configWebServer = require("./webpack.config.server")(markoPlugin);
-    utils.cleanUpWeb();
+    console.log(`Building Zoia, mode: ${argv.mode}${argv.type === "update" ? " (update)" : ""}`);
+    const configWebClient = require("./client")(moduleDirs, markoPlugin, argv);
+    const configWebServer = require("./server")(markoPlugin, argv);
+    utils.cleanUpWeb(argv);
     utils.ensureDirectories();
     utils.generateModulesConfig(moduleDirs, languages, argv);
     utils.generateTemplatesJSON();

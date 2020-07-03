@@ -6,7 +6,7 @@ const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const OptimizeCSSPlugin = require("optimize-css-assets-webpack-plugin");
 const CssoWebpackPlugin = require("csso-webpack-plugin").default;
 
-module.exports = (moduleDirs, markoPlugin) => ({
+module.exports = (moduleDirs, markoPlugin, argv) => ({
     name: "Client Part",
     context: path.resolve(`${__dirname}/../shared/marko`),
     resolve: {
@@ -78,8 +78,8 @@ module.exports = (moduleDirs, markoPlugin) => ({
     },
     output: {
         filename: "[name].[contenthash:8].js",
-        path: path.resolve(`${__dirname}/../build/public/web`),
-        publicPath: "/web/",
+        path: path.resolve(`${__dirname}/../build/public/${argv.type === "update" ? "update" : "zoia"}`),
+        publicPath: `/${argv.type === "update" ? "update" : "zoia"}/`,
     },
     plugins: [
         new webpack.DefinePlugin({

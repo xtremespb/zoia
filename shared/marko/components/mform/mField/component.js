@@ -5,6 +5,9 @@ const {
     v4: uuidv4
 } = require("uuid");
 const axios = require("axios");
+const {
+    cloneDeep
+} = require("lodash");
 
 if (process.browser) {
     // require("ace-builds/webpack-resolver");
@@ -21,7 +24,8 @@ module.exports = class {
     onCreate(input) {
         const state = {
             captchaData: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
-            captchaSecret: ""
+            captchaSecret: "",
+            toggleAce: {}
         };
         this.state = state;
         this.item = input.item;
@@ -164,5 +168,19 @@ module.exports = class {
         this.emit("button-click", {
             id: e.target.dataset.id
         });
+    }
+
+    onAceToggleClick(e) {
+        e.preventDefault();
+        const {
+            id
+        } = e.target.dataset;
+        const toggle = cloneDeep(this.state.toggleAce);
+        toggle[id] = !toggle[id];
+        if (toggle[id]) {
+            setTimeout(() => this.aceEditor.getSession().setValue(this.input.value || ""), 100);
+        }
+        this.setState("toggleAce", toggle);
+        this.forceUpdate();
     }
 };

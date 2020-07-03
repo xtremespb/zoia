@@ -228,8 +228,15 @@ ACE
     ${input.item.label}:<if(input.item.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
+    <if(input.item.toggle)>
+      <button type="button" class="button is-small is-rounded z3-mf-toggle-wrap" data-id=input.item.id on-click("onAceToggleClick")>
+        <span class="icon is-small">
+          <i class=`mdi mdi-18px ${state.toggleAce[input.item.id] ? "mdi-chevron-up" : "mdi-chevron-down"}` data-id=input.item.id/>
+        </span>
+      </button>
+    </if>
   </label>
-  <div class="control" id=input.item.id key=`mf_ctl_${input.item.id}`>
+  <div class="control" id=input.item.id key=`mf_ctl_${input.item.id}` style=`display:${input.item.toggle ? (state.toggleAce[input.item.id] ? "block" : "none") : "block"}`>
     <div class="z3-mf-ace"/>
   </div>
   <if(input.item.helpText)>

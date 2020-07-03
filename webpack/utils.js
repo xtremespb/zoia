@@ -5,8 +5,8 @@ const minify = require("@node-minify/core");
 const htmlMinifier = require("@node-minify/html-minifier");
 const packageJson = require("../package.json");
 
-const cleanUpWeb = () => {
-    ["build/public/web", "build/bin", "build/etc", "build/scripts"].map(d => {
+const cleanUpWeb = (argv) => {
+    [argv.type === "update" ? "build/public/update" : "build/public/zoia", "build/scripts"].map(d => {
         console.log(`Cleaning up directory: "${d}"`);
         const pathWeb = path.resolve(`${__dirname}/../${d}`);
         try {
@@ -56,8 +56,8 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
     fs.ensureDirSync(path.resolve(`${__dirname}/../etc/modules`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../build/scripts`));
     moduleDirs.map(dir => {
-        // In production mode, copy the configs of each module to etc/modules
-        if (argv.mode === "production" && !fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) && fs.existsSync(path.resolve(`${__dirname}/../modules/${dir}/config.dist.json`))) {
+        // In production / non-update mode, copy the configs of each module to etc/modules
+        if (argv.mode === "production" && argv.type !== "update" && !fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) && fs.existsSync(path.resolve(`${__dirname}/../modules/${dir}/config.dist.json`))) {
             fs.copyFileSync(path.resolve(`${__dirname}/../modules/${dir}/config.dist.json`), path.resolve(`${__dirname}/../etc/modules/${dir}.json`));
         }
         const moduleData = require(path.resolve(`${__dirname}/../modules/${dir}/module.json`));
