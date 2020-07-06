@@ -76,7 +76,7 @@ module.exports = class {
                 }
             });
             this.state.status = this.i18n.t("processRestarting");
-            this.restartInterval = setInterval(this.restartStatusCheck.bind(this), 2000);
+            this.restartInterval = setInterval(this.restartStatusCheck.bind(this), 3000);
         } catch (e) {
             this.state.progress = false;
             this.state.status = null;

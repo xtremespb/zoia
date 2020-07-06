@@ -18,15 +18,17 @@ export default () => ({
                     serializedGlobals: {
                         template: true,
                         pageTitle: true,
+                        buildJson: true,
+                        pid: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
                     pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
-                    ...site.getGlobals()
+                    buildJson: req.zoiaBuildJson,
+                    pid: process.pid,
+                    ...site.getGlobals(),
                 },
                 modules: req.zoiaModules,
-                version: req.zoiaPackageJson.version,
-                moduleId: moduleData.id,
             });
             return rep.sendHTML(rep, render);
         } catch (e) {

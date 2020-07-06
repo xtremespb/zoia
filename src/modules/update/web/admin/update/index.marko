@@ -3,6 +3,10 @@
     <i class="mdi z3-ap-mdi-29px mdi-dark mdi-update"/>
   </span>&nbsp;${out.global.i18n.t("moduleTitle")}
 </h1>
+<div class="my-5">
+  <b>${out.global.i18n.t("currentVersion")}</b>:&nbsp;${out.global.buildJson.version} / ${out.global.i18n.t(out.global.buildJson.mode)} (${out.global.buildJson.id}, ${out.global.i18n.t("pid")} ${out.global.pid})<br/>
+  <b>${out.global.i18n.t("buildDate")}</b>:&nbsp;${new Date(out.global.buildJson.date).toLocaleString()}
+</div>
 <if(state.status)>
   <div class="notification">
     <p>${state.status}</p>

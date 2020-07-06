@@ -15,5 +15,10 @@
     "processError": "Could not re-build ZOIA. Please check logs and try again.",
     "processRestarting": "System has been restarted. Waiting for a startup…",
     "updateStatusGeneralError": "Could not get an update status. Please try to refresh this page.",
-    "updateRestartGeneralError": "Could not initiate the system restart. Please try to refresh this page."
+    "updateRestartGeneralError": "Could not initiate the system restart. Please try to refresh this page.",
+    "currentVersion": "Current Version",
+    "buildDate": "Build Date",
+    "production": "production build",
+    "development": "development build",
+    "pid": "PID"
 }

@@ -52,7 +52,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
             try {
                 modulesConfig[m.id] = require(`../../../modules/${m.id}/config.dist.json`);
             } catch (e) {
-                pino.error(`Unable to load default config for ${m.id}`);
+                pino.error(`Fatal: unable to load default config for module: "${m.id}"`);
                 process.exit(1);
             }
             try {
@@ -68,7 +68,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
         }
     } catch (e) {
         // eslint-disable-next-line no-console
-        console.error(e);
+        console.error(`Fatal: ${e}`);
         process.exit(1);
     }
     try {
@@ -107,7 +107,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
             database: config.mongo.dbName
         }).register((ff, opts, next) => {
             ff.mongo.client.db(config.mongo.dbName).on("close", () => {
-                pino.error("Connection to MongoDB is broken");
+                pino.error("Fatal: connection to MongoDB is broken");
                 process.exit(1);
             });
             pino.info(`Connected to Mongo Server: (${config.mongo.url}/${config.mongo.dbName})`);
@@ -117,7 +117,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
         if (config.redis && config.redis.enabled) {
             const redis = new Redis(config.redis);
             redis.on("error", e => {
-                pino.error(`Redis: ${e}`);
+                pino.error(`Fatal: Redis is failed (${e})`);
                 process.exit(1);
             });
             fastify.decorate("redis", redis);
@@ -225,7 +225,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
         // Start Web Server
         await fastify.listen(config.webServer.port, config.webServer.ip);
     } catch (e) {
-        pino.error(e);
+        pino.error(`Fatal: ${e}`);
         process.exit(1);
     }
 })();

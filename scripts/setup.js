@@ -11,7 +11,7 @@ let packageJson;
 try {
     packageJson = require(path.resolve(`${__dirname}/../package.json`));
 } catch {
-    console.log(colors.brightRed("Could not load ../package.json"));
+    console.log(colors.brightRed("Fatal: could not load ../package.json"));
     console.log(colors.grey(`Please get this file from Github, you won't be able to run ZOIA otherwise.\n`));
     process.exit(1);
 }
@@ -43,14 +43,14 @@ let modules;
 try {
     config = fs.readJSONSync(path.resolve(`${__dirname}/../etc/zoia.json`));
 } catch {
-    console.log(colors.brightRed("Could not load ../etc/zoia.json"));
+    console.log(colors.brightRed("Fatal: could not load ../etc/zoia.json"));
     console.log(colors.grey(`Please run the following command to generate the configuration file: npm run config\n`));
     process.exit(1);
 }
 try {
     modules = fs.readJSONSync(path.resolve(`${__dirname}/../build/etc/modules.json`)).filter(m => options.module ? m.id === options.module : true);
 } catch {
-    console.log(colors.brightRed("Could not load ../build/etc/modules.json"));
+    console.log(colors.brightRed("Fatal: could not load ../build/etc/modules.json"));
     console.log(colors.grey(`Please run the following command to generate the configuration file: npm run build\n`));
     process.exit(1);
 }
@@ -154,7 +154,7 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
         mongoClient.close();
         console.log(colors.green("\nDone."));
     } catch (e) {
-        console.error(` ${colors.brightRed(e.message)}`);
+        console.error(` Fatal: ${colors.brightRed(e.message)}`);
         process.exit(1);
     }
 })();

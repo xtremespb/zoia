@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 const fs = require("fs-extra");
 const path = require("path");
+const {
+    v4: uuidv4
+} = require("uuid");
 const minify = require("@node-minify/core");
 const htmlMinifier = require("@node-minify/html-minifier");
 const packageJson = require("../package.json");
@@ -82,7 +85,8 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
     fs.writeJSONSync(`${__dirname}/../build/etc/build.json`, {
         date: new Date(),
         mode: argv.mode,
-        version: packageJson.version
+        version: packageJson.version,
+        id: uuidv4()
     });
 };
 
