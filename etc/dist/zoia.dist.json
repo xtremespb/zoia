@@ -73,7 +73,8 @@
     },
     "commonTableItemsLimit": 20,
     "collections": {
-        "files": "files"
+        "files": "files",
+        "registry": "registry"
     },
     "directories": {
         "files": "build/files"

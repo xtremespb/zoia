@@ -1,0 +1,19 @@
+{
+    "moduleTitle": "Update",
+    "update": "Update from Cloud",
+    "rebuild": "Rebuild",
+    "warnRebuildText": "You are going to re-build your ZOIA instance. This process may take a long time depending on your server configuration. When finished, the instance will be restarted. Please make sure that you have an access to your system console so you can check logs and restart manually when necessary.",
+    "confirm": "Confirm",
+    "updateInProgress": "Update process is already started. Please try to refresh this page to get the current status.",
+    "updateGeneralError": "Could not initiate the update process. Please try again in a few moments or contact your webmaster for assistance.",
+    "processStarted": "Re-build process has been started…",
+    "processCopyFiles": "Copying required files and directories…",
+    "processInstallNPM": "Installing and updating NPM modules…",
+    "processBuildUpdate": "Building an update package using Webpack…",
+    "processUpdateCopy": "Copying updated files and directories…",
+    "processSuccess": "Update package has been built. Restarting…",
+    "processError": "Could not re-build ZOIA. Please check logs and try again.",
+    "processRestarting": "System has been restarted. Waiting for a startup…",
+    "updateStatusGeneralError": "Could not get an update status. Please try to refresh this page.",
+    "updateRestartGeneralError": "Could not initiate the system restart. Please try to refresh this page."
+}

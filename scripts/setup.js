@@ -71,8 +71,8 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
         await Promise.allSettled(modules.map(async m => {
             try {
                 console.log(colors.cyan(`\nInstalling module: ${colors.brightWhite(m.id)}\n`));
-                console.log(`* Loading configuration file: ${fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) ? `../etc/modules/${m.id}.json` : `../modules/${m.id}/config.dist.json`}`);
-                const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) : require(path.resolve(`${__dirname}/../modules/${m.id}/config.dist.json`));
+                console.log(`* Loading configuration file: ${fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) ? `../etc/modules/${m.id}.json` : `../src/modules/${m.id}/config.dist.json`}`);
+                const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${m.id}.json`)) : require(path.resolve(`${__dirname}/../src/modules/${m.id}/config.dist.json`));
                 console.log(`* Configuration file loaded.`);
                 // Process database routines
                 if (moduleConfig.database) {

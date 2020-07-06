@@ -8,18 +8,18 @@ const utils = require("./utils");
 
 const languages = Object.keys(config.languages);
 const webpackConfig = [];
-const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/../modules`)).filter(d => !d.match(/^\./));
 const markoPlugin = new MarkoPlugin();
 
 module.exports = (env, argv) => {
     console.log(`Building Zoia, mode: ${argv.mode}${argv.type === "update" ? " (update)" : ""}`);
+    const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules`)).filter(d => !d.match(/^\./));
     const configWebClient = require("./client")(moduleDirs, markoPlugin, argv);
     const configWebServer = require("./server")(markoPlugin, argv);
     utils.cleanUpWeb(argv);
     utils.ensureDirectories();
     utils.generateModulesConfig(moduleDirs, languages, argv);
-    utils.generateTemplatesJSON();
-    utils.rebuildMarkoTemplates();
+    utils.generateTemplatesJSON(argv);
+    utils.rebuildMarkoTemplates(argv);
     console.log("Starting Webpack...");
     webpackConfig.push(configWebClient, configWebServer);
     return webpackConfig;

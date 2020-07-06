@@ -4,7 +4,7 @@ const webpack = require("webpack");
 
 module.exports = (markoPlugin, argv) => ({
     name: "Server Part",
-    context: path.resolve(`${__dirname}/../shared/marko`),
+    context: path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko`),
     resolve: {
         extensions: [".js", ".json", ".marko"]
     },
@@ -40,7 +40,7 @@ module.exports = (markoPlugin, argv) => ({
         libraryTarget: "commonjs2",
         path: path.resolve(`${__dirname}/../build/bin`),
         filename: argv.type === "update" ? "update.js" : "zoia.js",
-        publicPath: `/${argv.type === "update" ? "update" : "zoia"}/`,
+        publicPath: `/zoia/`,
     },
     node: {
         __dirname: false

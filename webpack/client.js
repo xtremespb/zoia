@@ -8,7 +8,7 @@ const CssoWebpackPlugin = require("csso-webpack-plugin").default;
 
 module.exports = (moduleDirs, markoPlugin, argv) => ({
     name: "Client Part",
-    context: path.resolve(`${__dirname}/../shared/marko`),
+    context: path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko`),
     resolve: {
         extensions: [".js", ".json", ".marko"]
     },
@@ -79,7 +79,7 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
     output: {
         filename: "[name].[contenthash:8].js",
         path: path.resolve(`${__dirname}/../build/public/${argv.type === "update" ? "update" : "zoia"}`),
-        publicPath: `/${argv.type === "update" ? "update" : "zoia"}/`,
+        publicPath: `/zoia/`,
     },
     plugins: [
         new webpack.DefinePlugin({

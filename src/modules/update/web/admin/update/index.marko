@@ -1,0 +1,43 @@
+<h1 class="z3-ap-head-thin">
+  <span class="icon">
+    <i class="mdi z3-ap-mdi-29px mdi-dark mdi-update"/>
+  </span>&nbsp;${out.global.i18n.t("moduleTitle")}
+</h1>
+<if(state.status)>
+  <div class="notification">
+    <p>${state.status}</p>
+    <progress class="progress is-small is-primary" max="100">&nbsp;</progress>
+  </div>
+</if>
+<if(state.error)>
+  <div class="notification is-danger">
+    <button class="delete" on-click("onErrorDelete")/>
+    <p>${state.error}</p>
+  </div>
+</if>
+<if(state.warnRebuild)>
+  <div class="notification is-warning">
+    <button class="delete" on-click("onWarnRebuildDelete")/>
+    ${out.global.i18n.t("warnRebuildText")}<div class="mt-3">
+      <button class="button is-primary" on-click("onRebuildConfirmClick")>${out.global.i18n.t("confirm")}</button>
+    </div>
+  </div>
+</if>
+<div class="field has-addons">
+  <p class="control">
+    <button class=`button${state.progress ? " is-loading" : ""}` on-click("onRebuildClick")>
+      <span class="icon is-small">
+        <i class="mdi mdi-update"/>
+      </span>
+      <span>${out.global.i18n.t("rebuild")}</span>
+    </button>
+  </p>
+  <p class="control">
+    <button class=`button${state.progress ? " is-loading" : ""}` disabled>
+      <span class="icon is-small">
+        <i class="mdi mdi-cloud-download-outline"/>
+      </span>
+      <span>${out.global.i18n.t("update")}</span>
+    </button>
+  </p>
+</div>
