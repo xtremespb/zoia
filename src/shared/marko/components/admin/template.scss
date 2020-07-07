@@ -1,8 +1,4 @@
-$family-sans-serif: "Source Sans Pro",
-sans-serif;
-$primary: #35525f;
-$link: #35525f;
-$mdi-font-path: "~@mdi/font/fonts";
+@import "./variables.scss";
 @import "~@mdi/font/scss/materialdesignicons.scss";
 @import "../../../fonts/source-sans-pro/source-sans-pro.css";
 @import "~bulma/bulma";
@@ -118,6 +114,4 @@ $mdi-font-path: "~@mdi/font/fonts";
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$pretty--class-name: z3-pretty;
-$pretty--color-primary: $primary;
 @import '~pretty-checkbox/src/pretty-checkbox.scss';

@@ -10,6 +10,17 @@
         "server": "localhost",
         "id": "z3"
     },
+    "pm2": {
+        "script": "./build/bin/zoia.js",
+        "watch": false,
+        "exec_mode": "cluster",
+        "instances": 0,
+        "error_file": true,
+        "out_file": true,
+        "log_file": false,
+        "merge_logs": true,
+        "time": false
+    },
     "secret": "",
     "token": {
         "expires": "7 days",

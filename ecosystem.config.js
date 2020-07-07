@@ -4,15 +4,10 @@ const config = require(path.resolve(`${__dirname}/etc/zoia.json`));
 
 module.exports = {
     apps: [{
+        ...config.pm2,
         name: config.siteOptions.id,
-        script: "./build/bin/zoia.js",
-        watch: false,
-        exec_mode: "cluster",
-        instances: 0,
-        error_file: path.resolve(`${__dirname}/logs/${config.siteOptions.id}_error.log`),
-        out_file: path.resolve(`${__dirname}/logs/${config.siteOptions.id}_out.log`),
-        log_file: "/dev/null",
-        merge_logs: true,
-        time: false
+        error_file: config.error_file ? path.resolve(`${__dirname}/logs/${config.siteOptions.id}_error.log`) : "/dev/null",
+        out_file: config.out_file ? path.resolve(`${__dirname}/logs/${config.siteOptions.id}_out.log`) : "/dev/null",
+        log_file: config.log_file ? path.resolve(`${__dirname}/logs/${config.siteOptions.id}_combined.log`) : "/dev/null",
     }]
 };

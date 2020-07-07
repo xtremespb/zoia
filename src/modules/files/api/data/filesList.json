@@ -1,0 +1,15 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "dir": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 255
+            }
+        },
+        "required": []
+    },
+    "projection": {},
+    "search": []
+}

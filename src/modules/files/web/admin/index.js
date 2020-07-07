@@ -7,10 +7,10 @@ export default () => ({
     async handler(req, rep) {
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
         try {
-            const site = new req.ZoiaSite(req, "update");
+            const site = new req.ZoiaSite(req, "files");
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
-                return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["update"].routes.admin);
+                return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["files"].routes.admin);
             }
             site.setAuth(auth);
             const render = await template.stream({

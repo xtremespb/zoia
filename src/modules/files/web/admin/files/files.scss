@@ -1,0 +1,43 @@
+@import "../../../../../shared/marko/components/admin/variables.scss";
+
+.z3-ap-f-item {
+    padding: 8px;
+    margin-bottom: 0 !important;
+    border-radius: 2px;
+}
+
+.z3-ap-f-item-details {
+    font-size: 80%;
+    margin: 3px 10px 0 10px !important;
+}
+
+.z3-ap-f-item-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.z3-ap-f-item-wrap {
+    padding: 5px !important;
+}
+
+.z3-ap-f-item-dir {
+    background: $yellow;
+}
+
+.z3-ap-f-item-file {
+    background: $white-bis;
+}
+
+
+.z3-ap-f-item-checkbox {
+    margin-right: 0 !important;
+    margin-left: 2px;
+}
+
+.z3-ap-f-item-icon {
+    border-radius: 50%;
+    background-color: $white;
+    margin-right: 7px;
+    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.23);
+}
