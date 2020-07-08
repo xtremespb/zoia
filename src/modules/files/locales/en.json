@@ -1,3 +1,5 @@
 {
-    "moduleTitle": "Files"
+    "moduleTitle": "Files",
+    "couldNotLoadDataFromServer": "Could not load data from server",
+    "nonExistentDirectory": "The requested directory doesn't exists"
 }

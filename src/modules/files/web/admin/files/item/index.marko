@@ -1,7 +1,7 @@
 <div class="column is-one-third z3-ap-f-item-wrap">
   <div class=`z3-ap-f-item columns is-mobile is-gapless ${input.file.dir ? "z3-ap-f-item-dir" : "z3-ap-f-item-file"}`>
     <div class="column is-auto z3-ap-f-item-name">
-      <a href="#">
+      <a href="" on-click("onFileClick") data-name=input.file.name data-dir=(input.file.dir ? "true" : null)>
         <span class="icon z3-ap-f-item-icon">
           <i class=`mdi mdi-${input.icon}`/>
         </span>

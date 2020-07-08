@@ -64,7 +64,7 @@ export default () => ({
             }))).filter(i => i && i.name !== "node_modules" && !i.name.match(/^\./)).sort(utils.sortByName).sort((a, b) => a.dir && !b.dir ? -1 : !a.dir && b.dir ? 1 : 0);
             // Send result
             rep.successJSON(rep, {
-                filesData
+                files: filesData
             });
             return;
         } catch (e) {

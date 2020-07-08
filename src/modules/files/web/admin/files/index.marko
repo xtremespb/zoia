@@ -9,17 +9,30 @@ import icons from "../../../data/mime.json"
     <i class="mdi z3-ap-mdi-29px mdi-dark mdi-folder-outline"/>
   </span>&nbsp;${out.global.i18n.t("moduleTitle")}
 </h1>
-<div class="columns is-multiline">
-  <for|file| of=state.files>
-    <if(file.dir)>
-      <item icon="folder-outline" file=file/>
-    </if>
-  </for>
-</div>
-<div class="columns is-multiline">
-  <for|file| of=state.files>
-    <if(!file.dir)>
-      <item icon=(icons[file.mime] || "file-outline") file=file/>
-    </if>
-  </for>
+<if(state.error)>
+  <div class="notification is-danger">
+    <button class="delete" on-click("onErrorDeleteClick")/>
+    ${state.error}
+  </div>
+</if>
+<div class="z3-ap-f-files-wrap">
+  <div class="z3-ap-f-files columns is-multiline">
+    <for|file| of=state.files>
+      <if(file.dir)>
+        <item icon="folder-outline" file=file/>
+      </if>
+    </for>
+  </div>
+  <div class="z3-ap-f-files columns is-multiline">
+    <for|file| of=state.files>
+      <if(!file.dir)>
+        <item icon=(icons[file.mime] || "file-outline") file=file/>
+      </if>
+    </for>
+  </div>
+  <if(state.loading)>
+    <div class="z3-ap-f-loading">
+      <span class="button is-white is-loading is-large z3-ap-f-loading-spinner">&nbsp;</span>
+    </div>
+  </if>
 </div>

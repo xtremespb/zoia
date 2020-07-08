@@ -5,11 +5,14 @@ module.exports = class {
     onCreate(input, out) {
         const state = {
             dir: "/",
-            files: []
+            files: [],
+            loading: false,
+            error: null
         };
         this.state = state;
         this.cookieOptions = out.global.cookieOptions;
         this.siteOptions = out.global.siteOptions;
+        this.i18n = out.global.i18n;
     }
 
     async onMount() {
@@ -19,6 +22,7 @@ module.exports = class {
     }
 
     async loadList(dir) {
+        this.state.loading = true;
         try {
             const res = await axios({
                 method: "post",
@@ -30,10 +34,15 @@ module.exports = class {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            this.state.files = res.data && res.data.filesData ? res.data.filesData : [];
+            this.state.loading = false;
+            this.state.files = res.data.files || [];
         } catch (e) {
-            // TODO: Error Handling
-            console.error(e);
+            this.state.loading = false;
+            this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
         }
+    }
+
+    onErrorDeleteClick() {
+        this.state.error = null;
     }
 };
