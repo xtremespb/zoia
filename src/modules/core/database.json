@@ -1,0 +1,13 @@
+{
+    "collections": {
+        "registry": {
+            "indexesAsc": [],
+            "indexesDesc": []
+        },
+		"captcha": {
+            "indexesAsc": [],
+            "indexesDesc": [],
+            "expires": 3600
+        }
+    }
+}

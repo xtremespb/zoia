@@ -1,0 +1,115 @@
+.za-html,
+.za-body {
+    background: #F5F5F5;
+}
+
+.za-html {
+    height: 100%;
+}
+
+.za-body {
+    min-height: 100%;
+}
+
+.za-navbar-container:not(.uk-navbar-transparent) {
+    background: #E0E0E0;
+    z-index: 10;
+}
+
+.za-navbar-nav>li.uk-active>a,
+.za-navbar-nav>li>a:active {
+    color: #222;
+}
+
+.za-navbar-nav>li>a,
+.za-navbar-toggle {
+    min-width: 40px;
+    color: #555;
+}
+
+.za-navbar-container {
+    min-height: 40px;
+}
+
+.za-navbar-nav>li>a,
+.za-navbar-left>.uk-navbar-nav>li>a,
+.za-navbar-right>.uk-navbar-nav>li>a {
+    text-transform: none;
+}
+
+.za-navbar-nav {
+    min-height: 40px;
+    padding: 0 0;
+}
+
+.za-navbar-nav>li>a,
+.za-navbar-toggle {
+    min-height: 40px;
+}
+
+.za-content {
+    background: #fff;
+    padding: 20px 20px 20px 20px;
+    box-shadow: 0px 1px 2px #ddd;
+    flex: 1 0 auto;
+}
+
+.za-footer {
+    flex: 0 0 auto;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.za-logo-wrap {
+    background: #F5F5F5;
+}
+
+.za-offcanvas-toggle {
+    margin: 20px 10px 0 20px;
+    float: left;
+    cursor: pointer;
+    display: none;
+}
+
+.za-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+@media (max-width: 960px) {
+    .za-content {
+        box-shadow: unset;
+    }
+
+    .za-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    html,
+    body {
+        background: #fff;
+    }
+
+    .za-navbar {
+        display: none;
+    }
+
+    .za-logo-wrap {
+        text-align: center;
+    }
+
+    .za-offcanvas-toggle {
+        display: block;
+    }
+
+    .za-logo-wrap>a>img {
+        padding-right: 50px;
+    }
+
+    .za-footer {
+        padding: 15px;
+    }
+
+}

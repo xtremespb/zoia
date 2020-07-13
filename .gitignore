@@ -1,3 +1,5 @@
+logs/*.log
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -18,10 +20,14 @@ typings/
 .npm
 .eslintcache
 .node_repl_history
+*.tgz
 .yarn-integrity
 .env
+node_modules/
+/dist/
+locale/_build/
+/src/shared/marko/templates/index.marko
+/src/shared/react/locales/admin/_build
+/src/static/etc
+/update/
 /build/
-/etc/modules
-/build/scripts
-/etc/*.json
-/logs

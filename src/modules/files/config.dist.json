@@ -1,6 +1,0 @@
-{
-    "routes": {
-        "admin": "/admin/files"
-    },
-    "root": "./"
-}

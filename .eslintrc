@@ -7,42 +7,57 @@
             "jsx": true
         }
     },
-    "extends": "airbnb-base",
+    "extends": "airbnb",
     "env": {
         "es6": true,
         "browser": true,
         "node": true
     },
     "rules": {
-        "quotes": ["error", "double",
+        "quotes": ["error", "single",
             {
                 "allowTemplateLiterals": true
             }
         ],
         "template-curly-spacing": "off",
         "indent": "off",
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4],
+        "react/one-expression-per-line": "off",
+        "react/jsx-wrap-multilines": "off",
         "arrow-parens": "off",
+        "react/jsx-one-expression-per-line": "off",
+        "jsx-a11y/anchor-is-valid": "off",
+        "react/destructuring-assignment": "off",
         "comma-dangle": "off",
         "array-callback-return": "off",
+        "react/sort-comp": "off",
         "guard-for-in": "off",
         "import/extensions": "off",
         "max-len": "off",
         "no-confusing-arrow": "off",
+        "react/jsx-closing-tag-location": "off",
         "no-unused-expressions": "off",
+        "jsx-a11y/label-has-for": "off",
+        "jsx-a11y/label-has-associated-control": "off",
+        "react/jsx-boolean-value": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "react/no-access-state-in-setstate": "off",
         "no-nested-ternary": "off",
         "no-return-assign": "off",
         "no-underscore-dangle": "off",
         "linebreak-style": "off",
         "import/no-dynamic-require": "off",
+        "jsx-a11y/anchor-has-content": "off",
         "no-case-declarations": "off",
         "global-require": "off",
+        "import/prefer-default-export": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react/static-property-placement": "off",
+        "jsx-a11y/control-has-associated-label": "off",
         "no-async-promise-executor": "off",
+        "react/state-in-constructor": "off",
         "dot-notation": "off",
-        "no-param-reassign": "off",
-        "import/no-extraneous-dependencies": "off",
-        "default-case": "off",
-        "class-methods-use-this": "off",
-        "no-cond-assign": "off",
-        "no-new": "off"
+        "import/no-extraneous-dependencies": "off"
     }
 }

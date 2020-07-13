@@ -1,0 +1,19 @@
+[Unit]
+Description=Zoia API Server ({siteid})
+Documentation=https://zoiajs.org
+After=network.target
+
+[Service]
+Environment=
+Type=simple
+User={user}
+Group={group}
+ExecStart=/usr/bin/node {path}
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier={siteid}_api
+
+[Install]
+WantedBy=multi-user.target

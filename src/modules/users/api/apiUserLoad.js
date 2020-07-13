@@ -1,49 +1,68 @@
 import {
     ObjectId
-} from "mongodb";
-import cloneDeep from "lodash/cloneDeep";
-import userEdit from "./data/userEdit.json";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
+} from 'mongodb';
 
-export default () => ({
+export default fastify => ({
+    schema: {
+        body: {
+            type: 'object',
+            properties: {
+                token: {
+                    type: 'string'
+                },
+                id: {
+                    type: 'string',
+                    minLength: 24,
+                    maxLength: 24,
+                    pattern: '^[a-f0-9]+$'
+                }
+            },
+            required: ['token', 'id']
+        }
+    },
+    attachValidation: true,
     async handler(req, rep) {
+        // Start of Validation
+        if (req.validationError) {
+            rep.logError(req, req.validationError.message);
+            return rep.sendBadRequestException(rep, 'Request validation error', req.validationError);
+        }
+        // End of Validation
         // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-            rep.unauthorizedError(rep);
-            return;
+        const user = await req.verifyToken(req.body.token, fastify, this.mongo.db);
+        if (!user || !user.admin) {
+            rep.logError(req, 'Authentication failed');
+            return rep.sendUnauthorizedException(rep, {
+                default: {
+                    username: '',
+                    password: ''
+                }
+            });
         }
-        const userEditRoot = cloneDeep(userEdit.root);
-        userEditRoot.required = ["id"];
-        const extendedValidation = new req.ExtendedValidation(req.body, userEditRoot);
-        const extendedValidationResult = extendedValidation.validate();
-        if (extendedValidationResult.failed) {
-            rep.logError(req, extendedValidationResult.message);
-            rep.validationError(rep, extendedValidationResult);
-            return;
-        }
+        // End of check permissions
         try {
-            const user = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).findOne({
+            // Find user with given ID
+            const userRecord = await this.mongo.db.collection('users').findOne({
                 _id: new ObjectId(req.body.id)
             });
-            if (!user) {
-                rep.requestError(rep, {
-                    failed: true,
-                    error: "Database error",
-                    errorKeyword: "userNotFound",
-                    errorData: []
-                });
-                return;
+            if (!userRecord) {
+                return rep.sendBadRequestError(rep, 'Non-existent record');
             }
-            delete user.password;
-            rep.successJSON(rep, {
-                data: user
+            delete userRecord.password;
+            // Send response
+            return rep.sendSuccessJSON(rep, {
+                data: {
+                    default: {
+                        username: userRecord.username,
+                        email: userRecord.email,
+                        active: userRecord.active ? '1' : '0',
+                        admin: userRecord.admin ? '1' : '0'
+                    }
+                }
             });
-            return;
         } catch (e) {
             rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            return rep.sendInternalServerError(rep, e.message);
         }
     }
 });

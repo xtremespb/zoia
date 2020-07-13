@@ -1,0 +1,16 @@
+html,
+body {
+    height: 100%;
+}
+
+.za-users-appTheme {
+    background: #ecf0f1;
+}
+
+#za_users_authForm {
+    min-width: 250px;
+}
+
+.za-users-auth-form-divider {
+    margin-top: 10px !important;
+}

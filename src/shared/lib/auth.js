@@ -1,167 +1,95 @@
+import { v4 as uuid } from 'uuid';
+import Cryptr from 'cryptr';
+import crypto from 'crypto';
 import {
     ObjectId
-} from "mongodb";
-import crypto from "crypto";
-import Cryptr from "cryptr";
-import {
-    v4 as uuid
-} from "uuid";
-import C from "./constants";
+} from 'mongodb';
+import locale from './locale';
 
-export default class {
-    constructor(db, fastify, req, rep, useBearer = C.USE_COOKIE_FOR_TOKEN) {
-        this.jwt = fastify.jwt;
-        this.db = db;
-        this.user = null;
-        this.req = req;
-        this.rep = rep;
-        this.zoiaConfig = fastify.zoiaConfig;
-        this.collectionUsers = req.zoiaModulesConfig["users"].collectionUsers;
-        this.ip = crypto.createHmac("md5", this.zoiaConfig.secret).update(req.ip).digest("hex");
-        if (useBearer === C.USE_EVERYTHING_FOR_TOKEN) {
-            this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : req.cookies[`${this.zoiaConfig.siteOptions.id || "zoia3"}.authToken`];
-        } else if (useBearer && req.headers.authorization) {
-            this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : null;
-        } else if (!useBearer) {
-            this.token = req.cookies[`${this.zoiaConfig.siteOptions.id || "zoia3"}.authToken`];
-        }
-    }
-
-    getToken() {
-        return this.token;
-    }
-
-    clearAuthCookie() {
-        this.rep.clearCookie(`${this.zoiaConfig.siteOptions.id || "zoia3"}.authToken`, {
-            path: "/"
-        });
-    }
-
-    async getUserData() {
-        if (!this.token) {
-            return null;
-        }
+export default {
+    verifyToken: async (token, fastify, db) => {
         try {
-            const tokenData = this.jwt.verify(this.token);
-            if (!tokenData || !tokenData.id || !tokenData.sid) {
+            const decodedToken = fastify.jwt.verify(token);
+            if (!decodedToken || !decodedToken.userId || !decodedToken.sessionId || Math.floor(Date.now() / 1000) > decodedToken.exp) {
                 return null;
             }
-            const user = await this.db.collection(this.collectionUsers).findOne({
-                _id: new ObjectId(tokenData.id)
+            const user = await db.collection('users').findOne({
+                _id: new ObjectId(decodedToken.userId)
             });
-            if (!user || user.sid !== tokenData.sid) {
+            if (!user || !user.active || user.sessionId !== decodedToken.sessionId) {
                 return null;
             }
-            if (this.zoiaConfig.token.ip && tokenData.ip !== this.ip) {
-                return null;
-            }
-            delete user.password;
-            this.user = user;
             return user;
         } catch (e) {
             return null;
         }
-    }
-
-    checkStatus(status) {
-        if (!this.user || !this.user.status) {
-            return false;
-        }
-        return this.user.status.indexOf(status) > -1;
-    }
-
-    generateSid() {
-        return uuid();
-    }
-
-    signToken(id, sid) {
-        const data = {
-            id: String(id),
-            sid,
-        };
-        if (this.zoiaConfig.token.ip) {
-            data.ip = this.ip;
-        }
-        const signedToken = this.jwt.sign(data, {
-            expiresIn: this.zoiaConfig.token.expires
-        });
-        return signedToken;
-    }
-
-    async login(username, password) {
+    },
+    getUserData: async (req, fastify, db) => {
         try {
-            const user = await this.db.collection(this.collectionUsers).findOne({
-                username
-            });
-            const passwordHash = crypto.createHmac("sha256", this.zoiaConfig.secret).update(password).digest("hex");
-            if (!user || user.password !== passwordHash || !user.status || user.status.indexOf("active") === -1) {
-                return null;
-            }
-            const sid = user.sid || this.generateSid();
-            const tokenSigned = this.signToken(user._id, sid);
-            await this.db.collection(this.collectionUsers).updateOne({
-                _id: user._id
-            }, {
-                $set: {
-                    sid
+            if (req.cookies[`${fastify.zoiaConfig.id}_auth`] && db) {
+                const token = req.cookies[`${fastify.zoiaConfig.id}_auth`];
+                const decodedToken = fastify.jwt.decode(token);
+                if (!decodedToken || !decodedToken.userId || !decodedToken.sessionId || Math.floor(Date.now() / 1000) > decodedToken.exp) {
+                    return {};
                 }
-            });
-            return tokenSigned;
-        } catch (e) {
-            return null;
-        }
-    }
-
-    getUser() {
-        return this.user || {};
-    }
-
-    async logout() {
-        // Get user data
-        const user = await this.getUserData();
-        // Authorized, let's remove SID
-        if (user) {
-            try {
-                await this.db.collection(this.collectionUsers).updateOne({
-                    _id: this.user._id
-                }, {
-                    $set: {
-                        sid: undefined
-                    }
+                const user = await db.collection('users').findOne({
+                    _id: new ObjectId(decodedToken.userId)
                 });
-            } catch (e) {
-                // Ignore
+                if (!user || !user.active || user.sessionId !== decodedToken.sessionId) {
+                    return {};
+                }
+                return {
+                    id: user._id,
+                    active: user.active,
+                    admin: user.admin,
+                    username: user.username
+                };
+            }
+        } catch (e) {
+            // Ignore
+        }
+        return {};
+    },
+    decodeEncryptedJSON: (data, fastify) => {
+        let dataJSON = {};
+        const cryptr = new Cryptr(fastify.zoiaConfigSecure.secret);
+        try {
+            const decrypted = cryptr.decrypt(data);
+            dataJSON = JSON.parse(decrypted) || {};
+        } catch (e) {
+            // Ignore
+        }
+        if (dataJSON.t) {
+            const captchaValidityMs = fastify.zoiaConfigSecure.captchaValidity * 1000 || 3600000;
+            dataJSON.tDiff = new Date().getTime() - parseInt(dataJSON.t, 10);
+            if (dataJSON.tDiff > captchaValidityMs) {
+                dataJSON.overdue = true;
             }
         }
-        // Clear auth cookie
-        this.clearAuthCookie();
-    }
-
-    async validateCaptcha(captchaSecret, code) {
-        if (!captchaSecret || typeof captchaSecret !== "string" || !code || typeof code !== "string") {
-            return false;
-        }
+        return dataJSON;
+    },
+    validateCaptcha: async (captchaSecret, code, fastify, db) => {
         try {
             // Generate hash of a secret string
-            const captchaSecretHash = crypto.createHmac("sha256", this.req.zoiaConfig.secret).update(captchaSecret).digest("hex");
+            const captchaSecretHash = crypto.createHmac('sha256', fastify.zoiaConfigSecure.secret).update(captchaSecret).digest('hex');
             // Check if this captcha has been already used before
-            const invCaptcha = await this.db.collection("captcha").findOne({
+            const invCaptcha = await db.collection('captcha').findOne({
                 _id: captchaSecretHash
             });
             if (invCaptcha) {
                 return false;
             }
             // Decrypt catcha secret and parse it to JSON
-            const cryptr = new Cryptr(this.req.zoiaConfig.secret);
+            const cryptr = new Cryptr(fastify.zoiaConfigSecure.secret);
             const decrypted = cryptr.decrypt(captchaSecret);
             const dataJSON = JSON.parse(decrypted) || {};
             // Check if captcha is valid and not outdated
-            if (!dataJSON.c || dataJSON.c !== code || (dataJSON.t && new Date().getTime() - parseInt(dataJSON.t, 10) > (this.req.zoiaConfig.captchaValidity * 1000 || 3600000))) {
+            if (!dataJSON.c || dataJSON.c !== code || (dataJSON.t && new Date().getTime() - parseInt(dataJSON.t, 10) > (fastify.zoiaConfigSecure.captchaValidity * 1000 || 3600000))) {
                 return false;
             }
             // All checks are passed
             // Invalidate captcha
-            await this.db.collection("captcha").insertOne({
+            await db.collection('captcha').insertOne({
                 _id: captchaSecretHash,
                 createdAt: new Date()
             });
@@ -169,5 +97,11 @@ export default class {
         } catch (e) {
             return false;
         }
+    },
+    logout(req, rep) {
+        const language = locale.getLocaleFromURL(req);
+        const languagePrefixURL = language === Object.keys(req.zoiaConfig.languages)[0] ? '' : `${language}`;
+        const redirectURL = `${languagePrefixURL}?_=${uuid()}`.replace(/\/\//, '/');
+        return rep.sendClearCookieRedirect(rep, `${req.zoiaConfig.id}_auth`, req.zoiaConfig.cookieOptions, redirectURL);
     }
-}
+};

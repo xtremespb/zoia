@@ -1,0 +1,152 @@
+{
+    "test": [{
+            "title": "This is a question which has a multiple answer options!",
+            "answers": [
+                "Answer One", "Answer Two", "Another Answer"
+            ],
+            "correct": [1, 3]
+        }, {
+            "title": "Below is a list of problems that can be observed during testing or operation. Which is MOST likely a failure?",
+            "answers": [
+                "The product crashed when the user selected an option in a dialog box", "One source code file included in the build was the wrong version", "The computation algorithm used the wrong input variables", "The developer misinterpreted the requirement for the algorithm"
+            ],
+            "correct": [1]
+        },
+        {
+            "title": "Which of the following will prevent defects from reoccurr?",
+            "answers": [
+                "Rotating developers to keep them motivated", "Determining the environmental conditions that caused the failure", "improving processes based on root cause analysis", "Prioritizing reoccuring defects higher than new defects"
+            ],
+            "correct": [3]
+        },
+        {
+            "title": "Why is it important to avoid the pesticide paradox?",
+            "answers": [
+                "Dynamic testing is lessjable in finding bugs", "Pesticides mixed with static testing can allow bugs to escape detection", "Tests should not be context dependent", "Running the same tests over and over will reduce the chance of finding new defects score"
+            ],
+            "correct": [4]
+        },
+        {
+            "title": "Which of the following is a true statement about exhaustive testing ?",
+            "answers": [
+                "It is a form of stress testing", "It is not feasible except in the case of trivial software", "It is commonly done with test automation", "It is normally the responsibility of the developer during unit testing"
+            ],
+            "correct": [2]
+        },
+        {
+            "title": "Which of the following statements best describes one of the seven key principles of software testing ?",
+            "answers": [
+                "Automated tests are better than manual tests for avoiding the exhaustive testing", "Exhaustive testing is, with sufficient effort and tool support, feasible for all software", "Itis normally impossible to test all input/output combinations for a software system", "The purpose of testing is to demonstrate the absence of defects"
+            ],
+            "correct": [3]
+        },
+        {
+            "title": "According to the ISTQB Glossary, the word “bug” is synonymous with which of the following?",
+            "answers": ["Error",
+                "Incident",
+                "Defect",
+                "Mistake"
+            ],
+            "correct": [3]
+        },
+        {
+            "title": "Which characteristic must a tester possess in order to be successful when working with a project team?",
+            "answers": [
+                "Constructive Communication Skills", "Authoritarian leadership style", "Extroverted personality", "Extensive organizational network"
+            ],
+            "correct": [2]
+
+        },
+        {
+            "title": "If test cases are derived from looking at the code, what type of test design technique is being used?",
+            "answers": [
+                "Black Box", "White Box", "Experience-based", "Behavior-based"
+            ],
+            "correct": [2]
+        },
+        {
+            "title": "When should the expected results of a test case be defined?",
+            "answers": [
+                "When the test case is written, prior to execution", "When the test case is executed", "When the risk is assessed", "When the test condition is identified"
+            ],
+            "correct": [1]
+        },
+        {
+            "title": "Which of the following test techniques uses the requirements specifications as the test basis??",
+            "answers": [
+                "Structure-based", "Black-box", "White-box", "Exploratory"
+            ],
+            "correct": [2]
+        },
+        {
+            "title": "You are testing a machine that scores exam papers and assigns grades. Based on the score achieved the grades are as follows:1-49 = F, 50-59 = D-, 60-69 = D, 70-79 = C, 80-89 = B, 90-100=A",
+            "answers": [
+                "8", "12", "10", "20"
+            ],
+            "correct": [1]
+
+        },
+        {
+            "title": "Which one of the following best describes a characteristic of a keyword driven test execution tool?",
+            "answers": [
+                "Actions of testers recorded in a script that is run with several sets of test input data", "A table with test input data, action words, and expected results, controls execution of the system under test", "The ability to log test results and compare them against the expected results, stored in a text file", "Actions of testers recorded in a script that is rerun several times"
+            ],
+            "correct": [2]
+        },
+        {
+            "title": "A tool that supports traceability, recording of incidents or scheduling of tests is called",
+            "answers": [
+                "Test management tool ", "Test execution tool", "Dynamic analysis tool", "Debugging tool"
+            ],
+            "correct": [1]
+        },
+        {
+            "title": "The place to start if you want to use a new test tool is",
+            "answers": [
+                "Analyze your needs and requirements", "Invite a vendor to give a demo", "Attend a tool exhibition", "Find out what your budget would be for the tool"
+            ],
+            "correct": [1]
+        },
+        {
+            "title": "Which of the following would NOT be done as part of selecting a tool for an organization?",
+            "answers": [
+                "Evaluate the tool features against clear requirements and objective criteria", "Roll out the tool to as many users as possible within the organization", "Assess organizational maturity, strengths and weaknesses", "Identify internal requirements for coaching and mentoring in the use of the tool"
+            ],
+            "correct": [2]
+        }
+    ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

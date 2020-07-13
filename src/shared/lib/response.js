@@ -1,62 +1,54 @@
 export default {
-    successJSON: (rep, data = {}) => rep.code(200).type("application/json").send({
+    sendSuccessHTML: (rep, data = '') => rep.code(200).type('text/html').send(data),
+    sendSuccessJSON: (rep, data = {}) => rep.code(200).type('application/json').send({
+        statusCode: 200,
         ...data
     }),
-    internalServerError: (rep, error, errorMessage = "Internal Server Error") => rep.code(500).type("application/json")
+    sendRedirect: (rep, url) => rep.code(302).redirect(url),
+    sendClearCookieRedirect: (rep, cookie, cookieOptions, url) => rep.clearCookie(cookie, cookieOptions).code(302).redirect(url),
+    sendError: (rep, httpStatus, statusCode, errorCode, message = 'Unknown error', errors) => rep.code(httpStatus).type('application/json')
         .send({
-            errorMessage,
+            statusCode,
+            errorCode,
+            message,
+            errors
+        }),
+    sendBadRequestException: (rep, message = 'Unknown error', errors = {}) => rep.code(400).type('application/json')
+        .send({
+            statusCode: 400,
+            message,
+            errors
+        }),
+    sendBadRequestError: (rep, message = 'Unknown error', errors = {}, errorCode) => rep.code(200).type('application/json')
+        .send({
+            statusCode: 400,
+            errorCode,
+            message,
+            errors
+        }),
+    sendUnauthorizedError: (rep, errors = {}) => rep.code(200).type('application/json')
+        .send({
+            statusCode: 401,
+            message: 'Unauthorized',
+            errors
+        }),
+    sendUnauthorizedException: (rep, errors = {}) => rep.code(401).type('application/json')
+        .send({
+            statusCode: 401,
+            message: 'Unauthorized',
+            errors
+        }),
+    sendInternalServerError: (rep, error) => rep.code(500).type('application/json')
+        .send({
+            statusCode: 500,
+            message: 'Internal Server Error',
             error
         }),
-    validationError: (rep, error = {}) => rep.code(400).type("application/json")
+    sendNotFoundError: (rep, message = 'Unknown error', errors = {}, errorCode) => rep.code(200).type('application/json')
         .send({
-            errorMessage: "Request Validation Failed",
-            error
+            statusCode: 404,
+            errorCode,
+            message,
+            errors
         }),
-    requestError: (rep, error = {}) => rep.code(400).type("application/json")
-        .send({
-            errorMessage: "Request Failed",
-            error
-        }),
-    unauthorizedError: (rep, invalidUsernameOrPassword) => rep.code(401).type("application/json")
-        .send({
-            errorMessage: "Unauthorized",
-            ...(invalidUsernameOrPassword ? {
-                error: {
-                    failed: true,
-                    error: "Invalid username or password",
-                    errorKeyword: "invalidUsernameOrPassword",
-                    errorData: [{
-                        keyword: "invalidUsernameOrPassword",
-                        dataPath: `.username`,
-                    }, {
-                        keyword: "invalidUsernameOrPassword",
-                        dataPath: `.password`,
-                    }]
-                }
-            } : {})
-        }),
-    redirectToQuery: (req, rep, site) => {
-        let url = site.i18n.getLocalizedURL(`/?_=${new Date().getTime()}`);
-        const redirect = req.query.redirect && typeof req.query.redirect === "string" ? req.query.redirect.trim() : "";
-        if (redirect.length > 1 && redirect.charAt(0) === "/") {
-            url = redirect.replace(/([^:]\/)\/+/g, "$1");
-            url = `${url}?_=${new Date().getTime()}`;
-        }
-        return rep.code(302).redirect(url);
-    },
-    redirectToRoot: (req, rep, site) => {
-        const url = site.i18n.getLocalizedURL(`/?_=${new Date().getTime()}`);
-        rep.code(302).redirect(url);
-    },
-    redirectToLogin: (req, rep, site, url) => {
-        const newURL = `${site.i18n.getLocalizedURL(`${req.zoiaConfig.routes.login}?redirect=`)}${site.i18n.getLocalizedURL(url)}`;
-        rep.code(302).redirect(newURL);
-    },
-    sendHTML: (rep, data) => rep.code(200).type("text/html").send(data),
-    sendError: (rep, msg, code) => {
-        const error = new Error(msg);
-        error.code = code;
-        rep.send(error);
-    },
-    getCode204: rep => rep.code(204)
 };

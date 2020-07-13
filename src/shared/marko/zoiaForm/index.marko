@@ -1,0 +1,260 @@
+import axios from 'axios'
+
+style {
+  .za-zf-wrap {
+    position: relative;
+  }
+  .za-zf-loading {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.3);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    z-index: 200;
+  }
+}
+
+class {
+  onCreate(input) {
+    const state = {};
+    if (input.data) {
+      input.data.map(i => {
+        if (Array.isArray(i)) {
+          i.map(ai => (state[ai.id] = ai.defaultValue || null));
+        } else {
+          state[i.id] = i.defaultValue || null;
+        }
+      });
+    }
+    this.state = state;
+    this.typesToSerialize = ["text", "textarea", "select", "captcha"];
+    this.setErrorMessage = this.intSetErrorMessage;
+    this.setLoading = this.loading;
+    this.setEnabled = this.enable;
+    this.setDisabled = this.disable;
+    this.captchaUpdate = this.doUpdateCaptcha;
+    this.setValue = this.value;
+    this.validate = this.doValidation;
+    this.serialize = this.doSerialization;
+    this.submitForm = this.save;
+    this.dataFlat = input.data.flat();
+  }
+  onMount() {
+    const autoFocusField = this.dataFlat.find(i => i.autoFocus);
+    if (autoFocusField) {
+      this.getComponent(autoFocusField.id).focus();
+    }
+  }
+  getFlatData() {
+    return this.input.data.flat();
+  }
+  value(id, value) {
+    this.setState(id, value);
+  }
+  doValidation(data = this.dataFlat) {
+    let error = false;
+    let focus;
+    // Clean up errors
+    data.map(i => this.setState(`error__${i.id}`, null));
+    this.setState("errorMessage", null);
+    // Validate
+    data.map(i => {
+      // Check if it's mandatory
+      if (i.mandatory && !this.state[i.id]) {
+        this.setState(`error__${i.id}`, this.input.i18n.ERR_MANDATORY);
+        if (!focus) {
+          this.getComponent(i.id).setFocus();
+          focus = true;
+        }
+        error = true;
+        return;
+      }
+      // If not mandatory and empty, stop
+      if (!i.mandatory && !this.state[i.id]) {
+        return;
+      }
+      // Validate only if string
+      if (typeof this.state[i.id] === "string") {
+        // Trim value
+        const value = this.state[i.id].trim();
+        // Get "shoudMatch" value and trim it, too
+        const valueSM = i.shouldMatch ? this.state[i.shouldMatch].trim() : null;
+        // Check min/max length
+        if ((i.minLength && value.length < i.minLength) || (i.maxLength && value.length > i.maxLength)) {
+          this.setState(`error__${i.id}`, this.input.i18n.ERR_FORMAT);
+          if (!focus) {
+            this.getComponent(i.id).setFocus();
+            focus = true;
+          }
+          error = true;
+          return;
+        }
+        // Check Regex pattern
+        if (i.pattern) {
+          if (this.state[i.id] && typeof this.state[i.id] === "string") {
+            const rx = new RegExp(i.pattern);
+            if (!value.match(rx)) {
+              this.setState(`error__${i.id}`, this.input.i18n.ERR_FORMAT);
+              if (!focus) {
+                this.getComponent(i.id).setFocus();
+                focus = true;
+              }
+              error = true;
+              return;
+            }
+          }
+        }
+        // Perform "shoudMatch" check
+        if (i.shouldMatch && value !== valueSM) {
+          this.setState(`error__${i.id}`, this.input.i18n.ERR_SHOULD_MATCH);
+          this.setState(`error__${i.shouldMatch}`, this.input.i18n.ERR_SHOULD_MATCH);
+          if (!focus) {
+            this.getComponent(i.id).setFocus();
+            focus = true;
+          }
+          error = true;
+          return;
+        }
+      }
+    });
+    return error;
+  }
+  async save(dataSerialized) {
+    if (!this.input.save) {
+      return;
+    }
+    this.disableAll();
+    this.loading(true);
+    try {
+      const data = Object.assign(dataSerialized, this.input.save.extras);
+      const res = await axios.post(this.input.save.url, data);
+      this.enableAll();
+      this.loading(false);
+      if (res && res.data && res.data.statusCode === 200) {
+        this.emit("save-success", res);
+      } else {
+        if (res && res.data && res.data.errors) {
+          let firstErrorComponent;
+          const fields = res.data.errors.default || res.data.errors;
+          Object.keys(fields).map(f => {
+            this.setState(`error__${f}`, fields[f] || "__error__");
+            const errorComponent = this.getComponent(f);
+            if (!firstErrorComponent && errorComponent && errorComponent.setFocus) {
+              firstErrorComponent = errorComponent;
+            }
+          });
+          if (firstErrorComponent) {
+            firstErrorComponent.setFocus();
+          }
+        }
+        this.emit("save-error", res);
+      }
+    } catch (e) {
+      console.error(e);
+      this.enableAll();
+      this.loading(false);
+      this.emit(
+        "save-error",
+        e.response || {
+          statusCode: 500
+        }
+      );
+    }
+  }
+  doSerialization(input = this.dataFlat) {
+    const data = {};
+    // Serialize data from input to a key-value pairs object
+    input.map(i => {
+      if (this.typesToSerialize.indexOf(i.type) > -1) {
+        data[i.id] = this.state[i.id];
+        // We also need to set a secret for captcha
+        if (i.type === "captcha" && this.state[`${i.id}Secret`]) {
+          data[`${i.id}Secret`] = this.state[`${i.id}Secret`];
+        }
+      }
+    });
+    // No need to doSerialization fields where "shouldMatch" points to
+    this.dataFlat.map(i => {
+      if (i.shouldMatch) {
+        delete data[i.shouldMatch];
+      }
+    });
+    // Return
+    return data;
+  }
+  enableAll() {
+    this.dataFlat.map(i => {
+      const item = this.getComponent(i.id);
+      if (item && item.enable) {
+        item.enable();
+      }
+    });
+  }
+  disableAll() {
+    document.activeElement.blur();
+    this.dataFlat.map(i => {
+      const item = this.getComponent(i.id);
+      if (item && item.disable) {
+        item.disable();
+      }
+    });
+  }
+  loading(flag) {
+    this.setState("loading", flag);
+  }
+  intSetErrorMessage(msg) {
+    this.setState("errorMessage", msg);
+  }
+  async onFormSubmit(e) {
+    e.preventDefault();
+    const errors = this.doValidation(this.dataFlat);
+    if (errors) {
+      return;
+    }
+    const dataSerialized = this.doSerialization(this.dataFlat);
+    await this.save(dataSerialized);
+  }
+  onFieldValueChanged(data) {
+    this.setState(data.id, data.value);
+  }
+  onCaptchaSecretUpdate(data) {
+    this.setState(`${data.id}Secret`, data.value);
+  }
+  onButtonClick(data) {
+    this.emit("button-click", data);
+  }
+  doUpdateCaptcha(id) {
+    this.getComponent(id).captchaUpdate();
+  }
+}
+
+<div class="za-zf-wrap">
+  <form on-submit("onFormSubmit")>
+    <if(state.errorMessage)>
+      <div class="uk-alert uk-alert-danger uk-margin-remove-bottom" uk-alert>
+        <p>${state.errorMessage}</p>
+      </div>
+    </if>
+    <for|item, index| of=input.data>
+      <if(typeof item === "object")>
+        <div class="uk-margin-small-bottom">
+          <itemSelector key=item.id item=item value=state[item.id] error=state[`error__${item.id}`] on-field-value-change("onFieldValueChanged") isDisabled=state[`disabled__${item.id}`] on-captcha-secret-update("onCaptchaSecretUpdate") on-button-click("onButtonClick")/>
+        </div>
+      </if>
+      <if(Array.isArray(item))>
+        <div class="uk-flex uk-flex-wrap uk-margin-small-bottom">
+          <for|sitem, sindex| of=item>
+            <itemSelector key=sitem.id item=sitem inlineFlag=true value=state[sitem.id] error=state[`error__${sitem.id}`] on-field-value-change("onFieldValueChanged") isDisabled=state[`disabled__${sitem.id}`] on-captcha-secret-update("onCaptchaSecretUpdate") on-button-click("onButtonClick")/>
+          </for>
+        </div>
+      </if>
+    </for>
+    <if(state.loading)>
+      <div class="za-zf-loading uk-flex uk-flex-center uk-flex-middle">
+        <span uk-spinner="ratio:2"/>
+      </div>
+    </if>
+  </form>
+</div>

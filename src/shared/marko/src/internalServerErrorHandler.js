@@ -1,44 +1,38 @@
-import errorInternal from "./errorInternal/index.marko";
+import error500 from '../error500/index.marko';
+import site from '../../lib/site';
 
-export default async (err, req, rep) => {
-    let errorCode;
-    let errorText;
-    let errorTitle;
-    let errorMessage;
-    const site = new req.ZoiaSite(req);
-    switch (err.code) {
-    case 403:
-        errorCode = 403;
-        errorText = "Forbidden";
-        errorTitle = site.i18n.t("forbiddenError");
-        errorMessage = site.i18n.t("forbiddenErrorMsg");
-        break;
-    case 429:
-        errorCode = 429;
-        errorText = "Rate Limit Exceeded";
-        errorTitle = site.i18n.t("rateError");
-        errorMessage = site.i18n.t("rateErrorMsg");
-        break;
-    default:
-        errorCode = 500;
-        errorText = "Internal Server Error";
-        errorTitle = site.i18n.t("internalError");
-        errorMessage = site.i18n.t("internalErrorMsg");
+export default async (err, req, rep, i18n, templates, secure) => {
+    let siteData = {};
+    try {
+        siteData = await site.getSiteData(req);
+    } catch (e) {
+        // Ignore
     }
-    const render = await errorInternal.stream({
+    const t = i18n()[siteData.language || Object.keys(req.zoiaConfig.languages)[0]];
+    let statusCode = 500;
+    if (err && err.response && err.response.data && err.response.data.statusCode === 429) {
+        statusCode = 429;
+        siteData.title = `${t['Too Many Requests']}${siteData.title ? ` | ${siteData.title}` : ''}`;
+    } else {
+        siteData.title = `${t['Internal Server Error']}${siteData.title ? ` | ${siteData.title}` : ''}`;
+    }
+    const render = await error500.render({
         $global: {
-            serializedGlobals: {
-                pageTitle: true,
-                ...site.getSerializedGlobals()
-            },
-            pageTitle: errorTitle,
-            ...site.getGlobals()
-        },
-        errorTitle,
-        errorMessage
+            siteData,
+            t,
+            template: templates.available[0],
+            statusCode
+        }
     });
-    rep.logError(req, errorText, err);
-    req.urlData().path.match(/^\/api\//) ? rep.code(errorCode).type("application/json").send({
-        errorMessage: errorText
-    }) : rep.code(errorCode).type("text/html").send(render);
+    req.log.error({
+        ip: req.ip,
+        path: req.urlData().path,
+        query: req.urlData().query,
+        error: err && err.message ? err.message : 'Internal Server Error',
+        stack: secure.stackTrace && err.stack ? err.stack : null
+    });
+    if (rep) {
+        return rep.code(500).type('text/html').send(render.out.stream._content);
+    }
+    return render.out.stream._content;
 };

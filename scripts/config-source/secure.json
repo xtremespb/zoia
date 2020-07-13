@@ -1,0 +1,72 @@
+{
+    "secret": "",
+    "randomInt": 0,
+    "authTokenExpiresIn": "7 days",
+    "mongo": {
+        "url": "mongodb://127.0.0.1:27017",
+        "dbName": "zoia"
+    },
+    "redisEnabled": false,
+    "redisConfig": {
+        "port": 6379,
+        "host": "127.0.0.1"
+    },
+    "rateLimitOptionsAPI": {
+        "global": false,
+        "max": 1000,
+        "timeWindow": 60000,
+        "cache": 5000,
+        "whitelist": [],
+        "skipOnError": false,
+        "addHeaders": {
+            "x-ratelimit-limit": true,
+            "x-ratelimit-remaining": true,
+            "x-ratelimit-reset": true,
+            "retry-after": true
+        }
+    },
+    "rateLimitOptionsWeb": {
+        "global": false,
+        "max": 1000,
+        "timeWindow": 60000,
+        "cache": 5000,
+        "whitelist": [],
+        "skipOnError": false,
+        "addHeaders": {
+            "x-ratelimit-limit": true,
+            "x-ratelimit-remaining": true,
+            "x-ratelimit-reset": true,
+            "retry-after": true
+        }
+    },
+    "originCORS": "*",
+    "trustProxy": true,
+    "apiServer": {
+        "ip": "127.0.0.1",
+        "port": 3000
+    },
+    "webServer": {
+        "ip": "127.0.0.1",
+        "port": 3001
+    },
+    "httpDevServer": {
+        "ip": "127.0.0.1",
+        "port": 8080
+    },
+    "mailer": {
+        "service": "Yandex",
+        "auth": {
+            "user": "info@zoiajs.org",
+            "pass": ""
+        }
+    },
+    "serviceMailbox": "info@zoiajs.org",
+    "pathToLogo": "../static/zoia/logo_dark_small.png",
+    "development": false,
+    "loglevel": "info",
+    "stackTrace": false,
+    "captchaValidity": 3600,
+    "user": "zoia",
+    "group": "zoia",
+    "serverName": ""
+}

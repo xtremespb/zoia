@@ -1,0 +1,28 @@
+{
+    "avail": [{
+            "id": "module1",
+            "title": "Sample Module",
+            "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur massa mauris, tincidunt vel ante semper, iaculis pharetra massa. Aliquam erat volutpat. Phasellus sit amet odio elementum, aliquam turpis in, mollis odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mattis at velit ultrices venenatis."
+        },
+        {
+            "id": "module2",
+            "title": "Another Module",
+            "desc": "Proin vitae tincidunt felis. Duis nec ante quis nisi sodales mollis. Sed condimentum massa pellentesque quam lacinia, vel pharetra ligula consequat. Suspendisse dictum interdum ex sit amet fringilla. Suspendisse sed sapien sem. Sed ac lectus eleifend, consectetur est et, varius urna."
+        },
+        {
+            "id": "module3",
+            "title": "Third Module",
+            "desc": "Proin vitae tincidunt felis. Duis nec ante quis nisi sodales mollis. Sed condimentum massa pellentesque quam lacinia, vel pharetra ligula consequat. Suspendisse dictum interdum ex sit amet fringilla. Suspendisse sed sapien sem. Sed ac lectus eleifend, consectetur est et, varius urna."
+        },
+        {
+            "id": "module4",
+            "title": "Fourth Module",
+            "desc": "Proin vitae tincidunt felis. Duis nec ante quis nisi sodales mollis. Sed condimentum massa pellentesque quam lacinia, vel pharetra ligula consequat. Suspendisse dictum interdum ex sit amet fringilla. Suspendisse sed sapien sem. Sed ac lectus eleifend, consectetur est et, varius urna."
+        },
+        {
+            "id": "module5",
+            "title": "Sample Module 6",
+            "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur massa mauris, tincidunt vel ante semper, iaculis pharetra massa. Aliquam erat volutpat. Phasellus sit amet odio elementum, aliquam turpis in, mollis odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mattis at velit ultrices venenatis."
+        }
+    ]
+}

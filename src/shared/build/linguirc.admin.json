@@ -1,0 +1,14 @@
+{
+  "localeDir": "src/shared/react/locales/admin",
+  "srcPathDirs": [
+    "shared/react/",
+    "src/modules/admin/admin/components/",
+    "src/modules/core/admin/components/",
+    "src/modules/edu/admin/components/",
+    "src/modules/nav/admin/components/",
+    "src/modules/pages/admin/components/",
+    "src/modules/update/admin/components/",
+    "src/modules/users/admin/components/"
+  ],
+  "format": "po"
+}

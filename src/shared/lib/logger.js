@@ -1,9 +1,9 @@
-import fs from "fs-extra";
-import path from "path";
-import pino from "pino";
+import fs from 'fs-extra';
+import path from 'path';
+import pino from 'pino';
 
-const config = fs.readJsonSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
+const secure = fs.readJsonSync(path.resolve(`${__dirname}/../etc/secure.json`));
 
 export default pino({
-    level: config.logLevel
+    level: secure.loglevel
 });

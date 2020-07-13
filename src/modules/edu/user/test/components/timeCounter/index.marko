@@ -1,0 +1,50 @@
+class {
+  formatSecondsHMS(val) {
+    const date = new Date(1970, 0, 1);
+    date.setSeconds(val);
+    return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+  }
+  formatSecondsHM(val, t) {
+    const h = Math.floor(val / 3600);
+    const m = Math.floor((val % 3600) / 60);
+    if (h === 0 && m === 0) {
+      return t["less than a minute"];
+    }
+    return `${h < 10 ? `0${h}` : h}:${m < 10 ? `0${m}` : m}`;
+  }
+  onCreate(input) {
+    const remaining = input.endTime && !input.nextAttemptRemaining ? parseInt(input.endTime, 10) - Math.floor(Date.now() / 1000) : null;
+    const remainingString = remaining && remaining > 0 ? this.formatSecondsHMS(remaining) : "00:00:00";
+    const nextAttempt = input.nextAttemptRemaining;
+    const nextAttemptString = input.nextAttemptRemaining ? this.formatSecondsHM(input.nextAttemptRemaining, input.t) : "00:00";
+    const state = {
+      remaining,
+      remainingString,
+      nextAttempt,
+      nextAttemptString,
+      t: input.t
+    };
+    this.state = state;
+  }
+  onMount() {
+    if (this.state.remaining > 0) {
+      this.countdown = setInterval(() => {
+        let remaining = this.state.remaining;
+        if (remaining > 0) {
+          remaining -= 1;
+        } else {
+          clearInterval(this.countdown);
+        }
+        const remainingString = this.formatSecondsHMS(remaining);
+        this.setState("remaining", remaining);
+        this.setState("remainingString", remainingString);
+      }, 1000);
+    }
+  }
+}
+
+<span>
+  <if(state.remaining && state.remaining > 0)>${out.global.t["Time Left"]}:&nbsp;${state.remainingString}</if>
+  <if(!state.remaining && !state.nextAttempt)><span class="uk-text-danger">${out.global.t["Time is over"]}</span></if>
+  <if(state.nextAttempt)>${out.global.t["Time until next attempt (hours, minutes)"]}:&nbsp;${state.nextAttemptString}</if>
+</span>

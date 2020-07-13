@@ -1,0 +1,29 @@
+.flag-icon {
+    background-size: contain;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    position: relative;
+    display: inline-block;
+    width: 1.33333333em;
+    line-height: 1em;
+}
+
+.flag-icon-switch {
+    box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.15);
+}
+
+.flag-icon:before {
+    content: "\00a0";
+}
+
+.flag-icon-ru {
+    background-image: url(/zoia/flags/ru.svg);
+}
+
+.flag-icon-en {
+    background-image: url(/zoia/flags/en.svg);
+}
+
+.flag-icon-de {
+    background-image: url(/zoia/flags/de.svg);
+}

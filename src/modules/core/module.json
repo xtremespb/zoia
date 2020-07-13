@@ -1,5 +1,6 @@
 {
-    "id": "core",
-    "icon": "",
-    "admin": false
+	"id": "core",
+	"icon": "",
+	"admin": false,
+	"adminRoute": ""
 }

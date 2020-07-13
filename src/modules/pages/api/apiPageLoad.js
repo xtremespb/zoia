@@ -1,45 +1,62 @@
 import {
     ObjectId
-} from "mongodb";
-import pageLoad from "./data/pageLoad.json";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
+} from 'mongodb';
 
-export default () => ({
+export default fastify => ({
+    schema: {
+        body: {
+            type: 'object',
+            properties: {
+                token: {
+                    type: 'string'
+                },
+                id: {
+                    type: 'string',
+                    minLength: 24,
+                    maxLength: 24,
+                    pattern: '^[a-f0-9]+$'
+                }
+            },
+            required: ['token', 'id']
+        }
+    },
+    attachValidation: true,
     async handler(req, rep) {
+        // Start of Validation
+        if (req.validationError) {
+            rep.logError(req, req.validationError.message);
+            return rep.sendBadRequestException(rep, 'Request validation error', req.validationError);
+        }
+        // End of Validation
         // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-            rep.unauthorizedError(rep);
-            return;
+        const user = await req.verifyToken(req.body.token, fastify, this.mongo.db);
+        if (!user || !user.admin) {
+            rep.logError(req, 'Authentication failed');
+            return rep.sendUnauthorizedException(rep, {
+                default: {
+                    username: '',
+                    password: ''
+                }
+            });
         }
-        const extendedValidation = new req.ExtendedValidation(req.body, pageLoad);
-        const extendedValidationResult = extendedValidation.validate();
-        if (extendedValidationResult.failed) {
-            rep.logError(req, extendedValidationResult.message);
-            rep.validationError(rep, extendedValidationResult);
-            return;
-        }
+        // End of check permissions
         try {
-            const data = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).findOne({
+            // Find page with given ID
+            const pageRecord = await this.mongo.db.collection('pages').findOne({
                 _id: new ObjectId(req.body.id)
             });
-            if (!data) {
-                rep.requestError(rep, {
-                    failed: true,
-                    error: "Database error",
-                    errorKeyword: "pageNotFound",
-                    errorData: []
-                });
-                return;
+            if (!pageRecord) {
+                return rep.sendNotFoundError(rep, 'Non-existent record or missing locale');
             }
-            rep.successJSON(rep, {
-                data
+            Object.keys(pageRecord.data).map(language => pageRecord[language] = pageRecord.data[language]);
+            delete pageRecord.data;
+            // Send response
+            return rep.sendSuccessJSON(rep, {
+                data: pageRecord
             });
-            return;
         } catch (e) {
             rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            return rep.sendInternalServerError(rep, e.message);
         }
     }
 });

@@ -1,0 +1,162 @@
+import axios from "axios"
+import { v4 as uuid } from "uuid"
+
+style {
+  .za-zf-disabled {
+    pointer-events: none;
+  }
+  img.za-zf-captcha {
+    cursor: pointer;
+    border-radius: 3px;
+    border: 1px solid #e5e5e5;
+    height: 40px;
+  }
+  input.za-zf-captcha {
+    width: 55px !important;
+  }
+}
+
+class {
+  onCreate(input) {
+    this.state = {
+      enabled: true
+    };
+    this.setFocus = this.focus;
+    this.setEnabled = this.enable;
+    this.setDisabled = this.disable;
+    this.captchaUpdate = this.doCaptchaUpdate;
+    this.item = input.item;
+  }
+  async doCaptchaUpdate() {
+    try {
+      this.emit("field-value-change", { id: this.item.id, value: "" });
+      const captcha = await axios.get(`${this.item.imgSrc}?_=${uuid()}`, {});
+      if (captcha && captcha.data && captcha.data.statusCode === 200 && captcha.data.imageData && captcha.data.imageSecret) {
+        this.getEl(`${this.item.id}_image`).src = captcha.data.imageData;
+        this.emit("captcha-secret-update", { id: this.item.id, value: captcha.data.imageSecret });
+      }
+    } catch (e) {
+      // Do nothing
+    }
+  }
+  onMount() {
+    if (this.item.type === "captcha" && this.item.imgSrc) {
+      this.doCaptchaUpdate();
+    }
+  }
+  handleChangeText(e) {
+    this.emit("field-value-change", { id: e.target.id, value: e.target.value });
+  }
+  handleChangeSelect(e) {
+    this.emit("field-value-change", { id: e.target.id, value: e.target.value });
+  }
+  handleButtonClick(e) {
+    this.emit("button-click", { id: e.target.id });
+  }
+  focus() {
+    const field = this.getEl(this.input.item.id);
+    if (field) {
+      field.focus();
+    }
+  }
+  enable() {
+    this.setState("enabled", true);
+  }
+  disable() {
+    this.setState("enabled", false);
+  }
+}
+
+<div class=`uk-width-auto uk-margin-small-right`>
+  <!-- Text Input -->
+  <if(input.item.type === "text")>
+    <label class="uk-form-label" for="">
+      ${input.item.label}<if(input.item.mandatory)>
+        <span class="uk-text-danger">*</span>
+      </if>:<div class="uk-form-controls">
+        <input type=(input.item.textType || "text") id=input.item.id class=`${input.item.css}${input.error ? " uk-form-danger" : ""}${state.enabled ? "" : " za-zf-disabled"}` value=input.value key=input.item.id on-change("handleChangeText") disabled=input.isDisabled/>
+        <if(input.error && input.error !== "__error__")>
+          <div>
+            <div class="uk-label uk-label-danger">${input.error}</div>
+          </div>
+        </if>
+        <if(input.item.helpText)>
+          <div class="uk-text-small uk-text-muted">${input.item.helpText}</div>
+        </if>
+      </div>
+    </label>
+  </if>
+  <!-- Textarea -->
+  <if(input.item.type === "textarea")>
+    <label class="uk-form-label" for="">
+      ${input.item.label}<if(input.item.mandatory)>
+        <span class="uk-text-danger">*</span>
+      </if>:<div class="uk-form-controls">
+        <textarea id=input.item.id class=`${input.item.css}${input.error ? " uk-form-danger" : ""}${state.enabled ? "" : " za-zf-disabled"}` rows=input.item.rows value=input.value key=input.item.id on-change("handleChangeText") disabled=input.isDisabled/>
+        <if(input.error && input.error !== "__error__")>
+          <div>
+            <div class="uk-label uk-label-danger">${input.error}</div>
+          </div>
+        </if>
+        <if(input.item.helpText)>
+          <div class="uk-text-small uk-text-muted">${input.item.helpText}</div>
+        </if>
+      </div>
+    </label>
+  </if>
+  <!-- Select -->
+  <if(input.item.type === "select")>
+    <label class="uk-form-label" for="">
+      ${input.item.label}<if(input.item.mandatory)>
+        <span class="uk-text-danger">*</span>
+      </if>:<div class="uk-form-controls">
+        <select id=input.item.id class=`${input.item.css}${input.error ? " uk-form-danger" : ""}${state.enabled ? "" : " za-zf-disabled"}` value=input.value key=input.item.id on-change("handleChangeSelect") disabled=input.isDisabled>
+          <for|oi| of=input.item.options>
+            <option selected=(oi.value === input.value) key=oi.value value=oi.value>${oi.label}</option>
+          </for>
+        </select>
+        <if(input.error && input.error !== "__error__")>
+          <div>
+            <div class="uk-label uk-label-danger">${input.error}</div>
+          </div>
+        </if>
+        <if(input.item.helpText)>
+          <div class="uk-text-small uk-text-muted">${input.item.helpText}</div>
+        </if>
+      </div>
+    </label>
+  </if>
+  <!-- Button -->
+  <if(input.item.type === "button")>
+    <button id=input.item.id type=input.item.buttonType class=`${input.item.css}${state.enabled ? "" : " za-zf-disabled"}` disabled=input.isDisabled on-click("handleButtonClick")>${input.item.label}</button>
+  </if>
+  <!-- Divider -->
+  <if(input.item.type === "divider")>
+    <div class="uk-margin-top"/>
+  </if>
+  <!-- Hint -->
+  <if(input.item.type === "hint")>
+    <div class="uk-margin-top uk-margin-bottom uk-text-small uk-heading-divider uk-text-secondary uk-text-uppercase uk-text-background">${input.item.label}</div>
+  </if>
+  <!-- Captcha -->
+  <if(input.item.type === "captcha")>
+    <label class="uk-form-label" for="">
+      ${input.item.label}<if(input.item.mandatory)>
+        <span class="uk-text-danger">*</span>
+      </if>:<div class="uk-form-controls">
+        <div class="uk-flex uk-flex-middle">
+          <input type="text" id=input.item.id class=`za-zf-captcha uk-margin-small-right ${input.item.css}${input.error ? " uk-form-danger" : ""}${state.enabled ? "" : " za-zf-disabled"}` value=input.value key=input.item.id on-change("handleChangeText") disabled=input.isDisabled/>
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAAAeCAQAAAAYofFAAAAAL0lEQVR42u3OAREAAAQEMJ9cdHI4W4Jluk6IqKioqKioqKioqKioqKioqKjo9+gCNZQs48iZxGcAAAAASUVORK5CYII=" class="za-zf-captcha" id=`${input.item.id}_image` key=`${input.item.id}_image` on-click("doCaptchaUpdate")/>
+        </div>
+        <if(input.error && input.error !== "__error__")>
+          <div>
+            <div class="uk-label uk-label-danger">${input.error}</div>
+          </div>
+        </if>
+        <if(input.item.helpText)>
+          <div class="uk-text-small uk-text-muted">${input.item.helpText}</div>
+        </if>
+      </div>
+    </label>
+  </if>
+</div>

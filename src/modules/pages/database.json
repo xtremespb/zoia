@@ -1,0 +1,8 @@
+{
+    "collections": {
+        "pages": {
+            "indexesAsc": ["path", "filename", "data.[language].title"],
+            "indexesDesc": ["path", "filename", "data.[language].title"]
+        }
+    }
+}

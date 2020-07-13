@@ -1,102 +1,199 @@
+import Ajv from 'ajv';
 import {
     ObjectId
-} from "mongodb";
-import cloneDeep from "lodash/cloneDeep";
-import crypto from "crypto";
-import Auth from "../../../shared/lib/auth";
-import userEdit from "./data/userEdit.json";
-import C from "../../../shared/lib/constants";
+} from 'mongodb';
+import crypto from 'crypto';
 
-export default () => ({
+const ajv = new Ajv();
+
+const baseValidate = ajv.compile({
+    type: 'object',
+    properties: {
+        token: {
+            type: 'string'
+        },
+        id: {
+            type: 'string'
+        }
+    },
+    required: ['token']
+});
+
+const formValidate = ajv.compile({
+    type: 'object',
+    properties: {
+        username: {
+            type: 'string',
+            minLength: 4,
+            maxLength: 32,
+            pattern: '^[a-zA-Z0-9_-]+$'
+        },
+        password: {
+            type: 'string'
+        },
+        email: {
+            type: 'string',
+            minLength: 6,
+            maxLength: 129,
+            pattern: '^(?:[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-])+@(?:[a-zA-Z0-9]|[^\\u0000-\\u007F])(?:(?:[a-zA-Z0-9-]|[^\\u0000-\\u007F]){0,61}(?:[a-zA-Z0-9]|[^\\u0000-\\u007F]))?(?:\\.(?:[a-zA-Z0-9]|[^\\u0000-\\u007F])(?:(?:[a-zA-Z0-9-]|[^\\u0000-\\u007F]){0,61}(?:[a-zA-Z0-9]|[^\\u0000-\\u007F]))?)*$'
+        },
+        active: {
+            type: 'string',
+            pattern: '^(0|1)$'
+        },
+        admin: {
+            type: 'string',
+            pattern: '^(0|1)$'
+        }
+    },
+    required: ['username', 'email', 'active', 'admin']
+});
+
+export default fastify => ({
+    schema: {
+        body: {
+            type: 'object',
+            properties: {
+                __form_data: {
+                    type: 'string'
+                }
+            },
+            required: ['__form_data']
+        }
+    },
+    attachValidation: true,
     async handler(req, rep) {
-        // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-            rep.unauthorizedError(rep);
-            return;
+        // Start of Pre-Validation
+        if (req.validationError) {
+            rep.logError(req, req.validationError.message);
+            return rep.sendBadRequestException(rep, 'Request validation error', req.validationError);
         }
-        // Clone root validation schema
-        const userEditRoot = cloneDeep(userEdit.root);
-        if (!req.body.id) {
-            // If it's a new record, password is mandatory
-            userEditRoot.required = [...userEditRoot.required, "password"];
-        }
-        // Initialize validator
-        const extendedValidation = new req.ExtendedValidation(req.body, userEditRoot);
-        // Perform validation
-        const extendedValidationResult = extendedValidation.validate();
-        // Check if there are any validation errors
-        if (extendedValidationResult.failed) {
-            rep.logError(req, extendedValidationResult.message);
-            rep.validationError(rep, extendedValidationResult);
-            return;
-        }
-        // Get data from form body
-        const data = extendedValidation.getData();
+        // End of Pre-Validation
         try {
-            // Process case for username and e-mail
-            data.username = data.username.trim().toLowerCase();
-            data.email = data.email.trim().toLowerCase();
-            // Check for username duplicates
-            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["users"].collectionUsers, {
-                    username: data.username,
-                    _id: {
-                        $ne: req.body.id ? new ObjectId(req.body.id) : null
+            const formData = JSON.parse(req.body.__form_data);
+            // Start of Form Validation
+            const baseDataValidation = baseValidate(formData);
+            const formDataValidation = formValidate(formData.default);
+            if (!baseDataValidation || !formDataValidation || (formData.id && (formData.id.length !== 24 || !formData.id.match(/^[a-f0-9]+$/)))) {
+                const errorData = {
+                    base: baseDataValidation ? undefined : (baseValidate.errors || {
+                        error: 'General validation error'
+                    }),
+                    form: formDataValidation ? null : (formValidate.errors || {
+                        error: 'General validation error'
+                    })
+                };
+                rep.logError(req, errorData);
+                return rep.sendBadRequestException(rep, 'Request validation error', errorData);
+            }
+            formData.default.active = parseInt(formData.default.active, 10);
+            formData.default.admin = parseInt(formData.default.admin, 10);
+            // End of Form Validation
+            // Check permissions
+            const user = await req.verifyToken(formData.token, fastify, this.mongo.db);
+            if (!user || !user.admin) {
+                rep.logError(req, 'Authentication failed');
+                return rep.sendUnauthorizedException(rep, {
+                    default: {
+                        username: '',
+                        password: ''
                     }
-                }, "userAlreadyExists", "username")) {
-                return;
+                });
             }
-            // Check for email duplicates
-            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["users"].collectionUsers, {
-                    email: data.email,
-                    _id: {
-                        $ne: req.body.id ? new ObjectId(req.body.id) : null
+            // End of check permissions
+            // Password-related checks
+            const passwordUpdate = {};
+            if (!formData.id && !formData.default.password) {
+                return rep.sendBadRequestError(rep, 'Missing password', {
+                    default: {
+                        password: ''
                     }
-                }, "emailAlreadyExists", "email")) {
-                return;
+                });
             }
-            // Set password when necessary
-            const updateExtras = {};
-            if (data.password) {
-                updateExtras.password = crypto.createHmac("sha256", req.zoiaConfig.secret).update(data.password).digest("hex");
+            if (formData.default.password) {
+                if (formData.default.password.length < 8) {
+                    return rep.sendBadRequestError(rep, 'Password is too short', {
+                        default: {
+                            password: ''
+                        }
+                    });
+                }
+                passwordUpdate.password = crypto.createHmac('sha512', fastify.zoiaConfigSecure.secret).update(formData.default.password).digest('hex');
             }
-            // Set createdAt timestamp if that's a new record
-            if (!data.id) {
-                updateExtras.createdAt = new Date();
+            // Check if such user exists
+            if (formData.id) {
+                const userDB = await this.mongo.db.collection('users').findOne({
+                    _id: new ObjectId(formData.id)
+                });
+                if (!userDB) {
+                    return rep.sendBadRequestError(rep, 'User not found', {
+                        default: {
+                            username: ''
+                        }
+                    });
+                }
+                if (fastify.zoiaConfig.demo && userDB.username.match(/admin/i)) {
+                    return rep.sendSuccessJSON(rep);
+                }
+            }
+            // Check if user with such username already exists
+            const dupeUsernameQuery = {
+                username: formData.default.username
+            };
+            if (formData.id) {
+                dupeUsernameQuery._id = {
+                    $ne: new ObjectId(formData.id)
+                };
+            }
+            const dupeUsername = await this.mongo.db.collection('users').findOne(dupeUsernameQuery);
+            if (dupeUsername) {
+                return rep.sendBadRequestError(rep, 'Duplicate username', {
+                    default: {
+                        username: ''
+                    }
+                });
+            }
+            // Check if user with such e-mail address already exists
+            const dupeEmailQuery = {
+                email: formData.default.email
+            };
+            if (formData.id) {
+                dupeEmailQuery._id = {
+                    $ne: new ObjectId(formData.id)
+                };
+            }
+            const dupeEmail = await this.mongo.db.collection('users').findOne(dupeEmailQuery);
+            if (dupeEmail) {
+                return rep.sendBadRequestError(rep, 'Duplicate e-mail', {
+                    default: {
+                        email: ''
+                    }
+                });
             }
             // Update database
-            const update = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).updateOne(data.id ? {
-                _id: new ObjectId(data.id)
+            const update = await this.mongo.db.collection('users').updateOne(formData.id ? {
+                _id: new ObjectId(formData.id)
             } : {
-                username: data.username
+                username: formData.default.username
             }, {
                 $set: {
-                    username: data.username,
-                    email: data.email,
-                    status: data.status,
-                    modifiedAt: new Date(),
-                    ...updateExtras
+                    username: formData.default.username,
+                    email: formData.default.email,
+                    active: formData.default.active === 1,
+                    admin: formData.default.admin === 1,
+                    ...passwordUpdate
                 }
             }, {
                 upsert: true
             });
             // Check result
             if (!update || !update.result || !update.result.ok) {
-                rep.requestError(rep, {
-                    failed: true,
-                    error: "Database error",
-                    errorKeyword: "databaseError",
-                    errorData: []
-                });
-                return;
+                return rep.sendBadRequestError(rep, 'Cannot update database record');
             }
-            // Return "success" result
-            rep.successJSON(rep);
-            return;
+            return rep.sendSuccessJSON(rep);
         } catch (e) {
-            // There is an exception, send error 500 as response
             rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            return rep.sendInternalServerError(rep, e.message);
         }
     }
 });

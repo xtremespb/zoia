@@ -1,0 +1,29 @@
+{
+    "slides": [{
+        "header": "Заголовок слайда 1",
+        "text": [
+            "Первый параграф текста здесь.",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in consectetur urna, vel tincidunt arcu. Aenean dapibus nisl nec nulla suscipit, ut feugiat ex aliquet. Aenean et congue nisl. Proin pellentesque nibh metus. Sed mollis nisl arcu, quis commodo purus tincidunt vel. Integer quis risus et diam sollicitudin ornare. Donec vitae dolor venenatis, consectetur tortor quis, pharetra magna. Duis pretium, arcu et vulputate gravida, massa enim placerat ex, vel eleifend augue tortor id enim."
+        ],
+        "glossary": [{
+                "Тестовое покрытие": "Test coverage is defined as a metric in Software Testing that measures the amount of testing performed by a set of test."
+            },
+            {
+                "Бета-тестирование": "A beta test is a type of testing period for a computer product prior to any sort of commercial or official release."
+            }
+        ]
+    }, {
+        "header": "Заголовок слайда 2",
+        "text": [
+            "Первый параграф текста здесь.",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in consectetur urna, vel tincidunt arcu. Aenean dapibus nisl nec nulla suscipit, ut feugiat ex aliquet. Aenean et congue nisl. Proin pellentesque nibh metus. Sed mollis nisl arcu, quis commodo purus tincidunt vel. Integer quis risus et diam sollicitudin ornare. Donec vitae dolor venenatis, consectetur tortor quis, pharetra magna. Duis pretium, arcu et vulputate gravida, massa enim placerat ex, vel eleifend augue tortor id enim."
+        ],
+        "glossary": [{
+                "Тестовое покрытие": "Test coverage is defined as a metric in Software Testing that measures the amount of testing performed by a set of test."
+            },
+            {
+                "Бета-тестирование": "A beta test is a type of testing period for a computer product prior to any sort of commercial or official release."
+            }
+        ]
+    }]
+}

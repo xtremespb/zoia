@@ -1,0 +1,136 @@
+import cookies from "zoia-cookies"
+import { v4 as uuid } from "uuid"
+
+class {
+  onCreate(input, out) {
+    this.t = out.global.t;
+    this.redirectURL = out.global.siteData.redirectURL;
+    this.cookieOptions = out.global.cookieOptions;
+    this.siteId = out.global.siteData.siteId;
+    this.languagePrefixURL = out.global.siteData.languagePrefixURL || "/";
+    this.state = {
+      registrationSuccessful: false
+    };
+  }
+  onSaveError(res) {
+    this.getComponent("registerForm").captchaUpdate("captcha");
+    if (res && res.data && res.data.errorCode && res.data.statusCode === 400) {
+      let message;
+      switch (res.data.errorCode) {
+        case 1:
+          message = this.t["Invalid captcha code entered"];
+          break;
+        case 2:
+          message = this.t["User with such username is already registered"];
+          break;
+        case 3:
+          message = this.t["User with such e-mail address is already registered"];
+          break;
+        default:
+          message = this.t["Could not complete the registration process"];
+      }
+      return this.getComponent("registerForm").setErrorMessage(message);
+    }
+    this.getComponent("registerForm").setErrorMessage(this.t["Could not connect to the server"]);
+  }
+  onSaveSuccess() {
+    this.setState("registrationSuccessful", true);
+  }
+  onLogOutButtonClick() {
+    cookies.expire(`${this.siteId}_auth`, undefined, this.cookieOptions);
+    location.href = `${this.languagePrefixURL || "/"}?_=${uuid()}`;
+  }
+}
+
+<div>
+  <if(out.global.siteData.user && out.global.siteData.user.username)>
+    <div class="uk-margin-top">${out.global.t["You are successfully authorized on this website. Click on the button below if you wish to log out."]}</div>
+    <div class="uk-margin-top">
+      <button type="button" class="uk-button uk-button-primary" on-click("onLogOutButtonClick")>${out.global.t["Log Out"]}</button>
+    </div>
+  </if>
+  <else>
+    <if(state.registrationSuccessful)>
+      <div class="uk-margin-top">${out.global.t["Your registration is almost complete. Please check your mailbox and activate your account."]}</div>
+    </if>
+    <else>
+      <zoiaForm key="registerForm" data=[
+        [
+          {
+            id: "username",
+            type: "text",
+            label: out.global.t["Username"],
+            css: "uk-input uk-form-width-medium",
+            helpText: out.global.t["Latin characters and numbers"],
+            mandatory: true,
+            pattern: "^[a-zA-Z0-9_-]{4,32}$",
+            autoFocus: true
+          },
+          {
+            id: "email",
+            type: "text",
+            label: out.global.t["E-mail"],
+            css: "uk-input uk-form-width-medium",
+            helpText: out.global.t["Example: user@domain.com"],
+            mandatory: true,
+            minLength: 5,
+            maxLength: 254,
+            pattern: "^(?:[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-])+@(?:[a-zA-Z0-9]|[^\\u0000-\\u007F])(?:(?:[a-zA-Z0-9-]|[^\\u0000-\\u007F]){0,61}(?:[a-zA-Z0-9]|[^\\u0000-\\u007F]))?(?:\\.(?:[a-zA-Z0-9]|[^\\u0000-\\u007F])(?:(?:[a-zA-Z0-9-]|[^\\u0000-\\u007F]){0,61}(?:[a-zA-Z0-9]|[^\\u0000-\\u007F]))?)*$"
+          },
+          {
+            id: "password",
+            type: "text",
+            label: out.global.t["Password"],
+            css: "uk-input uk-form-width-small",
+            textType: "password",
+            minLength: 8,
+            maxLength: 64,
+            mandatory: true,
+            shouldMatch: "passwordRepeat",
+            helpText: out.global.t["At least 8 chars"]
+          },
+          {
+            id: "passwordRepeat",
+            type: "text",
+            label: out.global.t["Repeat password"],
+            css: "uk-input uk-form-width-small",
+            textType: "password",
+            minLength: 8,
+            maxLength: 64,
+            mandatory: true
+          }
+        ],
+        {
+          id: "captcha",
+          type: "captcha",
+          label: out.global.t["Captcha"],
+          css: "uk-input uk-form-width-small",
+          helpText: out.global.t["Code on a picture, click to update"],
+          mandatory: true,
+          pattern: "^[0-9]{4,4}$",
+          imgSrc: `${out.global.siteData.api}/api/core/captcha`
+        },
+        {
+          id: "div1",
+          type: "divider"
+        },
+        {
+          id: "btn1",
+          type: "button",
+          label: out.global.t["Continue"],
+          buttonType: "submit",
+          css: "uk-button uk-button-primary"
+        }
+      ] i18n={
+        ERR_MANDATORY: out.global.t["Mandatory field"],
+        ERR_FORMAT: out.global.t["Invalid format"],
+        ERR_SHOULD_MATCH: out.global.t["Does not match"]
+      } save={
+        url: `${out.global.siteData.api}/api/users/register`,
+        extras: {
+          language: out.global.siteData.language
+        }
+      } on-save-error("onSaveError") on-save-success("onSaveSuccess")/>
+    </else>
+  </else>
+</div>

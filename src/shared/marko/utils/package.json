@@ -1,0 +1,8 @@
+{
+    "browser": {
+        "./uikit-node.js": "./uikit-browser.js",
+        "./uikit-icons-node.js": "./uikit-icons-browser.js",
+        "./lingui-catalogs-node.js": "./lingui-catalogs-browser.js",
+        "./i18n-node.js": "./i18n-browser.js"
+    }
+}

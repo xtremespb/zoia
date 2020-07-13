@@ -1,0 +1,24 @@
+<templates>
+  <if(out.global.data)>
+    <div class="uk-flex uk-flex-wrap uk-child-width-1-3@m uk-grid-small uk-grid uk-grid-match" uk-grid>
+      <for|program, programIndex| of=out.global.data.programs.avail>
+        <div>
+          <div class="uk-card uk-card-small uk-card-default">
+            <div class="uk-card-header">
+              <a class=`uk-button uk-button-primary uk-button-small` href=`${out.global.siteData.languagePrefixURL || ""}/edu/${program.id}`>${out.global.t["Open"]}</a>
+            </div>
+            <div class="uk-card-body">
+              <h3 class="uk-card-title">${program.title}</h3>
+              <p>${program.desc}</p>
+            </div>
+          </div>
+        </div>
+      </for>
+    </div>
+  </if>
+  <else>
+    <div class="uk-alert-danger" uk-alert>
+      <p>${out.global.t["Currently you don't have any programs assigned to you."]}</p>
+    </div>
+  </else>
+</templates>

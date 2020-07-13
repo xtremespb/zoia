@@ -1,0 +1,208 @@
+.zform-mandatory {
+    padding-left: 5px;
+    font-size: 100%;
+    color: red;
+}
+
+.zform-loading {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.3);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    z-index: 200;
+}
+
+.zform {
+    z-index: 100;
+}
+
+.zform-wrap {
+    position: relative;
+}
+
+.zform-upload-btn-wrapper {
+    display: inline-block;
+}
+
+.zform-upload-btn-wrapper input[type="file"] {
+    display: none;
+}
+
+.zform-drop-area {
+    padding: 30px 30px;
+    background: transparent;
+    border: 1px dashed #e5e5e5;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.zform-captcha-image-wrap {
+    height: 55px;
+}
+
+.zform-noselect {
+    user-select: none;
+}
+
+.zform-react-tags {
+    position: relative;
+    padding: 6px 0 0 6px;
+    border: 1px solid #D1D1D1;
+    border-radius: 1px;
+    font-size: 1em;
+    line-height: 1.2;
+    cursor: text;
+}
+
+.zform-react-tags.is-focused {
+    border-color: #B1B1B1;
+}
+
+.zform-react-tags__selected {
+    display: inline;
+}
+
+.zform-react-tags__selected-tag {
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 6px 6px 0;
+    padding: 6px 8px;
+    border: 1px solid #D1D1D1;
+    border-radius: 2px;
+    background: #F1F1F1;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.zform-react-tags__selected-tag:after {
+    content: '\2715';
+    color: #AAA;
+    margin-left: 8px;
+}
+
+.zform-react-tags__selected-tag:hover,
+.zform-react-tags__selected-tag:focus {
+    border-color: #B1B1B1;
+}
+
+.zform-react-tags__search {
+    display: inline-block;
+    padding: 7px 2px;
+    margin-bottom: 6px;
+    max-width: 100%;
+}
+
+@media screen and (min-width: 30em) {
+    .zform-react-tags__search {
+        position: relative;
+    }
+
+}
+
+.zform-react-tags__search-input {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.zform-react-tags__search-input::-ms-clear {
+    display: none;
+}
+
+.zform-react-tags__suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+}
+
+@media screen and (min-width: 30em) {
+    .zform-react-tags__suggestions {
+        width: 240px;
+    }
+}
+
+.zform-react-tags__suggestions ul {
+    margin: 4px -1px;
+    padding: 0;
+    list-style: none;
+    background: white;
+    border: 1px solid #D1D1D1;
+    border-radius: 2px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.zform-react-tags__suggestions li {
+    border-bottom: 1px solid #ddd;
+    padding: 6px 8px;
+}
+
+.zform-react-tags__suggestions li mark {
+    text-decoration: underline;
+    background: none;
+    font-weight: 600;
+}
+
+.zform-react-tags__suggestions li:hover {
+    cursor: pointer;
+    background: #eee;
+}
+
+.zform-react-tags__suggestions li.is-active {
+    background: #b7cfe0;
+}
+
+.zform-react-tags__suggestions li.is-disabled {
+    opacity: 0.5;
+    cursor: auto;
+}
+
+.DayPicker-Day {
+    border-radius: unset !important;
+}
+
+.zform-file-image-thumb-container {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+}
+
+.zform-file-image-thumb {
+    width: auto;
+    height: auto;
+    margin: 3px;
+    min-height: 100px;
+}
+
+/* .zform-files-list>ul {
+    padding-left: unset !important;
+} */
+
+.zform-textarea {
+    line-height: unset !important;
+}
+
+.zform-divider-margin-top {
+    margin-top: 50px;
+}
+
+.ace_editor {
+    border: 1px solid #e5e5e5;
+}
+
+.ace_scroller.ace_scroll-left {
+    box-shadow: unset;
+}
+
+/* @media (max-width: 680px) {
+    .ck-editor {
+        max-width: 87%;
+    }
+} */

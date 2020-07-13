@@ -1,130 +1,180 @@
+import Ajv from 'ajv';
 import {
     ObjectId
-} from "mongodb";
-import minify from "@node-minify/core";
-import csso from "@node-minify/csso";
-import terser from "@node-minify/terser";
-import htmlMinifier from "@node-minify/html-minifier";
-import Auth from "../../../shared/lib/auth";
-import utils from "../../../shared/lib/utils";
-import pageEdit from "./data/pageEdit.json";
-import C from "../../../shared/lib/constants";
+} from 'mongodb';
+import {
+    minify
+} from 'html-minifier';
+import Typograf from 'typograf';
 
-export default () => ({
+const ajv = new Ajv();
+
+const formValidate = ajv.compile({
+    type: 'object',
+    properties: {
+        path: {
+            type: 'string',
+            maxLength: 128
+        },
+        filename: {
+            type: 'string',
+            maxLength: 128
+        },
+        template: {
+            type: 'string',
+            maxLength: 64
+        }
+    },
+    required: ['path', 'filename']
+});
+
+export default fastify => ({
+    schema: {
+        body: {
+            type: 'object',
+            properties: {
+                __form_data: {
+                    type: 'string'
+                }
+            },
+            required: ['__form_data']
+        }
+    },
+    attachValidation: true,
     async handler(req, rep) {
-        // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-            rep.unauthorizedError(rep);
-            return;
+        // Start of Pre-Validation
+        if (req.validationError) {
+            rep.logError(req, req.validationError.message);
+            return rep.sendBadRequestException(rep, 'Request validation error', req.validationError);
         }
-        // Initialize validator
-        const extendedValidation = new req.ExtendedValidation(req.body, pageEdit.root, pageEdit.part, pageEdit.files, Object.keys(req.zoiaConfig.languages));
-        // Perform validation
-        const extendedValidationResult = extendedValidation.validate();
-        // Check if there are any validation errors
-        if (extendedValidationResult.failed) {
-            rep.logError(req, extendedValidationResult.message);
-            rep.validationError(rep, extendedValidationResult);
-            return;
-        }
-        // Get ID from body
-        const id = req.body.id && typeof req.body.id === "string" && req.body.id.match(/^[a-f0-9]{24}$/) ? req.body.id : undefined;
+        // End of Pre-Validation
         try {
-            // Get data from form body
-            const dataRaw = extendedValidation.getData();
-            const data = extendedValidation.filterDataFiles(dataRaw);
-            // Get files from body
-            const uploadFiles = extendedValidation.getFiles();
-            // Delete files which are removed
+            const formData = JSON.parse(req.body.__form_data);
+            // Start of Form Validation
+            const formDataValidation = formValidate(formData);
+            if (!formDataValidation || (formData.id && (typeof formData.id !== 'string' || !formData.id.match(/^[a-f0-9]+$/)))) {
+                const errorData = {
+                    form: formDataValidation ? null : (formValidate.errors || {
+                        error: 'General validation error'
+                    })
+                };
+                rep.logError(req, errorData);
+                return rep.sendBadRequestException(rep, 'Request validation error', errorData);
+            }
+            const id = formData.id || null;
+            // End of Form Validation
+            // Check permissions
+            const user = await req.verifyToken(formData.token, fastify, this.mongo.db);
+            if (!user || !user.admin) {
+                rep.logError(req, 'Authentication failed');
+                return rep.sendUnauthorizedException(rep, {
+                    default: {
+                        username: '',
+                        password: ''
+                    }
+                });
+            }
+            // End of check permissions
+            // Check if such page exists
             if (id) {
-                const dbItem = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).findOne({
+                const page = await this.mongo.db.collection('pages').findOne({
                     _id: new ObjectId(id)
                 });
-                await utils.cleanRemovedFiles(req, this.mongo.db, extendedValidation, dbItem, data);
-            }
-            // Upload files
-            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles, C.UPLOAD_AUTH, C.UPLOAD_ADMIN))) {
-                return;
-            }
-            // Process case and trim
-            data.path = data.path.trim().toLowerCase();
-            // Check for path duplicates
-            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["pages"].collectionPages, {
-                    path: data.path,
-                    _id: {
-                        $ne: id ? new ObjectId(id) : null
-                    }
-                }, "pathAlreadyExists", "path")) {
-                return;
-            }
-            const updateExtras = {};
-            // Set createdAt timestamp if that's a new record
-            if (!id) {
-                updateExtras.createdAt = new Date();
-            }
-            // Compile contents
-            await Promise.allSettled(Object.keys(req.zoiaConfig.languages).map(async k => {
-                if (!data[k]) {
-                    data[k] = undefined;
-                } else {
-                    data[k].contentMin = data[k].content;
-                    data[k].cssMin = data[k].css;
-                    data[k].jsMin = data[k].js;
-                    try {
-                        data[k].contentMin = await minify({
-                            compressor: htmlMinifier,
-                            options: {
-                                removeAttributeQuotes: true,
-                                collapseWhitespace: true,
-                                html5: true
-                            },
-                            content: data[k].content
-                        });
-                        data[k].cssMin = await minify({
-                            compressor: csso,
-                            content: data[k].css
-                        });
-                        data[k].jsMin = await minify({
-                            compressor: terser,
-                            content: data[k].js
-                        });
-                    } catch {
-                        // Ignore
-                    }
+                if (!page) {
+                    return rep.sendNotFoundError(rep, 'Page not found');
                 }
-            }));
-            // Update database
-            const update = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).updateOne(id ? {
+            }
+            // Build JSON
+            const pageData = {
+                filename: formData.filename,
+                path: formData.path,
+                template: formData.template,
+                data: {}
+            };
+            // Check for duplicates
+            const pathReduced = pageData.path.split(/\//).slice(0, -1).join('/') || '/';
+            const pathPopped = pageData.path.split(/\//).pop() || '';
+            const duplicatePageQuery = {
+                $or: [{
+                    path: pageData.path,
+                    filename: pageData.filename
+                }],
+            };
+            if (pageData.filename) {
+                duplicatePageQuery.$or.push({
+                    path: `${pageData.path}/${pageData.filename}`,
+                    filename: ''
+                });
+            }
+            if (pathPopped && !pageData.filename) {
+                duplicatePageQuery.$or.push({
+                    path: pathReduced,
+                    filename: pathPopped
+                });
+            }
+            if (id) {
+                duplicatePageQuery._id = {
+                    $ne: new ObjectId(id)
+                };
+            }
+            const duplicatePage = await this.mongo.db.collection('pages').findOne(duplicatePageQuery);
+            if (duplicatePage) {
+                return rep.sendBadRequestError(rep, 'Page with such path or filename already exists', null, 1);
+            }
+            Object.keys(req.zoiaConfig.languages).map(language => {
+                if (formData[language]) {
+                    let contentCompiled = formData[language].content;
+                    if (formData[language].extras.indexOf('typo') > -1) {
+                        const locale = [];
+                        if (language !== 'en') {
+                            locale.push(language);
+                        }
+                        locale.push('en-US');
+                        contentCompiled = new Typograf({
+                            locale
+                        }).execute(formData[language].content);
+                    }
+                    if (formData[language].extras.indexOf('minify') > -1) {
+                        contentCompiled = minify(contentCompiled, {
+                            caseSensitive: true,
+                            decodeEntities: true,
+                            html5: true,
+                            collapseWhitespace: true,
+                            removeComments: true,
+                            removeRedundantAttributes: true
+                        });
+                    }
+                    pageData.data[language] = {
+                        title: formData[language].title,
+                        content: formData[language].content,
+                        contentCompiled
+                    };
+                }
+            });
+            pageData.fullPath = `${pageData.path.length > 1 ? pageData.path : ''}/${pageData.filename}`;
+            pageData.fullPath = pageData.fullPath.length > 1 ? pageData.fullPath.replace(/\/$/, '') : pageData.fullPath;
+            if (fastify.zoiaConfig.demo && pageData.fullPath === '/') {
+                return rep.sendSuccessJSON(rep);
+            }
+            // Update page
+            const update = await this.mongo.db.collection('pages').updateOne(id ? {
                 _id: new ObjectId(id)
             } : {
-                path: data.path
+                filename: pageData.filename,
+                path: pageData.path,
             }, {
-                $set: {
-                    ...data,
-                    modifiedAt: new Date(),
-                    ...updateExtras
-                }
+                $set: pageData
             }, {
                 upsert: true
             });
             // Check result
             if (!update || !update.result || !update.result.ok) {
-                rep.requestError(rep, {
-                    failed: true,
-                    error: "Database error",
-                    errorKeyword: "databaseError",
-                    errorData: []
-                });
-                return;
+                return rep.sendBadRequestError(rep, 'Cannot update page record');
             }
-            // Return "success" result
-            rep.successJSON(rep);
-            return;
+            return rep.sendSuccessJSON(rep);
         } catch (e) {
-            // There is an exception, send error 500 as response
             rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            return rep.sendInternalServerError(rep, e.message);
         }
     }
 });

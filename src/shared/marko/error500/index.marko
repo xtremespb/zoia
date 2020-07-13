@@ -1,0 +1,67 @@
+style {
+  .za-e500-html,
+  .za-e500-body {
+    height: unset !important;
+    font-family: "Source Sans Pro";
+    padding: 15px;
+  }
+  @font-face {
+    font-family: "Source Sans Pro";
+    src: local("Source Sans Pro"), local(SourceSansPro-Regular),
+      url(/zoia/fonts/sourcesanspro.woff2) format("woff2"),
+      url(/zoia/fonts/sourcesanspro.woff) format("woff");
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Source Sans Pro";
+    src: local("Source Sans Pro"), local(SourceSansPro-Bold),
+      url(/zoia/fonts/sourcesansprobold.woff2) format("woff2"),
+      url(/zoia/fonts/sourcesansprobold.woff) format("woff");
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Source Sans Pro";
+    src: local("Source Sans Pro Light"), local(SourceSansPro-Light),
+      url(/zoia/fonts/sourcesansprolight.woff2) format("woff2"),
+      url(/zoia/fonts/sourcesansprolight.woff) format("woff");
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Source Sans Pro";
+    src: local("Source Sans Pro ExtraLight"), local(SourceSansPro-ExtraLight),
+      url(/zoia/fonts/sourcesansproextralight.woff2) format("woff2"),
+      url(/zoia/fonts/sourcesansproextralight.woff) format("woff");
+    font-weight: 200;
+    font-style: normal;
+  }
+  .za-head {
+    font-size: 200%;
+    font-weight: 300;
+  }
+}
+
+<!DOCTYPE html>
+<html class="za-e500-html">
+  <head>
+    <title>${out.global.siteData.title}</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="shortcut icon" type="image/ico" href="/zoia/favicon.ico"/>
+    <link rel="icon" href="/zoia/favicon.ico" type="image/x-icon"/>
+  </head>
+  <body class="za-e500-body">
+    <div>
+      <if(out.global.statusCode === 500)>
+        <div class="za-head">${out.global.t["Internal Server Error"]}</div>
+        <p>${out.global.t["The server encountered an unexpected condition which prevented it from fulfilling the request."]}</p>
+      </if>
+      <if(out.global.statusCode === 429)>
+        <div class="za-head">${out.global.t["Too Many Requests"]}</div>
+        <p>${out.global.t["Rate limit exceeded, retry in several minutes."]}</p>
+      </if>
+    </div>
+  </body>
+</html>

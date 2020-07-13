@@ -1,0 +1,22 @@
+<templates>
+  <ul class="uk-breadcrumb uk-margin-remove-bottom">
+    <li>
+      <a href=`${out.global.siteData.languagePrefixURL || ""}/edu`>&larr;&nbsp;${out.global.t["Programs"]}</a>
+    </li>
+    <li>
+      <a href=`${out.global.siteData.languagePrefixURL || ""}/edu/${out.global.program}`>${out.global.programTitle}</a>
+    </li>
+  </ul>
+  <if(out.global.statusData && out.global.statusData.avail[out.global.data.module.id])>
+    <div class="uk-title-head">${out.global.data.module.title}</div>
+    <div class="uk-margin-top">$!{out.global.data.module.descFull}</div>
+    <div class="uk-margin-top">
+      <a href=`${out.global.siteData.languagePrefixURL || ""}/edu/${out.global.program}/test/${out.global.data.module.id}` class="uk-button uk-button-large uk-button-default">${out.global.t["Test Exam"]}</a>
+    </div>
+  </if>
+  <else>
+    <div class="uk-alert-danger" uk-alert>
+      <p>${out.global.t["The module you've requested is not available."]}</p>
+    </div>
+  </else>
+</templates>

@@ -1,58 +1,90 @@
-import Auth from "../../../shared/lib/auth";
-import usersListData from "./data/usersList.json";
-import C from "../../../shared/lib/constants";
+const sortColumns = ['username', 'email', 'active'];
+const searchColumns = ['username', 'email'];
 
-export default () => ({
+export default fastify => ({
     schema: {
-        body: usersListData.schema
+        body: {
+            type: 'object',
+            properties: {
+                token: {
+                    type: 'string'
+                },
+                page: {
+                    type: 'integer',
+                    minimum: 1,
+                    maximum: 999999999
+                },
+                search: {
+                    type: 'string',
+                    maxLength: 64
+                },
+                sortColumn: {
+                    type: 'string',
+                    pattern: `^(${sortColumns.join('|')})$`
+                },
+                sortDirection: {
+                    type: 'string',
+                    pattern: '^(asc|desc)$'
+                }
+            },
+            required: ['token', 'page', 'sortColumn', 'sortDirection']
+        }
     },
     attachValidation: true,
     async handler(req, rep) {
-        // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-            rep.unauthorizedError(rep);
-            return;
-        }
-        // Validate form
+        // Start of Validation
         if (req.validationError) {
             rep.logError(req, req.validationError.message);
-            rep.validationError(rep, req.validationError);
-            return;
+            return rep.sendBadRequestException(rep, 'Request validation error', req.validationError);
         }
+        // End of Validation
+        // Check permissions
+        const user = await req.verifyToken(req.body.token, fastify, this.mongo.db);
+        if (!user || !user.admin) {
+            rep.logError(req, 'Authentication failed');
+            return rep.sendUnauthorizedException(rep, {
+                default: {
+                    username: '',
+                    password: ''
+                }
+            });
+        }
+        // End of check permissions
         try {
+            // Get users
             const options = {
-                sort: {},
-                projection: usersListData.projection
+                sort: {}
             };
             const query = {};
-            if (req.body.searchText && req.body.searchText.length > 1) {
-                query.$or = usersListData.search.map(c => {
+            if (req.body.search) {
+                query.$or = searchColumns.map(c => {
                     const sr = {};
                     sr[c] = {
-                        $regex: req.body.searchText,
-                        $options: "i"
+                        $regex: req.body.search,
+                        $options: 'i'
                     };
                     return sr;
                 });
             }
-            const count = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).count();
-            const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
-            options.limit = limit;
-            options.skip = (req.body.page - 1) * limit;
-            options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const data = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).toArray();
+            const count = await this.mongo.db.collection('users').find(query, options).count();
+            options.limit = req.zoiaConfig.commonItemsLimit;
+            options.skip = (req.body.page - 1) * req.zoiaConfig.commonItemsLimit;
+            options.projection = {
+                _id: 1,
+                username: 1,
+                email: 1,
+                active: 1
+            };
+            options.sort[req.body.sortColumn] = req.body.sortDirection === 'asc' ? 1 : -1;
+            const users = await this.mongo.db.collection('users').find(query, options).toArray();
             // Send response
-            rep.successJSON(rep, {
-                data,
-                count,
-                limit,
-                pagesCount: Math.ceil(count / limit)
+            return rep.sendSuccessJSON(rep, {
+                items: users,
+                total: count
             });
-            return;
         } catch (e) {
             rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            return rep.sendInternalServerError(rep, e.message);
         }
     }
 });

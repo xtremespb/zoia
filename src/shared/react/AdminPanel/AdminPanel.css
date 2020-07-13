@@ -1,0 +1,46 @@
+html,
+body {
+    background: #fff;
+}
+
+.za-admin-navleft-column-wrap {
+    min-width: 200px;
+}
+
+#za_admin_nav_wrap {
+    position: fixed;
+    width: 200px;
+    overflow-y: auto;
+}
+
+.za-admin-navleft {
+    margin: 20px;
+}
+
+.za-admin-content-wrap {
+    padding: 20px;
+}
+
+.za-admin-navbar {
+    background: #32323a !important;
+    height: 64px;
+    padding: 0 !important;
+}
+
+.za-admin-navbar-left,
+.za-admin-navbar-right {
+    flex-wrap: unset !important;
+}
+
+.za-admin-navbar-right>ul>li>a,
+.za-admin-navbar-left>div>span>a>svg {
+    color: #ccc;
+}
+
+.za-admin-navbar-right>ul>li>a:focus,
+.za-admin-navbar-right>ul>li>a:active,
+.za-admin-navbar-right>ul>li>a:hover,
+.za-admin-navbar-left>div>span>a:focus>svg,
+.za-admin-navbar-left>div>span>a:active>svg div.uk-navbar-left>div>span>a:hover>svg {
+    color: #eee;
+}

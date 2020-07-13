@@ -1,5 +1,6 @@
 {
-    "id": "pages",
-    "icon": "text-box-outline",
-    "admin": "/admin/pages"
+	"id": "pages",
+	"icon": "file-text",
+	"admin": true,
+	"adminRoute": "/admin/pages"
 }

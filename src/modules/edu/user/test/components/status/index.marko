@@ -1,0 +1,30 @@
+<p>
+  <div class="uk-alert-primary uk-alert" uk-alert>
+    ${input.t["The test was successfully completed"]}.&nbsp;${input.t["Percentage of correct answers"]}:&nbsp;<span class="uk-badge">${input.statusData[input.moduleMeta.id].percentage}%</span>
+  </div>
+  <if(input.statusData[input.moduleMeta.id].wrong && Object.keys(input.statusData[input.moduleMeta.id].wrong).length)>
+    <p>${input.t["The following answers were not correct"]}:</p>
+    <div class="uk-margin" uk-margin>
+      <for|item, indexIndex| of=Object.keys(input.statusData[input.moduleMeta.id].wrong)>
+        <div>${input.testData.find(i => i.id === parseInt(item, 10)).title}</div>
+        <div>
+          <for|answer, answerIndex| of=input.testData.find(i => i.id === parseInt(item, 10)).answers>
+            <div class=`uk-text-small${input.statusData[input.moduleMeta.id].wrong[item].indexOf(answer.id + 1) > -1 && input.statusData[input.moduleMeta.id].correct[item].indexOf(answer.id + 1) === -1 ? " uk-text-danger" : input.statusData[input.moduleMeta.id].correct[item].indexOf(answer.id + 1) > -1 ? " uk-text-success" : ""}`>
+              <if(input.statusData[input.moduleMeta.id].wrong[item].indexOf(answer.id + 1) > -1 && input.statusData[input.moduleMeta.id].correct[item].indexOf(answer.id + 1) === -1)>
+                <span uk-icon="close"/>
+              </if>
+              <if(input.statusData[input.moduleMeta.id].correct[item].indexOf(answer.id + 1) > -1)>
+                <span uk-icon="check"/>
+              </if>
+              <if(input.statusData[input.moduleMeta.id].correct[item].indexOf(answer.id + 1) === -1 && input.statusData[input.moduleMeta.id].wrong[item].indexOf(answer.id + 1) === -1)>
+                <div style="display:inline-block;width:20px;height:16px;"/>
+              </if>
+              <span>&nbsp;</span>
+              ${answer.title}
+            </div>
+          </for>
+        </div>
+      </for>
+    </div>
+  </if>
+</p>

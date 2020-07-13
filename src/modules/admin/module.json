@@ -1,5 +1,6 @@
 {
-    "id": "admin",
-    "icon": "cog",
-    "admin": "/admin"
+	"id": "admin",
+	"icon": "",
+	"admin": false,
+	"adminRoute": "/admin/users"
 }

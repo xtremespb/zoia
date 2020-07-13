@@ -1,0 +1,6 @@
+{
+	"id": "nav",
+	"icon": "list",
+	"admin": true,
+	"adminRoute": "/admin/nav"
+}

@@ -1,0 +1,161 @@
+import axios from "axios"
+import cookies from "zoia-cookies"
+import { v4 as uuid } from "uuid";
+
+style {
+  .za-ed-no-select {
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .za-ed-answer:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+class {
+  onCreate(input, out) {
+    const state = {
+      view: 1,
+      questions: {},
+      errors: [],
+      errorMessage: "",
+      statusData: {},
+      scoreCurrent: 0,
+      scoreRequired: 0,
+      nextAttemptRemaining: 0
+    };
+    input.questions.map((q, i) => (state.questions[`edu_test_q${q.id}`] = q.answersCount === 1 ? null : []));
+    this.state = state;
+    this.apiURL = input.apiURL;
+    this.moduleID = input.moduleID;
+    this.programID = input.programID;
+    this.cookieOptions = input.cookieOptions;
+    this.siteId = input.siteId;
+    this.t = input.t;
+  }
+  onRadioValueChanged(e) {
+    const id = e.target.name;
+    const value = String(e.target.value, 10);
+    const questions = this.state.questions;
+    questions[id] = value;
+    this.setState("questions", questions);
+  }
+  onCheckboxValueChanged(e) {
+    const id = e.target.name;
+    const value = String(e.target.value, 10);
+    const checked = e.target.checked;
+    const data = this.state.questions[id];
+    if (checked && data.indexOf(value) === -1) {
+      data.push(value);
+    }
+    if (!checked && data.indexOf(value) > -1) {
+      data.splice(data.indexOf(value), 1);
+    }
+    const questions = this.state.questions;
+    questions[id] = data;
+    this.setState("questions", questions);
+  }
+  serverError() {
+    this.setState("view", 2);
+    this.setState("errorMessage", this.t["Could not load data from server. Please refresh the current page and try again."]);
+  }
+  async onFinishButtonClick(e) {
+    const errors = Object.keys(this.state.questions)
+      .map(item => (!this.state.questions[item] || (Array.isArray(this.state.questions[item]) && !this.state.questions[item].length) ? item : null))
+      .filter(i => i);
+    this.setState("errors", errors.length ? errors : []);
+    if (errors.length) {
+      document.getElementById(`q${errors[0].replace(/^edu_test_q/, "")}`).scrollIntoView();
+      return;
+    }
+    const answers = {};
+    Object.keys(this.state.questions).map(q => {
+      const id = parseInt(q.replace(/^edu_test_q/, ""), 10);
+      answers[id] = this.state.questions[q];
+    });
+    try {
+      const token = cookies.get(`${this.siteId}_auth`, this.cookieOptions);
+      const res = await axios.post(`${this.apiURL}/api/edu/test/execute`, {
+        answers,
+        token,
+        program: this.programID,
+        module: this.moduleID
+      });
+      if (res && res.data) {
+        if (res.data.statusCode === 200 && res.data.status) {
+          this.setState("statusData", res.data.status);
+          this.setState("view", 3);
+          return;
+        }
+        if (res.data.statusCode === 400 && res.data.errorCode === 3 && res.data.errors) {
+          this.setState("scoreCurrent", res.data.errors.current);
+          this.setState("scoreRequired", res.data.errors.required);
+          this.setState("nextAttemptRemaining", res.data.errors.nextAttemptRemaining);
+          this.setState("view", 4);
+          return;
+        }
+      }
+      this.serverError();
+    } catch (e) {
+      console.error(e);
+      this.serverError();
+    }
+  }
+}
+
+<div class="uk-margin" uk-margin>
+  <if(state.view === 1)>
+    <if(!input.slotData.unlimited)>
+      <div class="uk-card uk-card-default uk-card-small uk-box-shadow-small uk-padding-small uk-margin-bottom" style="z-index: 980;" uk-sticky>
+        <timeCounter endTime=input.slotData.endTime nextAttemptRemaining=input.slotData.nextAttemptRemaining t=out.global.t/>
+      </div>
+    </if>
+    <for|question, indexQuestion| of=input.questions>
+      <div class=`za-ed-no-select`>
+        <a id=`q${question.id}`/>${indexQuestion + 1}. ${question.title}<if(state.errors.indexOf(`edu_test_q${question.id}`) > -1)>
+          &nbsp;
+          <span class="uk-label uk-label-danger">${input.t["Required"]}</span>
+        </if>
+      </div>
+      <fieldset class="uk-fieldset uk-flex uk-flex-column">
+        <for|answer, indexAnswer| of=question.answers>
+          <label class="uk-text-small za-ed-no-select">
+            <if(question.answersCount === 1)>
+              <input name=`edu_test_q${question.id}` class="uk-radio" type="radio" on-change("onRadioValueChanged") value=answer.id checked=(state.questions[`edu_test_q${question.id}`] === String(answer.id))/>
+            </if>
+            <else>
+              <input name=`edu_test_q${question.id}` class="uk-checkbox" type="checkbox" on-change("onCheckboxValueChanged") value=answer.id checked=(state.questions[`edu_test_q${question.id}`].indexOf(String(answer.id)) > -1)/>
+            </else>
+            &nbsp;<span class="za-ed-answer">${String.fromCharCode(97 + parseInt(indexAnswer, 10)).toUpperCase()}.&nbsp;${answer.title}</span>
+          </label>
+        </for>
+      </fieldset>
+    </for>
+    <div class="uk-margin-top">
+      <button class="uk-button uk-button-primary uk-margin-top" on-click("onFinishButtonClick")>${input.t["Finish"]}</button>
+    </div>
+  </if>
+  <if(state.view === 2)>
+    <div class="uk-alert-danger" uk-alert>
+      <p>${state.errorMessage}</p>
+    </div>
+  </if>
+  <if(state.view === 3)>
+    <status t=input.t statusData=state.statusData moduleMeta=input.moduleMeta testData=input.questions/>
+    <a href=`${out.global.siteData.languagePrefixURL || '/'}edu/modules/${input.moduleID}` class="uk-button uk-button-default">${input.t["Return to module"]}</a>
+  </if>
+  <if(state.view === 4)>
+    <if(!input.slotData.unlimited)>
+      <div class="uk-card uk-card-default uk-card-small uk-box-shadow-small uk-padding-small uk-margin-bottom" style="z-index: 980;" uk-sticky>
+        <timeCounter endTime=null nextAttemptRemaining=state.nextAttemptRemaining t=out.global.t/>
+      </div>
+    </if>
+    <p>${input.t["Unfortunately, you didn't pass the test."]} ${input.t["Your score"]}: ${state.scoreCurrent}%, ${input.t["score required"]}: ${state.scoreRequired}%</p>
+    <a href=`${out.global.siteData.languagePrefixURL || '/'}edu/modules/${input.moduleID}` class="uk-button uk-button-default">${input.t["Return to module"]}</a>
+  </if>
+</div>

@@ -1,0 +1,31 @@
+{
+    "id": "zoia2",
+    "languages": {
+        "en": "English",
+        "ru": "Русский"
+    },
+    "useUIkitOnFrontend": true,
+    "siteTitle": {
+        "en": "Example Website",
+        "ru": "Тестовый веб-сайт"
+    },
+    "siteTitleShort": {
+        "en": "Example Website",
+        "ru": "Тестовый веб-сайт"
+    },
+    "siteURL": "http://127.0.0.1",
+    "commonItemsLimit": 12,
+    "allowRegistration": true,
+    "allowSignIn": true,
+    "wysiwyg": false,
+    "api": {
+        "url": "http://127.0.0.1:3000"
+    },
+    "cookieOptions": {
+        "expires": 604800,
+        "path": "/",
+        "domain": "",
+        "secure": false,
+        "sameSite": "strict"
+    }
+}

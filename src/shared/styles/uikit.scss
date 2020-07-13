@@ -1,0 +1,64 @@
+// 1. Custom variables and variable overwrites.
+$global-primary-background: #35525f !default;
+$global-secondary-background: #444 !default;
+$global-link-color: #35525f !default;
+$global-font-family: "Source Sans Pro",
+-apple-system,
+BlinkMacSystemFont,
+"Segoe UI",
+Roboto,
+"Helvetica Neue",
+Arial,
+"Noto Sans",
+sans-serif,
+"Apple Color Emoji",
+"Segoe UI Emoji",
+"Segoe UI Symbol",
+"Noto Color Emoji" !default;
+// 2. Import default variables and available mixins.
+@import "../../../node_modules/uikit/src/scss/variables-theme.scss";
+@import "../../../node_modules/uikit/src/scss/mixins-theme.scss";
+// 3. Import UIkit.
+@import "../../../node_modules/uikit/src/scss/uikit-theme.scss";
+
+// 4. Modify default styling
+.uk-notification-message {
+    opacity: 1;
+    background-color: #fff;
+    box-shadow: -1px 2px 4px 0px rgba(0, 0, 0, 0.24);
+    text-align: center;
+    font-size: 100%;
+    font-weight: normal;
+}
+
+// 5. Add extra styles
+.uk-title-head {
+    font-size: 200%;
+    font-weight: 300;
+}
+
+.uk-title-large-head {
+    font-size: 230%;
+    font-weight: 300;
+}
+
+// 6. Fixes
+/* This is just a fix to prevent modal dialog to scroll to top */
+.uk-modal-page {
+    overflow: visible !important;
+}
+
+/* This is just a fix to prevent modal dialog to scroll to top */
+.uk-modal-page>body {
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+}
+
+/* Underline links */
+a {
+    text-decoration: underline;
+}
+
+ul.uk-tab>li>a {
+    text-decoration: none;
+}

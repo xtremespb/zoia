@@ -1,0 +1,50 @@
+.ztable-th {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.ztable-th-sortable {
+    cursor: pointer;
+}
+
+.ztable-wrap {
+    position: relative;
+}
+
+.ztable-loading {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.3);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.ztable-loading>span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.ztable-td-error {
+    background: #fef4f6;
+    color: #f0506e;
+}
+
+.ztable-cell {
+    min-height: 26px;
+}
+
+.ztable-cell:focus {
+    outline: 0 !important;
+}
+
+.ztable-noselect {
+    user-select: none;
+}
