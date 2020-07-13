@@ -1,0 +1,138 @@
+<div class="zoia-wrap" style="display:none">
+    <h1>{{ i18n.__(locale, 'Your Account')}}</h1>
+    <div class="za-hidden@s zoia-account-id-mobile"><span za-icon="user"></span>&nbsp;{{ account.username }}</div>
+    <div class="za-position-relative za-margin-medium">
+        <ul za-tab id="zoia_account_tabs">
+            <li><a href="#">{{ i18n.__(locale, 'Summary') }}</a></li>
+            <li><a href="#">{{ i18n.__(locale, 'Password') }}</a></li>
+            <li><a href="#">{{ i18n.__(locale, 'E-mail') }}</a></li>
+        </ul>
+        <ul class="za-switcher za-margin">
+            <li>
+                <div za-grid>
+                    <div class="za-width-1-2@s">
+                        <p>
+                            {{ i18n.__(locale, 'Registration date') }}:&nbsp;<span class="zoia-account-timestamp">{{ account.timestamp }}</span>
+                            <br>{{ i18n.__(locale, 'E-mail address') }}:&nbsp;<span class="zoia-account-email">{{ account.email }}</span>
+                            <br>{{ i18n.__(locale, 'Account status') }}:&nbsp;<span class="zoia-account-status">{{ account.status }}</span>{% if isAdmin %}, {{ i18n.__(locale, 'administrator') }}{% endif %}
+                        </p>
+                        <form class="za-form-stacked" id="zoia_act_form_common">
+                            <div class="za-margin">
+                                <label class="za-form-label" for="zoia_actc_realname">{{ i18n.__(locale, 'Real name') }}:</label>
+                                <div class="za-form-controls">
+                                    <input class="za-input za-form-width-large" id="zoia_actc_realname" type="text" autofocus="true" maxlength="48" value="{{ account.realname }}">
+                                    <div class="za-text-muted za-text-small">{{ i18n.__(locale, 'Your real name, max. length: 48 characters')}}</div>
+                                </div>
+                            </div>
+                            <div class="za-margin">
+                                <label class="za-form-label" for="zoia_actc_photo">{{ i18n.__(locale, 'Profile picture') }}:</label>
+                                <div class="za-form-controls">
+                                    <div class="js-upload" za-form-custom>
+                                        <input type="file" multiple>
+                                        <button class="za-button za-button-default zoia-btn-picture" type="button" tabindex="-1">{{ i18n.__(locale, 'Select') }}</button>
+                                    </div>
+                                    &nbsp;
+                                    <button class="za-button za-button-default zoia-btn-picture" type="button" id="zoia_actc_btn_picture_reset">{{ i18n.__(locale, 'Reset') }}</button>&nbsp;<span id="zoia_actc_photo_progress" style="display:none"><div za-spinner></div>&nbsp;<span></span></span>
+                                    <div class="za-text-muted za-text-small">{{ i18n.__(locale, 'JPEG or PNG images, max. size (MB)')}}:&nbsp;{{ configModule.picture.maxSizeMB }}</div>
+                                </div>
+                            </div>
+                            <div class="za-margin-top">
+                                <button type="submit" class="za-button za-button-primary">
+                                    <div za-spinner class="zoiaButtonSpinner" style="display:none" id="spnCommonForm"></div>{{ i18n.__(locale, 'Save data') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="za-width-1-2@s za-text-right@s za-text-center">
+                        <img src="{{ pictureURL }}" class="za-border-circle" id="zoia_actc_picture">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <p>{{ i18n.__(locale, 'Please use the form below to change your password. You will need to enter your current password for security purposes.')}}</p>
+                <p>{{ i18n.__(locale, 'You will be logged off after your password is changed.')}}</p>
+                <form class="za-form-stacked" id="zoia_act_form_password">
+                    <div class="za-margin">
+                        <label class="za-form-label" for="zoia_act_password_current">{{ i18n.__(locale, 'Current password') }}:</label>
+                        <div class="za-form-controls">
+                            <input class="za-input za-form-width-medium zoia-act-form-field" id="zoia_act_password_current" type="password" value="">
+                            <div class="zoia-form-error-message" id="zoia_act_password_current_error" style="display:none"><span class="za-label-danger za-text-small"></span></div>
+                            <div class="za-text-muted za-text-small">{{ i18n.__(locale, 'Your current password')}}</div>
+                        </div>
+                    </div>
+                    <div class="za-margin">
+                        <label class="za-form-label" for="zoia_act_password">{{ i18n.__(locale, 'New password') }}:</label>
+                        <div class="za-form-controls">
+                            <input class="za-input za-form-width-medium zoia-act-form-field" id="zoia_act_password" minlength="8" maxlength="50" type="password" value="">&nbsp;
+                            <input class="za-input za-form-width-medium zoia-act-form-field" minlength="8" id="zoia_act_password_confirm" maxlength="50" type="password" value="">
+                            <div class="zoia-form-error-message" id="zoia_act_password_error" style="display:none"><span class="za-label-danger za-text-small"></span></div>
+                            <div class="za-text-muted za-text-small">{{ i18n.__(locale, 'Your new password, type twice to verify, 8-50 characters')}}</div>
+                        </div>
+                    </div>
+                    <div class="za-margin-top">
+                        <button type="submit" class="za-button za-button-primary">
+                            <div za-spinner class="zoiaButtonSpinner" style="display:none" id="spnPasswordForm"></div>{{ i18n.__(locale, 'Change password') }}</button>
+                    </div>
+                </form>
+            </li>
+            <li>
+                <p>{{ i18n.__(locale, 'To change your e-mail address you will need to verify your old e-mail address.')}}</p>
+                <p>{{ i18n.__(locale, 'The verification codes will be sent to the both e-mail addresses.')}}</p>
+                <div id="zoia_act_email_step1">
+                    <div class="za-text-large za-margin-bottom">{{ i18n.__(locale, 'Step 1') }}</div>
+                    <form class="za-form-stacked" id="zoia_act_form_email1">
+                        <div class="za-margin">
+                            <label class="za-form-label" for="zoia_act_email_new">{{ i18n.__(locale, 'New e-mail address') }}:</label>
+                            <div class="za-form-controls">
+                                <input class="za-input za-form-width-large zoia-act-form-field" id="zoia_act_email_new" type="email" value="">
+                                <div class="zoia-form-error-message" id="zoia_act_email_new_error" style="display:none"><span class="za-label-danger za-text-small"></span></div>
+                                <div class="za-text-muted za-text-small">{{ i18n.__(locale, 'Your new e-mail address')}}</div>
+                            </div>
+                        </div>
+                        <div class="za-margin-top">
+                            <button type="submit" class="za-button za-button-primary">
+                                <div za-spinner class="zoiaButtonSpinner" style="display:none" id="spnEmail1Form"></div>{{ i18n.__(locale, 'Send codes') }}</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="zoia_act_email_step2" style="display:none">
+                    <div class="za-text-large za-margin-bottom">{{ i18n.__(locale, 'Step 2') }}</div>
+                    <p class="za-text-small za-text-muted">
+                    	{{ i18n.__(locale, 'You should receive the confirmation codes to the e-mail addresses shown below. Please enter the codes to the corresponding fields.')}}
+                        <br>{{ i18n.__(locale, 'You will be logged off after your e-mail is changed.')}}
+                    </p>
+                    <form class="za-form-horizontal" id="zoia_act_form_email2">
+                        <div class="za-margin">
+                            <label class="za-form-label" for="zoia_act_email_code1">{{ account.email }}</label>
+                            <div class="za-form-controls">
+                                <input class="za-input za-form-width-small zoia-act-form-field" id="zoia_act_email_code1" type="text">
+                            </div>
+                            <div class="zoia-form-error-message" id="zoia_act_email_code1_error" style="display:none"><span class="za-label-danger za-text-small"></span></div>
+                        </div>
+                        <div class="za-margin">
+                            <label class="za-form-label" for="zoia_act_email_code2" id="zoia_act_email_code2_label"></label>
+                            <div class="za-form-controls">
+                                <input class="za-input za-form-width-small zoia-act-form-field" id="zoia_act_email_code2" type="text">
+                            </div>
+                            <div class="zoia-form-error-message" id="zoia_act_email_code2_error" style="display:none"><span class="za-label-danger za-text-small"></span></div>
+                        </div>
+                        <div class="za-margin-top">
+                            <button type="submit" class="za-button za-button-primary">
+                                <div za-spinner class="zoiaButtonSpinner" style="display:none" id="spnEmail2Form"></div>{{ i18n.__(locale, 'Change e-mail') }}</button>
+                        </div>
+                    </form>
+                </div>
+            </li>
+        </ul>
+        <div class="za-position-top-right za-margin-small-top za-visible@s">
+            <div style="margin-top:-7px"><span za-icon="user"></span>&nbsp;{{ account.username }}</div>
+        </div>
+    </div>
+</div>
+<div class="zoia-loading">
+    <div za-spinner style="margin-right:10px"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}...
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_uprefix" data="{{ uprefix }}"></div>
+    <div id="zp_aprefix" data="{{ aprefix }}"></div>
+</div>

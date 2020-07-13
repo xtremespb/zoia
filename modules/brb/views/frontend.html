@@ -1,0 +1,147 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js" type="text/javscript"></script>
+<div class="zoia-wrap-info za-width-1-1" style="display:none">
+    <div class="za-grid-collapse" za-grid>
+        <div>
+            <div class="za-tile za-tile-primary za-padding-small">
+                <p class="za-text-small">{{ i18n.__(locale, 'Account ID')}}:</p>
+                <p class="za-h4" style="margin-top:0">{{ apiInfo.name }}</p>
+            </div>
+        </div>
+        <div>
+            <div class="za-tile za-tile-muted za-padding-small">
+                <p class="za-text-small">{{ i18n.__(locale, 'Cost')}}:</p>
+                <p class="za-h4 za-text-primary" style="margin-top:0">${{ apiInfo.portfolio_cost }}</p>
+            </div>
+        </div>
+        <div>
+            <div class="za-tile za-tile-muted za-padding-small">
+                <p class="za-text-small">{{ i18n.__(locale, 'Realized')}}:</p>
+                <p class="za-h4 za-text-{% if apiInfo.realized < 0 %}danger{% else %}success{% endif %}" style="margin-top:0">{% if apiInfo.realized < 0 %}-${{ apiInfo.realized | abs }}{% else %}${{ apiInfo.realized | abs }}{% endif %}</p>
+            </div>
+        </div>
+        <div>
+            <div class="za-tile za-tile-muted za-padding-small">
+                <p class="za-text-small">{{ i18n.__(locale, 'Not Realized')}}:</p>
+                <p class="za-h4 za-text-{% if apiInfo.unrealized < 0 %}danger{% else %}success{% endif %}" style="margin-top:0">{% if apiInfo.unrealized < 0 %}-${{ apiInfo.unrealized | abs }}{% else %}${{ apiInfo.unrealized | abs }}{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="za-overflow-auto za-margin-bottom*">
+        <table class="za-table za-table-divider za-table-striped za-table-hover za-table-middle" id="tickers">
+            <thead class="noselect" style="display:none">
+                <tr>
+                    <th id="tickers_ticker" class="za-table-shrink">{{ i18n.__(locale, 'Ticker')}}</th>
+                    <th id="tickers_position_date" class="za-table-shrink">{{ i18n.__(locale, 'Date')}}</th>
+                    <th id="tickers_position_time" class="za-table-shrink">{{ i18n.__(locale, 'Time')}}</th>
+                    <th id="tickers_price" class="za-table-shrink">{{ i18n.__(locale, 'Price')}}</th>
+                    <th id="tickers_position" class="za-table-shrink">{{ i18n.__(locale, 'Position')}}</th>
+                    <th id="tickers_position_value" class="za-table-shrink">{{ i18n.__(locale, 'Volume')}}</th>
+                    <th id="tickers_average_price" class="za-table-shrink">{{ i18n.__(locale, 'Avg. Price')}}</th>
+                    <th id="tickers_market_price" class="za-table-shrink">{{ i18n.__(locale, 'Market Price')}}</th>
+                    <th id="tickers_position_prc" class="za-table-shrink">{{ i18n.__(locale, 'Position')}}</th>
+                    <th id="tickers_unrealized" class="za-table-shrink">{{ i18n.__(locale, 'Profit/Loss $')}}</th>
+                    <th id="tickers_tp" class="za-table-shrink">{{ i18n.__(locale, 'Profit')}}</th>
+                    <th id="tickers_sl" class="za-table-shrink">{{ i18n.__(locale, 'Loss')}}</th>
+                    <th id="tickers_potpro" class="za-table-shrink">{{ i18n.__(locale, 'Pot. Profit')}}</th>
+                    <th id="tickers_potlos" class="za-table-shrink">{{ i18n.__(locale, 'Pot. Loss')}}</th>
+                    <th id="tickers_protolos" class="za-table-shrink">{{ i18n.__(locale, 'Ratio')}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="100%">
+                        <div za-spinner style="margin:-2px 5px 0 0"></div>
+                        &nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="za-flex za-margin-top" style="height: 50px">
+        <div><button type="button" id="chartSettingsButton" class="za-button za-button-default za-button-small chart-button" style="display:none;">{{ i18n.__(locale, 'Settings')}}</button>&nbsp;
+        <button type="button" id="chartEverythingButton" class="za-button za-button-default za-button-small chart-button chart-button-period za-button-secondary" style="display:none;">{{ i18n.__(locale, 'Everything')}}</button>&nbsp;
+        <button type="button" id="chartMonthButton" class="za-button za-button-default za-button-small chart-button chart-button-period" style="display:none;">{{ i18n.__(locale, 'Month')}}</button>&nbsp;
+        <button type="button" id="chartWeekButton" class="za-button za-button-default za-button-small chart-button chart-button-period" style="display:none;">{{ i18n.__(locale, 'Week')}}</button>&nbsp;
+        </div>
+        <div class="za-width-expand"><div id="chartTickersSpinner" style="display: inline-block;float: right;"><div za-spinner style="margin-right:10px"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}...</div></div>
+    </div>    
+    <div id="chartTickers" style="width:100%;height:600px"></div>
+    </div>
+</div>
+
+<div id="chartSettingsModal">
+    <div class="za-modal-dialog">
+        <button class="za-modal-close-default" type="button" za-close></button>
+        <div class="za-modal-header">
+            <h2 class="za-modal-title">{{ i18n.__(locale, 'Settings')}}</h2>
+        </div>
+        <div class="za-modal-body">
+            <div class="za-text-bold">{{ i18n.__(locale, 'Display chart')}}:</div>
+            <div class="za-margin za-grid-small za-child-width-auto za-grid zoia-chart-checkboxes">
+                <label><input class="za-checkbox zoia-chart-checkbox zoia-chart-checkbox-line" type="checkbox" checked> {{ i18n.__(locale, 'Line')}}</label>
+                <label><input class="za-checkbox zoia-chart-checkbox zoia-chart-checkbox-candles" type="checkbox" checked> {{ i18n.__(locale, 'Candles')}}</label>                        
+            </div>
+            <div class="za-text-bold">{{ i18n.__(locale, 'Colors')}}:</div>
+            <div class="za-margin za-grid-small za-child-width-auto za-grid">
+                <label><input type="color" value="#444444" id="chartColorLine"> {{ i18n.__(locale, 'Line')}}</label>
+                <label><input type="color" value="#50ba27" id="chartColorPositive"> {{ i18n.__(locale, 'Positive candle')}}</label>
+                <label><input type="color" value="#db4c3c" id="chartColorNegative"> {{ i18n.__(locale, 'Negative candle')}}</label>
+            </div>
+        </div>
+        <div class="za-modal-footer za-text-right">
+            <button class="za-button za-button-primary chart-settings-button" id="chartSettingsSaveButton" type="button">{{ i18n.__(locale, 'Save')}}</button>
+            <button class="za-button za-button-default chart-settings-button za-modal-close" type="button">{{ i18n.__(locale, 'Cancel')}}</button>
+            <div za-spinner id="chartSettingsSpinner" style="display:none"></div>
+        </div>
+    </div>
+</div>
+<div class="zoia-wrap-ticker za-width-1-1" style="display:none">
+    <div class="za-flex za-flex-wrap za-grid-match" za-grid>
+        <div class="za-flex za-flex-center za-width-auto@m za-width-auto@l za-width-auto@s">
+            <div class="za-width-auto">
+                <div class="za-background-primary za-padding-small">
+                    <div class="zoia-ticker-name zoia-header-font"></div>
+                    <div class="za-text-small zoia-ticker-full-name"></div>
+                </div>
+                <div class="za-text-large za-text-center zoia-ticker-position za-text-danger"></div>
+            </div>
+        </div>
+        <div class="za-flex za-flex-center za-flex-middle za-width-expand@s za-width-1-1@s zoia-header-font">
+            <div class="zoia-ticker-price"></div>
+        </div>
+        <div class="za-width-auto@m za-flex za-flex-middle za-flex-center">
+            <div za-grid class="za-flex za-flex-center za-flex-middle">
+                <div class="za-width-1-3 za-flex za-flex-center za-flex-middle">
+                    <div>
+                        <div class="za-text-small">{{ i18n.__(locale, 'Entry')}}:</div>
+                        <div class="za-text-large zoia-ticker-entry">$0</div>
+                    </div>
+                </div>
+                <div class="za-width-1-3 za-flex za-flex-center za-flex-middle">
+                    <div>
+                        <div class="za-text-small">{{ i18n.__(locale, 'TP')}}:</div>
+                        <div class="za-text-large zoia-ticker-tp">$0</div>
+                    </div>
+                </div>
+                <div class="za-width-1-3 za-flex za-flex-center za-flex-middle">
+                    <div>
+                        <div class="za-text-small">{{ i18n.__(locale, 'SL')}}:</div>
+                        <div class="za-text-large zoia-ticker-sl">$0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="zoia-loading">
+    <div za-spinner style="margin-right:10px"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}...
+</div>
+<script type="text/javascript" src="/brb/static/amcharts/amcharts.js"></script>
+<script type="text/javascript" src="/brb/static/amcharts/serial.js"></script>
+<script type="text/javascript" src="/brb/static/amcharts/themes/light.js"></script>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_uprefix" data="{{ uprefix }}"></div>
+    <div id="zp_tickers" data='{{ apiTickersJSON }}'></div>
+    <div id="zp_apiInfo" data='{{ apiInfoJSON }}'></div>
+</div>

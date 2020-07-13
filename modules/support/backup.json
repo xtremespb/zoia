@@ -1,0 +1,16 @@
+{
+    "id": "support",
+    "items": [
+    {
+        "type": "mongo",
+        "collections": ["support", "support_counters"]
+    },
+    {
+        "type": "directory",
+        "directories": ["storage"]
+    },
+    {
+        "type": "file",
+        "files": ["config/support.json"]
+    }]
+}

@@ -1,0 +1,19 @@
+{
+	"title": "Навигација",
+	"Navigation": "Навигација",
+	"Cancel": "Откажи",
+	"Save": "Сачувај",
+	"Should not be empty": "Обавезно поље",
+	"Too short": "Вредност је прекратка",
+	"Too long": "Вредност је предугачка",
+	"Doesn't match required format": "Не одговара формату",
+	"Edit Item": "Измени запис",
+	"1-64 characters": "Дужина: 1-64 знака",
+	"Title": "Наслов",
+	"URL": "УРЛ",
+	"Duplicate item": "Такав запис већ постоји",
+	"Could not save to the database": "Грешка приликом записивања у базу података",
+	"Navigation data has been saved": "Навигацијско стабло је успешно сачувано",
+	"Language": "Језик",
+	"Actions": "Дејство"
+}

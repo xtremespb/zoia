@@ -1,0 +1,8 @@
+{
+    "id": "blog",
+    "items": [
+    {
+        "type": "mongo",
+        "collections": ["blog", "blog_comments", "blog_counters"]
+    }]
+}

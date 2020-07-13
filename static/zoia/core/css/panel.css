@@ -1,0 +1,111 @@
+.za-notification-message {
+    opacity: 1;
+    background-color: #fff;
+    -webkit-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    -moz-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    text-align: center;
+}
+
+.za-navbar-container.za-navbar {
+    background: #32323a;
+}
+
+.za-navbar-nav>li.za-active>a {
+    color: #f5f5f5;
+}
+
+.za-navbar-nav>li>a {
+    color: #a5a5a5;
+}
+
+.za-navbar-nav>li>a:hover {
+    color: #fff;
+}
+
+.za-navbar,
+.za-navbar > * > *,
+.za-navbar-nav > li > a {
+    height: 64px;
+    text-transform: none;
+}
+
+.za-navbar-dropdown.za-open {
+    padding: 5px 10px 5px 20px;
+}
+
+.za-navbar-toggle {
+    margin-right: -10px;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.zoia-panel-logo {
+    margin-top: -2px;
+}
+
+.zoia-panel-nav-col {
+    position: fixed;
+    width: 250px;
+    border-right: 1px solid #ddd;
+    background: #f1f2f7;
+}
+
+.zoia-panel-nav-content {
+    display: flex;
+    min-height: 100%;
+    margin-left: 240px
+}
+
+.zoia-panel-nav-wrap {}
+
+.za-nav-default > li > a {
+    color: #555;
+}
+
+.za-nav-default > li {
+    padding: 0 10px 0 10px;
+}
+
+.za-nav-default > li:hover {
+    background: #474752;
+}
+
+.za-nav-default > li.za-nav-active {
+    background: #474752;
+}
+
+.za-nav-default > li.za-nav-active > a {
+    color: #fff;
+}
+
+.za-nav-default > li:not(.za-nav-header) > a:hover {
+    color: #fff;
+}
+
+.za-icon {
+    float: left;
+}
+
+@media (max-width: 640px) {
+    .zoia-panel-nav-content {
+        margin-left: 0;
+    }
+}
+
+.zoia-panel-nav-content-wrap {
+    width: 100%;
+    padding: 10px 20px 10px 20px;
+}
+
+.zoia-nav-menu > li {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.zoia-nav-menu > li:hover > a {
+    color: #f5f5f5;
+}

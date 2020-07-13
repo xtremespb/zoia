@@ -1,0 +1,30 @@
+.za-catalog-cart-btn-del {
+    cursor: pointer;
+}
+
+.za-catalog-cart-count {
+    text-align: center;
+}
+
+#za-catalog-cart-table-spinner {
+    position: absolute;
+    background: #fff;
+    opacity: 0.7;
+}
+
+.za-notification-message {
+    opacity: 1;
+    background-color: #fff;
+    -webkit-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    -moz-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    text-align: center;
+}
+
+.za-catalog-cart-total-wrap {
+    font-size: 120%;
+}
+
+.za-catalog-cart-total {
+    font-weight: bold;
+}

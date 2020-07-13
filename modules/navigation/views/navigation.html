@@ -1,0 +1,52 @@
+<h1>{{ i18n.__(locale, 'title')}}</h1>
+<table class="za-table za-table-divider za-table-striped za-table-hover za-table-middle" id="navigation">
+    <thead class="noselect">
+        <tr>
+            <th id="navigation_language">{{ i18n.__(locale, 'Language')}}</th>
+            <th id="navigation_actions" class="za-table-shrink">{{ i18n.__(locale, 'Actions')}}</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div id="zoiaNavigationDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div class="za-modal-header">
+            <h2 id="zoiaNavigationDialogTitle"></h2>
+        </div>
+        <div class="za-modal-body">
+            <div class="za-button-group">
+                <button class="za-button za-button-default zoia-navigation-btn" id="zoiaNavigationAdd"><span za-icon="icon:plus"></span></button>
+                <button class="za-button za-button-default zoia-navigation-btn" id="zoiaNavigationEdit"><span za-icon="icon:pencil"></span></button>
+                <button class="za-button za-button-danger zoia-navigation-btn" id="zoiaNavigationDelete"><span za-icon="icon:trash"></span></button>
+            </div>
+            <div class="za-button-group">
+                <button class="za-button za-button-secondary zoia-navigation-btn-revert" id="zoiaNavigationRevert"><span za-icon="icon:reply"></span></button>
+            </div>
+            <div id="zoia_navigation_tree"></div>
+        </div>
+        <div class="za-modal-footer za-text-right">
+            <button class="za-button za-button-default za-modal-close zoia-navigation-dialog-button" type="button">{{ i18n.__(locale, 'Cancel')}}</button>
+            <button class="za-button za-button-primary zoia-navigation-dialog-button" id="zoiaNavigationDialogButton" type="button">{{ i18n.__(locale, 'Save')}}</button>
+            <div za-spinner style="float:right;display:none" id="zoiaNavigationDialogSpinner"></div>
+        </div>
+    </div>
+</div>
+<div id="zoiaNavigationEditDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div class="za-modal-header">
+            <h2>{{ i18n.__(locale, 'Edit Item')}}</h2>
+        </div>
+        <form id="editNavigationForm">
+            <div class="za-flex za-flex-center za-margin-bottom">
+                <div za-spinner></div>
+            </div>
+        </form>
+    </div>
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_langs" data='{{ langs }}'></div>
+    <div id="zp_navigationData" data='{{ folders }}'></div>
+	<div id="zp_rxp" data='{{ rxp }}'></div>
+</div>

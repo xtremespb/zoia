@@ -1,0 +1,43 @@
+{
+	"title": "Группы",
+	"Select all": "Выбрать все",
+	"Select none": "Отменить выбор",
+	"Name": "Название",
+	"Status": "Статус",
+	"Actions": "Действия",
+	"statuses": [
+		"Неактивна",
+		"Активна"
+	],
+	"fieldErrors": {
+		"group": "Неверная группа",
+		"status": "Неверный статус",
+		"Could not save to the database": "Ошибка во время сохранения в базе данных",
+		"Group not found": "Группа не найдена",
+		"Group already exists in database": "Группа с таким названием уже создана",
+		"Saved successfully": "Успешно сохранено"
+	},
+	"Operation was successful": "Операция прошла успешно",
+	"Cannot delete one or more items": "Ошибка во время удаления одного или более элементов",
+	"Could not load information from database": "Ошибка во время загрузки информации из БД",
+	"Edit": "Редактировать",
+	"Delete": "Удалить",
+	"Add": "Добавить",
+	"editItem": "Редактировать группу",
+	"addItem": "Создать группу",
+	"Cancel": "Отмена",
+	"Save": "Сохранить",
+	"Search": "Поиск",
+	"Latin characters and numbers, length: 3-20": "Только лат. буквы и цифры, длина: 3-20",
+	"The following group(s) will be removed from the database": "Следующие группы будут удалены из системы",
+	"Could not load data from server. Please try to refresh page in a few moments.": "Ошибка во время загрузки данных из системы. Пожалуйста, повторите попытку позже.",
+	"No items to display": "Нет элементов для отображения",
+	"Should not be empty": "Обязательное поле",
+	"Too short": "Слишком короткое значение",
+	"Too long": "Слишком длинное значение",
+	"Doesn't match required format": "Не соответствует формату",
+	"Passwords do not match": "Пароли не совпадают",
+	"Could not delete admin group because it's a system one.": "Системная группа (admin) не может быть удалена.",
+	"OK": "OK",
+	"Loading data, please wait": "Загрузка данных, пожалуйста, подождите"
+}

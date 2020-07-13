@@ -1,0 +1,23 @@
+<tr>
+    <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+        <p>{{ i18n.__(locale, 'Your ticket has been commented by our support team. You can see the comment below, please click the "View ticket" button to view your ticket.') }}</p>
+        <p><b>{{ i18n.__(locale, 'Ticket ID') }}:</b> {{ id }}<br>
+        <b>{{ i18n.__(locale, 'Title') }}:</b> {{ title }}</p>
+        <p><b>{{ i18n.__(locale, 'Message') }}:</b><br><br>{{ message }}</p>
+    </td>
+</tr>
+<tr>
+    <td align="center">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td align="center" style="padding-top: 25px;" class="padding">
+                    <table border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
+                        <tr>
+                            <td align="center" style="border-radius: 3px;" bgcolor="#3e606f"><a href="{{ url }}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; border-radius: 3px; padding: 15px 25px; border: 1px solid #374140; display: inline-block;" class="mobile-button"><strong style="color:#ffffff;font-weight:normal;">{{ i18n.__(locale, 'View ticket') }}</strong></a></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>

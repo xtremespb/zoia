@@ -1,0 +1,64 @@
+.zoia-blog-label {
+    background: #dadada;
+    color: #444;
+}
+
+.za-article-title {
+    color: #444;
+}
+
+.zoia-blog-article {
+    padding-top: 20px;
+}
+
+.zoia-blog-tag {
+    text-decoration: none;
+}
+
+.za-article-meta {
+    color: #777;
+}
+
+.zoiaButtonSpinner>svg,
+a>.za-spinner>svg {
+    width: 15px;
+    margin-top: -2px;
+    margin-right: 10px;
+}
+
+.zoia-comment-text {
+    margin-top: 2px;
+    margin-bottom: 5px;
+}
+
+.zoia-comment-new {
+    transition-property: background;
+    transition-duration: 0.5s;
+}
+
+.za-notification-message {
+    opacity: 1;
+    background-color: #fff;
+    -webkit-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    -moz-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    text-align: center;
+}
+
+.zoia-comment-text {
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.zoia-wrap-keywords {
+    margin-top: 4px;
+}
+
+.zoia-wrap-keywords > a {
+    text-decoration: underline;
+}

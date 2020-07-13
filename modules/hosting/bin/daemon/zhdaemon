@@ -1,0 +1,50 @@
+#!/usr/bin/node
+const http = require('http');
+const url = require('url');
+const path = require('path');
+const { exec } = require('child_process')
+let config;
+if (process.argv.length < 3) {
+    try {
+        config = require(path.join(__dirname, 'config.json'));
+    } catch (e) {
+        config = require(path.join(__dirname, 'config.dist.json'));
+    }
+} else {
+    try {
+        config = require(process.argv[2]);
+    } catch (e) {
+        console.log(String(e));
+        process.exit(1);
+    }
+}
+const requestHandler = async(request, response) => {
+    response.setHeader('Content-Type', 'application/json');
+    try {
+        const query = url.parse(request.url, true).query;
+        if (!query.key || typeof query.key !== 'string' || query.key !== config.key) {
+            return response.end(JSON.stringify({ status: 0, error: 'Invalid key' }));
+        }
+        if (!query.id || typeof query.id !== 'string' || !config.commands[query.id] ||
+            !query.command || typeof query.command !== 'string' || !query.command.match(/^(start|stop)$/)) {
+            return response.end(JSON.stringify({ status: 0, error: 'Invalid action or ID' }));
+        }
+        try {
+            console.log('Executing: ' + config.commands[query.id][query.command]);
+            await exec(config.commands[query.id][query.command]);
+            response.end(JSON.stringify({ status: 1 }));
+        } catch (e) {
+            return response.end(JSON.stringify({ status: 0, error: e }));
+        }
+    } catch (e) {
+        response.end(JSON.stringify({ status: 0, error: e }));
+    }
+};
+const server = http.createServer(requestHandler)
+server.listen(config.port, (err) => {
+    if (err) {
+        return console.log('Could not start zhdaemon: ', err);
+        process.exit(1);
+    }
+    console.log(`Listening on port ${config.port}`);
+});

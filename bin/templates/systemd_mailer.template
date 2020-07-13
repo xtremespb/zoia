@@ -1,0 +1,19 @@
+[Unit]
+Description={serverName} (Zoia Mailer)
+Documentation=https://zoiajs.org
+After=network.target
+
+[Service]
+Environment=
+Type=simple
+User={user}
+Group={group}
+ExecStart=/usr/bin/node {root}/bin/mailer.js
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=nodejs_{name}_mailer
+
+[Install]
+WantedBy=multi-user.target

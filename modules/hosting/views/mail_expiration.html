@@ -1,0 +1,20 @@
+<tr>
+    <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+        <p>{{ i18n.__(locale, 'One or more of your hosting accounts are going to expire.') }}</p>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family: Helvetica, Arial, sans-serif; color: #333333; padding:5px;">
+            <tr style="font-weight:bold;background:#f5f5f5">
+                <td>{{ i18n.__(locale, 'Account') }}</td>
+                <td width="90px" nowrap="nowrap">{{ i18n.__(locale, 'Days&nbsp;Remain') }}</td>
+            </tr>
+            {% for item in accounts %}
+            <tr>
+                <td style="width:100%">
+                    {{ item.id }}
+                </td>
+                <td>{{ item.days }}</td>
+            </tr>
+            {% endfor %}
+        </table> 
+        <p>{{ i18n.__(locale, 'If you have any questions about your hosting accounts or services, please contact support to get help.') }}</p>   
+    </td>
+</tr>

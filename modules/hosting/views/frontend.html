@@ -1,0 +1,138 @@
+<div class="zoia-wrap-everything" style="display:none">
+    <h1>{{ i18n.__(locale, 'Customer Accounts') }}</h1>
+    <div class="za-hidden@s za-card za-card-default za-card-small za-card-body">
+        {{ i18n.__(locale, 'Balance') }}:&nbsp;{% if configModule.currencyPosition == 'left' %}{{ configModule.currency[locale] }}{% endif %}<span class="zoia-balance za-text-bold">{{ totalFunds }}</span>{% if configModule.currencyPosition == 'right' %}&nbsp;{{ configModule.currency[locale] }}{% endif %}
+    </div>
+    <div class="za-position-relative za-margin-medium">
+        <ul za-tab id="zoia_hosting_tabs">
+            <li><a href="#">{{ i18n.__(locale, 'Accounts') }}</a></li>
+            <li><a href="#">{{ i18n.__(locale, 'Top-Up') }}</a></li>
+            <li><a href="#">{{ i18n.__(locale, 'History') }}</a></li>
+        </ul>
+        <ul class="za-switcher za-margin">
+            <li>
+                <!-- <button class="za-button za-button-primary" id="zoia_btn_account_create">{{ i18n.__(locale, 'New Account') }}</button> -->
+                <table class="za-table za-table-divider za-table-middle za-margin-top za-table-responsive">
+                    <thead>
+                        <tr>
+                            <th class="za-width-1-3">{{ i18n.__(locale, 'Account&nbsp;ID') }}</th>
+                            <th class="za-width-2-3">{{ i18n.__(locale, 'Plan') }}</th>
+                            <th class="za-table-shrink">{{ i18n.__(locale, 'Days') }}</th>
+                            <th class="za-table-shrink"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="zoia-accounts-tbody" id="zoia_account_table_body">
+                        {% if accounts.length > 0 %} {% for account in accounts %}
+                        <tr>
+                            <td class="zoia-accounts-id">{{ account.id }}</td>
+                            <td data="{{ account.preset }}">{{ presets[account.preset] }}</td>
+                            <td>{{ account.days }}</td>
+                            <td><a href="" class="za-icon-button zoia-btn-extend" za-icon="plus"></a></td>
+                        </tr>
+                        {% endfor %} {% else %}
+                        <tr class="zoia-accounts-empty-accounts">
+                            <td colspan="4">{{ i18n.__(locale, 'You have got no accounts.') }}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </li>
+            <li>
+                <p>{{ i18n.__(locale, 'Please use the form below to top-up your account.') }}</p>
+                <p>{{ i18n.__(locale, 'You will be forwarded to the payment system website. After completing your payment, you will be returned to the current page and your transaction will be processed.') }}</p>
+                <form class="za-form-stacked za-card za-card-body za-card-default za-card-small" id="zoia_form_topup">
+                    <div za-grid class="za-grid-small">
+                        <div>
+                            <label class="za-form-label" for="topup_sum">{{ i18n.__(locale, 'Amount') }}:</label>
+                            <div class="za-form-controls">
+                                <input class="za-input za-form-width-small zoia-topup-field" id="topup_sum" type="number" value="{{ configModule.defaultSum }}">&nbsp;<span class="zoia-topup-currency">{{ configModule.currency[locale] }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="za-form-label">&nbsp;</label>
+                            <div class="za-form-controls">
+                                <button class="za-button za-button-primary" id="zoia_btn_topup" type="submit">{{ i18n.__(locale, 'Continue') }}</button>
+                                <div za-spinner id="zoia_spinner_topup" style="display:none"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </li>
+            <li>
+                <table class="za-table za-table-small za-table-divider" id="zoia_history_table" style="display:none">
+                    <thead>
+                        <tr>
+                            <th>{{ i18n.__(locale, 'Date') }}</th>
+                            <th class="za-table-shrink">{{ i18n.__(locale, 'Sum') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if transactions.length > 0 %} {% for t in transactions %}
+                        <tr>
+                            <td>{{ t.timestamp }}</td>
+                            <td nowrap><span za-icon="{% if t.sum < 0 %}minus{% else %}plus{% endif %}-circle"></span>&nbsp;{% if configModule.currencyPosition == 'left' %}{{ configModule.currency[locale] }}{% endif %}{{ t.sum|abs }}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ configModule.currency[locale] }}{% endif %}</td>
+                        </tr>
+                        {% endfor %} {% else %}
+                        <tr class="zoia-accounts-empty-history">
+                            <td colspan="4">{{ i18n.__(locale, 'You have got no records in history.') }}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </li>
+        </ul>
+        <div class="za-position-top-right za-margin-small-top za-visible@s">
+            <div style="margin-top:-7px">{{ i18n.__(locale, 'Balance') }}:&nbsp;{% if configModule.currencyPosition == 'left' %}{{ configModule.currency[locale] }}{% endif %}<span class="zoia-balance za-text-bold">{{ totalFunds }}</span>{% if configModule.currencyPosition == 'right' %}&nbsp;{{ configModule.currency[locale] }}{% endif %}</div>
+        </div>
+    </div>
+    <div id="createAccountDialog" style="display:none">
+        <div class="za-modal-dialog">
+            <div class="za-modal-header">
+                <h2>{{ i18n.__(locale, 'Create Account')}}</h2>
+            </div>
+            <div class="za-alert-danger" za-alert style="display:none;margin-top:0;margin-bottom:0" id="createAccountDialogError">
+                <p id="createAccountDialogErrorText"></p>
+            </div>
+            <form id="zoiaAccountForm">
+                <div class="za-flex za-flex-center za-margin-bottom">
+                    <div za-spinner class="za-margin-top za-margin-bottom"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="extendAccountDialog" style="display:none">
+        <div class="za-modal-dialog">
+            <div class="za-modal-header">
+                <h2>{{ i18n.__(locale, 'Account Prolongation')}}</h2>
+            </div>
+            <div class="za-alert-danger" za-alert style="display:none;margin-top:0;margin-bottom:0" id="extendAccountDialogError">
+                <p id="extendAccountDialogErrorText"></p>
+            </div>
+            <form id="zoiaAccountExtendForm">
+                <div class="za-flex za-flex-center za-margin-bottom">
+                    <div za-spinner class="za-margin-top za-margin-bottom"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="accountProgressDialog" style="display:none">
+        <div class="za-modal-dialog">
+            <div class="za-modal-header">
+                <h2>{{ i18n.__(locale, 'Creating Account')}}</h2>
+            </div>
+            <div class="za-modal-body">
+                <div za-spinner style="margin:-2px 20px 0 0"></div>{{ i18n.__(locale, 'Account creation is in progress, please wait...')}}</div>
+        </div>
+    </div>
+</div>
+<div class="zoia-loading">
+    <div za-spinner style="margin-right:10px"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}...
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_prices" data='{{ pricesJSON }}'></div>
+    <div id="zp_presets" data='{{ presetsJSON }}'></div>
+    <div id="zp_totalFunds" data="{{ totalFunds }}"></div>
+    <div id="zp_configModule" data='{{ configModuleJSON }}'></div>
+    <div id="zp_transactionsLength" data="{{ transactions.length }}"></div>
+</div>

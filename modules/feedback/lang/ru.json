@@ -1,0 +1,23 @@
+{
+	"Feedback": "Обратная связь",
+	"Should not be empty": "Обязательное поле",
+	"Too short": "Слишком короткое значение",
+	"Too long": "Слишком длинное значение",
+	"Doesn't match required format": "Не соответствует формату",
+	"Passwords do not match": "Пароли не совпадают",
+	"You can send us a message by filling the form below. All fields except e-mail and phone number are mandatory, but this might be a good idea to leave us your contact information if you need a reply.": "Воспользуйтесь формой, расположенной ниже, для отправки сообщения. Все поля, за исключением контактной информации, являются обязательными (но для того, чтобы мы могли с Вами связаться, необходимо оставить свой номер телефона или адрес электронной почты).",
+	"Name": "Ваше имя",
+	"E-mail": "Адрес e-mail",
+	"Phone": "Номер телефона",
+	"Message": "Текст сообщения",
+	"Type a message you wish to send": "Введите сообщение, которое хотите отправить",
+	"Your name or pseudonym": "Ваше имя или псевдоним",
+	"Your e-mail address": "Ваш адрес электронной почты",
+	"Your phone number including country code": "Номер телефона, включая код страны и код города",
+	"Send message": "Отправить сообщение",
+	"Code": "Код с картинки",
+	"New Feedback Message": "Новое сообщение с сайта",
+	"New message received from your feedback form.": "С формы обратной связи на Вашем сайте получено новое сообщение.",
+	"Your message has been sent. Thank you!": "Ваше сообщение успешно отправлено. Спасибо!",
+	"Could not send your message right now": "Ошибка во время отправки сообщения"
+}

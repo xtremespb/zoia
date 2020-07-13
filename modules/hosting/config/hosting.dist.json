@@ -1,0 +1,48 @@
+{
+    "currency": {
+        "en": "₽",
+        "ru": "₽"
+    },
+    "currencyPosition": "right",
+    "hosts": ["rw2", "sh1"],
+    "defaultPlugin": "ispmgr",
+    "defaultHost": "rw2",
+    "defaultSum": 1000,
+    "warnDays": 7,
+    "cleanupDays": 7,
+    "paymentPlugin": "robokassa",
+    "presets": [
+        { 
+            "id": "professional",
+            "titles": {
+                "en": "Professional",
+                "ru": "Профессионал"
+            },
+            "cost": 600
+        },
+        { 
+            "id": "comfort",
+            "titles": {
+                "en": "Comfort",
+                "ru": "Комфорт"
+            },
+            "cost": 400
+        },
+        { 
+            "id": "econom",
+            "titles": {
+                "en": "Econom",
+                "ru": "Эконом"
+            },
+            "cost": 200
+        },
+        { 
+            "id": "backup",
+            "titles": {
+                "en": "Backup",
+                "ru": "Резервные копии"
+            },
+            "cost": 400
+        }
+    ]
+}

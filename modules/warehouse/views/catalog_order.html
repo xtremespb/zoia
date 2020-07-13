@@ -1,0 +1,114 @@
+<h1>{{ i18n.__(locale, 'Order')}}</h1>
+<ul class="za-breadcrumb">
+    <li><a href="{{ uprefix }}{{ configModule.prefix }}/">{{ i18n.__(locale, 'Catalog')}}</a></li>
+</ul>
+{% if cartCount > 0 %}
+<div id="za_catalog_order_wrap">
+    <p>{{ i18n.__(locale, 'Please check your order details below.')}}&nbsp;{{ i18n.__(locale, 'Choose the appropriate shipping method and provide your contact details.')}}</p>
+    <div class="za-margin za-margin-large-top za-form-horizontal">
+        <label class="za-form-label" for="za_catalog_form_delivery">{{ i18n.__(locale, 'Delivery')}}:</label>
+        <div class="za-form-controls">
+            <select class="za-select za-form-width-medium za-catalog-order-form-rx za-catalog-form-input" id="za_catalog_form_delivery">
+                {% for item in delivery %}
+                <option value="{{ item.pid }}" data-type="{{ item.delivery }}" data-cost="{{ item.cost }}" data-weight="{{ item.cost_weight }}">{{ item.title[locale] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="za-margin za-form-horizontal">
+        <label class="za-form-label" for="za_catalog_form_email">{{ i18n.__(locale, 'E-mail')}}:<span class="za-text-danger za-text-bold">&nbsp;*</span></label>
+        <div class="za-form-controls">
+            <input class="za-input za-form-width-large za-catalog-order-form-rx za-catalog-form-input" id="za_catalog_form_email" data-mask="^(?:[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-])+@(?:[a-zA-Z0-9]|[^\u0000-\u007F])(?:(?:[a-zA-Z0-9-]|[^\u0000-\u007F]){0,61}(?:[a-zA-Z0-9]|[^\u0000-\u007F]))?(?:\.(?:[a-zA-Z0-9]|[^\u0000-\u007F])(?:(?:[a-zA-Z0-9-]|[^\u0000-\u007F]){0,61}(?:[a-zA-Z0-9]|[^\u0000-\u007F]))?)*$" data-mandatory="true" maxlength="100" value="{{ email }}">
+            </select>
+        </div>
+    </div>
+    <div class="za-margin za-form-horizontal">
+        <label class="za-form-label" for="za_catalog_form_phone">{{ i18n.__(locale, 'Phone')}}:<span class="za-text-danger za-text-bold">&nbsp;*</span></label>
+        <div class="za-form-controls">
+            <input class="za-input za-form-width-medium za-catalog-order-form-rx za-catalog-form-input" id="za_catalog_form_phone" data-mandatory="true" data-mask="^[\+][0-9]{4,24}$" maxlength="30" value="{{ phone }}">
+            <div class="za-text-meta">{{ i18n.__(locale, 'Example: +15417543010')}}</div>
+            </select>
+        </div>
+    </div>
+    <div class="za-alert-danger" za-alert id="za_catalog_order_form_error" style="display:none">
+        <p>{{ i18n.__(locale, 'Form contains errors. Please check it and re-submit your order.')}}</p>
+    </div>
+    <form class="za-form-horizontal za-margin-top" id="za_catalog_order_form" style="display:none">
+    </form>
+    <table class="za-table za-table-small za-table-striped za-table-middle za-table-responsive" id="za-catalog-cart-table">
+        <thead>
+            <tr>
+                <th>{{ i18n.__(locale, 'Item')}}</th>
+                <th>{{ i18n.__(locale, 'Price')}}</th>
+                <th nowrap="nowrap">{{ i18n.__(locale, 'Amount')}}</th>
+                <th>{{ i18n.__(locale, 'Cost')}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            <tr>
+                <td class="za-table-expand">{{ item.text }}{% if item.variant %}&nbsp;({{ item.variantTitle }}){% endif %} {% for cbx in item.checkboxes %}
+                    <br>{{ item.propertiesData[cbx] }} {% endfor %} {% for itg in item.integersID %}
+                    <br>{{ item.propertiesData[itg] }}&nbsp;({{ item.propertiesCount[itg] }}) {% endfor %} {% for slt in item.selectsID %}
+                    <br>{{ item.selectsTitles[slt] }}: {{ item.selectsValues[slt] }} {% endfor %}</td>
+                <td class="za-table-shrink">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{% if item.price !== 'NaN' %}{{ item.price }}{% else %}0{% endif %}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</td>
+                <td class="za-table-shrink">
+                    <div class="za-text-center za-visible@m">{{ item.count }}</div>
+                    <div class="za-hidden@m">{{ item.count }}&nbsp;{{ i18n.__(locale, 'pc(s).')}}</div>
+                </td>
+                <td class="za-table-shrink za-catalog-order-subtotal" data="{{ item.id }}" data-val="{{ item.subtotal }}">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{% if item.subtotal !== 'NaN' %}{{ item.subtotal }}{% else %}0{% endif %}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if not auth %}
+    <div class="za-alert-warning" za-alert>
+        <p>{{ i18n.__(locale, 'You are not authorized. To check your order status and make the next order faster, please')}}&nbsp;<a href="{{ uprefix }}{{ config.core.prefix.auth }}">{{ i18n.__(locale, 'authorize')}}</a>&nbsp;{{ i18n.__(locale, 'or')}}&nbsp;<a href="{{ uprefix }}{{ config.core.prefix.auth }}/register">{{ i18n.__(locale, 'register')}}</a>.</p>
+        <div class="za-margin">
+            <label class="za-form-label" for="za_catalog_form_captcha">{{ i18n.__(locale, 'Captcha')}}:</label>
+            <div class="za-grid za-grid-small">
+                <div>
+                    <input class="za-input za-catalog-form-input" type="text" id="za_catalog_form_captcha" data-mandatory="true" data-mask="^[0-9]+$" maxlength="4">
+                </div>
+                <div>
+                    <div class="za-form-controls"><img class="za-catalog-order-captcha-img za-box-shadow-small"></div>
+                </div>
+            </div>
+            <div id="za_catalog_form_captcha_error_text" style="display:none"><span class="za-label-danger">{{ i18n.__(locale, 'Invalid code')}}</span></div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="za-catalog-cart-total-wrap">
+        {{ i18n.__(locale, 'Total sum')}}:&nbsp;<span class="za-catalog-cart-total" data-total="{{ total }}"></span>
+    </div>
+    <div class="za-margin-top">
+        {% if configModule.payBeforeOrderIsPlaced %}<div class="za-alert-warning" za-alert>
+            <p>{{ i18n.__(locale, 'Notice: you should make a payment within a hour, your order will be cancelled otherwise!') }}</p>
+        </div>{% endif %}
+        <button class="za-button za-button-primary" id="za_catalog_order_submit">
+            <div za-spinner class="za_catalog_order_submit_spinner" style="display:none"></div>{% if configModule.payBeforeOrderIsPlaced %}{{ i18n.__(locale, 'Order & Pay') }}{% else %}{{ i18n.__(locale, 'Place Order')}}{% endif %}</button>
+    </div>
+</div>
+<div za-alert id="za_catalog_order_success" style="display:none">
+    <p>{{ i18n.__(locale, 'Your order has been placed and it is being processed.')}}</p>
+    <p><b>{{ i18n.__(locale, 'Order ID')}}</b>:&nbsp;<span id="za_catalog_order_success_id"></span></p>
+    <div class="za-margin-top">
+        {% if configModule.payments.enabled %}
+        <a href="#" data="{{ uprefix }}{{ configModule.prefix }}" class="za-button za-button-primary" id="za_order_btn_pay">{{ i18n.__(locale, 'Pay')}}</a>&nbsp; {% endif %}
+        {% if isAuth == 'true' %}<a href="#" data="{{ uprefix }}{{ configModule.prefix }}" class="za-button za-button-primary" id="za_order_btn_goto">{{ i18n.__(locale, 'Go to Order')}}</a>{% endif %}
+    </div>
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_settings" data='{{ settingsJSON }}'></div>
+    <div id="zp_addressJSON" data='{{ addressJSON }}'></div>
+    <div id="zp_weight" data="{{ weight }}"></div>
+    <div id="zp_isAuth" data="{{ isAuth }}"></div>
+    <div id="zp_currencyPosition" data="{{ configModule.currencyPosition }}"></div>
+    <div id="zp_payBeforeOrderIsPlaced" data="{{ configModule.payBeforeOrderIsPlaced }}"></div>
+</div>
+{% else %}
+<div class="za-alert-danger" za-alert>
+    <p>{{ i18n.__(locale, 'There are no items in cart yet.')}}</p>
+</div>
+{% endif %}

@@ -1,0 +1,14 @@
+<h1>{{ i18n.__(locale, 'Brief') }}</h1>
+<p>{{ i18n.__(locale, 'To start your project we need to get more information. Please fill the fields below.') }}</p>
+<div class="za-alert-danger" za-alert id="zoiaBriefError" style="display:none">
+    <p></p>
+</div>
+<div za-alert style="display:none" class="za-box-shadow-small" id="zoiaBriefSuccess">{{ i18n.__(locale, 'Your brief information has been received, thank you!<br>We will contact you shortly as soon as we process your request.') }}</div>
+<form id="zoiaBrief" class="za-form-horizontal za-margin-large-top">
+    <div class="za-margin-bottom">
+        <div za-spinner></div>
+    </div>
+</form>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+</div>

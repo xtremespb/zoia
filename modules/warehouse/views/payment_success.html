@@ -1,0 +1,7 @@
+<h1>{{ i18n.__(locale, 'Successful Payment') }}</h1>
+<p>{{ i18n.__(locale, 'The payment of the order was successful. Thank you!') }}</p>
+{% if auth %}
+<div>
+    <a class="za-button za-button-primary" href="{{ configWarehouse.prefix }}/orders?action=view&id={{ id }}">{{ i18n.__(locale, 'View Order') }}</a>
+</div>
+{% endif %}

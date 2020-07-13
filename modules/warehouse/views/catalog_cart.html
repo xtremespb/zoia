@@ -1,0 +1,53 @@
+<h1>{{ i18n.__(locale, 'Cart')}}</h1>
+<ul class="za-breadcrumb">
+    <li><a href="{{ uprefix }}{{ configModule.prefix }}/">{{ i18n.__(locale, 'Catalog')}}</a></li>
+</ul>
+{% if cart.length %}
+<div id="za_catalog_cart_wrap">
+    <table class="za-table za-table-small za-table-striped za-table-middle za-table-responsive" id="za_catalog_cart_table">
+        <div id="za_catalog_cart_table-spinner" class="za-flex za-flex-center za-flex-middle" style="display:none">
+            <span za-spinner></span>
+        </div>
+        <tbody>
+            {% for item in cart %}
+            <tr>
+                <td class="za-table-expand">{{ item.text }}{% if item.variant %}&nbsp;({{ item.variantTitle }}){% endif %}
+                {% for cbx in item.checkboxes %}
+                <br>{{ item.propertiesData[cbx] }}
+                {% endfor %}
+                {% for itg in item.integersID %}
+                <br>{{ item.propertiesData[itg] }}&nbsp;({{ item.propertiesCount[itg] }})
+                {% endfor %}
+                {% for slt in item.selectsID %}
+                <br>{{ item.selectsTitles[slt] }}: {{ item.selectsValues[slt] }}
+                {% endfor %}
+                </td>
+                <td class="za-table-shrink">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{% if item.price !== 'NaN' %}{{ item.price }}{% else %}0{% endif %}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</td>
+                <td class="za-table-shrink">
+                    <input class="za-input za-form-width-xsmall za-catalog-cart-count" type="text" data="{{ item.id }}" data-prev="{{ item.count }}" value="{{ item.count }}" data-variant="{{ item.variant }}">
+                </td>
+                <td class="za-table-shrink za-catalog-cart-subtotal" data="{{ item.id }}" data-val="{{ item.subtotal }}" data-variant="{{ item.variant }}">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{% if item.subtotal !== 'NaN' %}{{ item.subtotal }}{% else %}0{% endif %}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</td>
+                <td class="za-table-shrink"><span data="{{ item.id }}" data-variant="{{ item.variant }}" class="za-icon-button za-button-danger za-catalog-cart-btn-del" za-icon="icon:trash"></span></span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="za-margin-top za-catalog-cart-total-wrap">
+        {{ i18n.__(locale, 'Cost')}}:&nbsp;<span class="za-catalog-cart-total">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{% if total !== 'NaN' %}{{ total }}{% else %}0{% endif %}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</span>
+    </div>
+    <div class="za-margin-top">
+        <a href="{{ uprefix }}{{ configModule.prefix }}/order" class="za-button za-button-primary">{{ i18n.__(locale, 'Order')}}</a>
+    </div>
+</div>
+<div style="display:none" id="za_catalog_cart_empty">
+    {{ i18n.__(locale, 'There are no items in cart yet.')}}
+</div>
+{% else %}
+<p>{{ i18n.__(locale, 'There are no items in cart yet.')}}</p>
+{% endif %}
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_settings" data='{{ settingsJSON }}'></div>
+    <div id="zp_currencyPosition" data="{{ configModule.currencyPosition }}"></div>
+</div>

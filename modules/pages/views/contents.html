@@ -1,0 +1,10 @@
+<div class="za-card za-card-small za-card-default za-card-body{{ css }}">
+    <ul class="za-nav za-nav-default zoia-pages-subnav">
+        {% for page in pages %} 
+        {% if pageID == page._id %}
+        <li class="za-active"><a href="#">{{ page[locale].title }}</a></li>
+        {% else %}
+        <li><a href="{{ uprefix }}/{{ page.url }}">{{ page[locale].title }}</a></li>
+        {% endif %} {% endfor %}
+    </ul>
+</div>

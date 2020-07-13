@@ -1,0 +1,9 @@
+{
+    "id": "users",
+    "items": [
+    	{
+        	"type": "mongo",
+        	"collections": ["users"]
+    	}
+    ]
+}

@@ -1,0 +1,19 @@
+{
+	"title": "Навигация",
+	"Navigation": "Навигация",
+	"Cancel": "Отмена",
+	"Save": "Сохранить",
+	"Should not be empty": "Обязательное поле",
+	"Too short": "Слишком короткое значение",
+	"Too long": "Слишком длинное значение",
+	"Doesn't match required format": "Не соответствует формату",
+	"Edit Item": "Редактирование записи",
+	"1-64 characters": "Длина: 1-64 символов",
+	"Title": "Заголовок",
+	"URL": "URL",
+	"Duplicate item": "Такая запись уже существует",
+	"Could not save to the database": "Ошибка во время сохранения в базе данных",
+	"Navigation data has been saved": "Дерево навигации успешно сохранено",
+	"Language": "Язык",
+	"Actions": "Действия"
+}

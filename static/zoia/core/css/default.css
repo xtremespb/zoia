@@ -1,0 +1,74 @@
+h1 {
+    margin: 0 0 20px 0;
+}
+
+a {
+    text-decoration: underline;
+}
+
+.zoia-logo-wrap {
+    margin: 20px 0 20px 0;
+}
+
+.zoia-logo-wrap>a>img {
+    width: 120px;
+}
+
+.zoia-mobile-navbar-menu {
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-top: -29px;
+    margin-left: 10px;
+}
+
+.zoia-mobile-nav {
+    height: 60px;
+}
+
+.zoia-wrap-content {
+    min-height: calc(100vh - 278px);
+}
+
+.zoia-wrap-footer {
+    height: 80px;
+}
+
+.zoia-mobile-nav-logo {
+    width: 100px;
+}
+
+.zoia-footer-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-top: 1px solid #f8f8f8;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 10px;
+}
+
+.zoia-subnav {
+    min-width: 250px;
+}
+
+@media (max-width: 640px) {
+    .zoia-content-container {
+        margin-top: -25px;
+        padding-top: 20px;
+    }
+    .zoia-wrap-content {
+        min-height: calc(100vh - 212px);
+    }
+    .zoia-pages-subnav>li>a {
+        color: #666;
+    }
+    .zoia-subnav {
+        display: none;
+    }
+}
+
+@media (min-width: 640px) {
+    .zoia-content-container {
+        padding-top: 20px;
+    }
+}

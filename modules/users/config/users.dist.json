@@ -1,0 +1,13 @@
+{
+    "picture": {
+    	"large": {
+    		"width": 300,
+    		"height": 300
+    	},
+    	"small": {
+    		"width": 100,
+    		"height": 100
+    	},
+        "maxSizeMB": 5
+    }
+}

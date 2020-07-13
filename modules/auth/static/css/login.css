@@ -1,0 +1,68 @@
+body {
+    align-items: center;
+}
+
+body,
+html {
+    height: 100%;
+    background: #ECF0F1;
+}
+
+.za-card {
+    min-width: 260px;
+}
+
+.zoia-signin-wrap {
+    text-align: center;
+}
+
+.zoia-links > a:hover,
+.zoia-links > a:link,
+.zoia-links > a:focus,
+.zoia-links > a:active {
+    color: #3E606F;
+}
+
+.zoia-info-div {
+    text-align: center;
+    font-size: 50%;
+    color: #666;
+    margin-top: 5px;
+}
+
+.zoia-links {
+    color: #aaa;
+    text-align: center;
+    font-size: 80%;
+}
+
+.zoia-links > a {
+    color: #444;
+}
+
+#zoiaAuth_passwordConfirm {
+    margin-left: 5px;
+}
+
+.zoiaAuth-error-text {
+    margin-top: 5px;
+}
+
+.zoiaAuth-error-text > span {
+    padding: 0 3px 0 3px;
+    border-radius: 3px;
+    font-size: 90%;
+}
+
+.za-notification-message {
+    opacity: 1;
+    background-color: #fff;
+    -webkit-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    -moz-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    text-align: center;
+}
+
+.zoia-btn-oauth {
+    cursor: pointer;
+}

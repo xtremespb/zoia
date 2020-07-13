@@ -1,0 +1,10 @@
+<div class="za-flex za-flex-wrap za-child-width-1-5@s">
+    {% for item in portfolioData %}
+    <div class="za-text-center za-animation-slide-top-small">
+        <a href="{{ uprefix }}{{ prefix }}/{{ item.id }}" class="zoia-pf-link">
+            <!-- <h3 class="za-card-title">{{ item.lang[locale].short }}</h3> -->
+            <img src="/portfolio/static/images/tn/{{ item.id }}.jpg">
+        </a>
+    </div>
+    {% endfor %}
+</div>

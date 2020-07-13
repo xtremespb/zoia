@@ -1,0 +1,124 @@
+<div class="za-grid za-margin-bottom">
+    <div class="za-width-expand">
+        <ul class="za-breadcrumb">
+            {% for c in breadcrumbs %}{% if c.url %}
+            <li><a href="{{ uprefix }}{{ c.url }}?s={{ sort }}">{{ c.title }}</a></li>
+            {% else %}
+            <li><span>{{ c.title }}</span></li>
+            {% endif %}{% endfor %}
+        </ul>
+    </div>
+    {% if configModule.cart %}
+    <div class="za-width-auto">
+        <div class="za-catalog-cart za-margin">
+            <a href="{{ uprefix }}{{ configModule.prefix }}/cart" class="za-button za-button-default za-button-small"><span class="za-badge za-catalog-cart-count za-box-shadow" style="display:none">0</span>&nbsp;{{ i18n.__(locale, 'Cart')}}</a> {% if auth %}
+            <a href="{{ uprefix }}{{ configModule.prefix }}/orders" class="za-button za-button-default za-button-small">{{ i18n.__(locale, 'My orders')}}</a> {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% if folders.length > 0 %}
+<a class="za-icon-button za-margin-small-right za-margin-bottom za-hidden@s" za-icon="icon:chevron-down" type="button" id="zoia_catalog_folders_toggle"></a>
+<div za-drop="mode:click" style="display:none">
+    <div class="za-card za-card-default za-card-small za-card-body">
+        <ul class="za-nav za-nav-default">
+            {% for folder in folders %}
+            <li class="{{ folder.active }}"><a href="{{ uprefix }}{{ folder.pathT }}?&s={{ sort }}">{{ folder.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+<div class="za-grid-small za-child-width-expand" za-grid>
+    {% if folders.length > 0 %}
+    <div class="za-width-medium@s za-visible@m za-margin-bottom" id="zoia_catalog_folders">
+        <div class="za-card za-card-default za-card-small za-card-body">
+            <ul class="za-nav za-nav-default">
+                {% for folder in folders %}
+                <li class="{{ folder.active }}"><a href="{{ uprefix }}{{ folder.pathT }}?&s={{ sort }}">{{ folder.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+    <div>
+        <div class="za-card za-card-small za-card-body">
+            <div za-grid class="za-flex-center">
+                {% if items.length %}
+                <div class="za-flex za-flex-middle">
+                    <label class="za-form-label" for="za_catalog_sort_order">{{ i18n.__(locale, 'Sort by')}}</label>
+                    &nbsp;
+                    <div class="za-form-controls">
+                        <select class="za-select" id="za_catalog_sort_order">
+                            <option value="price_desc">{{ i18n.__(locale, 'Lowest price')}}</option>
+                            <option value="price_asc" {% if sort==='price_asc' %} selected{% endif %}>{{ i18n.__(locale, 'Highest price')}}</option>
+                            <option value="title" {% if sort==='title' %} selected{% endif %}>{{ i18n.__(locale, 'Title')}}</option>
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="za-margin za-width-expand@s za-flex za-flex-center za-catalog-search-wrap">
+                    <form class="za-search za-search-default" id="za_catalog_search_form">
+                        <button class="za-search-icon-flip" za-search-icon id="za_catalog_search_btn" type="submit"></button>
+                        <input class="za-search-input" id="za_catalog_search_text" type="search" placeholder="{{ i18n.__(locale, 'Search')}}..." value="{{ text }}">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="za-flex za-flex-wrap">
+            {% if items.length %} {% for item in items %}
+            <div class="za-catalog-item">
+                <div class="za-catalog-image-wrap za-flex za-flex-center">{% if item.firstImage %}
+                    <a href="{{ uprefix }}{{ configModule.prefix }}/item/{{ item.sku }}"><img src="/warehouse/static/images/{{ item._id }}/tn_{{ item.firstImage }}" class="za-catalog-image"></a> {% else %}
+                    <div class="za-catalog-item-img-placeholder za-flex za-flex-center za-flex-middle"><a href="{{ uprefix }}{{ configModule.prefix }}/item/{{ item.sku }}"><span class="za-catalog-item-img-placeholder-icon" za-icon="icon:image;ratio:4"></span></a></div>
+                    {% endif %}</div>
+                <div class="za-catalog-item-text za-text-truncate"><a href="{{ uprefix }}{{ configModule.prefix }}/item/{{ item.sku }}">{{ item[locale].title }}</a></div>
+                <div class="za-catalog-item-price">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{% if item.price %}{{ item.price }}{% else %}0{% endif %}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</div>
+                {% if configModule.cart %}
+                <div class="za-catalog-item-buttons">
+                    {% if item.amount > 0 %}
+                    <button class="za-button za-button-primary za-button-small za-catalog-item-button" data="{{ item._id }}">
+                        <div za-spinner="ratio:0.5" class="za-catalog-item-button-spinner" style="display:none" data="{{ item._id }}"></div>{{ i18n.__(locale, 'Add to cart')}}
+                    </button>
+                    {% else %}
+                    <button class="za-button za-button-default za-button-small">
+                        {{ i18n.__(locale, 'Out of Stock')}}
+                    </button>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="za-catalog-item-buttons">
+                    <a class="za-button za-button-primary za-button-small" href="{{ uprefix }}{{ configModule.prefix }}/item/{{ item.sku }}">{{ i18n.__(locale, 'More info')}}</a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %} {% else %}
+            <div class="za-align-center">
+                <p class="za-text-meta">{{ i18n.__(locale, 'No items found.')}}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% if paginationData.length %}
+        <ul class="za-pagination" za-margin>
+            {% for item in paginationData %}{% if item.type === 'prev' %}
+            <li><a href="?p={{ item.page }}&s={{ sort }}&t={{ text }}"><span za-pagination-previous></span></a></li>
+            {% endif %}{% if item.type === 'item' %}{% if item.status === 'active' %}
+            <li class="za-active"><span>{{ item.page }}</span></li>
+            {% else %}
+            <li><a href="?p={{ item.page }}&s={{ sort }}&t={{ text }}">{{ item.page }}</a></li>
+            {% endif %}{% endif %}{% if item.type === 'dots' %}
+            <li class="za-disabled"><span>...</span></li>
+            {% endif %}{% if item.type === 'next' %}
+            <li><a href="?p={{ item.page }}&s={{ sort }}&t={{ text }}"><span za-pagination-next></span></a></li>
+            {% endif %}{% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+<div style="display:none">
+    <div id="zp_za_catalog_cart_count" data="{{ cartCount }}"></div>
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_querySort" data="{{ sort }}"></div>
+    <div id="zp_queryPage" data="{{ page }}"></div>
+    <div id="zp_queryText" data="{{ text }}"></div>
+</div>

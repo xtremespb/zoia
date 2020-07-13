@@ -1,0 +1,57 @@
+<h1 id="zoiaUpdatesHeader">{{ i18n.__(locale, 'title') }}</h1>
+<p>{{ i18n.__(locale, 'Current version installed') }}: <b>{{ config.version }}</b></p>
+<div class="za-card za-card-default za-card-body">
+    <p>{{ i18n.__(locale, 'Your configuration files won\'t be updated. Please read the changelog to make sure if there are any changes required.') }}</p>
+    <b>{{ i18n.__(locale, 'Important') }}</b>:&nbsp;{{ i18n.__(locale, 'after the application update the Zoia process will terminate. If you are running with default recommended tools like <i>forever</i>, the process will be restarted automatically. The process needs to have permissions to write to the following directory') }}:&nbsp;<i>{{ dirname }}</i>.</p>
+</div>
+<div class="za-margin-top">
+    <button class="za-button za-button-primary" id="btnCheckUpdates">
+        <div za-spinner class="zoiaButtonSpinner" style="display:none" id="spnCheckUpdates"></div>{{ i18n.__(locale, 'Check for updates') }}</button>
+</div>
+<div id="zoiaUpdateDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div class="za-modal-header">
+            <h2>{{ i18n.__(locale, 'New version available')}}</h2>
+        </div>
+        <div class="za-modal-body">
+            <div>{{ i18n.__(locale, 'There is a newer version of Zoia available')}}:</div>
+            <div id="zoiaUpdateDialogVersion" class="za-margin-top za-margin-bottom"></div>
+            <div class="za-margin-top">
+                <div><span class="zoiaChangelogHeader">{{ i18n.__(locale, 'Changelog')}}:</span></div>
+                <ul class="za-list za-list-bullet" id="zoiaUpdateDialogChangelog">
+                </ul>
+            </div>
+        </div>
+        <div class="za-modal-footer za-text-right">
+            <button class="za-button za-button-default za-modal-close zoia-update-dialog-button" type="button">{{ i18n.__(locale, 'Cancel')}}</button>
+            <button class="za-button za-button-primary zoia-update-dialog-button" id="btnUpdateStart" type="button">{{ i18n.__(locale, 'Update')}}</button>
+            <div za-spinner style="float:right;display:none" id="zoiaUpdateDialogSpinner"></div>
+        </div>
+    </div>
+</div>
+<div id="zoiaUpdateProgressDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div class="za-modal-header">
+            <h2>{{ i18n.__(locale, 'Updating')}}</h2>
+        </div>
+        <div class="za-modal-body">
+            <div class="za-margin-bottom"><div za-spinner style="margin:-2px 20px 0 0"></div>{{ i18n.__(locale, 'Update is in progress, please wait...')}}</div>
+            <div class="za-margin-top"><progress id="progressbar" class="za-progress" value="10" max="100"></progress></div>
+        </div>
+    </div>
+</div>
+<div id="zoiaRestartProgressDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div class="za-modal-header">
+            <h2>{{ i18n.__(locale, 'Restarting')}}</h2>
+        </div>
+        <div class="za-modal-body">
+            <p><div za-spinner style="margin:-2px 20px 0 0"></div>{{ i18n.__(locale, 'Zoia has been updated successfully. The system is restarting now, please wait...')}}</p>
+        </div>
+    </div>
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_uprefix" data="{{ uprefix }}"></div>
+    <div id="zp_corePrefix" data='{{ corePrefix }}'></div>
+</div>

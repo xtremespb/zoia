@@ -1,0 +1,17 @@
+<div class="zoia-form-header">
+    <h1>{{ i18n.__(locale, 'Set new password') }}</h1>
+</div>
+<form id="zoiaResetConfirm">
+    <div class="za-flex za-flex-center za-margin-bottom">
+        <div za-spinner></div>
+    </div>
+</form>
+<div id="resetConfirmSuccessful" style="display:none">
+    <p>{{ i18n.__(locale, 'Password change was successful. You may login to the website using your new password right now.') }}</p>
+    <p><a class="za-button za-button-default" href="{{ config.core.prefix.auth }}">{{ i18n.__(locale, 'Login') }}</a></p>
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_usernameConfirm" data="{{ username }}"></div>
+    <div id="zp_codeConfirm" data="{{ code }}"></div>
+</div>

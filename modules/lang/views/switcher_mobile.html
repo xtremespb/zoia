@@ -1,0 +1,6 @@
+<ul class="za-nav za-nav-default">
+    <li class="za-nav-divider"></li>
+   	{% for lng in locales %}
+    <li><a href="{% if type == 'query' %}?lang={{ lng }}{% endif %}{% if type == 'subdomain' %}{{ protocol }}://{{ urls[lng] }}{{ originalUrl }}{% endif %}{% if type == 'url' %}{{ protocol }}://{{ urls[lng] }}{{ langUrls[lng] }}{% endif %}">{{ names[lng] }}</a></li>
+    {% endfor %}
+</ul>

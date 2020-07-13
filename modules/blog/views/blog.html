@@ -1,0 +1,185 @@
+<ul za-tab>
+    <li><a href="#">{{ i18n.__(locale, 'Posts')}}</a></li>
+    <li><a href="#">{{ i18n.__(locale, 'Comments')}}</a></li>
+</ul>
+<ul class="za-switcher za-margin">
+    <li>
+        <div id="wrapTable">
+            <h1>{{ i18n.__(locale, 'Posts')}}</h1>{% if config.demo %}
+            <div class="za-alert-primary" za-alert>
+                <a class="za-alert-close" za-close></a>
+                <p>{{ i18n.__(locale, 'In demo mode, you cannot edit or delete the index page. That\'s not an error.')}}</p>
+            </div>{% endif %}
+            <div class="za-grid za-grid-small">
+                <div>
+                    <ul class="za-iconnav za-hidden@m">
+                        <li>
+                            <button za-icon="icon:plus" class="za-icon-button zoiaAdd" title="{{ i18n.__(locale, 'Add')}}" za-tooltip="pos: bottom-right"></button>
+                        </li>
+                        <li>
+                            <button za-icon="icon:trash" class="za-icon-button zoiaDeleteButton" title="{{ i18n.__(locale, 'Delete')}}" za-tooltip="pos:bottom-right"></button>
+                        </li>
+                        <li>
+                            <button za-icon="icon:check" class="za-icon-button blogBtnSelectAll" title="{{ i18n.__(locale, 'Select all')}}" za-tooltip="pos:bottom-right"></button>
+                        </li>
+                        <li>
+                            <button za-icon="icon:close" class="za-icon-button blogBtnSelectNone" title="{{ i18n.__(locale, 'Select none')}}" za-tooltip="pos:bottom-right"></button>
+                        </li>
+                        <li>
+                            <button za-icon="icon:refresh" class="za-icon-button blogBtnRefresh" title="{{ i18n.__(locale, 'Refresh')}}" za-tooltip="pos:bottom-right"></button>
+                        </li>
+                    </ul>
+                    <div class="za-button-group za-margin-right za-visible@m">
+                        <button class="za-button za-button-success zoiaAdd">{{ i18n.__(locale, 'Add')}}</button>
+                        <button class="za-button za-button-danger zoiaDeleteButton">{{ i18n.__(locale, 'Delete')}}</button>
+                    </div>
+                    <div class="za-button-group za-visible@m">
+                        <button class="za-button za-button-default blogBtnSelectAll" title="{{ i18n.__(locale, 'Select all')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:check"></span></button>
+                        <button class="za-button za-button-default blogBtnSelectNone" title="{{ i18n.__(locale, 'Select none')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:close"></span></button>
+                        <button class="za-button za-button-default blogBtnRefresh" title="{{ i18n.__(locale, 'Refresh')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:refresh"></span></button>
+                    </div>
+                </div>
+                <div class="za-width-expand za-visible@m">
+                    <div class="za-inline za-float-right">
+                        <a class="za-form-icon za-form-icon-flip blogSearchInputClear" za-icon="icon: close"></a>
+                        <input type="text" class="blogSearchInput za-input za-width-medium" placeholder="{{ i18n.__(locale, 'Search')}}">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="za-inline za-margin-top za-hidden@m">
+                    <a class="za-form-icon za-form-icon-flip blogSearchInputClear" za-icon="icon: close"></a>
+                    <input type="text" class="blogSearchInput za-input" placeholder="{{ i18n.__(locale, 'Search')}}">
+                </div>
+            </div>
+            <div class="blogPagination za-margin-top noselect"></div>
+            <table class="za-table za-table-divider za-table-striped za-table-hover za-table-responsive za-table-middle" id="blog">
+                <thead class="noselect" style="display:none">
+                    <tr>
+                        <th id="blogID" class="za-table-shrink"></th>
+                        <th id="blog__id" class="za-table-shrink">{{ i18n.__(locale, 'ID')}}</th>
+                        <th id="blog_timestamp" class="za-table-shrink">{{ i18n.__(locale, 'Date')}}</th>
+                        <th id="blog_title">{{ i18n.__(locale, 'Title')}}</th>
+                        <th id="blog_status" class="za-table-shrink">{{ i18n.__(locale, 'Status')}}</th>
+                        <th id="blog_actions" class="za-table-shrink">{{ i18n.__(locale, 'Actions')}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="100%">
+                            <div za-spinner style="margin:-2px 5px 0 0"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="blogPagination za-margin noselect"></div>
+        </div>
+        <div id="zoiaEdit" style="display:none">
+            <h1 id="zoiaEditHeader"></h1>
+            <ul za-tab id="zoiaEditLanguages"></ul>
+            <div class="za-fieldset za-margin-bottom zoia-edit-languages-area">
+                <label>
+                    <input class="za-checkbox" type="checkbox" checked id="zoiaEditLanguageCheckbox">&nbsp;{{ i18n.__(locale, 'Enable language')}}
+                </label>
+            </div>
+            <form id="editForm">
+                <div class="za-flex za-flex-center za-margin-bottom">
+                    <div za-spinner></div>
+                </div>
+            </form>
+            <div id="zoia_edit_form_footer" class="za-width-1-1"></div>
+        </div>
+    </li>
+    <li>
+        <h1>{{ i18n.__(locale, 'Comments')}}</h1>
+        <div class="za-grid za-grid-small">
+            <div>
+                <ul class="za-iconnav za-hidden@m">
+                    <li>
+                        <button za-icon="icon:trash" class="za-icon-button zoiaDeleteCommentsButton" title="{{ i18n.__(locale, 'Delete')}}" za-tooltip="pos:bottom-right"></button>
+                    </li>
+                    <li>
+                        <button za-icon="icon:check" class="za-icon-button commentsBtnSelectAll" title="{{ i18n.__(locale, 'Select all')}}" za-tooltip="pos:bottom-right"></button>
+                    </li>
+                    <li>
+                        <button za-icon="icon:close" class="za-icon-button commentsBtnSelectNone" title="{{ i18n.__(locale, 'Select none')}}" za-tooltip="pos:bottom-right"></button>
+                    </li>
+                    <li>
+                        <button za-icon="icon:refresh" class="za-icon-button commentsBtnRefresh" title="{{ i18n.__(locale, 'Refresh')}}" za-tooltip="pos:bottom-right"></button>
+                    </li>
+                </ul>
+                <div class="za-button-group za-margin-right za-visible@m">
+                    <button class="za-button za-button-danger zoiaDeleteCommentsButton">{{ i18n.__(locale, 'Delete')}}</button>
+                </div>
+                <div class="za-button-group za-visible@m">
+                    <button class="za-button za-button-default commentsBtnSelectAll" title="{{ i18n.__(locale, 'Select all')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:check"></span></button>
+                    <button class="za-button za-button-default commentsBtnSelectNone" title="{{ i18n.__(locale, 'Select none')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:close"></span></button>
+                    <button class="za-button za-button-default commentsBtnRefresh" title="{{ i18n.__(locale, 'Refresh')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:refresh"></span></button>
+                </div>
+            </div>
+            <div class="za-width-expand za-visible@m">
+                <div class="za-inline za-float-right">
+                    <a class="za-form-icon za-form-icon-flip commentsSearchInputClear" za-icon="icon: close"></a>
+                    <input type="text" class="commentsSearchInput za-input za-width-medium" placeholder="{{ i18n.__(locale, 'Search')}}">
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="za-inline za-margin-top za-hidden@m">
+                <a class="za-form-icon za-form-icon-flip commentsSearchInputClear" za-icon="icon: close"></a>
+                <input type="text" class="commentsSearchInput za-input" placeholder="{{ i18n.__(locale, 'Search')}}">
+            </div>
+        </div>
+        <div>
+            <div class="za-inline za-margin-top za-hidden@m">
+                <a class="za-form-icon za-form-icon-flip commentsSearchInputClear" za-icon="icon: close"></a>
+                <input type="text" class="commentsSearchInput za-input" placeholder="{{ i18n.__(locale, 'Search')}}">
+            </div>
+        </div>
+        <div class="commentsPagination za-margin-top noselect"></div>
+        <table class="za-table za-table-divider za-table-striped za-table-hover za-table-responsive za-table-middle" id="comments">
+            <thead class="noselect" style="display:none">
+                <tr>
+                    <th id="commentsID" class="za-table-shrink"></th>
+                    <th id="comments_comment">{{ i18n.__(locale, 'Comment')}}</th>
+                    <th id="comments_actions" class="za-table-shrink">{{ i18n.__(locale, 'Actions')}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="100%">
+                        <div za-spinner style="margin:-2px 5px 0 0"></div>
+                        &nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="commentsPagination za-margin noselect"></div>
+    </li>
+</ul>
+<div id="zoiaDeleteDialog" style="display:none">
+    <div class="za-modal-dialog" za-overflow-auto>
+        <div class="za-modal-header">
+            <h2>{{ i18n.__(locale, 'Delete')}}</h2>
+        </div>
+        <div class="za-modal-body">
+            <p>{{ i18n.__(locale, 'The following post(s) will be removed from the database')}}:</p>
+            <ul class="za-list za-list-striped" id="zoiaDeleteDialogList"></ul>
+        </div>
+        <div class="za-modal-footer za-text-right">
+            <button class="za-button za-button-default za-modal-close zoia-delete-dialog-button" type="button">{{ i18n.__(locale, 'Cancel')}}</button>
+            <button class="za-button za-button-primary zoia-delete-dialog-button" id="zoiaDeleteDialogButton" type="button">{{ i18n.__(locale, 'Delete')}}</button>
+            <div za-spinner style="float:right;display:none" id="zoiaDeleteDialogSpinner"></div>
+        </div>
+    </div>
+</div>
+<div id="zoiaSpinnerMain" style="display:none" class="za-flex za-flex-middle za-flex-center"><span za-spinner style="color:#000"></span></div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_codemirror" data="{{ config.codemirror }}"></div>
+    <div id="zp_uprefix" data="{{ uprefix }}"></div>
+    <div id="zp_langs" data='{{ langs }}'></div>
+    <div id="zp_templates" data='{{ templates }}'></div>
+    <div id="zp_foldersData" data='{{ folders }}'></div>
+    <div id="zp_testMode" data="{{ config.testMode }}"></div>
+    <div id="zp_corePrefix" data='{{ corePrefix }}'></div>
+</div>

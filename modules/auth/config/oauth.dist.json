@@ -1,0 +1,26 @@
+{
+	"facebook": {
+		"enabled": false,
+		"id": 111111111111111,
+		"secret": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		"redirect_uri": "https://zoiajs.org/auth/oauth/facebook",
+		"icon": "facebook",
+		"url": "https://www.facebook.com/dialog/oauth?client_id={id}&redirect_uri={redirect_uri}&response_type=code&display=popup"
+	},
+	"vk": {
+		"enabled": false,
+		"id": 1111111,
+		"secret": "aaaaaaaaaaaaaaaaaaaa",
+		"redirect_uri": "https://zoiajs.org/auth/oauth/vk",
+		"icon": "fa-vk",
+		"url": "https://oauth.vk.com/authorize?client_id={id}&display=popup&redirect_uri={redirect_uri}&scope=email&response_type=code&v=5.78"
+	},
+	"google": {
+		"enabled": false,
+		"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.apps.googleusercontent.com",
+		"secret": "AAAAAAAAAAAAAAAAAAA-AAAA",
+		"redirect_uri": "https://zoiajs.org/auth/oauth/google",		
+		"icon": "google",
+		"url": "https://accounts.google.com/o/oauth2/auth?redirect_uri={redirect_uri}&response_type=code&client_id={id}&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile"
+	}
+}

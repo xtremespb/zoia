@@ -1,0 +1,54 @@
+.supportBtnRefresh,
+.supportBtnSelectAll,
+.supportBtnSelectNone {
+    padding: 9px;
+} 
+
+#zoiaSpinnerDark {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .7;
+    z-index: 2000;
+}
+
+#zoiaSpinnerWhite {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    opacity: .2;
+    z-index: 2000;
+}
+
+#support_actions {
+	width: 90px;
+}
+
+.zoia-msg-edit,
+.zoia-msg-delete {
+	cursor: pointer;
+}
+
+.zoia-attachment-delete {
+	cursor: pointer;
+}
+
+.zoia-reply-msg {
+	background: #F5F5F5;
+	border: 1px solid #ddd;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

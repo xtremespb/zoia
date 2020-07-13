@@ -1,0 +1,14 @@
+<tr>
+    <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+        <p style="text-align:center">{{ i18n.__(locale, 'Your order has been updated.') }}</p>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family: Helvetica, Arial, sans-serif; color: #333333; padding:5px;">
+            <tr>
+                <td>{{ i18n.__(locale, 'Order ID') }}: {{ orderData._id }}</td>
+        </table>
+        <p>
+           {% if diff.status %}<b>{{ i18n.__(locale, 'Status') }}:</b> {{ diff.status }}<br>{% endif %}
+           {% if diff.tracking %}<b>{{ i18n.__(locale, 'Tracking number') }}:</b> {{ diff.tracking }}<br>{% endif %}
+           {% if diff.paid %}<b>{{ i18n.__(locale, 'Paid') }}:</b> {% if diff.paid === 2 %}{{ i18n.__(locale, 'yes') }}{% else %}{{ i18n.__(locale, 'no') }}{% endif %}<br>{% endif %}
+       </p>
+    </td>
+    </tr>

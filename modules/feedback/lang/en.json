@@ -1,0 +1,23 @@
+{
+	"Feedback": "Feedback",
+	"Should not be empty": "Should not be empty",
+	"Too short": "Too short",
+	"Doesn't match required format": "Doesn't match required format",
+	"Passwords do not match": "Passwords do not match",
+	"You can send us a message by filling the form below. All fields except e-mail and phone number are mandatory, but this might be a good idea to leave us your contact information if you need a reply.": "You can send us a message by filling the form below. All fields except e-mail and phone number are mandatory, but this might be a good idea to leave us your contact information if you need a reply.",
+	"Name": "Name",
+	"E-mail": "E-mail",
+	"Phone": "Phone",
+	"Message": "Message",
+	"Type a message you wish to send": "Type a message you wish to send",
+	"Your name or pseudonym": "Your name or pseudonym",
+	"Your e-mail address": "Your e-mail address",
+	"Your phone number including country code": "Your phone number including country code",
+	"Send message": "Send message",
+	"Please wait some time before you send another message": "Please wait some time before you send another message",
+	"Code": "Code",
+	"New Feedback Message": "New Feedback Message",
+	"New message received from your feedback form.": "New message received from your feedback form.",
+	"Your message has been sent. Thank you!": "Your message has been sent. Thank you!",
+	"Could not send your message right now": "Could not send your message right now"
+}

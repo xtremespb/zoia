@@ -1,0 +1,9 @@
+{
+    "id": "backup",
+    "items": [
+    {
+        "type": "file",
+        "root": true,
+        "files": ["etc/config.json", "etc/website.json"]
+    }]
+}

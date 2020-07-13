@@ -1,0 +1,6 @@
+{% for item in items %}
+<div{% if loop.last != true %} class="za-margin-bottom"{% endif %}>
+	<div class="za-article-meta">{{ item.timestamp }}</div>
+	<div class="za-comment-title"><a class="za-link-reset" href="{{ configModule.prefix.blog }}{{ configModule.prefix.post }}/{{ item._id }}">{{ item[locale].title }}</a></div>
+</div>
+{% endfor %}

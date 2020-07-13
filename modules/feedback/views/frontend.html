@@ -1,0 +1,16 @@
+<h1>{{ i18n.__(locale, 'Feedback') }}</h1>
+<div class="za-alert-success zoia-feedback-sent" za-alert style="display:none">
+    {{ i18n.__(locale, 'Your message has been sent. Thank you!') }}
+</div>
+<div class="zoia-feedback-wrap">
+    <p>{{ i18n.__(locale, 'You can send us a message by filling the form below. All fields except e-mail and phone number are mandatory, but this might be a good idea to leave us your contact information if you need a reply.') }}</p>
+    <form id="zoiaFeedback" class="za-form-horizontal za-margin-large-top">
+        <div class="za-margin-bottom">
+            <div za-spinner></div>
+        </div>
+    </form>
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+</div>
+<div id="zoiaSpinnerMain" style="display:none" class="za-flex za-flex-middle za-flex-center"><span za-spinner style="color:#000"></span></div>

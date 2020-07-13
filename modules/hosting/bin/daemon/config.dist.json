@@ -1,0 +1,10 @@
+{
+	"port": "3900",
+	"key": "",
+	"commands": {
+		"example": {
+			"start": "",
+			"stop": ""
+		}
+	}
+}

@@ -1,0 +1,94 @@
+<div id="wrapTable">
+    <h1>{{ i18n.__(locale, 'title')}}</h1>
+    <div class="za-grid za-grid-small">
+        <div>
+            <ul class="za-iconnav za-hidden@m">
+                <li>
+                    <button za-icon="icon: plus" class="za-icon-button zoiaAdd" title="{{ i18n.__(locale, 'Add')}}" za-tooltip="pos: bottom-right"></button>
+                </li>
+                <li>
+                    <button za-icon="icon: trash" class="za-icon-button zoiaDeleteButton" title="{{ i18n.__(locale, 'Delete')}}" za-tooltip="pos: bottom-right"></button>
+                </li>
+                <li>
+                    <button za-icon="icon: check" class="za-icon-button groupsBtnSelectAll" title="{{ i18n.__(locale, 'Select all')}}" za-tooltip="pos: bottom-right"></button>
+                </li>
+                <li>
+                    <button za-icon="icon: close" class="za-icon-button groupsBtnSelectNone" title="{{ i18n.__(locale, 'Select none')}}" za-tooltip="pos: bottom-right"></button>
+                </li>
+                <li>
+                    <button za-icon="icon:refresh" class="za-icon-button groupsBtnRefresh" title="{{ i18n.__(locale, 'Refresh')}}" za-tooltip="pos:bottom-right"></button>
+                </li>
+            </ul>
+            <div class="za-button-group za-margin-right za-visible@m">
+                <button class="za-button za-button-success zoiaAdd zoiaAddD">{{ i18n.__(locale, 'Add')}}</button>
+                <button class="za-button za-button-danger zoiaDeleteButton zoiaDeleteD">{{ i18n.__(locale, 'Delete')}}</button>
+            </div>
+            <div class="za-button-group za-visible@m">
+                <button class="za-button za-button-default groupsBtnSelectAll" title="{{ i18n.__(locale, 'Select all')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:check"></span></button>
+                <button class="za-button za-button-default groupsBtnSelectNone" title="{{ i18n.__(locale, 'Select none')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:close"></span></button>
+                <button class="za-button za-button-default groupsBtnRefresh" title="{{ i18n.__(locale, 'Refresh')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:refresh"></span></button>
+            </div>
+        </div>
+        <div class="za-width-expand">
+            <div class="za-inline za-float-right">
+                <a class="za-form-icon za-form-icon-flip groupsSearchInputClear" za-icon="icon: close"></a>
+                <input type="text" class="groupsSearchInput za-input za-width-medium" placeholder="{{ i18n.__(locale, 'Search')}}">
+            </div>
+        </div>
+    </div>
+    <div class="groupsPagination za-margin-top noselect"></div>
+    <table class="za-table za-table-divider za-table-striped za-table-hover za-table-responsive za-table-middle" id="groups">
+        <thead class="noselect" style="display:none">
+            <tr>
+                <th id="groupsID" class="za-table-shrink"></th>
+                <th id="groups_groupname">{{ i18n.__(locale, 'Name')}}</th>
+                <th id="groups_status" class="za-table-shrink">{{ i18n.__(locale, 'Status')}}</th>
+                <th id="groups_actions">{{ i18n.__(locale, 'Actions')}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="100%"><div za-spinner style="margin:-2px 5px 0 0"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}</td></tr>
+        </tbody>
+    </table>
+    <div class="groupsPagination za-margin noselect"></div>
+</div>
+<div id="zoiaEditDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div id="zoiaEditDialogLoading">
+            <div class="zoiaEditDialogLoadingSpinnerWrap">
+                <div za-spinner></div>
+            </div>
+        </div>
+        <div id="zoiaEditDialogForm" style="display:none">
+            <div class="za-modal-header">
+                <h2 class="za-modal-title" id="editDialogHeader"></h2>
+            </div>
+            <form id="editForm">
+                <div class="za-flex za-flex-center za-margin-bottom">
+                    <div za-spinner></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="zoiaDeleteDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div class="za-modal-header">
+            <h2>{{ i18n.__(locale, 'Delete')}}</h2>
+        </div>
+        <div class="za-modal-body">
+            <p>{{ i18n.__(locale, 'The following group(s) will be removed from the database')}}:</p>
+            <ul class="za-list za-list-striped" id="zoiaDeleteDialogList"></ul>
+        </div>
+        <div class="za-modal-footer za-text-right">
+            <button class="za-button za-button-default za-modal-close zoia-delete-dialog-button" type="button">{{ i18n.__(locale, 'Cancel')}}</button>
+            <button class="za-button za-button-primary zoia-delete-dialog-button" id="zoiaDeleteDialogButton" type="button">{{ i18n.__(locale, 'Delete')}}</button>
+            <div za-spinner style="float:right;display:none" id="zoiaDeleteDialogSpinner"></div>
+        </div>
+    </div>
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_uprefix" data="{{ uprefix }}"></div>
+    <div id="zp_corePrefix" data='{{ corePrefix }}'></div>
+</div>

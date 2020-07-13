@@ -1,0 +1,86 @@
+<h1>{{ i18n.__(locale, 'title') }}</h1>
+<p>{{ i18n.__(locale, 'You can backup and restore your website data. The backup contains database collections, files and folders.') }}</p>
+<p za-margin>
+    <button class="za-button za-button-default" id="zoia_btn_backup">{{ i18n.__(locale, 'Backup') }}</button>
+    <button class="za-button za-button-default" id="zoia_btn_restore">{{ i18n.__(locale, 'Restore') }}</button>
+</p>
+<div id="dialogBackupOptions" style="display:none">
+    <div class="za-modal-dialog za-modal-body">
+        <h2 class="za-modal-title">{{ i18n.__(locale, 'Backup Options') }}</h2>
+        <div>
+            <p>{{ i18n.__(locale, 'Choose the modules you wish to backup') }}:</p>
+            <div class="za-panel za-panel-scrollable">
+                <ul class="za-list">
+                    {% for m in modules %}
+                    <li>
+                        <label>
+                            <input class="za-checkbox za-backup-module-checkbox" type="checkbox" data="{{ m }}" checked="checked">&nbsp;{{ m }}</label>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <p class="za-text-right" id="dialogBackupOptionsButtons">
+            <button class="za-button za-button-default za-modal-close" type="button">{{ i18n.__(locale, 'Cancel') }}</button>
+            <button class="za-button za-button-primary" type="button" id="zoia_btn_backup_start">{{ i18n.__(locale, 'Start') }}</button>
+        </p>
+    </div>
+</div>
+<div id="dialogBackup" style="display:none">
+    <div class="za-modal-dialog za-modal-body">
+        <h2 class="za-modal-title">{{ i18n.__(locale, 'System Backup') }}</h2>
+        <div za-grid class="za-grid-small" id="dialogBackupWait">
+            <div class="za-width-auto">
+                <div za-spinner></div>
+            </div>
+            <div class="za-width-expand">
+                <p>{{ i18n.__(locale, 'System backup is currently being created. This can take up to several minutes...') }}</p>
+            </div>
+        </div>
+        <div id="dialogBackupDownload">
+            <p>{{ i18n.__(locale, 'Backup file has been created. Please download it by clicking the link below.') }}</p>
+            <div class="za-card za-card-default za-card-small za-card-body">
+                <p id="dialogBackupDownloadLink" class="za-text-center"></p>
+            </div>
+        </div>
+        <p class="za-text-right" id="dialogBackupButtons">
+            <button class="za-button za-button-default za-modal-close" type="button">{{ i18n.__(locale, 'Close') }}</button>
+        </p>
+    </div>
+</div>
+<div id="dialogRestore" style="display:none">
+    <div class="za-modal-dialog">
+        <div class="za-modal-header">
+            <h2>{{ i18n.__(locale, 'Restore backup')}}</h2>
+        </div>
+        <div class="za-modal-body" id="dialogRestoreBody">
+            <p>{{ i18n.__(locale, 'Please note: your existing files will be overwritten. The MongoDB collections will be dropped first before importing.') }}</p>
+            <p>{{ i18n.__(locale, 'When finished, Zoia will terminate, so make sure you are running any tool to automatically restart the server (like forever). You will need to re-authorize.') }}</p>
+            <div class="bimport-upload za-placeholder za-text-center">
+                <span class="za-text-middle">{{ i18n.__(locale, 'Attach backup file by dropping it here or')}}</span>
+                <div za-form-custom>
+                    <input type="file" multiple>
+                    <span class="za-link" style="cursor:pointer">{{ i18n.__(locale, 'selecting one')}}</span>
+                </div>
+            </div>
+            <progress id="bimport_progressbar" class="za-progress" value="0" max="100" hidden></progress>
+        </div>
+        <div class="za-modal-body" id="dialogRestoreRestart" style="display:none">
+            <div za-spinner style="margin:-2px 20px 0 0"></div>{{ i18n.__(locale, 'System is restarting, please wait...')}}
+        </div>
+        <div class="za-modal-body" id="dialogRestoreSuccess" style="display:none">
+            <p>{{ i18n.__(locale, 'Backup has been restored. You\'re now logged off and need to re-authorize.') }}</p>
+            <a href="?_={{ rnd }}" class="za-button za-button-default">{{ i18n.__(locale, 'Close')}}</a>
+        </div>
+        <div class="za-modal-body za-flex za-flex-center za-flex-middle" id="dialogRestoreSpinner" style="display:none">
+            <div za-spinner></div>
+        </div>
+        <div class="za-modal-footer za-text-right" id="dialogRestoreFooter">
+            <button class="za-button za-button-default za-modal-close" type="button">{{ i18n.__(locale, 'Close')}}</button>
+        </div>
+    </div>
+</div>
+<div id="zoiaSpinnerMain" style="display:none" class="za-flex za-flex-middle za-flex-center"><span za-spinner style="color:#000"></span></div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+</div>

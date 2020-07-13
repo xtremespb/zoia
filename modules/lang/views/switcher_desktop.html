@@ -1,0 +1,12 @@
+<ul class="za-navbar-nav">
+    <li>
+        <a href="#"><span za-icon="world"></span>&nbsp;{{ names[locale] }}&nbsp;<span za-icon="icon:chevron-down"></a>
+        <div class="za-navbar-dropdown">
+            <ul class="za-nav za-navbar-dropdown-nav">
+            	{% for lng in locales %}
+                <li><a href="{% if type == 'query' %}?lang={{ lng }}{% endif %}{% if type == 'subdomain' %}{{ protocol }}://{{ urls[lng] }}{{ originalUrl }}{% endif %}{% if type == 'url' %}{{ protocol }}://{{ urls[lng] }}{{ langUrls[lng] }}{% endif %}">{{ names[lng] }}</a></li>
+            	{% endfor %}
+            </ul>
+        </div>
+    </li>
+</ul>

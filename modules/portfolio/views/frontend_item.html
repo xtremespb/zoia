@@ -1,0 +1,26 @@
+<article class="za-article" style="margin-bottom:20px">
+    <h1 class="za-article-title"><a class="za-link-reset" href="">{{ item.lang[locale].title }}</a></h1>
+    <p class="za-article-meta">
+        <ul class="za-breadcrumb">
+            <li><a href="{{ uprefix }}{{ prefix }}">{{ i18n.__(locale, 'Portfolio')}}</a></li>
+            <li><span>{{ item.lang[locale].short }}</span></li>
+        </ul>
+    </p>
+    {% if item.url.length > 0 %}
+    <div class="za-light za-box-shadow-small" style="background:#43464c" za-alert>Сайт проекта: <a href="{{ item.url }}" class="za-text za-text-muted" target="_blank">{{ item.url }}</a></div>
+    {% else %}
+    <div class="za-light za-box-shadow-small" style="background:#43464c" za-alert>Проект находится в архиве.</div>
+    {% endif %}
+    <p class="za-text-lead">{{ i18n.__(locale, 'What was to be done')}}: {{ item.lang[locale].task }}</p>
+    <p>{{ item.lang[locale].desc }}</p>
+    <p>{{ item.lang[locale].process }}</p>
+    {% if item.screenshots.length > 0 %}
+    <div class="za-margin-large-top">
+    {% for pic in item.screenshots %}
+    <div class="za-flex za-flex-vertical za-flex-center">
+        <div><img src="/portfolio/static/images/large/{{ pic }}"></div>
+    </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+</article>

@@ -1,0 +1,135 @@
+<h1 id="zoiaDashboardHeader">{{ i18n.__(locale, 'title') }}</h1>
+<p>{{ i18n.__(locale, 'Up and running.') }}</p>
+<ul za-tab>
+    <li><a href="#">{{ i18n.__(locale, 'Info') }}</a></li>
+    <li><a href="#">{{ i18n.__(locale, 'Settings') }}</a></li>
+    <li><a href="#">{{ i18n.__(locale, 'Control') }}</a></li>
+</ul>
+<ul class="za-switcher za-margin">
+    <li>
+        <div class="za-overflow-auto">
+            <table class="za-table za-table-divider za-table-striped za-table-hover">
+                <thead>
+                    <tr>
+                        <th style="width:200px">{{ i18n.__(locale, 'Parameter') }}</th>
+                        <th>{{ i18n.__(locale, 'Value') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ i18n.__(locale, 'Software version') }}:</td>
+                        <td>{{ config.version }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ i18n.__(locale, 'OS Type') }}:</td>
+                        <td>{{ os.type() }}&nbsp;{{ os.arch() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ i18n.__(locale, 'Running on hostname') }}:</td>
+                        <td>{{ os.hostname() }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </li>
+    <li>
+        <form class="za-form-stacked" id="zoia_settings">
+            <div class="za-margin">
+                <label class="za-form-label" for="zoia_settings_protocol">{{ i18n.__(locale, 'Protocol') }}:</label>
+                <div class="za-form-controls">
+                    <select class="za-select za-form-width-small" id="zoia_settings_protocol">
+                        <option value="http" {% if config.website.protocol=='http' %}selected{% endif %}>http</option>
+                        <option value="https" {% if config.website.protocol=='https' %}selected{% endif %}>https</option>
+                    </select>
+                </div>
+            </div>
+            <div class="za-margin">
+                <label class="za-form-label">{{ i18n.__(locale, 'URL') }}:</label>
+                {% for lng in config.i18n.locales %}
+                <div class="za-form-controls">
+                    <div class="za-width-1-1 za-inline{% if loop.index > 1 %} zoia-multi-input{% endif %}">
+                        <span class="za-form-icon">{{ lng }}</span>
+                        <input class="za-input za-width-1-1 zoia-settings-url" data="{{ lng }}" type="text" value="{{ config.website.url[lng] }}">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="za-margin">
+                <label class="za-form-label">{{ i18n.__(locale, 'Title') }}:</label>
+                {% for lng in config.i18n.locales %}
+                <div class="za-form-controls">
+                    <div class="za-width-1-1 za-inline{% if loop.index > 1 %} zoia-multi-input{% endif %}">
+                        <span class="za-form-icon">{{ lng }}</span>
+                        <input class="za-input za-width-1-1 zoia-settings-title" data="{{ lng }}" type="text" value="{{ config.website.title[lng] }}">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="za-margin">
+                <label class="za-form-label">{{ i18n.__(locale, 'Title (short)') }}:</label>
+                {% for lng in config.i18n.locales %}
+                <div class="za-form-controls">
+                    <div class="za-width-1-1 za-inline{% if loop.index > 1 %} zoia-multi-input{% endif %}">
+                        <span class="za-form-icon">{{ lng }}</span>
+                        <input class="za-input za-width-1-1 zoia-settings-title-short" data="{{ lng }}" type="text" value="{{ config.website.titleShort[lng] }}">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="za-margin">
+                <label class="za-form-label" for="zoia_settings_email_noreply">{{ i18n.__(locale, 'E-mail address (no-reply)') }}:</label>
+                <div class="za-form-controls">
+                    <input class="za-input" id="zoia_settings_email_noreply" type="text" value="{{ config.website.email.noreply }}">
+                </div>
+            </div>
+            <div class="za-margin">
+                <label class="za-form-label" for="zoia_settings_email_feedback">{{ i18n.__(locale, 'E-mail address (feedback)') }}:</label>
+                <div class="za-form-controls">
+                    <input class="za-input" id="zoia_settings_email_feedback" type="text" value="{{ config.website.email.feedback }}">
+                </div>
+            </div>
+            <hr>
+            <div class="za-margin">
+                <button type="submit" class="za-button za-button-primary">{{ i18n.__(locale, 'Save') }}</button>
+            </div>
+        </form>
+    </li>
+    <li>
+        <ul za-accordion>
+            <li class="za-open">
+                <a class="za-accordion-title" href="#">{{ i18n.__(locale, 'Restart') }}</a>
+                <div class="za-accordion-content">
+                    <p>{{ i18n.__(locale, 'Zoia process will terminate. If you are running with default recommended tools like forever, the process will be restarted automatically.') }}</p>
+                    <button class="za-button za-button-primary" id="zoia_dashboard_restart">{{ i18n.__(locale, 'Restart') }}</button>
+                </div>
+            </li>
+            <li class="za-open">
+                <a class="za-accordion-title" href="#">{{ i18n.__(locale, 'Maintenance mode') }}</a>
+                <div class="za-accordion-content">
+                    <p>{{ i18n.__(locale, 'In maintenance mode the users will see the corresponding page instead of content of your website.') }}</p>
+                    <ul class="za-subnav za-subnav-pill" za-switcher>
+                        <li class="zoia-maintenance"><a href="#">{{ i18n.__(locale, 'Off') }}</a></li>
+                        <li class="zoia-maintenance" id="zoia_maintenance_on"><a href="#">{{ i18n.__(locale, 'On') }}</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </li>
+</ul>
+<div id="zoiaRestartProgressDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div class="za-modal-header">
+            <h2>{{ i18n.__(locale, 'Restarting')}}</h2>
+        </div>
+        <div class="za-modal-body">
+            <div class="za-margin-bottom">
+                <div za-spinner style="margin:-2px 20px 0 0"></div>{{ i18n.__(locale, 'Restart is in progress, please wait...')}}</div>
+        </div>
+    </div>
+</div>
+<div id="zoiaSpinnerMain" style="display:none" class="za-flex za-flex-middle za-flex-center"><span za-spinner style="color:#000"></span></div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_langs" data='{{ langs }}'></div>
+    <div id="zp_maintenanceEnabled" data="{{ maintenanceEnabled }}"></div>
+</div>

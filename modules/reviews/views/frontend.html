@@ -1,0 +1,60 @@
+<button class="za-button za-button-primary" id="zoia_review_add">{{ i18n.__(locale, 'Add review') }}</button>
+{% for item in items %}
+<div class="za-margin-top">
+    <h4 class="za-comment-title">{{ item.name }}</h4>
+    <div class="review-bubble tri-right left-top za-box-shadow-medium">
+        <div class="reviewtext">
+            <p>{{ item.text }}</p>
+        </div>
+    </div>
+</div>
+{% endfor %} {% if nextpage %}
+<ul class="za-pagination za-margin-large-top">
+    <li class="zoia-reviews-previous"><a href="?page={{ nextpage }}"><span za-pagination-previous></span>&nbsp;{{ i18n.__(locale, 'Previous') }}</a></li>
+</ul>
+{% endif %}
+<div id="zoiaReviewDialog" style="display:none">
+    <div class="za-modal-dialog za-modal-body">
+        <h2 class="za-modal-title">{{ i18n.__(locale, 'Add Review') }}</h2>
+        <div id="zoiaReviewDialogWrap">
+            <div class="za-alert-danger zoia-review-error" za-alert style="display:none">
+                <p class="zoia-review-error-text"></p>
+            </div>
+            <form class="za-form-stacked" id="zoia_review_form" action="#">
+                <div class="za-margin">
+                    <label class="za-form-label" for="rf_name">{{ i18n.__(locale, 'Your name') }}:</label>
+                    <div class="za-form-controls">
+                        <input class="za-input zoia-rfield" id="rf_name" type="text">
+                    </div>
+                </div>
+                <div class="za-margin">
+                    <label class="za-form-label" for="rf_text">{{ i18n.__(locale, 'Comment') }}:</label>
+                    <div class="za-form-controls">
+                        <textarea class="za-textarea zoia-rfield" id="rf_text" rows="5"></textarea>
+                    </div>
+                </div>
+                <div class="za-margin">
+                    <label class="za-form-label" for="rf_captcha">{{ i18n.__(locale, 'Captcha') }}:</label>
+                    <div class="za-grid za-grid-small">
+                        <div>
+                            <input class="za-input zoia-rfield" type="text" placeholder="" id="rf_captcha">
+                        </div>
+                        <div>
+                            <div class="za-form-controls"><img class="rf-captcha-img"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <p class="za-text-right">
+                <button class="za-button za-button-default za-modal-close" type="button">{{ i18n.__(locale, 'Cancel') }}</button>
+                <button class="za-button za-button-primary" type="button" id="zoia_btn_review_save">{{ i18n.__(locale, 'Save') }}</button>
+            </p>
+        </div>
+        <div id="zoiaReviewDialogSpinner" class="za-flex za-flex-center" style="display:none">
+            <div za-spinner></div>
+        </div>
+    </div>
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+</div>

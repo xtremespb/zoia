@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ i18n.__(locale, 'browse')}}</title>
+    {% if config.production %}
+    <link rel="stylesheet" href="/pages/static/css/browse.min.css">{% else %}
+    <link rel="stylesheet" href="/zoia/3rdparty/uikit/css/uikit.min.css">
+    <link rel="stylesheet" href="/pages/static/css/browse.css">{% endif %}
+</head>
+
+<body>
+    <div>
+        <div class="zoia-browse-control">
+            <button class="za-button za-button-default zoia-browse-ctl-button zoia-browse-ctl-refresh"><span za-icon="icon:refresh"></span></button>
+            <button class="za-button za-button-default zoia-browse-ctl-button zoia-browse-ctl-up"><span za-icon="icon:reply"></span></button>
+            <div class="za-button-group">
+                <button class="za-button za-button-default zoia-browse-ctl-button zoia-browse-ctl-upload"><span za-icon="icon:upload"></span></button>
+                <button class="za-button za-button-default zoia-browse-ctl-button zoia-browse-ctl-newdir"><span za-icon="icon:folder"></span></button>
+                <button class="za-button za-button-default zoia-browse-ctl-button zoia-browse-ctl-rename"><span za-icon="icon:pencil"></span></button>
+                <button class="za-button za-button-danger zoia-browse-ctl-button zoia-browse-ctl-delete"><span za-icon="icon:trash"></span></button>
+            </div>
+            <div class="za-button-group">
+                <button class="za-button za-button-default zoia-browse-ctl-button zoia-browse-ctl-clipboard zoia-browse-ctl-copy"><span za-icon="icon:copy"></span></button>
+                <button class="za-button za-button-default zoia-browse-ctl-button zoia-browse-ctl-clipboard zoia-browse-ctl-cut"><span za-icon="icon:move"></span></button>
+                <button class="za-button za-button-default zoia-browse-ctl-button zoia-browse-ctl-clipboard zoia-browse-ctl-paste"><span za-icon="icon:pull"></span></button>
+            </div>
+        </div>
+        <div id="zoia-browse-content" class="za-flex za-flex-wrap za-flex-wrap-top"></div>
+        <div class="zoia-browse-footer">
+            <button class="za-button za-button-default" id="zoiaBrowseCancelBtn">{{ i18n.__(locale, 'Cancel')}}</button>
+            <button class="za-button za-button-primary zoia-browse-ctl-button" id="zoiaBrowseSelectBtn">{{ i18n.__(locale, 'Select')}}</button>
+        </div>
+    </div>
+    <div id="zoiaSpinnerDialog" class="za-flex-top" style="display:none">
+        <div class="za-margin-auto-vertical zoia-spinner-dialog">
+            <span za-spinner></span>
+        </div>
+    </div>
+    <div id="zoiaFileDialog" style="display:none">
+        <div class="za-modal-dialog">
+            <form id="zoiaFileDialogForm">
+                <div class="za-modal-header">
+                    <h2 class="za-modal-title zoiaFileDialogTitle"></h2>
+                </div>
+                <div class="za-modal-body">
+                    <label class="za-form-label" for="zoiaFileDialogInput">{{ i18n.__(locale, 'Name')}}</label>
+                    <div class="za-form-controls">
+                        <input class="za-input" id="zoiaFileDialogInput" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="za-modal-footer za-text-right">
+                    <button class="za-button za-button-default za-modal-close" type="button">{{ i18n.__(locale, 'Cancel')}}</button>
+                    <button class="za-button za-button-primary" type="submit">{{ i18n.__(locale, 'OK')}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="zoiaUploadDialog" style="display:none">
+        <div class="za-modal-dialog" za-overflow-auto>
+            <div class="za-modal-header">
+                <h2 class="za-modal-title">{{ i18n.__(locale, 'Upload file(s)')}}</h2>
+            </div>
+            <div class="za-modal-body">
+                <div class="za-flex za-flex-center za-flex-middle" id="zoia-upload-area">{{ i18n.__(locale, 'Drag files or click here to upload')}}</div>
+                <div id="zoia-upload-files" style="display:none"></div>
+            </div>
+            <div class="za-modal-footer za-text-right">
+                <button class="za-button za-button-default za-modal-close" type="button">{{ i18n.__(locale, 'Done')}}</button>
+                <button class="za-button za-button-default" id="btnUploadClear" type="button">{{ i18n.__(locale, 'Clear')}}</button>
+                <button class="za-button za-button-primary" type="button" id="btnUpload">{{ i18n.__(locale, 'Upload')}}</button>
+            </div>
+        </div>
+    </div>
+    <div style="display:none">
+        <div id="zp_locale" data="{{ locale }}"></div>
+    </div>
+    {% if config.production %}
+    <script src="/pages/static/js/browse.min.js" type="text/javascript"></script>{% else %}
+    <script src="/zoia/3rdparty/jquery/jquery.min.js" type="text/javascript"></script>
+    <script src="/zoia/3rdparty/jquery/jquery.shifty.min.js" type="text/javascript"></script>
+    <script src="/zoia/3rdparty/jquery/jquery.finger.min.js" type="text/javascript"></script>
+    <script src="/zoia/3rdparty/uikit/js/uikit.min.js" type="text/javascript"></script>
+    <script src="/zoia/3rdparty/uikit/js/uikit-icons.min.js" type="text/javascript"></script>
+    <script src="/zoia/3rdparty/plupload/plupload.min.js" type="text/javascript"></script>
+    <script src="/pages/static/js/browse.js" type="text/javascript"></script>{% endif %}
+    <script type="text/javascript">
+    var browseContentSize = function() { $('#zoia-browse-content').height($(window).height() - $('.zoia-browse-control').height() - $('.zoia-browse-footer').innerHeight() - 44); };
+    $(window).resize(function() { browseContentSize(); });
+    browseContentSize();
+    </script>
+</body>
+
+</html>

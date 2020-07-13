@@ -1,0 +1,25 @@
+server {
+
+    listen {ip}:{port};
+    client_max_body_size 32m;
+    server_name {serverName} www.{serverName};
+    access_log {dir}/logs/nginx_access.log;
+    error_log {dir}/logs/nginx_error.log;
+    root {dir}/static/;
+
+    location /  {
+        try_files $uri @node;
+    }
+
+    location ~ "^/(?<module>[a-zA-Z0-9]+)/static/(?<req>.+)$" {
+        rewrite ^/$module/static/$req$ $req last;
+        root {dir}/modules/;
+    }
+
+    location @node {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_pass http://{zoiaIP}:{zoiaPort};
+    }
+
+}

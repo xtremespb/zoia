@@ -1,0 +1,12 @@
+{
+    "id": "pages",
+    "items": [
+    {
+        "type": "mongo",
+        "collections": ["pages", "pages_registry"]
+    },
+    {
+        "type": "directory",
+        "directories": ["static/storage"]
+    }]
+}

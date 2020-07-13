@@ -1,0 +1,90 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+export NODE_PATH=$NODE_PATH:/usr/lib/node_modules
+
+zoia_dir="{root}"
+zoia_minuptime=1000
+zoia_spinsleeptime=1000
+name="{serverName}"
+pid_file="{root}/run/{name}_mailer.pid"
+stdout_log="{root}/logs/{name}_mailer.log"
+stderr_log="{root}/logs/{name}_mailer.err"
+cmd_start="forever --pidFile $pid_file --sourceDir $zoia_dir/bin -l $zoia_dir/logs/{name}_mailer.log -a --minUptime $zoia_minuptime --spinSleepTime $zoia_spinsleeptime start mailer.js"
+cmd_stop="forever stop $zoia_dir/bin/mailer.js"
+
+get_pid() {
+    cat "$pid_file"
+}
+
+is_running() {
+    [ -f "$pid_file" ] && ps `get_pid` > /dev/null 2>&1
+}
+
+case "$1" in
+    start)
+    if is_running; then
+        echo "Already started"
+    else
+        echo "Starting $name Mailer"
+        cd "$zoia_dir"
+        exec $cmd_start >> "$stdout_log" 2>> "$stderr_log" &
+        echo $! > "$pid_file"
+        if ! is_running; then
+            echo "Unable to start, see $stdout_log and $stderr_log"
+            exit 1
+        fi
+    fi
+    ;;
+    stop)
+    if is_running; then
+        echo -n "Stopping $name.."
+        cd "$zoia_dir"
+        exec $cmd_stop >> "$stdout_log" 2>> "$stderr_log" &
+        for i in {1..10}
+        do
+                        if ! is_running; then
+                break
+            fi
+
+            echo -n "."
+            sleep 1
+        done
+        echo
+
+        if is_running; then
+            echo "Not stopped; may still be shutting down or shutdown may have failed"
+            exit 1
+        else
+            echo "Stopped"
+            if [ -f "$pid_file" ]; then
+                rm "$pid_file"
+            fi
+        fi
+    else
+        echo "Not running"
+    fi
+    ;;
+    restart)
+    $0 stop
+    if is_running; then
+        echo "Unable to stop, will not attempt to start"
+        exit 1
+    fi
+        $0 start
+    ;;
+    status)
+    if is_running; then
+        echo "Running"
+    else
+        echo "Stopped"
+        exit 1
+    fi
+    ;;
+    *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+
+exit 0

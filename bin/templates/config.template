@@ -1,0 +1,89 @@
+{
+    "ip": "127.0.0.1",
+    "port": 3000,
+    "credentials": {
+        "set": false,
+        "user": "",
+        "group": ""
+    },
+    "production": false,
+    "salt": "",
+    "trustProxy": true,
+    "log": {
+        "dirname": "",
+        "filename": "main.log",
+        "stackTrace": false,
+        "logLevel": "info",
+        "maxsize": 1048576,
+        "maxFiles": 10,
+        "tailable": true,
+        "timestamp": false,
+        "showLevel": false,
+        "meta": false,
+        "json": false
+    },
+    "maxUploadSizeMB": 32,
+    "testMode": false,
+    "codemirror": false,
+    "mongo": {
+        "url": "mongodb://127.0.0.1:27017/zoia",
+        "database": "zoia",
+        "options": {},
+        "sessionCollection": "sessions"
+    },
+    "session": {
+        "secret": "",
+        "name": "zoia",
+        "cookie": {
+            "domain": "",
+            "httpOnly": false,
+            "secure": false,
+            "maxAge": 604800000,
+            "path": "/"
+        }
+    },
+    "i18n": {
+        "locales": ["en", "ru", "sr"],
+        "localeNames": {
+            "en": "English",
+            "ru": "Русский",
+            "sr": "Српски"
+        },
+        "detect": {
+            "subdomain": false,
+            "query": true,
+            "cookie": false,
+            "url": false
+        },
+        "dev": false,
+        "cookieName": "zoiaLang",
+        "fallback": false
+    },
+    "mailer": {
+        "host": "127.0.0.1",
+        "port": 25,
+        "secure": false,
+        "auth": {
+            "user": "",
+            "pass": ""
+        }
+    },
+    "core": {
+        "prefix": {
+            "auth": "/auth",
+            "authLogout": "/logout",
+            "authRegister": "/register",
+            "authRegisterConfirm": "/register/confirm",
+            "authReset": "/reset",
+            "authResetConfirm": "/reset/confirm",
+            "account": "/account",
+            "admin": "/admin"
+        },
+        "regexp": {
+            "username": "^[_\\-0-9a-zA-Z]{3,20}$",
+            "pageID": "^[_\\-a-zA-Z0-9\\u0400-\\u04FF\\u00C0-\\u02AF\\u0370-\\u07BF\\u0900-\\u097F\\u0980-\\u09FF\\u0A00-\\u0A7F\\u0B00-\\u0B7F]+$",
+            "pageURL": "^[_\\/\\-a-zA-Z0-9\\u0400-\\u04FF\\u00C0-\\u02AF\\u0370-\\u07BF\\u0900-\\u097F\\u0980-\\u09FF\\u0A00-\\u0A7F\\u0B00-\\u0B7F]+$",
+            "pageFolder": "^[_\\-a-zA-Z0-9\\u0400-\\u04FF\\u00C0-\\u02AF\\u0370-\\u07BF\\u0900-\\u097F\\u0980-\\u09FF\\u0A00-\\u0A7F\\u0B00-\\u0B7F]+$"
+        }
+    }
+}

@@ -1,0 +1,7 @@
+check process nodejs with pidfile "{root}/run/{name}.pid"
+        start program = "{root}/bin/zoia.sh start"
+        stop program = "{root}/bin/zoia.sh stop"
+        if failed port {port} protocol HTTP
+                request /
+                with timeout 10 seconds
+                then restart

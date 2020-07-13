@@ -1,0 +1,61 @@
+<h1>{{ i18n.__(locale, 'My Orders')}}</h1>
+<ul class="za-breadcrumb">
+    <li><a href="{{ uprefix }}{{ configModule.prefix }}/">{{ i18n.__(locale, 'Catalog')}}</a></li>
+    <li><a href="{{ uprefix }}{{ configModule.prefix }}/orders" class="za-active">{{ i18n.__(locale, 'Orders')}}</a></li>
+</ul>
+<div id="wrapOrders" style="display:none">
+    <table class="za-table za-table-divider za-table-striped za-table-hover za-table-responsive za-table-middle" id="orders">
+        <thead class="noselect" style="display:none">
+            <tr>
+                <th id="orders__id" class="za-table-shrink">{{ i18n.__(locale, 'ID')}}</th>
+                <th id="orders_date">{{ i18n.__(locale, 'Order date')}}</th>
+                <th id="orders_costs" class="za-table-shrink">{{ i18n.__(locale, 'Total')}}</th>
+                <th id="orders_status" class="za-table-shrink">{{ i18n.__(locale, 'Status')}}</th>
+                <th id="orders_actions" class="za-table-shrink">{{ i18n.__(locale, 'Actions')}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="100%">
+                    <div za-spinner style="margin:-2px 5px 0 0"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="ordersPagination za-margin-top noselect"></div>
+</div>
+<div id="wrapOrder" style="display:none">
+    <h2>{{ i18n.__(locale, 'Order')}}&nbsp;<span id="orderID"></span></h2>    
+    <div za-grid class="za-catalog-metadata-wrap">
+        <div>
+            <div class="za-catalog-metadata">{{ i18n.__(locale, 'Order date')}}:&nbsp;<span id="za_order_date"></span></div>
+            <div class="za-catalog-metadata">{{ i18n.__(locale, 'Status')}}:&nbsp;<span id="za_order_status"></span>{% if configModule.payments.enabled %}&nbsp;&nbsp;<span id="za_order_status_badge_paid" class="za-label za-label-success" style="display:none;margin-top:-2px">{{ i18n.__(locale, 'Paid')}}</span><span id="za_order_status_badge_unpaid" class="za-label za-label-warning" style="display:none;margin-top:-2px">{{ i18n.__(locale, 'Unpaid')}}</span>{% endif %}</div>
+            <div class="za-catalog-metadata">{{ i18n.__(locale, 'Delivery')}}:&nbsp;<span id="za_order_delivery"></span></div>
+            <div class="za-catalog-metadata za-order-tracking-wrap">{{ i18n.__(locale, 'Tracking number')}}:&nbsp;<span id="za_order_tracking"></span></div>
+        </div>
+        <div id="za_order_address">
+        </div>
+    </div>
+    <h3>{{ i18n.__(locale, 'Cart')}}</h3>
+    <div class="za-margin-top" id="za_order_cart">
+    </div>
+    <h3>{{ i18n.__(locale, 'Costs')}}</h3>
+    <div class="za-margin-top" id="za_order_costs">
+    </div>
+    {% if configModule.payments.enabled %}
+    <div class="za-margin-large-top" id="za_order_btn_pay_wrap">
+        <a href="#" data="{{ uprefix }}{{ configModule.prefix }}" class="za-button za-button-primary" id="za_order_btn_pay">{{ i18n.__(locale, 'Pay')}}</a>
+    </div>
+    {% endif %}
+</div>
+<div id="zoiaSpinnerMain" style="display:none" class="za-flex za-flex-middle za-flex-center"><span za-spinner style="color:#000"></span></div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_prefix" data="{{ configModule.prefix }}"></div>
+    <div id="zp_uprefix" data="{{ uprefix }}"></div>
+    <div id="zp_settings" data='{{ settings }}'></div>
+    <div id="zp_deliveryData" data='{{ delivery }}'></div>
+    <div id="zp_addressTemplate" data='{{ template }}'></div>
+    <div id="zp_addressData" data='{{ addressData }}'></div>
+    <div id="zp_currencyPosition" data="{{ configModule.currencyPosition }}"></div>
+</div>

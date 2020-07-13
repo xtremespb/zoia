@@ -1,0 +1,3217 @@
+ [
+ {
+     "id": "firstname",
+     "title":
+     {
+         "en": "First name",
+         "ru": "Имя"
+     },
+     "maxlength": 80,
+     "width": "medium",
+     "type": "text",
+     "label":
+     {
+         "en": "First name",
+         "ru": "Имя"
+     }
+ },
+ {
+     "id": "lastname",
+     "title":
+     {
+         "en": "Last name",
+         "ru": "Фамилия"
+     },
+     "maxlength": 80,
+     "width": "medium",
+     "type": "text",
+     "label":
+     {
+         "en": "Last name",
+         "ru": "Фамилия"
+     }
+ },
+ {
+     "id": "middlename",
+     "title":
+     {
+         "en": "Middle Name",
+         "ru": "Отчество"
+     },
+     "maxlength": 80,
+     "width": "medium",
+     "type": "text",
+     "label":
+     {
+         "en": "Middle Name",
+         "ru": "Отчество"
+     }
+ },
+ {
+     "id": "phone",
+     "title":
+     {
+         "en": "Phone number",
+         "ru": "Номер телефона"
+     },
+     "maxlength": 25,
+     "width": "small",
+     "type": "text",
+     "label":
+     {
+         "en": "Phone number",
+         "ru": "Номер телефона"
+     }
+ },
+ {
+     "id": "street",
+     "title":
+     {
+         "en": "Street",
+         "ru": "Улица"
+     },
+     "maxlength": 80,
+     "width": "large",
+     "type": "text",
+     "label":
+     {
+         "en": "Street",
+         "ru": "Улица"
+     }
+ },
+ {
+     "id": "building",
+     "title":
+     {
+         "en": "Building, apt.",
+         "ru": "Номер дома, корпус, кв."
+     },
+     "maxlength": 40,
+     "width": "large",
+     "type": "text",
+     "label":
+     {
+         "en": "Building, apt.",
+         "ru": "Номер дома, корпус, кв."
+     }
+ },
+ {
+     "id": "state",
+     "title":
+     {
+         "en": "State",
+         "ru": "Штат"
+     },
+     "width": "medium",
+     "type": "select",
+     "label":
+     {
+         "en": "State",
+         "ru": "Штат"
+     },
+     "values": [
+         {
+             "value": "AL",
+             "lang":
+             {
+                 "en": "Alabama",
+                 "ru": "Алабама"
+             },
+             "cost": 0,
+             "addPrc": 4
+         },
+         {
+             "value": "AK",
+             "lang":
+             {
+                 "en": "Alaska",
+                 "ru": "Аляска"
+             },
+             "cost": 0,
+             "addPrc": 4
+         },
+         {
+             "value": "AZ",
+             "lang":
+             {
+                 "en": "Arizona",
+                 "ru": "Аризона"
+             },
+             "cost": 0,
+             "addPrc": 5.6
+         },
+         {
+             "value": "AR",
+             "lang":
+             {
+                 "en": "Arkansas",
+                 "ru": "Арканзас"
+             },
+             "cost": 0,
+             "addPrc": 6.5
+         },
+
+         {
+             "value": "CA",
+             "lang":
+             {
+                 "en": "California",
+                 "ru": "Калифорния"
+             },
+             "cost": 0,
+             "addPrc": 7.25
+         },
+         {
+             "value": "CO",
+             "lang":
+             {
+                 "en": "Colorado",
+                 "ru": "Колорадо"
+             },
+             "cost": 0,
+             "addPrc": 2.9
+         },
+         {
+             "value": "CT",
+             "lang":
+             {
+                 "en": "Connecticut",
+                 "ru": "Коннектикут"
+             },
+             "cost": 0,
+             "addPrc": 6.35
+         },
+         {
+             "value": "DE",
+             "lang":
+             {
+                 "en": "Delaware",
+                 "ru": "Делавер"
+             },
+             "cost": 0,
+             "addPrc": 0
+         },
+         {
+             "value": "DC",
+             "lang":
+             {
+                 "en": "District of Columbia",
+                 "ru": "Округ Колумбия"
+             },
+             "cost": 0,
+             "addPrc": 5.75
+         },
+         {
+             "value": "FL",
+             "lang":
+             {
+                 "en": "Florida",
+                 "ru": "Флорида"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "GA",
+             "lang":
+             {
+                 "en": "Georgia",
+                 "ru": "Джорджия"
+             },
+             "cost": 0,
+             "addPrc": 4
+         },
+         {
+             "value": "HI",
+             "lang":
+             {
+                 "en": "Hawaii",
+                 "ru": "Гавайи"
+             },
+             "cost": 0,
+             "addPrc": 4.166
+         },
+
+         {
+             "value": "ID",
+             "lang":
+             {
+                 "en": "Idaho",
+                 "ru": "Айдахо"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "IL",
+             "lang":
+             {
+                 "en": "Illinois",
+                 "ru": "Иллинойс"
+             },
+             "cost": 0,
+             "addPrc": 6.25
+         },
+         {
+             "value": "IN",
+             "lang":
+             {
+                 "en": "Indiana",
+                 "ru": "Индиана"
+             },
+             "cost": 0,
+             "addPrc": 7
+         },
+         {
+             "value": "IA",
+             "lang":
+             {
+                 "en": "Iowa",
+                 "ru": "Айова"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "KS",
+             "lang":
+             {
+                 "en": "Kansas",
+                 "ru": "Канзас"
+             },
+             "cost": 0,
+             "addPrc": 6.5
+         },
+         {
+             "value": "KY",
+             "lang":
+             {
+                 "en": "Kentucky",
+                 "ru": "Кентукки"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "LA",
+             "lang":
+             {
+                 "en": "Louisiana",
+                 "ru": "Луизиана"
+             },
+             "cost": 0,
+             "addPrc": 5
+         },
+         {
+             "value": "ME",
+             "lang":
+             {
+                 "en": "Maine",
+                 "ru": "Мейн"
+             },
+             "cost": 0,
+             "addPrc": 5.5
+         },
+         {
+             "value": "MD",
+             "lang":
+             {
+                 "en": "Maryland",
+                 "ru": "Мэриленд"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "MA",
+             "lang":
+             {
+                 "en": "Massachusetts",
+                 "ru": "Массачусетс"
+             },
+             "cost": 0,
+             "addPrc": 6.25
+         },
+         {
+             "value": "MI",
+             "lang":
+             {
+                 "en": "Michigan",
+                 "ru": "Мичиган"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "MN",
+             "lang":
+             {
+                 "en": "Minnesota",
+                 "ru": "Миннесота"
+             },
+             "cost": 0,
+             "addPrc": 6.875
+         },
+         {
+             "value": "MS",
+             "lang":
+             {
+                 "en": "Mississippi",
+                 "ru": "Миссисипи"
+             },
+             "cost": 0,
+             "addPrc": 7
+         },
+         {
+             "value": "MO",
+             "lang":
+             {
+                 "en": "Missouri",
+                 "ru": "Миссури"
+             },
+             "cost": 0,
+             "addPrc": 4.225
+         },
+         {
+             "value": "MT",
+             "lang":
+             {
+                 "en": "Montana",
+                 "ru": "Монтана"
+             },
+             "cost": 0,
+             "addPrc": 0
+         },
+         {
+             "value": "NE",
+             "lang":
+             {
+                 "en": "Nebraska",
+                 "ru": "Небреска"
+             },
+             "cost": 0,
+             "addPrc": 5.5
+         },
+         {
+             "value": "NV",
+             "lang":
+             {
+                 "en": "Nevada",
+                 "ru": "Невада"
+             },
+             "cost": 0,
+             "addPrc": 0
+         },
+         {
+             "value": "NH",
+             "lang":
+             {
+                 "en": "New Hampshire",
+                 "ru": "Нью-Гемпшир"
+             },
+             "cost": 0,
+             "addPrc": 0
+         },
+         {
+             "value": "NJ",
+             "lang":
+             {
+                 "en": "New Jersey",
+                 "ru": "Нью-Джерси"
+             },
+             "cost": 0,
+             "addPrc": 6.875
+         },
+         {
+             "value": "NM",
+             "lang":
+             {
+                 "en": "New Mexico",
+                 "ru": "Нью-Мексико"
+             },
+             "cost": 0,
+             "addPrc": 5.125
+         },
+         {
+             "value": "NY",
+             "lang":
+             {
+                 "en": "New York",
+                 "ru": "Нью-Йорк"
+             },
+             "cost": 0,
+             "addPrc": 6.85
+         },
+         {
+             "value": "NC",
+             "lang":
+             {
+                 "en": "North Carolina",
+                 "ru": "Северная Каролина"
+             },
+             "cost": 0,
+             "addPrc": 4.75
+         },
+         {
+             "value": "ND",
+             "lang":
+             {
+                 "en": "North Dakota",
+                 "ru": "Северная Дакота"
+             },
+             "cost": 0,
+             "addPrc": 5
+         },
+         {
+             "value": "OH",
+             "lang":
+             {
+                 "en": "Ohio",
+                 "ru": "Огайо"
+             },
+             "cost": 0,
+             "addPrc": 5.75
+         },
+         {
+             "value": "OK",
+             "lang":
+             {
+                 "en": "Oklahoma",
+                 "ru": "Оклахома"
+             },
+             "cost": 0,
+             "addPrc": 4.5
+         },
+         {
+             "value": "OR",
+             "lang":
+             {
+                 "en": "Oregon",
+                 "ru": "Орегон"
+             },
+             "cost": 0,
+             "addPrc": 0
+         },
+         {
+             "value": "PA",
+             "lang":
+             {
+                 "en": "Pennsylvania",
+                 "ru": "Пенсильвания"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "RI",
+             "lang":
+             {
+                 "en": "Rhode Island",
+                 "ru": "Род-Айленд"
+             },
+             "cost": 0,
+             "addPrc": 7
+         },
+         {
+             "value": "SC",
+             "lang":
+             {
+                 "en": "South Carolina",
+                 "ru": "Южная Каролина"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "SD",
+             "lang":
+             {
+                 "en": "South Dakota",
+                 "ru": "Южная Дакота"
+             },
+             "cost": 0,
+             "addPrc": 4
+         },
+         {
+             "value": "TN",
+             "lang":
+             {
+                 "en": "Tennessee",
+                 "ru": "Теннеси"
+             },
+             "cost": 0,
+             "addPrc": 7
+         },
+         {
+             "value": "TX",
+             "lang":
+             {
+                 "en": "Texas",
+                 "ru": "Техас"
+             },
+             "cost": 0,
+             "addPrc": 6.25
+         },
+         {
+             "value": "UT",
+             "lang":
+             {
+                 "en": "Utah",
+                 "ru": "Юта"
+             },
+             "cost": 0,
+             "addPrc": 5.95
+         },
+         {
+             "value": "VT",
+             "lang":
+             {
+                 "en": "Vermont",
+                 "ru": "Вермонт"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "VA",
+             "lang":
+             {
+                 "en": "Virginia",
+                 "ru": "Вирджиния"
+             },
+             "cost": 0,
+             "addPrc": 5.3
+         },
+
+         {
+             "value": "WA",
+             "lang":
+             {
+                 "en": "Washington",
+                 "ru": "Вашингтон"
+             },
+             "cost": 0,
+             "addPrc": 6.5
+         },
+
+         {
+             "value": "WV",
+             "lang":
+             {
+                 "en": "West Virginia",
+                 "ru": "Западная Вирджиния"
+             },
+             "cost": 0,
+             "addPrc": 6
+         },
+         {
+             "value": "WI",
+             "lang":
+             {
+                 "en": "Wisconsin",
+                 "ru": "Висконсин"
+             },
+             "cost": 0,
+             "addPrc": 5
+         },
+         {
+             "value": "WY",
+             "lang":
+             {
+                 "en": "Wyoming",
+                 "ru": "Вайоминг"
+             },
+             "cost": 0,
+             "addPrc": 4
+         }
+     ]
+ },
+ {
+     "id": "country",
+     "title":
+     {
+         "en": "Country",
+         "ru": "Страна"
+     },
+     "width": "medium",
+     "type": "select",
+     "label":
+     {
+         "en": "Country",
+         "ru": "Страна"
+     },
+     "default": "RU",
+     "values": [
+     {
+         "value": "AF",
+         "lang":
+         {
+             "en": "Afghanistan",
+             "ru": "Афганистан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AX",
+         "lang":
+         {
+             "en": "Åland Islands",
+             "ru": "Аландские о-ва"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AL",
+         "lang":
+         {
+             "en": "Albania",
+             "ru": "Албания"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "DZ",
+         "lang":
+         {
+             "en": "Algeria",
+             "ru": "Алжир"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AS",
+         "lang":
+         {
+             "en": "American Samoa",
+             "ru": "Американское Самоа"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AD",
+         "lang":
+         {
+             "en": "Andorra",
+             "ru": "Андорра"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AO",
+         "lang":
+         {
+             "en": "Angola",
+             "ru": "Ангола"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AI",
+         "lang":
+         {
+             "en": "Anguilla",
+             "ru": "Ангилья"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AQ",
+         "lang":
+         {
+             "en": "Antarctica",
+             "ru": "Антарктида"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AG",
+         "lang":
+         {
+             "en": "Antigua & Barbuda",
+             "ru": "Антигуа и Барбуда"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AR",
+         "lang":
+         {
+             "en": "Argentina",
+             "ru": "Аргентина"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AM",
+         "lang":
+         {
+             "en": "Armenia",
+             "ru": "Армения"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AW",
+         "lang":
+         {
+             "en": "Aruba",
+             "ru": "Аруба"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AC",
+         "lang":
+         {
+             "en": "Ascension Island",
+             "ru": "о-в Вознесения"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AU",
+         "lang":
+         {
+             "en": "Australia",
+             "ru": "Австралия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AT",
+         "lang":
+         {
+             "en": "Austria",
+             "ru": "Австрия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AZ",
+         "lang":
+         {
+             "en": "Azerbaijan",
+             "ru": "Азербайджан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BS",
+         "lang":
+         {
+             "en": "Bahamas",
+             "ru": "Багамы"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BH",
+         "lang":
+         {
+             "en": "Bahrain",
+             "ru": "Бахрейн"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BD",
+         "lang":
+         {
+             "en": "Bangladesh",
+             "ru": "Бангладеш"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BB",
+         "lang":
+         {
+             "en": "Barbados",
+             "ru": "Барбадос"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BY",
+         "lang":
+         {
+             "en": "Belarus",
+             "ru": "Беларусь"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BE",
+         "lang":
+         {
+             "en": "Belgium",
+             "ru": "Бельгия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BZ",
+         "lang":
+         {
+             "en": "Belize",
+             "ru": "Белиз"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BJ",
+         "lang":
+         {
+             "en": "Benin",
+             "ru": "Бенин"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BM",
+         "lang":
+         {
+             "en": "Bermuda",
+             "ru": "Бермуды"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BT",
+         "lang":
+         {
+             "en": "Bhutan",
+             "ru": "Бутан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BO",
+         "lang":
+         {
+             "en": "Bolivia",
+             "ru": "Боливия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BA",
+         "lang":
+         {
+             "en": "Bosnia & Herzegovina",
+             "ru": "Босния и Герцеговина"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BW",
+         "lang":
+         {
+             "en": "Botswana",
+             "ru": "Ботсвана"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BR",
+         "lang":
+         {
+             "en": "Brazil",
+             "ru": "Бразилия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IO",
+         "lang":
+         {
+             "en": "British Indian Ocean Territory",
+             "ru": "Британская территория в Индийском океане"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "VG",
+         "lang":
+         {
+             "en": "British Virgin Islands",
+             "ru": "Виргинские о-ва (Британские)"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BN",
+         "lang":
+         {
+             "en": "Brunei",
+             "ru": "Бруней-Даруссалам"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BG",
+         "lang":
+         {
+             "en": "Bulgaria",
+             "ru": "Болгария"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BF",
+         "lang":
+         {
+             "en": "Burkina Faso",
+             "ru": "Буркина-Фасо"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BI",
+         "lang":
+         {
+             "en": "Burundi",
+             "ru": "Бурунди"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KH",
+         "lang":
+         {
+             "en": "Cambodia",
+             "ru": "Камбоджа"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CM",
+         "lang":
+         {
+             "en": "Cameroon",
+             "ru": "Камерун"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CA",
+         "lang":
+         {
+             "en": "Canada",
+             "ru": "Канада"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IC",
+         "lang":
+         {
+             "en": "Canary Islands",
+             "ru": "Канарские о-ва"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CV",
+         "lang":
+         {
+             "en": "Cape Verde",
+             "ru": "Кабо-Верде"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BQ",
+         "lang":
+         {
+             "en": "Caribbean Netherlands",
+             "ru": "Бонэйр"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KY",
+         "lang":
+         {
+             "en": "Cayman Islands",
+             "ru": "Каймановы о-ва"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CF",
+         "lang":
+         {
+             "en": "Central African Republic",
+             "ru": "ЦАР"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "EA",
+         "lang":
+         {
+             "en": "Ceuta & Melilla",
+             "ru": "Сеута и Мелилья"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TD",
+         "lang":
+         {
+             "en": "Chad",
+             "ru": "Чад"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CL",
+         "lang":
+         {
+             "en": "Chile",
+             "ru": "Чили"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CN",
+         "lang":
+         {
+             "en": "China",
+             "ru": "Китай"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CX",
+         "lang":
+         {
+             "en": "Christmas Island",
+             "ru": "о-в Рождества"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CC",
+         "lang":
+         {
+             "en": "Cocos (Keeling) Islands",
+             "ru": "Кокосовые о-ва"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CO",
+         "lang":
+         {
+             "en": "Colombia",
+             "ru": "Колумбия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KM",
+         "lang":
+         {
+             "en": "Comoros",
+             "ru": "Коморы"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CG",
+         "lang":
+         {
+             "en": "Congo - Brazzaville",
+             "ru": "Конго - Браззавиль"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CD",
+         "lang":
+         {
+             "en": "Congo - Kinshasa",
+             "ru": "Конго - Киншаса"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CK",
+         "lang":
+         {
+             "en": "Cook Islands",
+             "ru": "Острова Кука"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CR",
+         "lang":
+         {
+             "en": "Costa Rica",
+             "ru": "Коста-Рика"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CI",
+         "lang":
+         {
+             "en": "Côte d’Ivoire",
+             "ru": "Кот-д’Ивуар"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "HR",
+         "lang":
+         {
+             "en": "Croatia",
+             "ru": "Хорватия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CU",
+         "lang":
+         {
+             "en": "Cuba",
+             "ru": "Куба"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CW",
+         "lang":
+         {
+             "en": "Curaçao",
+             "ru": "Кюрасао"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CY",
+         "lang":
+         {
+             "en": "Cyprus",
+             "ru": "Кипр"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CZ",
+         "lang":
+         {
+             "en": "Czechia",
+             "ru": "Чехия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "DK",
+         "lang":
+         {
+             "en": "Denmark",
+             "ru": "Дания"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "DG",
+         "lang":
+         {
+             "en": "Diego Garcia",
+             "ru": "Диего-Гарсия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "DJ",
+         "lang":
+         {
+             "en": "Djibouti",
+             "ru": "Джибути"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "DM",
+         "lang":
+         {
+             "en": "Dominica",
+             "ru": "Доминика"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "DO",
+         "lang":
+         {
+             "en": "Dominican Republic",
+             "ru": "Доминиканская Республика"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "EC",
+         "lang":
+         {
+             "en": "Ecuador",
+             "ru": "Эквадор"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "EG",
+         "lang":
+         {
+             "en": "Egypt",
+             "ru": "Египет"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SV",
+         "lang":
+         {
+             "en": "El Salvador",
+             "ru": "Сальвадор"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GQ",
+         "lang":
+         {
+             "en": "Equatorial Guinea",
+             "ru": "Экваториальная Гвинея"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ER",
+         "lang":
+         {
+             "en": "Eritrea",
+             "ru": "Эритрея"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "EE",
+         "lang":
+         {
+             "en": "Estonia",
+             "ru": "Эстония"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ET",
+         "lang":
+         {
+             "en": "Ethiopia",
+             "ru": "Эфиопия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "FK",
+         "lang":
+         {
+             "en": "Falkland Islands",
+             "ru": "Фолклендские о-ва"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "FO",
+         "lang":
+         {
+             "en": "Faroe Islands",
+             "ru": "Фарерские о-ва"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "FJ",
+         "lang":
+         {
+             "en": "Fiji",
+             "ru": "Фиджи"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "FI",
+         "lang":
+         {
+             "en": "Finland",
+             "ru": "Финляндия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "FR",
+         "lang":
+         {
+             "en": "France",
+             "ru": "Франция"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GF",
+         "lang":
+         {
+             "en": "French Guiana",
+             "ru": "Французская Гвиана"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PF",
+         "lang":
+         {
+             "en": "French Polynesia",
+             "ru": "Французская Полинезия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TF",
+         "lang":
+         {
+             "en": "French Southern Territories",
+             "ru": "Французские Южные территории"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GA",
+         "lang":
+         {
+             "en": "Gabon",
+             "ru": "Габон"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GM",
+         "lang":
+         {
+             "en": "Gambia",
+             "ru": "Гамбия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GE",
+         "lang":
+         {
+             "en": "Georgia",
+             "ru": "Грузия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "DE",
+         "lang":
+         {
+             "en": "Germany",
+             "ru": "Германия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GH",
+         "lang":
+         {
+             "en": "Ghana",
+             "ru": "Гана"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GI",
+         "lang":
+         {
+             "en": "Gibraltar",
+             "ru": "Гибралтар"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GR",
+         "lang":
+         {
+             "en": "Greece",
+             "ru": "Греция"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GL",
+         "lang":
+         {
+             "en": "Greenland",
+             "ru": "Гренландия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GD",
+         "lang":
+         {
+             "en": "Grenada",
+             "ru": "Гренада"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GP",
+         "lang":
+         {
+             "en": "Guadeloupe",
+             "ru": "Гваделупа"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GU",
+         "lang":
+         {
+             "en": "Guam",
+             "ru": "Гуам"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GT",
+         "lang":
+         {
+             "en": "Guatemala",
+             "ru": "Гватемала"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GG",
+         "lang":
+         {
+             "en": "Guernsey",
+             "ru": "Гернси"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GN",
+         "lang":
+         {
+             "en": "Guinea",
+             "ru": "Гвинея"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GW",
+         "lang":
+         {
+             "en": "Guinea-Bissau",
+             "ru": "Гвинея-Бисау"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GY",
+         "lang":
+         {
+             "en": "Guyana",
+             "ru": "Гайана"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "HT",
+         "lang":
+         {
+             "en": "Haiti",
+             "ru": "Гаити"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "HN",
+         "lang":
+         {
+             "en": "Honduras",
+             "ru": "Гондурас"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "HK",
+         "lang":
+         {
+             "en": "Hong Kong SAR China",
+             "ru": "Гонконг (специальный административный район)"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "HU",
+         "lang":
+         {
+             "en": "Hungary",
+             "ru": "Венгрия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IS",
+         "lang":
+         {
+             "en": "Iceland",
+             "ru": "Исландия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IN",
+         "lang":
+         {
+             "en": "India",
+             "ru": "Индия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ID",
+         "lang":
+         {
+             "en": "Indonesia",
+             "ru": "Индонезия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IR",
+         "lang":
+         {
+             "en": "Iran",
+             "ru": "Иран"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IQ",
+         "lang":
+         {
+             "en": "Iraq",
+             "ru": "Ирак"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IE",
+         "lang":
+         {
+             "en": "Ireland",
+             "ru": "Ирландия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IM",
+         "lang":
+         {
+             "en": "Isle of Man",
+             "ru": "о-в Мэн"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IL",
+         "lang":
+         {
+             "en": "Israel",
+             "ru": "Израиль"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "IT",
+         "lang":
+         {
+             "en": "Italy",
+             "ru": "Италия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "JM",
+         "lang":
+         {
+             "en": "Jamaica",
+             "ru": "Ямайка"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "JP",
+         "lang":
+         {
+             "en": "Japan",
+             "ru": "Япония"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "JE",
+         "lang":
+         {
+             "en": "Jersey",
+             "ru": "Джерси"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "JO",
+         "lang":
+         {
+             "en": "Jordan",
+             "ru": "Иордания"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KZ",
+         "lang":
+         {
+             "en": "Kazakhstan",
+             "ru": "Казахстан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KE",
+         "lang":
+         {
+             "en": "Kenya",
+             "ru": "Кения"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KI",
+         "lang":
+         {
+             "en": "Kiribati",
+             "ru": "Кирибати"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "XK",
+         "lang":
+         {
+             "en": "Kosovo",
+             "ru": "Косово"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KW",
+         "lang":
+         {
+             "en": "Kuwait",
+             "ru": "Кувейт"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KG",
+         "lang":
+         {
+             "en": "Kyrgyzstan",
+             "ru": "Киргизия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LA",
+         "lang":
+         {
+             "en": "Laos",
+             "ru": "Лаос"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LV",
+         "lang":
+         {
+             "en": "Latvia",
+             "ru": "Латвия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LB",
+         "lang":
+         {
+             "en": "Lebanon",
+             "ru": "Ливан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LS",
+         "lang":
+         {
+             "en": "Lesotho",
+             "ru": "Лесото"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LR",
+         "lang":
+         {
+             "en": "Liberia",
+             "ru": "Либерия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LY",
+         "lang":
+         {
+             "en": "Libya",
+             "ru": "Ливия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LI",
+         "lang":
+         {
+             "en": "Liechtenstein",
+             "ru": "Лихтенштейн"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LT",
+         "lang":
+         {
+             "en": "Lithuania",
+             "ru": "Литва"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LU",
+         "lang":
+         {
+             "en": "Luxembourg",
+             "ru": "Люксембург"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MO",
+         "lang":
+         {
+             "en": "Macau SAR China",
+             "ru": "Макао (специальный административный район)"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MK",
+         "lang":
+         {
+             "en": "Macedonia",
+             "ru": "Македония"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MG",
+         "lang":
+         {
+             "en": "Madagascar",
+             "ru": "Мадагаскар"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MW",
+         "lang":
+         {
+             "en": "Malawi",
+             "ru": "Малави"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MY",
+         "lang":
+         {
+             "en": "Malaysia",
+             "ru": "Малайзия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MV",
+         "lang":
+         {
+             "en": "Maldives",
+             "ru": "Мальдивы"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ML",
+         "lang":
+         {
+             "en": "Mali",
+             "ru": "Мали"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MT",
+         "lang":
+         {
+             "en": "Malta",
+             "ru": "Мальта"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MH",
+         "lang":
+         {
+             "en": "Marshall Islands",
+             "ru": "Маршалловы Острова"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MQ",
+         "lang":
+         {
+             "en": "Martinique",
+             "ru": "Мартиника"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MR",
+         "lang":
+         {
+             "en": "Mauritania",
+             "ru": "Мавритания"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MU",
+         "lang":
+         {
+             "en": "Mauritius",
+             "ru": "Маврикий"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "YT",
+         "lang":
+         {
+             "en": "Mayotte",
+             "ru": "Майотта"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MX",
+         "lang":
+         {
+             "en": "Mexico",
+             "ru": "Мексика"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "FM",
+         "lang":
+         {
+             "en": "Micronesia",
+             "ru": "Федеративные Штаты Микронезии"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MD",
+         "lang":
+         {
+             "en": "Moldova",
+             "ru": "Молдова"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MC",
+         "lang":
+         {
+             "en": "Monaco",
+             "ru": "Монако"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MN",
+         "lang":
+         {
+             "en": "Mongolia",
+             "ru": "Монголия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ME",
+         "lang":
+         {
+             "en": "Montenegro",
+             "ru": "Черногория"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MS",
+         "lang":
+         {
+             "en": "Montserrat",
+             "ru": "Монтсеррат"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MA",
+         "lang":
+         {
+             "en": "Morocco",
+             "ru": "Марокко"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MZ",
+         "lang":
+         {
+             "en": "Mozambique",
+             "ru": "Мозамбик"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MM",
+         "lang":
+         {
+             "en": "Myanmar (Burma)",
+             "ru": "Мьянма (Бирма)"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NA",
+         "lang":
+         {
+             "en": "Namibia",
+             "ru": "Намибия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NR",
+         "lang":
+         {
+             "en": "Nauru",
+             "ru": "Науру"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NP",
+         "lang":
+         {
+             "en": "Nepal",
+             "ru": "Непал"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NL",
+         "lang":
+         {
+             "en": "Netherlands",
+             "ru": "Нидерланды"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NC",
+         "lang":
+         {
+             "en": "New Caledonia",
+             "ru": "Новая Каледония"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NZ",
+         "lang":
+         {
+             "en": "New Zealand",
+             "ru": "Новая Зеландия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NI",
+         "lang":
+         {
+             "en": "Nicaragua",
+             "ru": "Никарагуа"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NE",
+         "lang":
+         {
+             "en": "Niger",
+             "ru": "Нигер"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NG",
+         "lang":
+         {
+             "en": "Nigeria",
+             "ru": "Нигерия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NU",
+         "lang":
+         {
+             "en": "Niue",
+             "ru": "Ниуэ"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NF",
+         "lang":
+         {
+             "en": "Norfolk Island",
+             "ru": "о-в Норфолк"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KP",
+         "lang":
+         {
+             "en": "North Korea",
+             "ru": "КНДР"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MP",
+         "lang":
+         {
+             "en": "Northern Mariana Islands",
+             "ru": "Северные Марианские о-ва"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "NO",
+         "lang":
+         {
+             "en": "Norway",
+             "ru": "Норвегия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "OM",
+         "lang":
+         {
+             "en": "Oman",
+             "ru": "Оман"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PK",
+         "lang":
+         {
+             "en": "Pakistan",
+             "ru": "Пакистан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PW",
+         "lang":
+         {
+             "en": "Palau",
+             "ru": "Палау"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PS",
+         "lang":
+         {
+             "en": "Palestinian Territories",
+             "ru": "Палестинские территории"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PA",
+         "lang":
+         {
+             "en": "Panama",
+             "ru": "Панама"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PG",
+         "lang":
+         {
+             "en": "Papua New Guinea",
+             "ru": "Папуа – Новая Гвинея"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PY",
+         "lang":
+         {
+             "en": "Paraguay",
+             "ru": "Парагвай"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PE",
+         "lang":
+         {
+             "en": "Peru",
+             "ru": "Перу"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PH",
+         "lang":
+         {
+             "en": "Philippines",
+             "ru": "Филиппины"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PN",
+         "lang":
+         {
+             "en": "Pitcairn Islands",
+             "ru": "острова Питкэрн"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PL",
+         "lang":
+         {
+             "en": "Poland",
+             "ru": "Польша"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PT",
+         "lang":
+         {
+             "en": "Portugal",
+             "ru": "Португалия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PR",
+         "lang":
+         {
+             "en": "Puerto Rico",
+             "ru": "Пуэрто-Рико"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "QA",
+         "lang":
+         {
+             "en": "Qatar",
+             "ru": "Катар"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "RE",
+         "lang":
+         {
+             "en": "Réunion",
+             "ru": "Реюньон"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "RO",
+         "lang":
+         {
+             "en": "Romania",
+             "ru": "Румыния"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "RU",
+         "lang":
+         {
+             "en": "Russia",
+             "ru": "Россия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "RW",
+         "lang":
+         {
+             "en": "Rwanda",
+             "ru": "Руанда"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "WS",
+         "lang":
+         {
+             "en": "Samoa",
+             "ru": "Самоа"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SM",
+         "lang":
+         {
+             "en": "San Marino",
+             "ru": "Сан-Марино"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ST",
+         "lang":
+         {
+             "en": "São Tomé & Príncipe",
+             "ru": "Сан-Томе и Принсипи"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SA",
+         "lang":
+         {
+             "en": "Saudi Arabia",
+             "ru": "Саудовская Аравия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SN",
+         "lang":
+         {
+             "en": "Senegal",
+             "ru": "Сенегал"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "RS",
+         "lang":
+         {
+             "en": "Serbia",
+             "ru": "Сербия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SC",
+         "lang":
+         {
+             "en": "Seychelles",
+             "ru": "Сейшельские Острова"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SL",
+         "lang":
+         {
+             "en": "Sierra Leone",
+             "ru": "Сьерра-Леоне"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SG",
+         "lang":
+         {
+             "en": "Singapore",
+             "ru": "Сингапур"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SX",
+         "lang":
+         {
+             "en": "Sint Maarten",
+             "ru": "Синт-Мартен"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SK",
+         "lang":
+         {
+             "en": "Slovakia",
+             "ru": "Словакия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SI",
+         "lang":
+         {
+             "en": "Slovenia",
+             "ru": "Словения"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SB",
+         "lang":
+         {
+             "en": "Solomon Islands",
+             "ru": "Соломоновы Острова"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SO",
+         "lang":
+         {
+             "en": "Somalia",
+             "ru": "Сомали"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ZA",
+         "lang":
+         {
+             "en": "South Africa",
+             "ru": "ЮАР"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GS",
+         "lang":
+         {
+             "en": "South Georgia & South Sandwich Islands",
+             "ru": "Южная Георгия и Южные Сандвичевы о-ва"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KR",
+         "lang":
+         {
+             "en": "South Korea",
+             "ru": "Республика Корея"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SS",
+         "lang":
+         {
+             "en": "South Sudan",
+             "ru": "Южный Судан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ES",
+         "lang":
+         {
+             "en": "Spain",
+             "ru": "Испания"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LK",
+         "lang":
+         {
+             "en": "Sri Lanka",
+             "ru": "Шри-Ланка"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "BL",
+         "lang":
+         {
+             "en": "St. Barthélemy",
+             "ru": "Сен-Бартелеми"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SH",
+         "lang":
+         {
+             "en": "St. Helena",
+             "ru": "о-в Св. Елены"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "KN",
+         "lang":
+         {
+             "en": "St. Kitts & Nevis",
+             "ru": "Сент-Китс и Невис"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "LC",
+         "lang":
+         {
+             "en": "St. Lucia",
+             "ru": "Сент-Люсия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "MF",
+         "lang":
+         {
+             "en": "St. Martin",
+             "ru": "Сен-Мартен"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "PM",
+         "lang":
+         {
+             "en": "St. Pierre & Miquelon",
+             "ru": "Сен-Пьер и Микелон"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "VC",
+         "lang":
+         {
+             "en": "St. Vincent & Grenadines",
+             "ru": "Сент-Винсент и Гренадины"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SD",
+         "lang":
+         {
+             "en": "Sudan",
+             "ru": "Судан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SR",
+         "lang":
+         {
+             "en": "Suriname",
+             "ru": "Суринам"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SJ",
+         "lang":
+         {
+             "en": "Svalbard & Jan Mayen",
+             "ru": "Шпицберген и Ян-Майен"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SZ",
+         "lang":
+         {
+             "en": "Swaziland",
+             "ru": "Свазиленд"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SE",
+         "lang":
+         {
+             "en": "Sweden",
+             "ru": "Швеция"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "CH",
+         "lang":
+         {
+             "en": "Switzerland",
+             "ru": "Швейцария"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "SY",
+         "lang":
+         {
+             "en": "Syria",
+             "ru": "Сирия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TW",
+         "lang":
+         {
+             "en": "Taiwan",
+             "ru": "Тайвань"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TJ",
+         "lang":
+         {
+             "en": "Tajikistan",
+             "ru": "Таджикистан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TZ",
+         "lang":
+         {
+             "en": "Tanzania",
+             "ru": "Танзания"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TH",
+         "lang":
+         {
+             "en": "Thailand",
+             "ru": "Таиланд"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TL",
+         "lang":
+         {
+             "en": "Timor-Leste",
+             "ru": "Восточный Тимор"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TG",
+         "lang":
+         {
+             "en": "Togo",
+             "ru": "Того"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TK",
+         "lang":
+         {
+             "en": "Tokelau",
+             "ru": "Токелау"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TO",
+         "lang":
+         {
+             "en": "Tonga",
+             "ru": "Тонга"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TT",
+         "lang":
+         {
+             "en": "Trinidad & Tobago",
+             "ru": "Тринидад и Тобаго"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TA",
+         "lang":
+         {
+             "en": "Tristan da Cunha",
+             "ru": "Тристан-да-Кунья"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TN",
+         "lang":
+         {
+             "en": "Tunisia",
+             "ru": "Тунис"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TR",
+         "lang":
+         {
+             "en": "Turkey",
+             "ru": "Турция"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TM",
+         "lang":
+         {
+             "en": "Turkmenistan",
+             "ru": "Туркменистан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TC",
+         "lang":
+         {
+             "en": "Turks & Caicos Islands",
+             "ru": "о-ва Тёркс и Кайкос"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "TV",
+         "lang":
+         {
+             "en": "Tuvalu",
+             "ru": "Тувалу"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "UM",
+         "lang":
+         {
+             "en": "U.S. Outlying Islands",
+             "ru": "Внешние малые о-ва (США)"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "VI",
+         "lang":
+         {
+             "en": "U.S. Virgin Islands",
+             "ru": "Виргинские о-ва (США)"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "UG",
+         "lang":
+         {
+             "en": "Uganda",
+             "ru": "Уганда"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "UA",
+         "lang":
+         {
+             "en": "Ukraine",
+             "ru": "Украина"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "AE",
+         "lang":
+         {
+             "en": "United Arab Emirates",
+             "ru": "ОАЭ"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "GB",
+         "lang":
+         {
+             "en": "United Kingdom",
+             "ru": "Великобритания"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "UN",
+         "lang":
+         {
+             "en": "United Nations",
+             "ru": "Организация Объединенных Наций"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "US",
+         "lang":
+         {
+             "en": "United States",
+             "ru": "Соединенные Штаты"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "UY",
+         "lang":
+         {
+             "en": "Uruguay",
+             "ru": "Уругвай"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "UZ",
+         "lang":
+         {
+             "en": "Uzbekistan",
+             "ru": "Узбекистан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "VU",
+         "lang":
+         {
+             "en": "Vanuatu",
+             "ru": "Вануату"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "VA",
+         "lang":
+         {
+             "en": "Vatican City",
+             "ru": "Ватикан"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "VE",
+         "lang":
+         {
+             "en": "Venezuela",
+             "ru": "Венесуэла"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "VN",
+         "lang":
+         {
+             "en": "Vietnam",
+             "ru": "Вьетнам"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "WF",
+         "lang":
+         {
+             "en": "Wallis & Futuna",
+             "ru": "Уоллис и Футуна"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "EH",
+         "lang":
+         {
+             "en": "Western Sahara",
+             "ru": "Западная Сахара"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "YE",
+         "lang":
+         {
+             "en": "Yemen",
+             "ru": "Йемен"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ZM",
+         "lang":
+         {
+             "en": "Zambia",
+             "ru": "Замбия"
+         },
+         "cost": 0,
+         "addPrc": 0
+     },
+     {
+         "value": "ZW",
+         "lang":
+         {
+             "en": "Zimbabwe",
+             "ru": "Зимбабве"
+         },
+         "cost": 0,
+         "addPrc": 0
+     }]
+ },
+ {
+     "id": "city",
+     "title":
+     {
+         "en": "City",
+         "ru": "Город"
+     },
+     "maxlength": 60,
+     "width": "large",
+     "type": "text",
+     "label":
+     {
+         "en": "City",
+         "ru": "Город"
+     }
+ },
+ {
+     "id": "zip",
+     "title":
+     {
+         "en": "ZIP",
+         "ru": "Индекс"
+     },
+     "maxlength": 12,
+     "width": "small",
+     "type": "text",
+     "label":
+     {
+         "en": "ZIP",
+         "ru": "Индекс"
+     }
+ } ]

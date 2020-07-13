@@ -1,0 +1,136 @@
+html,
+body {
+    margin: 0;
+}
+
+.za-notification-message {
+    opacity: 1;
+    background-color: #fff;
+    -webkit-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    -moz-box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    box-shadow: -1px 2px 5px 0px rgba(0, 0, 0, 0.34);
+    text-align: center;
+}
+
+.za-button-group,
+.za-modal-close {
+    margin-right: 5px;
+}
+
+#zoia-browse-content {
+    overflow: auto;
+    padding: 7px;
+}
+
+.zoia-browse-item {
+    width: 90px;
+    height: 115px;
+    margin: 10px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.zoia-browse-item-img {
+    -webkit-box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.65);
+    -moz-box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.65);
+    box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.65);
+    width: 80px;
+    height: 80px;
+    border-radius: 7px;
+    margin: 5px;
+}
+
+.zoia-browse-item-text {
+    height: 25px;
+    width: 90px;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.zoia-spinner-dialog {
+    background: transparent;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    z-index: 15;
+    top: 50%;
+    left: 50%;
+}
+
+.zoia-browse-item-d>.zoia-browse-item-img {
+    background: #FFFAD5;
+}
+
+.zoia-browse-item-f>.zoia-browse-item-img {
+    background: #FDFDFD;
+}
+
+.zoia-browse-item-thumb {
+    border-radius: 7px;
+}
+
+.zoia-browse-item-selected {
+    background: #374140;
+    border-radius: 7px;
+}
+
+.zoia-browse-item-selected>.zoia-browse-item-text {
+    color: #fff;
+}
+
+.zoia-browse-control {
+    padding: 20px 10px 10px 20px;
+}
+
+.zoia-browse-ctl-button {
+    padding: 0px 10px 3px 10px;
+}
+
+.zoia-browse-ctl-up,
+.zoia-browse-ctl-up {
+    margin-right: 5px;
+}
+
+#zoia-upload-area {
+    border: 1px dashed #ccc;
+    min-height: 100px;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#zoia-upload-files {
+    padding-top: 25px;
+}
+
+.zoia-upload-files-label {
+    margin-bottom: -15px;
+    font-size: 11px;
+    color: #222;
+}
+
+.zoia-browse-footer {
+    padding: 20px;
+    text-align: right;
+}
+
+#zoiaBrowseCancelBtn {
+    margin-right: 5px;
+}
+
+#zoiaSpinnerDialog.za-modal {
+    background: rgba(255, 255, 255, .6);
+}

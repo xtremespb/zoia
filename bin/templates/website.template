@@ -1,0 +1,50 @@
+{
+    "protocol": "http",    
+    "url": {
+        "en": "127.0.0.1:3000",
+        "ru": "127.0.0.1:3000",
+        "sr": "127.0.0.1:3000"
+    },
+    "logo": {
+        "normal": {
+            "url": "/zoia/core/images/zoia_logo.png",
+            "path": "../static/zoia/core/images/zoia_logo.png",
+            "width": 168,
+            "height": 81
+        },
+        "small": {
+            "url": "/zoia/core/images/zoia_logo_small.png",
+            "path": "../static/zoia/core/images/zoia_logo_small.png",
+            "width": 120,
+            "height": 58
+        },
+        "mobile": {
+            "url": "/zoia/core/images/zoia_logo_mobile.png",
+            "path": "../static/zoia/core/images/zoia_logo_mobile.png",
+            "width": 100,
+            "height": 48
+        },
+        "mail": {
+            "url": "/zoia/core/images/zoia_logo_mail.png",
+            "path": "../static/zoia/core/images/zoia_logo_mail.png",
+            "width": 100,
+            "height": 48
+        }
+    },
+    "title": {
+        "en": "Example Website powered by Zoia Web Framework",
+        "ru": "Тестовый сайт на основе Zoia Web Framework",
+        "sr": "Пример вебсајта заснованог на Зоиа веб окружењу"
+    },
+    "titleShort": {
+        "en": "Example Website",
+        "ru": "Тестовый сайт",
+        "sr": "Пробни вебсајт"
+    },
+    "templates": ["default"],
+    "email": {
+        "noreply": "Zoia Web Framework <info@zoiajs.org>",
+        "feedback": "info@zoiajs.org"
+    },
+    "maintenance": false
+}

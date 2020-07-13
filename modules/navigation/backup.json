@@ -1,0 +1,9 @@
+{
+    "id": "navigation",
+    "items": [
+    {
+        "type": "mongo",
+        "collections": ["navigation"]
+    }
+    ]
+}

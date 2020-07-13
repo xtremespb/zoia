@@ -1,0 +1,14 @@
+{
+    "id": "hosting",
+    "items": [
+    {
+        "type": "mongo",
+        "collections": ["hosting_accounts", "hosting_counters", "hosting_payments", "hosting_transactions",
+            "hosting_tasks"
+        ]
+    },
+    {
+        "type": "file",
+        "files": ["config/hosting.json", "config/ispmgr.json", "config/robokassa.json"]
+    }]
+}

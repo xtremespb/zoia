@@ -1,0 +1,42 @@
+<article class="za-article za-margin">
+    <div class="za-article-meta za-text-small"><img src="{{ userData[item.authorId].url }}" class="za-border-circle" style="width:24px;height:24px;margin-top:-3px">&nbsp;{{ userData[item.authorId].username }}&nbsp;&nbsp;&nbsp;{{ item.timestamp }}</div>
+    <div class="za-article-title">{{ item[locale].title }}</div>
+    {% if item[locale].keywords.length %}
+    <div class="za-text-small zoia-wrap-keywords">
+        {% for tag in item[locale].keywords %}
+        <a class="zoia-blog-tag" href="{{uprefix}}{{ configModule.prefix.blog }}?tag={{ tag }}">{{ tag }}</a>{% if loop.last != true %},{% endif %} {% endfor %}
+    </div>
+    {% endif %}
+    <div class="za-margin-top">
+        {{ item[locale].content_p1 }}{{ item[locale].content_p2 }}
+    </div>
+</article>
+{% if configModule.allowComments %} {% if item.comments == "1" %}
+<div id="zoia_comments_loading">
+    <div za-spinner style="margin-right:10px"></div>&nbsp;{{ i18n.__(locale, 'Loading comments, please wait')}}...
+</div>
+<div id="zoia_comments_wrap" style="display:none">
+    <div class="za-margin-top za-margin-bottom" id="zoia_comments">
+    </div>
+    {% if auth %}
+    <div class="za-card za-card-default za-card-small za-card-body za-width-1-2@m zoia-comment-form">
+        <textarea class="za-textarea" rows="4" id="zoia_comment" placeholder="{{ i18n.__(locale, 'Comment text')}}"></textarea>
+        <button class="za-button za-button-primary za-button-small za-margin-top" id="zoia_btn_addcomment">
+            <div za-spinner class="zoiaButtonSpinner" style="display:none" id="zoia_btn_addcomment_spinner"></div>{{ i18n.__(locale, 'Add comment')}}
+        </button>
+    </div>
+    <div>
+        <div class="za-button za-button-primary" id="zoia_btn_newcomment" style="display:none">{{ i18n.__(locale, 'New comment')}}</div>
+    </div>
+    {% else %}
+    <div>{{ i18n.__(locale, 'Please authorize to post add a comment.')}}</div>
+    {% endif %}
+</div>
+{% endif %} {% endif %}
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_postId" data="{{ item._id }}"></div>
+    <div id="zp_newCommentHighlight" data="#F5F1D5"></div>
+    <div id="zp_comment" data='<div><article class="za-comment za-margin-bottom" id="{id}" data-id="{id}" data-level="{level}" style="margin-left:{offset}px"><div class="za-comment-meta"><img class="za-comment-avatar za-border-circle" src="{picture}" style="width:24px;height:24px;margin-top:-4px" alt="">&nbsp;{username}&nbsp;{timestamp}</div><div class="zoia-comment-text">{comment}</div>{% if auth %}<div class="za-comment-meta"><a href="" data-id="{id}" class="za-text-small za-text-muted zoia-comment-reply">{{ i18n.__(locale, ' Reply ')}}</a>{% if admin %}&nbsp;&nbsp;<a href="" data-id="{id}" class="za-text-small za-text-muted zoia-comment-remove"><span za-spinner style="display:none"></span>{{ i18n.__(locale, 'Remove ')}}</a>{% endif %}{% endif %}</div></article></div>'></div>
+    <div id="zp_comment_removed" data='<div><article class="za-comment za-margin-bottom" id="{id}" data-id="{id}" data-level="{level}" style="margin-left:{offset}px"><div class="zoia-comment-text za-text-muted">{{ i18n.__(locale, ' Comment was deleted ')}}</div></div></article></div>'></div>
+</div>

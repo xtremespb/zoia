@@ -1,0 +1,43 @@
+{
+    "title": "Групе",
+    "Select all": "Изаберите све",
+    "Select none": "Поништи избор",
+    "Name": "Име",
+    "Status": "Статус",
+    "Actions": "Акције",
+    "statuses": [
+        "Није активна",
+        "Активна"
+    ],
+    "fieldErrors": {
+        "group": "Нетачна група",
+        "status": "Погрешан статус",
+        "Could not save to the database": "Грешке приликом чувања у базу података",
+        "Group not found": "Група није нађена",
+        "Group already exists in database": "Група са тим именом је већ створена",
+        "Saved successfully": "Успешно сачувана"
+    },
+    "Operation was successful": "Операција је прошла успешно",
+    "Cannot delete one or more items": "Грешка приликом уклањања једног или више елемената",
+    "Could not load information from database": "Грешка приликом преузимања информација из базе података",
+    "Edit": "Уредите",
+    "Delete": "Уклоните",
+    "Add": "Додајте",
+    "editItem": "Измените групу",
+    "addItem": "Направите групу",
+    "Cancel": "Одустаните",
+    "Save": "Сачувајте",
+    "Search": "Претражите",
+    "Latin characters and numbers, length: 3-20": "Само лат. слова и бројеве, дужина: 3-20",
+    "The following group(s) will be removed from the database": "Следеће групе ће бити уклоњени из система",
+    "Could not load data from server. Please try to refresh page in a few moments.": "Грешка за време преузимања података из система. Молимо вас, покушајте поново касније.",
+    "No items to display": "Нема ставки за приказивање",
+    "Should not be empty": "Обавезно поље",
+    "Too short": "Сувише кратка вредност",
+    "Too long": "Сувише дуга вредност",
+    "Doesn't match required format": "Не одговара формату",
+    "Passwords do not match": "Лозинке се не поклапају",
+    "Could not delete admin group because it's a system one.": "Системска група (админ) не може да се уклони.",
+    "OK": "У реду",
+    "Loading data, please wait": "Преузимање података, молимо вас, сачекајте"
+}

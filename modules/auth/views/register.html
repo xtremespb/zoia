@@ -1,0 +1,16 @@
+<div class="zoia-form-header">
+    <h1>{{ i18n.__(locale, 'Register new user') }}</h1>
+</div>
+<form id="zoiaRegister">
+    <div class="za-flex za-flex-center za-margin-bottom">
+        <div za-spinner></div>
+    </div>
+</form>
+<div id="registrationSuccessful" style="display:none">
+    <p>{{ i18n.__(locale, 'Registration was successful.') }}</p>
+    <p>{{ i18n.__(locale, 'Please check your mailbox and confirm your registration by clicking the confirmation link.') }}</p>
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_rxp" data='{{ rxp }}'></div>
+</div>

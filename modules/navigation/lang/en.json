@@ -1,0 +1,19 @@
+{
+	"title": "Navigation",
+	"Navigation": "Navigation",
+	"Cancel": "Cancel",
+	"Save": "Save",
+	"Should not be empty": "Should not be empty",
+	"Too short": "Too short",
+	"Too long": "Too long",
+	"Doesn't match required format": "Doesn't match required format",
+	"Edit Item": "Edit Item",
+	"1-64 characters": "1-64 characters",
+	"Title": "Title",
+	"URL": "URL",
+	"Duplicate item": "Duplicate item",
+	"Could not save to the database": "Could not save to the database",
+	"Navigation data has been saved": "Navigation data has been saved",
+	"Language": "Language",
+	"Actions": "Actions"
+}

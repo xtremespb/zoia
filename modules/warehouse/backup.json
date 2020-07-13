@@ -1,0 +1,19 @@
+{
+    "id": "warehouse",
+    "items": [
+    {
+        "type": "mongo",
+        "collections": ["warehouse", "warehouse_collections", "warehouse_delivery", "warehouse_orders",
+            "warehouse_properties", "warehouse_registry", "warehouse_variants",
+            "warehouse_variants_collections", "warehouse_counters"
+        ]
+    },
+    {
+        "type": "directory",
+        "directories": ["static/images", "static/storage"]
+    },
+    {
+        "type": "file",
+        "files": ["config/address.json", "config/catalog.json"]
+    }]
+}

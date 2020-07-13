@@ -1,0 +1,19 @@
+[Unit]
+Description={serverName} (Zoia)
+Documentation=https://zoiajs.org
+After=network.target
+
+[Service]
+Environment=
+Type=simple
+User={user}
+Group={group}
+ExecStart=/usr/bin/node {root}/bin/webserver.js
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=nodejs_{name}
+
+[Install]
+WantedBy=multi-user.target

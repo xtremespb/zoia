@@ -1,0 +1,77 @@
+.zoiaTableSortingIndicator {
+    font-size: 80%;
+}
+
+.za-pagination > li.za-active > a {
+    font-weight: bold;
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.zoia-action-btn-mobile-wrap {
+	margin-top: 10px;
+}
+
+.zoia-action-btn-mobile {
+	padding: 10px;
+	border: 1px solid #ccc;
+	font-size: 90%;
+	color: #111;
+}
+
+.zoia-action-btn-mobile:hover {
+	color: #111;
+	text-decoration: none;
+	background: #eee;
+}
+
+.za-checkbox:selection {
+	border: 1px solid #ddd;
+	background: #ddd;
+}
+
+#zoiaEditDialogLoading {
+	height: 200px;
+}
+
+.zoiaEditDialogLoadingSpinnerWrap {
+	margin: 0 auto;
+	width: 30px;
+	padding-top: 85px;
+	position: relative;
+}
+
+.editForm-help-text {
+    font-size: 75%;
+}
+
+.editForm-field-wrap {
+    margin-right: 5px;
+}
+
+/* Module-specific styles */
+
+#brb_actions {
+	width: 90px;
+}
+
+.brbSearchInput {
+    height: 40px;
+}
+
+#brb > tbody > tr:hover {
+	background: #FFF8E3;
+}
+
+.brbBtnSelectAll,
+.brbBtnSelectNone,
+.brbBtnRefresh {
+    padding: 9px;
+} 

@@ -1,0 +1,62 @@
+<div id="wrapTable">
+    <h1>{{ i18n.__(locale, 'title')}}</h1>
+    <div class="za-grid za-grid-small">
+        <div>
+            <ul class="za-iconnav za-hidden@m">
+                <li>
+                    <button za-icon="icon:refresh" class="za-icon-button brbBtnRefresh" title="{{ i18n.__(locale, 'Refresh')}}" za-tooltip="pos:bottom-right"></button>
+                </li>
+            </ul>
+            <div class="za-button-group za-visible@m">
+                <button class="za-button za-button-default brbBtnRefresh" title="{{ i18n.__(locale, 'Refresh')}}" za-tooltip="pos:bottom-right"><span za-icon="icon:refresh"></span></button>
+            </div>
+        </div>
+        <div class="za-width-expand">
+            <div class="za-inline za-float-right">
+                <a class="za-form-icon za-form-icon-flip brbSearchInputClear" za-icon="icon: close"></a>
+                <input type="text" class="brbSearchInput za-input za-width-medium" placeholder="{{ i18n.__(locale, 'Search')}}">
+            </div>
+        </div>
+    </div>
+    <div class="brbPagination za-margin-top noselect"></div>
+    <table class="za-table za-table-divider za-table-striped za-table-hover za-table-responsive za-table-middle" id="brb">
+        <thead class="noselect" style="display:none">
+            <tr>
+                <th id="brb_username">{{ i18n.__(locale, 'Username')}}</th>
+                <th id="brb_actions">{{ i18n.__(locale, 'Actions')}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="100%">
+                    <div za-spinner style="margin:-2px 5px 0 0"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="brbPagination za-margin noselect"></div>
+</div>
+<div id="zoiaEditDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div id="zoiaEditDialogLoading">
+            <div class="zoiaEditDialogLoadingSpinnerWrap">
+                <div za-spinner></div>
+            </div>
+        </div>
+        <div id="zoiaEditDialogForm" style="display:none">
+            <div class="za-modal-header">
+                <h2 class="za-modal-title">{{ i18n.__(locale, 'editItem')}}</h2>
+            </div>
+            <form id="editForm">
+                <div class="za-flex za-flex-center za-margin-bottom">
+                    <div za-spinner></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_uprefix" data="{{ uprefix }}"></div>
+    <div id="zp_rxp" data='{{ rxp }}'></div>
+    <div id="zp_corePrefix" data='{{ corePrefix }}'></div>
+</div>

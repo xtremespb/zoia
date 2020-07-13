@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ pageTitle }} | {{ config.website.title[locale] }}</title>
+    <meta name="keywords" content="{{ keywords }}">
+    <meta name="description" content="{{ description }}">
+    <link rel="stylesheet" href="/zoia/3rdparty/uikit/css/uikit.min.css" />
+    <link rel="stylesheet" href="/zoia/core/css/default.css" />{% if extraCSS %}{% for item in extraCSS %}
+    <link rel="stylesheet" href="{{ item }}">{% endfor %}{% endif %}
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <div class="zoia-template-wrapper">
+        <div class="za-hidden@s zoia-wrap-logo">
+            <nav class="za-navbar-container za-margin zoia-mobile-nav" za-navbar>
+                <a class="za-navbar-item za-logo" href="#" za-toggle="target:#zoia-offcanvas-nav"><span class="zoia-mobile-navbar-menu" za-navbar-toggle-icon="ratio:1.4"></span></a>
+                <div class="za-navbar-center">
+                    <a href="{{ uprefix }}/"><img src="{{ config.website.logo.mobile.url }}" class="zoia-mobile-nav-logo"></a>
+                </div>
+            </nav>
+        </div>
+        <div class="za-container zoia-wrap-nav za-visible@s">
+            <div class="zoia-logo-wrap">
+                <a href="{{ uprefix }}/"><img src="{{ config.website.logo.small.url }}"></a>
+            </div>
+            <nav class="za-navbar-container" za-navbar="mode:click;offset:-10">
+                <div class="za-navbar-left">
+                    <ul class="za-navbar-nav">
+                        {{ req | navigationDesktop }}
+                    </ul>
+                </div>
+                <div class="za-navbar-right zoia-template-navbar-right" style="display:none">
+                    <ul class="za-navbar-nav">{% if auth %}
+                        <li>
+                            <a href="#">{{ auth.username }}&nbsp;<span za-icon="icon:chevron-down"></a>
+                            <div class="za-navbar-dropdown">
+                                <ul class="za-nav za-navbar-dropdown-nav">
+                                    <li><a href="{{ uprefix }}{{ config.core.prefix.account }}">{{ i18nc.__(locale, 'Your Account') }}</a></li>{% if admin %}
+                                    <li><a href="{{ uprefix }}{{ config.core.prefix.admin }}">{{ i18nc.__(locale, 'Administration panel') }}</a></li>
+                                    <li class="za-nav-divider"></li>{% endif %}
+                                    <li><a href="{{ uprefix }}{{ config.core.prefix.auth }}{{ config.core.prefix.authLogout }}">{{ i18nc.__(locale, 'Log out') }}</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        {% else %}
+                        <li><a href="{{ uprefix }}{{ config.core.prefix.auth }}">{{ i18nc.__(locale, 'Sign In') }}</a></li>
+                        <li><a href="{{ uprefix }}{{ config.core.prefix.auth }}{{ config.core.prefix.authRegister }}">{{ i18nc.__(locale, 'Register') }}</a></li>{% endif %}
+                    </ul>
+                    {{ req | switcherDesktopQuery }}
+                </div>
+            </nav>
+        </div>
+        <div class="za-container zoia-wrap-content zoia-content-container za-flex">
+            {% if folderPagesCount > 0 %}
+            <div class="za-margin-right zoia-subnav">{{ [req, pageFolder, pageID, locale] | contents }}</div>
+            {% endif %}
+            <div class="za-width-1-1">
+                {% if folderPagesCount > 0 %}
+                <a class="za-icon-button za-margin-small-right za-margin-bottom za-hidden@s" za-icon="icon:chevron-down" type="button" id="zoia_catalog_folders_toggle" style="float:right;margin-top:8px"></a>
+                <div za-drop="mode:click" style="display:none">
+                    {{ [req, pageFolder, pageID, locale] | contents }}
+                </div>
+                {% endif %}
+                {{ content }}
+            </div>
+        </div>
+        <div class="za-container zoia-wrap-footer">
+            <div class="zoia-footer-container">
+                Стартовано са <a href="https://zoiajs.org" target="_blank">Зоиа развојно окружење</a>, <a href="https://opensource.org/licenses/MIT" target="_blank">МИТ лиценца</a>. &copy; 2017-2018 Михаил А. Матвеев
+            </div>
+        </div>
+        <div id="zoia-offcanvas-nav" za-offcanvas="overlay:true;display:none">
+            <div class="za-offcanvas-bar">
+                <ul class="za-nav za-nav-default">
+                    {{ req | navigationMobile }}
+                    <li class="za-nav-divider"></li>{% if auth %}
+                    <li class="za-nav-header">{{ auth.username }}</li>
+                    <li><a href="{{ uprefix }}{{ config.core.prefix.account }}">{{ i18nc.__(locale, 'Your Account') }}</a></li>{% if admin %}
+                    <li><a href="{{ uprefix }}{{ config.core.prefix.admin }}">{{ i18nc.__(locale, 'Administration panel') }}</a></li>{% endif %}
+                    <li><a href="{{ uprefix }}{{ config.core.prefix.auth }}{{ config.core.prefix.authLogout }}">{{ i18nc.__(locale, 'Log out') }}</a></li>{% else %}
+                    <li><a href="{{ uprefix }}{{ config.core.prefix.auth }}">{{ i18nc.__(locale, 'Sign In') }}</a></li>
+                    <li><a href="{{ uprefix }}{{ config.core.prefix.auth }}{{ config.core.prefix.authRegister }}">{{ i18nc.__(locale, 'Register') }}</a></li>{% endif %}
+                </ul>
+                {{ req | switcherMobileQuery }}
+            </div>
+        </div>
+    </div>
+    {% if config.production %}
+    <script src="/zoia/3rdparty/uikit/js/bundle.min.js" type="text/javascript"></script>{% else %}
+    <script src="/zoia/3rdparty/jquery/jquery.min.js" type="text/javascript"></script>
+    <script src="/zoia/3rdparty/uikit/js/uikit.min.js" type="text/javascript"></script>
+    <script src="/zoia/3rdparty/uikit/js/uikit-icons.min.js" type="text/javascript"></script>{% endif %}{% if extraJS %} {% for item in extraJS %}
+    <script src="{{ item }}" type="text/javascript"></script>{% endfor %}{% endif %}
+    <script>
+    window.onload = function() {
+        $('.zoia-template-navbar-right').show();
+    };
+    </script>
+</body>
+
+</html>

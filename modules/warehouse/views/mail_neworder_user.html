@@ -1,0 +1,80 @@
+<tr>
+    <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+        <p style="text-align:center">{{ i18n.__(locale, 'Thank you for placing your order.') }}</p>
+        <table style="padding:18px 0 0 0"></table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family: Helvetica, Arial, sans-serif; color: #333333; padding:5px;">
+            <tr>
+                <td>{{ i18n.__(locale, 'Order ID') }}: {{ orderData._id }}</td>
+                <td style="text-align: right">{{ i18n.__(locale, 'Status') }}: {{ orderStatus }}</td>
+            </tr>
+        </table>
+        <table style="padding:18px 0 0 0"></table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family: Helvetica, Arial, sans-serif; color: #333333; padding:5px;">
+            <tr style="font-weight:bold;background:#f5f5f5">
+                <td>
+                    <p>{{ i18n.__(locale, 'Item') }}</p>
+                </td>
+                <td>{{ i18n.__(locale, 'Cost') }}</td>
+                <td width="90px" nowrap="nowrap">{{ i18n.__(locale, 'Amount') }}</td>
+                <td>{{ i18n.__(locale, 'Total') }}</td>
+            </tr>
+            {% for item in cart %}
+            <tr>
+                <td style="width:100%">
+                    <p>{{ item.text }}{% if item.variant %} ({{ item.variantTitle }}){% endif %} {% for cbx in item.checkboxes %}
+                        <br>{{ item.propertiesData[cbx] }} {% endfor %} {% for itg in item.integersID %}
+                        <br>{{ item.propertiesData[itg] }}&nbsp;({{ item.propertiesCount[itg] }}) {% endfor %} {% for its in item.selectsID %}
+                        <br>{{ item.selectsTitles[its] }}: {{ item.selectsValues[its] }} {% endfor %}</p>
+                </td>
+                <td nowrap="">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{{ item.price }}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</td>
+                <td nowrap="" style="text-align:center;">{{ item.count }}</td>
+                <td nowrap="">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{{ item.subtotal }}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <table style="padding:18px 0 0 0"></table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family: Helvetica, Arial, sans-serif; color: #333333; padding:5px;">
+            <tr>
+                <td style="width:100%">
+                    <p>{{ i18n.__(locale, 'Delivery') }}</p>
+                </td>
+                <td nowrap="">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{{ orderData.costs.delivery }}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</td>
+            </tr>
+            {% for item in delivery %}
+            <tr>
+                <td style="width:100%">
+                    <p>{{ item.title }} {% if item.variant %}&nbsp;({{ item.variantTitle }}){% endif %}</p>
+                </td>
+                <td nowrap="">{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{{ item.cost }}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</td>
+            </tr>
+            {% endfor %}
+            <tr style="padding: 18px 5 5 5">
+                <td>
+                    <p><b>{{ i18n.__(locale, 'Total cost') }}</b></p>
+                </td>
+                <td nowrap=""><b>{% if configModule.currencyPosition == 'left' %}{{ settings.currency }}{% endif %}{{ orderData.costs.total }}{% if configModule.currencyPosition == 'right' %}&nbsp;{{ settings.currency }}{% endif %}</b></td>
+            </tr>
+        </table>
+        {% if addressHTML %}
+        <hr>
+        <p style="font-family: Helvetica, Arial, sans-serif; color: #222222;font-size:16px">{{ i18n.__(locale, 'Delivery address') }}:</p>
+        <p style="font-family: Helvetica, Arial, sans-serif; color: #666666;font-size:16px">{{ addressHTML }}</p>
+        {% endif %}
+    </td>
+</tr>
+<tr>
+    <td align="center">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td align="center" style="padding-top: 25px;" class="padding">
+                    <table border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
+                        <tr>
+                            <td align="center" style="margin:3px;border-right:3px solid #ffffff" bgcolor="#374140"><a href="{{ payURL }}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; border-radius: 3px; padding: 15px 25px; border: 1px solid #374140; display: inline-block;" class="mobile-button"><strong style="color:#ffffff;font-weight:normal;">{{ i18n.__(locale, 'Pay') }}</strong></a></td>
+                            {% if auth %}<td align="center" style="margin:3px;" bgcolor="#374140"><a href="{{ viewURL }}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; border-radius: 3px; padding: 15px 25px; border: 1px solid #374140; display: inline-block;" class="mobile-button"><strong style="color:#ffffff;font-weight:normal;">{{ i18n.__(locale, 'View Order') }}</strong></a></td>{% endif %}
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>

@@ -1,0 +1,19 @@
+[Unit]
+Description=Zoia Hosting Daemon
+Documentation=https://zoiajs.org
+After=network.target
+
+[Service]
+Environment=
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/bin/node /usr/local/bin/zhdaemon /etc/zhdaemon.json
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=zhdaemon
+
+[Install]
+WantedBy=multi-user.target

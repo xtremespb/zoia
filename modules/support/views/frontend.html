@@ -1,0 +1,160 @@
+<div class="zoia-wrap-table" style="display:none">
+    <div class="za-grid-collapse" za-grid>
+        <div class="za-width-expand">
+            <h1>{{ i18n.__(locale, 'title')}}</h1>
+        </div>
+        <div class="za-flex za-flex-right za-visible@s">
+            <button class="za-button za-button-primary zoia-btn-create-ticket">{{ i18n.__(locale, 'Create ticket')}}</button>
+        </div>
+    </div>
+    <ul class="za-breadcrumb">
+        <li><a href="#" class="zoia-breadcrumb-root">{{ i18n.__(locale, 'title')}}</a></li>
+        <li><span>{{ i18n.__(locale, 'All Tickets')}}</span></li>
+    </ul>
+    <div class="za-margin-top">
+        <button class="za-button za-button-primary zoia-btn-create-ticket za-hidden@s za-button-small">{{ i18n.__(locale, 'Create ticket')}}</button>
+    </div>
+    <div class="supportPagination za-margin-top noselect"></div>
+    <table class="za-table za-table-divider za-table-striped za-table-hover za-table-responsive za-table-middle" id="support">
+        <thead class="noselect" style="display:none">
+            <tr>
+                <th id="support__id" class="za-table-shrink">{{ i18n.__(locale, 'ID')}}</th>
+                <th id="support_timestamp" class="za-table-shrink">{{ i18n.__(locale, 'Date')}}</th>
+                <th id="support_title">{{ i18n.__(locale, 'Title')}}</th>
+                <th id="support_priority" class="za-table-shrink">{{ i18n.__(locale, 'Priority')}}</th>
+                <th id="support_status" class="za-table-shrink">{{ i18n.__(locale, 'Status')}}</th>
+                <th id="support_actions" class="za-table-shrink"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="100%">
+                    <div za-spinner style="margin:-2px 5px 0 0"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="supportPagination za-margin noselect"></div>
+</div>
+<div class="zoia-wrap-new" style="display:none">
+    <h1>{{ i18n.__(locale, 'Create ticket')}}</h1>
+    <ul class="za-breadcrumb">
+        <li><a href="#" class="zoia-breadcrumb-root">{{ i18n.__(locale, 'title')}}</a></li>
+        <li><span>{{ i18n.__(locale, 'Create ticket')}}</span></li>
+    </ul>
+    <div class="za-alert-danger" za-alert style="display:none" id="zoia_ct_form_error">
+        <a class="za-alert-close" za-close></a>
+        <p>{{ i18n.__(locale, 'Form contains errors. Please check all fields and try again.')}}</p>
+    </div>
+    <div za-grid>
+        <div class="za-width-2-3@m">
+            <form class="za-form-stacked" id="zoia_ct_form">
+                <div class="za-margin">
+                    <label class="za-form-label" for="zoia_ct_title">{{ i18n.__(locale, 'Title')}}:</label>
+                    <div class="za-form-controls">
+                        <input class="za-input za-form-width-large zoia-ct-field" id="zoia_ct_title" type="text">
+                    </div>
+                    <div class="za-text-muted za-text-small">{{ i18n.__(locale, 'A short description, length: 2-128 characters')}}</div>
+                </div>
+                <div class="za-margin">
+                    <label class="za-form-label" for="zoia_ct_priority">{{ i18n.__(locale, 'Priority')}}:</label>
+                    <div class="za-form-controls">
+                        <select class="za-select za-form-width-medium zoia-ct-field" id="zoia_ct_priority">
+                        </select>
+                    </div>
+                </div>
+                <div class="za-margin">
+                    <label class="za-form-label" for="zoia_ct_message">{{ i18n.__(locale, 'Message')}}:</label>
+                    <div class="za-form-controls">
+                        <textarea class="za-textarea za-form-width-large zoia-ct-field" id="zoia_ct_message" rows="5"></textarea>
+                    </div>
+                    <div class="za-text-muted za-text-small">{{ i18n.__(locale, 'A long description, length: 2-4096 characters')}}</div>
+                </div>
+                <div class="za-margin">
+                    <button class="za-button za-button-primary" id="zoia_ct_btn_create" type="submit">
+                        <div za-spinner id="zoia_ct_btn_create_spinner" style="display:none"></div>{{ i18n.__(locale, 'Create')}}</button>
+                    <a href="" class="za-button za-button-default" id="zoia_ct_btn_cancel" type="button">{{ i18n.__(locale, 'Cancel')}}</a>
+                </div>
+            </form>
+        </div>
+        <div class="za-width-1-3@m">
+            <div class="za-text-muted">
+                <ul>
+                    <li>{{ i18n.__(locale, 'Please set the appropriate title for your support ticket.')}}</li>
+                    <li>{{ i18n.__(locale, 'The priority of the ticket indicates the importance of your request or problem and may be changed by support team later.')}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="zoia-wrap-view" style="display:none">
+    <h1>{{ i18n.__(locale, 'Ticket')}}&nbsp;<span class="zoia-ticket-id"></span></h1>
+    <ul class="za-breadcrumb">
+        <li><a href="#" class="zoia-breadcrumb-root">{{ i18n.__(locale, 'title')}}</a></li>
+        <li><span>{{ i18n.__(locale, 'Ticket')}}&nbsp;<span class="zoia-ticket-id"></span></span>
+        </li>
+    </ul>
+    <div class="zoia-ticket-wrap-loading">
+        <div za-spinner style="margin-right:10px"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}...</div>
+    <div class="zoia-ticket-wrap-data za-child-width-expand@m" za-grid>
+        <div>
+            <div class="zoia-ticket-title"></div>
+            <div class="za-flex-inline">
+                <div class="zoia-ticket-timestamp"></div>
+                <div class="zoia-ticket-status za-label" style="margin-left:10px"></div>
+            </div>
+            <div class="za-margin">
+                <button class="za-button za-button-primary zoia-btn-create-msg">{{ i18n.__(locale, 'Add Message')}}</button>
+            </div>
+            <div class="zoia-ticket-messages za-margin-top">
+            </div>
+        </div>
+        <div class="za-width-medium">
+            <div class="za-margin zoia-attachments-wrap">
+                <div class="za-text-large">{{ i18n.__(locale, 'Attachments')}}</div>
+                <div class="za-text-muted za-text-small">
+                    {{ i18n.__(locale, 'Max. size of each file')}}:&nbsp;{{ configModule.maxAttachmentSizeMB }}&nbsp;{{ i18n.__(locale, 'MB')}}
+                    <br> {{ i18n.__(locale, 'Max. files count')}}:&nbsp;{{ configModule.maxAttachmentCount }}
+                </div>
+                <div class="zoia-upload za-placeholder za-text-center">
+                    <span class="za-text-middle">{{ i18n.__(locale, 'Attach file(s) by dropping them here or')}}</span>
+                    <div za-form-custom>
+                        <input type="file" multiple>
+                        <span class="za-link">{{ i18n.__(locale, 'selecting one')}}</span>
+                    </div>
+                </div>
+                <progress id="zoia_upload_progressbar" class="za-progress" value="0" max="100" hidden></progress>
+                <div class="za-margin-top" id="zoia_attachments"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="supportMessageDialog" style="display:none">
+    <div class="za-modal-dialog">
+        <div class="za-modal-header">
+            <h2 class="za-modal-title">{{ i18n.__(locale, 'Message')}}</h2>
+        </div>
+        <div class="za-modal-body">
+            <div class="za-margin">
+                <label class="za-form-label" for="zoia_md_message">{{ i18n.__(locale, 'Message text')}}:</label>
+                <div class="za-form-controls">
+                    <textarea class="za-textarea zoia-md-field" id="zoia_md_message" rows="5"></textarea>
+                </div>
+                <div class="za-text-muted za-text-small">{{ i18n.__(locale, 'A long description, length: 2-4096 characters')}}</div>
+            </div>
+        </div>
+        <div class="za-modal-footer za-text-right">
+            <button class="za-button za-button-default za-modal-close zoia-md-button" type="button">{{ i18n.__(locale, 'Cancel')}}</button>
+            <button class="za-button za-button-primary zoia-md-button" type="button" id="zoia_btn_message_save">{{ i18n.__(locale, 'Save')}}</button>
+            <div za-spinner id="zoia_btn_message_save_spinner" style="display:none"></div>
+        </div>
+    </div>
+</div>
+<div class="zoia-loading">
+    <div za-spinner style="margin-right:10px"></div>&nbsp;{{ i18n.__(locale, 'Loading data, please wait')}}...
+</div>
+<div style="display:none">
+    <div id="zp_locale" data="{{ locale }}"></div>
+    <div id="zp_currentUsername" data="{{ username }}"></div>
+    <div id="zp_uprefix" data="{{ uprefix }}"></div>
+</div>
