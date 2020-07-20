@@ -6,6 +6,31 @@ import C from "../../../shared/lib/constants";
 import utils from "../../../shared/lib/utils";
 import filesListData from "./data/filesList.json";
 
+const recursiveReadDir = async (root, tree = {
+    id: "/",
+    c: []
+}) => {
+    const files = (await fs.readdir(root)).sort(utils.sortAsc);
+    await Promise.all(files.filter(i => i !== "node_modules" && !i.match(/^\./)).map(async f => {
+        const dir = path.resolve(`${root}/${f}`);
+        const stats = await fs.lstat(path.resolve(`${root}/${f}`));
+        if (stats.isDirectory()) {
+            const data = {};
+            data.id = f;
+            data.c = [];
+            const res = await recursiveReadDir(dir, data);
+            if (res.c && !res.c.length) {
+                delete res.c;
+            }
+            tree.c.push(res);
+        }
+    }));
+    if (tree.c && !tree.c.length) {
+        delete tree.c;
+    }
+    return tree;
+};
+
 export default () => ({
     schema: {
         body: filesListData.schema
@@ -62,9 +87,12 @@ export default () => ({
                 }
                 return data;
             }))).filter(i => i && i.name !== "node_modules" && !i.name.match(/^\./)).sort(utils.sortByName).sort((a, b) => a.dir && !b.dir ? -1 : !a.dir && b.dir ? 1 : 0);
+            // Read directory tree
+            const tree = await recursiveReadDir(root);
             // Send result
             rep.successJSON(rep, {
-                files: filesData
+                files: filesData,
+                tree
             });
             return;
         } catch (e) {

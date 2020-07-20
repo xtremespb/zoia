@@ -1,0 +1,18 @@
+<if(input.data.isVisible)>
+  <div style=`margin-left:${(input.level - 1) * 5}px`>
+    <if(input.data.c && input.data.c.length)>
+      <a href="" data-id=input.data.uuid on-click("onOpenCloseClick")>
+        <if(input.data.isOpen)>-</if>
+        <else>+</else>
+        &nbsp;
+      </a>
+    </if>
+    <a href="" data-id=input.data.uuid on-click("onItemClick") class=(input.selected === input.data.uuid ? "has-text-weight-bold" : "")>${input.data.t || input.data.id}</a>
+  </div>
+  <if(input.data.c)>
+    $ const level = input.level + 1;
+    <for|item| of=input.data.c>
+      <mtreeItem data=item level=level key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=input.selected/>
+    </for>
+  </if>
+</if>

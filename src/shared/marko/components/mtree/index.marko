@@ -1,0 +1,9 @@
+<div>
+  <if(state.data)>
+    $ const level = 1;
+    $ console.log(state.data);
+    <for|item| of=state.data>
+      <mtreeItem data=item level=level key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
+    </for>
+  </if>
+</div>

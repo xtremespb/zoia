@@ -41,6 +41,15 @@ export default {
         }
         return 0;
     },
+    sortAsc(a, b) {
+        if (a < b) {
+            return -1;
+        }
+        if (a > b) {
+            return 1;
+        }
+        return 0;
+    },
     async cleanRemovedFiles(req, db, extendedValidation, dbItem, data) {
         if (dbItem) {
             const dbFiles = extendedValidation.extractFiles(dbItem);

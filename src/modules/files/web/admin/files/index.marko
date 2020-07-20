@@ -15,24 +15,31 @@ import icons from "../../../data/mime.json"
     ${state.error}
   </div>
 </if>
-<div class="z3-ap-f-files-wrap">
-  <div class="z3-ap-f-files columns is-multiline">
-    <for|file| of=state.files>
-      <if(file.dir)>
-        <item icon="folder-outline" file=file/>
-      </if>
-    </for>
+<div class="columns">
+  <div class="column is-narrow z3-ap-f-tree-wrap">
+    <mtree key="z3_ap_f_tree"/>
   </div>
-  <div class="z3-ap-f-files columns is-multiline">
-    <for|file| of=state.files>
-      <if(!file.dir)>
-        <item icon=(icons[file.mime] || "file-outline") file=file/>
+  <div class="column">
+    <div class="z3-ap-f-files-wrap">
+      <div class="z3-ap-f-files columns is-multiline">
+        <for|file| of=state.files>
+          <if(file.dir)>
+            <item icon="folder-outline" file=file/>
+          </if>
+        </for>
+      </div>
+      <div class="z3-ap-f-files columns is-multiline">
+        <for|file| of=state.files>
+          <if(!file.dir)>
+            <item icon=(icons[file.mime] || "file-outline") file=file/>
+          </if>
+        </for>
+      </div>
+      <if(state.loading)>
+        <div class="z3-ap-f-loading">
+          <span class="button is-white is-loading is-large z3-ap-f-loading-spinner">&nbsp;</span>
+        </div>
       </if>
-    </for>
-  </div>
-  <if(state.loading)>
-    <div class="z3-ap-f-loading">
-      <span class="button is-white is-loading is-large z3-ap-f-loading-spinner">&nbsp;</span>
     </div>
-  </if>
+  </div>
 </div>

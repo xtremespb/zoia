@@ -6,6 +6,7 @@ module.exports = class {
         const state = {
             dir: "/",
             files: [],
+            tree: {},
             loading: false,
             error: null
         };
@@ -36,6 +37,8 @@ module.exports = class {
             });
             this.state.loading = false;
             this.state.files = res.data.files || [];
+            this.state.tree = res.data.tree || {};
+            this.getComponent("z3_ap_f_tree").func.initData(res.data.tree);
         } catch (e) {
             this.state.loading = false;
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
