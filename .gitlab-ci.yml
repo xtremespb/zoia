@@ -13,8 +13,7 @@ before_script:
 
 build_zoya:
   stage: build
-  always-run:
-    script:
-      - echo "This job builds something fantastic"
-      - npm install
-      - npm run config
+  script:
+    - echo "This job builds something fantastic"
+    - npm install
+    - npm run config
