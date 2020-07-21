@@ -3,13 +3,15 @@ module.exports = class {
         if (e && e.preventDefault) {
             e.preventDefault();
         }
-        this.emit("open-close-click", e.target ? e.target.dataset.id : e);
+        const dataset = e.target ? (Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {}) : e;
+        this.emit("open-close-click", dataset.id || e);
     }
 
     onItemClick(e) {
         if (e && e.preventDefault) {
             e.preventDefault();
         }
-        this.emit("item-click", e.target ? e.target.dataset.id : e);
+        const dataset = e.target ? (Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {}) : e;
+        this.emit("item-click", dataset.id || e);
     }
 };

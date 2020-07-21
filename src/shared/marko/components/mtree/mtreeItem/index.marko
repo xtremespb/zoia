@@ -1,13 +1,34 @@
+style.scss {
+  @import "./mtreeItem.scss";
+}
+
 <if(input.data.isVisible)>
-  <div style=`margin-left:${(input.level - 1) * 5}px`>
+  <div style=`margin-left:${(input.level - 1) * 24}px;` class="z3-mtr-tree-item">
     <if(input.data.c && input.data.c.length)>
       <a href="" data-id=input.data.uuid on-click("onOpenCloseClick")>
-        <if(input.data.isOpen)>-</if>
-        <else>+</else>
-        &nbsp;
+        <if(input.data.isOpen)>
+          <span class="icon">
+            <i class="mdi mdi-minus-box-outline"/>
+          </span>
+        </if>
+        <else>
+          <span class="icon">
+            <i class="mdi mdi-plus-box-outline"/>
+          </span>
+        </else>
       </a>
     </if>
-    <a href="" data-id=input.data.uuid on-click("onItemClick") class=(input.selected === input.data.uuid ? "has-text-weight-bold" : "")>${input.data.t || input.data.id}</a>
+    <else>
+      <span class="icon" style="opacity:0">
+        <i class="mdi mdi-checkbox-blank-outline"/>
+      </span>
+    </else>
+    <a href="" data-id=input.data.uuid on-click("onItemClick")>
+      <span class="icon z3-mtr-icon-wrap">
+        <i class=`z3-mtr-icon z3-mtr-icon-folder${input.data.isOpen ? "-open" : ""}`/>
+      </span>
+      <span class=`z3-mtr-label${input.selected === input.data.uuid ? " z3-mtr-label-selected" : ""}`>${input.data.t || input.data.id}</span>
+    </a>
   </div>
   <if(input.data.c)>
     $ const level = input.level + 1;

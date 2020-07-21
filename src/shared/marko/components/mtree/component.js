@@ -1,26 +1,25 @@
-// const cloneDeep = require("lodash.clonedeep");
+const cloneDeep = require("lodash.clonedeep");
 const {
     v4: uuidv4
 } = require("uuid");
-const {
-    cloneDeep
-} = require("lodash");
 
 module.exports = class {
     onCreate() {
         const state = {
             data: [],
+            root: null,
             selected: null
         };
         this.state = state;
         this.func = {
-            initData: this.initData.bind(this)
+            initData: this.initData.bind(this),
+            selectNode: this.selectNode.bind(this)
         };
     }
 
     initTree(data, level = 1) {
         return data.map(i => {
-            i.isVisible = level === 1;
+            i.isVisible = level < 2;
             i.isOpen = false;
             i.uuid = i.uuid || uuidv4();
             if (i.c) {
@@ -30,26 +29,89 @@ module.exports = class {
         });
     }
 
-    initData(data) {
-        this.state.data = this.initTree(data.c);
+    initData(data, selected) {
+        const root = cloneDeep(data);
+        const uuid = root.uuid || uuidv4();
+        this.state.root = {
+            ...root,
+            isVisible: true,
+            isOpen: true,
+            c: [],
+            uuid
+        };
+        this.state.selected = selected || uuid;
+        this.state.data = this.initTree(cloneDeep(data.c));
     }
 
-    findNode(uuid, data) {
+    findNodeByUUID(uuid, data) {
         let node;
         data.map(i => {
             if (i.uuid === uuid) {
                 node = i;
             }
             if (!node && i.c) {
-                node = this.findNode(uuid, i.c);
+                node = this.findNodeByUUID(uuid, i.c);
             }
         });
         return node;
     }
 
+    findNodeById(id, data) {
+        let node;
+        data.map(i => {
+            if (i.id === id) {
+                node = i;
+            }
+        });
+        return node;
+    }
+
+    selectNode(path) {
+        let data = this.state.data || [];
+        path.map((p, i) => {
+            if (!data || !data.length) {
+                return;
+            }
+            const node = this.findNodeById(p, data);
+            if (node && data) {
+                node.isVisible = true;
+                node.isOpen = path.length - 1 !== i;
+                if (path.length - 1 === i) {
+                    this.state.selected = node.uuid;
+                } else if (node.c) {
+                    node.c.map(n => n.isVisible = true);
+                }
+            }
+            data = node && node.c ? node.c : null;
+        });
+    }
+
+    getPathByUUID(uuid, data, path = []) {
+        let res = [];
+        data.map(i => {
+            if (res.length) {
+                return;
+            }
+            path.push(i.id);
+            if (i.uuid === uuid) {
+                res = path;
+                return;
+            }
+            if (i.c) {
+                const sr = this.getPathByUUID(uuid, i.c, path);
+                if (sr.length) {
+                    res = path;
+                    return;
+                }
+            }
+            path.pop();
+        });
+        return res;
+    }
+
     onOpenCloseClick(uuid) {
         const data = cloneDeep(this.state.data);
-        const item = this.findNode(uuid, data);
+        const item = this.findNodeByUUID(uuid, data);
         item.isOpen = !item.isOpen;
         (item.c || []).map(i => i.isVisible = item.isOpen);
         this.state.data = data;
@@ -57,5 +119,7 @@ module.exports = class {
 
     onItemClick(uuid) {
         this.state.selected = uuid;
+        const data = cloneDeep(this.state.data);
+        console.log(this.getPathByUUID(uuid, data));
     }
 };

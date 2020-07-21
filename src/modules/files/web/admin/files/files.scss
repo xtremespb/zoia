@@ -30,7 +30,7 @@
 }
 
 .z3-ap-f-tree-wrap {
-    min-width: 250px;
+    width: 250px;
 }
 
 .z3-ap-f-item-checkbox {
@@ -75,4 +75,12 @@
 
 .z3-ap-f-files {
     margin: 0 !important;
+}
+
+@media (max-width: 768px) {
+
+    .z3-ap-f-tree-wrap {
+        width: unset;
+    }
+
 }

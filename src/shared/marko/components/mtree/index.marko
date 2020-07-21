@@ -1,9 +1,14 @@
-<div>
-  <if(state.data)>
-    $ const level = 1;
-    $ console.log(state.data);
+style.scss {
+  @import "./mtree.scss";
+}
+
+<div class="z3-mtr-wrap" id=input.id>
+  <if(state.root)>
+    <mtreeItem data=state.root level=0 key=state.root.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
+  </if>
+  <if(state.data && state.data.length)>
     <for|item| of=state.data>
-      <mtreeItem data=item level=level key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
+      <mtreeItem data=item level=1 key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
     </for>
   </if>
 </div>
