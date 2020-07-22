@@ -1,14 +1,12 @@
 import path from "path";
 import fs from "fs-extra";
-import mime from "mime-types";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
-import utils from "../../../shared/lib/utils";
-import filesListData from "./data/filesList.json";
+import filesDeleteData from "./data/filesDelete.json";
 
 export default () => ({
     schema: {
-        body: filesListData.schema
+        body: filesDeleteData.schema
     },
     attachValidation: true,
     async handler(req, rep) {
@@ -43,29 +41,34 @@ export default () => ({
                 rep.unauthorizedError(rep);
                 return;
             }
-            // Read directory
-            const files = await fs.readdir(dir);
-            const filesData = (await Promise.all(files.map(async f => {
-                const stats = await fs.lstat(path.resolve(`${dir}/${f}`));
-                if (!stats.isFile() && !stats.isDirectory()) {
-                    return null;
+            // Check files
+            const files = req.body.files.filter(f => !f.match(/\// && !f.match(/^\./) && f !== "node_modules"));
+            const errors = [];
+            await Promise.all(files.map(async f => {
+                try {
+                    const file = path.resolve(`${dir}/${f}`).replace(/\\/gm, "/");
+                    const stats = await fs.lstat(file);
+                    if (file.indexOf(dir) !== 0 || (!stats.isFile() && !stats.isDirectory())) {
+                        errors.push(f);
+                        return;
+                    }
+                    await fs.remove(file);
+                } catch (e) {
+                    errors.push(f);
                 }
-                const data = {
-                    name: f,
-                    dir: stats.isDirectory(),
-                    // eslint-disable-next-line no-bitwise
-                    mod: `0${(stats.mode & 0o777).toString(8)}`,
-                };
-                if (stats.isFile()) {
-                    data.size = utils.formatBytes(stats.size);
-                    data.mime = f.indexOf(".") > 0 ? mime.lookup(f) || "application/octet-stream" : "application/octet-stream";
-                }
-                return data;
-            }))).filter(i => i && i.name !== "node_modules" && !i.name.match(/^\./)).sort(utils.sortByName).sort((a, b) => a.dir && !b.dir ? -1 : !a.dir && b.dir ? 1 : 0);
+            }));
+            if (errors.length) {
+                rep.requestError(rep, {
+                    failed: true,
+                    error: "One or more file(s) could not be deleted",
+                    errorKeyword: "couldNotDelete",
+                    errorData: [],
+                    files: errors
+                });
+                return;
+            }
             // Send result
-            rep.successJSON(rep, {
-                files: filesData
-            });
+            rep.successJSON(rep, {});
             return;
         } catch (e) {
             rep.logError(req, null, e);

@@ -7,4 +7,11 @@ module.exports = class {
             dir: dataset.dir !== undefined
         });
     }
+
+    onCheckboxChange(e) {
+        this.emit("checkbox-change", {
+            id: e.target.dataset.id,
+            state: e.target.checked
+        });
+    }
 };

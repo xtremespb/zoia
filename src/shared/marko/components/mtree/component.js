@@ -6,6 +6,7 @@ const {
 module.exports = class {
     onCreate() {
         const state = {
+            loading: false,
             data: [],
             root: null,
             selected: null
@@ -13,7 +14,8 @@ module.exports = class {
         this.state = state;
         this.func = {
             initData: this.initData.bind(this),
-            selectNode: this.selectNode.bind(this)
+            selectNode: this.selectNode.bind(this),
+            setLoading: this.setLoading.bind(this)
         };
     }
 
@@ -75,7 +77,8 @@ module.exports = class {
             const node = this.findNodeById(p, data);
             if (node && data) {
                 node.isVisible = true;
-                node.isOpen = path.length - 1 !== i;
+                // node.isOpen = path.length - 1 !== i;
+                node.isOpen = (node.c && node.c.length && node.c[0].isVisible) || path.length - 1 !== i;
                 if (path.length - 1 === i) {
                     this.state.selected = node.uuid;
                 } else if (node.c) {
@@ -84,6 +87,9 @@ module.exports = class {
             }
             data = node && node.c ? node.c : null;
         });
+        if (!path.length && this.state.root) {
+            this.state.selected = this.state.root.uuid;
+        }
     }
 
     getPathByUUID(uuid, data, path = []) {
@@ -120,6 +126,15 @@ module.exports = class {
     onItemClick(uuid) {
         this.state.selected = uuid;
         const data = cloneDeep(this.state.data);
-        console.log(this.getPathByUUID(uuid, data));
+        const path = this.getPathByUUID(uuid, data);
+        const item = this.findNodeByUUID(uuid, data);
+        this.emit("item-click", {
+            item,
+            path
+        });
+    }
+
+    setLoading(state) {
+        this.state.loading = state;
     }
 };

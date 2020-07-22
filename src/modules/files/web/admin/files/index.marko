@@ -17,24 +17,104 @@ import icons from "../../../data/mime.json"
 </if>
 <div class="columns is-variable is-1">
   <div class="column is-narrow z3-ap-f-tree-wrap">
-    <mtree key="z3_ap_f_tree" id="z3_ap_f_tree"/>
+    <mtree key="z3_ap_f_tree" id="z3_ap_f_tree" on-item-click("onTreeItemClick")/>
   </div>
   <div class="column">
+    <div class="columns is-mobile is-multiline mb-0 z3-ap-f-toolbar-wrap">
+      <div class="column is-narrow">
+        <div class="field has-addons">
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("refresh") on-click("onRefreshClick")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-reload"/>
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+      <div class="column is-narrow">
+        <div class="field has-addons">
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("selectAll") on-click("onSelectAllClick")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-checkbox-marked-outline"/>
+              </span>
+            </button>
+          </p>
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("selectNone") on-click("onSelectNoneClick")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-checkbox-blank-outline"/>
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+      <div class="column is-narrow">
+        <div class="field has-addons">
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("levelUp") disabled=(state.dir === "/") on-click("onLevelUpClick")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-folder-upload-outline"/>
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+      <div class="column is-narrow">
+        <div class="field has-addons">
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("doCopy") disabled=!state.checkedCount on-click("onCopyClick")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-content-copy"/>
+              </span>
+            </button>
+          </p>
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("doCut") disabled=!state.checkedCount on-click("onCutClick")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-content-cut"/>
+              </span>
+            </button>
+          </p>
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("doPaste") disabled=(!state.clipboard.src || state.clipboard.src === state.dir) on-click("onPasteClick")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-content-paste"/>
+              </span>
+              <if(state.clipboard.filesCount)>
+                <span class="tag is-info z3-ap-f-paste-tag">${state.clipboard.filesCount}</span>
+              </if>
+            </button>
+          </p>
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("doDelete") disabled=!state.checkedCount on-click("onDeleteClick")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-trash-can-outline"/>
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
     <div class="z3-ap-f-files-wrap">
       <div class="z3-ap-f-files columns is-multiline">
         <for|file| of=state.files>
           <if(file.dir)>
-            <item icon="folder-outline" file=file/>
+            <item icon="folder-outline" file=file on-file-click("onFileClick") on-checkbox-change("onCheckboxChange") checked=state.checked[file.name]/>
           </if>
         </for>
       </div>
       <div class="z3-ap-f-files columns is-multiline">
         <for|file| of=state.files>
           <if(!file.dir)>
-            <item icon=(icons[file.mime] || "file-outline") file=file/>
+            <item icon=(icons[file.mime] || "file-outline") file=file on-file-click("onFileClick") on-checkbox-change("onCheckboxChange") checked=state.checked[file.name]/>
           </if>
         </for>
       </div>
+      <if(!state.files.length && !state.loading)>
+        <div class="has-text-weight-light mt-3">${out.global.i18n.t("noFilesInDirectory")}</div>
+      </if>
       <if(state.loading)>
         <div class="z3-ap-f-loading">
           <span class="button is-white is-loading is-large z3-ap-f-loading-spinner">&nbsp;</span>
@@ -43,3 +123,5 @@ import icons from "../../../data/mime.json"
     </div>
   </div>
 </div>
+<deleteModal key="z3_ap_f_deleteModal" on-delete-confirm("onDeleteConfirm")/>
+<mnotify key=`files_mnotify`/>

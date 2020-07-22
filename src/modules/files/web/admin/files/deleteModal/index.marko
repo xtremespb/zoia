@@ -1,0 +1,17 @@
+<div class=`modal${state.active ? " is-active" : ""}`>
+  <div class="modal-background" on-click("onCloseClick")/>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">${out.global.i18n.t("deleteConfirmation")}</p>
+      <button class="delete" aria-label="close" on-click("onCloseClick")/>
+    </header>
+    <section class="modal-card-body">
+      <div>${out.global.i18n.t("deleteFilesText")}:</div>
+      <div class="mt-3">${state.files}</div>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-danger" on-click("onConfirmClick")>${out.global.i18n.t("btnDelete")}</button>
+      <button class="button" on-click("onCloseClick")>${out.global.i18n.t("btnCancel")}</button>
+    </footer>
+  </div>
+</div>

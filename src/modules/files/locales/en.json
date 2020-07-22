@@ -1,5 +1,21 @@
 {
     "moduleTitle": "Files",
     "couldNotLoadDataFromServer": "Could not load data from server",
-    "nonExistentDirectory": "The requested directory doesn't exists"
+    "nonExistentDirectory": "The requested directory doesn't exists",
+    "noFilesInDirectory": "There are no files in the selected directory.",
+    "deleteConfirmation": "Delete Confirmation",
+    "btnDelete": "Delete",
+    "btnCancel": "Cancel",
+    "deleteFilesText": "The following file(s) or folder(s) will be deleted and you won't be able to undo",
+    "couldNotDelete": "Could not delete one or more file(s) or folder(s)",
+    "operationSuccess": "Operation complete",
+    "selectAll": "Select All",
+    "selectNone": "Select None",
+    "levelUp": "Level Up",
+    "doCopy": "Copy",
+    "doCut": "Cut",
+    "doPaste": "Paste",
+    "doDelete": "Delete",
+    "refresh": "Refresh",
+    "couldNotProcess": "Could not process one or more file(s) or folder(s)"
 }

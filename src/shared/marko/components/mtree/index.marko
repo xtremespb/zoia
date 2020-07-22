@@ -11,4 +11,9 @@ style.scss {
       <mtreeItem data=item level=1 key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
     </for>
   </if>
+  <if(state.loading)>
+    <div class="z3-mtr-loading">
+      <span class="button is-white is-loading is-large z3-mtr-loading-spinner">&nbsp;</span>
+    </div>
+  </if>
 </div>
