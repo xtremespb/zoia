@@ -40,6 +40,7 @@ module.exports = class {
     setLoading(state) {
         this.state.loading = state;
         this.tree.func.setLoading(state);
+        this.state.error = null;
     }
 
     onWindowResize() {
@@ -54,7 +55,6 @@ module.exports = class {
 
     async loadFilesList(dir = this.state.dir) {
         this.onSelectNoneClick();
-        this.state.error = null;
         this.setLoading(true);
         try {
             const res = await axios({
@@ -76,7 +76,6 @@ module.exports = class {
     }
 
     async loadTree() {
-        this.state.error = null;
         this.setLoading(true);
         try {
             const res = await axios({
