@@ -97,6 +97,20 @@ import icons from "../../../data/mime.json"
         </div>
       </div>
     </div>
+    <if(state.dir !== "/")>
+      <nav class="breadcrumb mb-2" aria-label="breadcrumbs">
+        <ul>
+          <li>
+            <span/>
+          </li>
+          <for|item, i| of=state.dir.split("/").filter(i => i)>
+            <li>
+              <span>${item}</span>
+            </li>
+          </for>
+        </ul>
+      </nav>
+    </if>
     <div class="z3-ap-f-files-wrap">
       <div class="z3-ap-f-files columns is-multiline">
         <for|file| of=state.files>
