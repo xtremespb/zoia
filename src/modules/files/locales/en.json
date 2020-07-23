@@ -17,5 +17,9 @@
     "doPaste": "Paste",
     "doDelete": "Delete",
     "refresh": "Refresh",
-    "couldNotProcess": "Could not process one or more file(s) or folder(s)"
+    "couldNotProcess": "Could not process one or more files",
+    "upload": "Upload",
+    "uploadTitle": "Upload file(s)",
+    "btnUpload": "Upload",
+    "dragOrClickToUpload": "Click here to select files or drag them onto this area"
 }

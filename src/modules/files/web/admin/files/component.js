@@ -27,6 +27,7 @@ module.exports = class {
         this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
         this.tree = this.getComponent("z3_ap_f_tree");
         this.deleteModal = this.getComponent("z3_ap_f_deleteModal");
+        this.uploadModal = this.getComponent("z3_ap_f_uploadModal");
         this.onWindowResize();
         window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
         this.state.dir = this.query.get("d") || this.state.dir;
@@ -92,6 +93,13 @@ module.exports = class {
             this.setLoading(false);
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
         }
+    }
+
+    async loadData() {
+        await Promise.all([this.loadTree(), this.loadFilesList()]);
+        this.setState("clipboard", {});
+        this.onSelectNoneClick();
+        this.tree.func.selectNode(this.state.dir.split("/").filter(i => i));
     }
 
     onErrorDeleteClick() {
@@ -188,11 +196,7 @@ module.exports = class {
             });
             this.setLoading(false);
             this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
-            await this.loadFilesList();
-            this.setState("clipboard", {});
-            this.onSelectNoneClick();
-            await this.loadTree();
-            this.tree.func.selectNode(this.state.dir.split("/").filter(i => i));
+            await this.loadData();
         } catch (e) {
             this.setLoading(false);
             const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
@@ -200,7 +204,7 @@ module.exports = class {
             if (files) {
                 this.state.error = `${this.state.error}: ${files}`;
             }
-            await this.loadFilesList();
+            await this.loadData();
         }
     }
 
@@ -217,9 +221,7 @@ module.exports = class {
     }
 
     async onRefreshClick() {
-        await this.loadFilesList();
-        await this.loadTree();
-        this.tree.func.selectNode(this.state.dir.split("/").filter(i => i));
+        this.loadData();
     }
 
     async onPasteClick() {
@@ -243,11 +245,7 @@ module.exports = class {
             });
             this.setLoading(false);
             this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
-            await this.loadFilesList();
-            this.setState("clipboard", {});
-            this.onSelectNoneClick();
-            await this.loadTree();
-            this.tree.func.selectNode(this.state.dir.split("/").filter(i => i));
+            this.loadData();
         } catch (e) {
             this.setLoading(false);
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
@@ -255,9 +253,21 @@ module.exports = class {
             if (files) {
                 this.state.error = `${this.state.error}: ${files}`;
             }
-            await this.loadFilesList();
-            await this.loadTree();
-            this.tree.func.selectNode(this.state.dir.split("/").filter(i => i));
+            this.loadData();
         }
+    }
+
+    onUploadClick() {
+        this.uploadModal.func.setDir(this.state.dir);
+        this.uploadModal.func.setActive(true);
+    }
+
+    onUploadSuccess() {
+        this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
+        this.loadData();
+    }
+
+    onUploadError() {
+        this.loadFilesList();
     }
 };

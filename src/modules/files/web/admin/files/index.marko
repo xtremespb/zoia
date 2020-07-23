@@ -96,6 +96,17 @@ import icons from "../../../data/mime.json"
           </p>
         </div>
       </div>
+      <div class="column is-narrow">
+        <div class="field has-addons">
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("upload") on-click("onUploadClick") disabled=state.loading>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-upload-outline"/>
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
     <if(state.dir !== "/")>
       <nav class="breadcrumb mb-2" aria-label="breadcrumbs">
@@ -138,4 +149,5 @@ import icons from "../../../data/mime.json"
   </div>
 </div>
 <deleteModal key="z3_ap_f_deleteModal" on-delete-confirm("onDeleteConfirm")/>
+<uploadModal key="z3_ap_f_uploadModal" on-upload-success("onUploadSuccess") on-upload-success("onUploadError")/>
 <mnotify key=`files_mnotify`/>

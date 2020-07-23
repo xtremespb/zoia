@@ -85,6 +85,27 @@
     margin-left: 0 !important;
 }
 
+.z3-ap-f-upload-area {
+    background: $white;
+    border: 1px dashed $grey-lighter;
+    padding: 15px;
+    text-align: center;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.z3-ap-f-upload-area>.file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.z3-ap-f-upload-area>.file>.file-input {
+    cursor: pointer;
+}
+
 @media (max-width: 768px) {
 
     .z3-ap-f-tree-wrap {
