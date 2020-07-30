@@ -28,8 +28,10 @@ module.exports = class {
         this.tree = this.getComponent("z3_ap_f_tree");
         this.deleteModal = this.getComponent("z3_ap_f_deleteModal");
         this.uploadModal = this.getComponent("z3_ap_f_uploadModal");
+        this.inputModal = this.getComponent("z3_ap_f_inputModal");
         this.onWindowResize();
         window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
+        window.addEventListener("click", this.onContextMenuHide.bind(this));
         this.state.dir = this.query.get("d") || this.state.dir;
         await this.loadFilesList();
         await this.loadTree();
@@ -38,8 +40,12 @@ module.exports = class {
         }
     }
 
-    setLoading(state) {
+    setLoadingList(state) {
         this.state.loading = state;
+        this.state.error = null;
+    }
+
+    setLoadingTree(state) {
         this.tree.func.setLoading(state);
         this.state.error = null;
     }
@@ -54,9 +60,37 @@ module.exports = class {
         }
     }
 
+    onContextMenu(e) {
+        e.preventDefault();
+        this.getComponent("z3_ap_f_fileMenu").func.setActive(true, e.pageX, e.pageY, e.currentTarget.dataset.id, e.currentTarget.dataset.directory);
+    }
+
+    onContextMenuHide(e) {
+        const menu = document.getElementById("z3_ap_f_menu");
+        if (menu && !menu.contains(e.target)) {
+            this.getComponent("z3_ap_f_fileMenu").func.setActive(false);
+        }
+    }
+
+    bindContextMenu() {
+        const items = document.querySelectorAll(".z3-ap-f-item-wrap");
+        Array.from(items).map(i => {
+            i.addEventListener("contextmenu", this.onContextMenu.bind(this));
+            i.addEventListener("longtap", this.onContextMenu.bind(this));
+        });
+    }
+
+    unbindContextMenu() {
+        const items = document.querySelectorAll(".z3-ap-f-item-wrap");
+        Array.from(items).map(i => {
+            i.removeEventListener("contextmenu", this.onContextMenu.bind(this));
+            i.removeEventListener("longtap", this.onContextMenu.bind(this));
+        });
+    }
+
     async loadFilesList(dir = this.state.dir) {
         this.onSelectNoneClick();
-        this.setLoading(true);
+        this.setLoadingList(true);
         try {
             const res = await axios({
                 method: "post",
@@ -68,16 +102,18 @@ module.exports = class {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            this.setLoading(false);
+            this.setLoadingList(false);
+            this.unbindContextMenu();
             this.state.files = res.data.files || [];
+            setTimeout(this.bindContextMenu.bind(this), 300);
         } catch (e) {
-            this.setLoading(false);
+            this.setLoadingList(false);
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
         }
     }
 
     async loadTree() {
-        this.setLoading(true);
+        this.setLoadingTree(true);
         try {
             const res = await axios({
                 method: "post",
@@ -88,9 +124,9 @@ module.exports = class {
             });
             this.state.tree = res.data.tree || {};
             this.tree.func.initData(res.data.tree);
-            this.setLoading(false);
+            this.setLoadingTree(false);
         } catch (e) {
-            this.setLoading(false);
+            this.setLoadingTree(false);
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
         }
     }
@@ -181,30 +217,34 @@ module.exports = class {
     }
 
     async onDeleteConfirm() {
-        this.setLoading(true);
+        this.setLoadingList(true);
+        this.setLoadingTree(true);
         try {
             await axios({
                 method: "post",
                 url: "/api/files/delete",
                 data: {
                     dir: this.state.dir,
-                    files: Object.keys(this.state.checked)
+                    files: this.deleteItems || Object.keys(this.state.checked)
                 },
                 headers: {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            this.setLoading(false);
+            this.deleteItems = null;
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
             this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
             await this.loadData();
         } catch (e) {
-            this.setLoading(false);
+            this.deleteItems = null;
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
             const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotDelete");
             if (files) {
                 this.state.error = `${this.state.error}: ${files}`;
             }
-            await this.loadData();
         }
     }
 
@@ -228,7 +268,8 @@ module.exports = class {
         if (this.loading || !this.state.clipboard.src || this.state.clipboard.src === this.state.dir) {
             return;
         }
-        this.setLoading(true);
+        this.setLoadingList(true);
+        this.setLoadingTree(true);
         try {
             await axios({
                 method: "post",
@@ -243,17 +284,18 @@ module.exports = class {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            this.setLoading(false);
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
             this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
             this.loadData();
         } catch (e) {
-            this.setLoading(false);
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
             const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
             if (files) {
                 this.state.error = `${this.state.error}: ${files}`;
             }
-            this.loadData();
         }
     }
 
@@ -263,11 +305,149 @@ module.exports = class {
     }
 
     onUploadSuccess() {
+        this.loadFilesList();
         this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
-        this.loadData();
     }
 
     onUploadError() {
         this.loadFilesList();
+        this.state.error = this.i18n.t("couldNotUpload");
+    }
+
+    onMenuItemClick(data) {
+        switch (data.cmd) {
+        case "rename":
+            this.onFileRename(data);
+            break;
+        case "edit":
+            this.onFileEdit(data);
+            break;
+        case "cut":
+        case "copy":
+            this.onFileCutCopy(data, data.cmd);
+            break;
+        case "delete":
+            this.deleteItems = [data.uid];
+            this.deleteModal.func.setFiles(data.uid);
+            this.deleteModal.func.setActive(true);
+            break;
+        }
+    }
+
+    onFileRename(data) {
+        this.inputModal.func.setMode("rename");
+        this.inputModal.func.setTitle(this.i18n.t("rename"));
+        this.inputModal.func.setFilename(data.uid);
+        this.inputModal.func.setActive(true);
+    }
+
+    onCreateDir() {
+        this.inputModal.func.setMode("createDir");
+        this.inputModal.func.setTitle(this.i18n.t("createDir"));
+        this.inputModal.func.setFilename("");
+        this.inputModal.func.setActive(true);
+    }
+
+    onCreateFile() {
+        this.inputModal.func.setMode("createFile");
+        this.inputModal.func.setTitle(this.i18n.t("doCreateFile"));
+        this.inputModal.func.setFilename("");
+        this.inputModal.func.setActive(true);
+    }
+
+    async processRename(data) {
+        if (this.loading || data.src === data.dest) {
+            return;
+        }
+        this.setLoadingList(true);
+        this.setLoadingTree(true);
+        try {
+            await axios({
+                method: "post",
+                url: "/api/files/rename",
+                data: {
+                    dir: this.state.dir,
+                    src: data.src,
+                    dest: data.dest
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
+            this.loadData();
+        } catch (e) {
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            if (files) {
+                this.state.error = `${this.state.error}: ${files}`;
+            }
+        }
+    }
+
+    async processCreateNew(data, mode) {
+        if (this.loading || data.src === data.dest) {
+            return;
+        }
+        this.setLoadingList(true);
+        this.setLoadingTree(true);
+        try {
+            await axios({
+                method: "post",
+                url: "/api/files/new",
+                data: {
+                    dir: this.state.dir,
+                    name: data.dest,
+                    mode
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
+            this.loadData();
+        } catch (e) {
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            if (files) {
+                this.state.error = `${this.state.error}: ${files}`;
+            }
+        }
+    }
+
+    onInputConfirm(data) {
+        switch (data.mode) {
+        case "rename":
+            this.processRename(data);
+            break;
+        case "createDir":
+            this.processCreateNew(data, "dir");
+            break;
+        case "createFile":
+            this.processCreateNew(data, "file");
+            break;
+        }
+    }
+
+    onFileEdit(data) {
+        console.log(data.uid);
+    }
+
+    onFileCutCopy(data, mode) {
+        const clipboardData = {
+            src: this.state.dir,
+            mode,
+            files: [data.uid],
+            filesCount: 1
+        };
+        this.setState("clipboard", clipboardData);
     }
 };

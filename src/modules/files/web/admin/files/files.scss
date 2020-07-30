@@ -106,6 +106,18 @@
     cursor: pointer;
 }
 
+.z3-ap-f-menu-inner-wrap {
+    padding: 10px;
+}
+
+.z3-ap-f-menu-wrap {
+    display: table;
+}
+
+.z3-ap-f-menu {
+    position: absolute;
+}
+
 @media (max-width: 768px) {
 
     .z3-ap-f-tree-wrap {

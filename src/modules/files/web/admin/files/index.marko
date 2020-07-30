@@ -15,7 +15,7 @@ import icons from "../../../data/mime.json"
     ${state.error}
   </div>
 </if>
-<div class="columns is-variable is-1">
+<div class="columns is-variable is-1 z3-ap-noselect">
   <div class="column is-narrow z3-ap-f-tree-wrap">
     <mtree key="z3_ap_f_tree" id="z3_ap_f_tree" on-item-click("onTreeItemClick")/>
   </div>
@@ -59,10 +59,24 @@ import icons from "../../../data/mime.json"
               </span>
             </button>
           </p>
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("createDir") disabled=state.loading on-click("onCreateDir")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-folder-plus-outline"/>
+              </span>
+            </button>
+          </p>
         </div>
       </div>
       <div class="column is-narrow">
         <div class="field has-addons">
+          <p class="control">
+            <button class="button tooltip" data-tooltip=out.global.i18n.t("doCreateFile") disabled=state.loading on-click("onCreateFile")>
+              <span class="icon">
+                <i class="mdi mdi-24px mdi-file-plus-outline"/>
+              </span>
+            </button>
+          </p>
           <p class="control">
             <button class="button tooltip" data-tooltip=out.global.i18n.t("doCopy") disabled=(state.loading || !state.checkedCount) on-click("onCopyClick")>
               <span class="icon">
@@ -78,12 +92,12 @@ import icons from "../../../data/mime.json"
             </button>
           </p>
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("doPaste") disabled=(state.loading || !state.clipboard.src || state.clipboard.src === state.dir) on-click("onPasteClick")>
+            <button class="button tooltip" data-tooltip=`${state.clipboard.mode === "cut" ? out.global.i18n.t("doCut") : out.global.i18n.t("doCopy")} → ${out.global.i18n.t("doPaste")}` disabled=(state.loading || !state.clipboard.src || state.clipboard.src === state.dir) on-click("onPasteClick")>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-content-paste"/>
               </span>
               <if(state.clipboard.filesCount)>
-                <span class="tag is-info z3-ap-f-paste-tag">${state.clipboard.filesCount}</span>
+                <span class=`tag ${state.clipboard.mode === "copy" ? "is-info" : "is-warning"} z3-ap-f-paste-tag`>${state.clipboard.filesCount}</span>
               </if>
             </button>
           </p>
@@ -148,6 +162,8 @@ import icons from "../../../data/mime.json"
     </div>
   </div>
 </div>
+<fileMenu key="z3_ap_f_fileMenu" on-item-click("onMenuItemClick")/>
 <deleteModal key="z3_ap_f_deleteModal" on-delete-confirm("onDeleteConfirm")/>
-<uploadModal key="z3_ap_f_uploadModal" on-upload-success("onUploadSuccess") on-upload-success("onUploadError")/>
+<uploadModal key="z3_ap_f_uploadModal" on-upload-success("onUploadSuccess") on-upload-error("onUploadError")/>
+<inputModal key="z3_ap_f_inputModal" on-input-confirm("onInputConfirm")/>
 <mnotify key=`files_mnotify`/>

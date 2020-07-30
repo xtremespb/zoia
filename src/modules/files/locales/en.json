@@ -21,5 +21,11 @@
     "upload": "Upload",
     "uploadTitle": "Upload file(s)",
     "btnUpload": "Upload",
-    "dragOrClickToUpload": "Click here to select files or drag them onto this area"
+    "dragOrClickToUpload": "Click here to select files or drag them onto this area",
+    "rename": "Rename",
+    "edit": "Edit File",
+    "btnConfirm": "Confirm",
+    "couldNotUpload": "Could not upload one or more files",
+    "createDir": "New Directory",
+    "doCreateFile": "New File"
 }
