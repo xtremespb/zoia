@@ -8,7 +8,7 @@
         "setup": "node ./scripts/setup.js",
         "setup-all": "node ./scripts/setup.js --all --defaults",
         "build-dev-maps": "webpack --display minimal --progress --mode development --config ./webpack/config.js --maps true",
-        "build-dev": "webpack --display minimal --progress --mode development --config ./webpack/config.js --dev true",
+        "build-dev": "webpack --display minimal --progress --mode development --config ./webpack/config.js",
         "build-update": "webpack --display minimal --progress --mode production --config ./webpack/config.js --type update",
         "build": "webpack --display minimal --progress --mode production --config ./webpack/config.js",
         "start": "node ./build/bin/zoia.js",

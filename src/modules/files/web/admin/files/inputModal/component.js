@@ -6,7 +6,7 @@ module.exports = class {
             filenameDest: "",
             title: "",
             mode: "",
-            error: null
+            error: null,
         };
         this.state = state;
         this.func = {
@@ -50,24 +50,10 @@ module.exports = class {
         this.setActive(false);
     }
 
-    checkForErrors() {
+    process() {
         const dest = this.state.filenameDest.trim();
         if (!dest || !dest.length) {
             this.setState("error", true);
-            return false;
-        }
-        return dest;
-    }
-
-    onFormSubmit(e) {
-        e.preventDefault();
-        this.onConfirmClick(e);
-    }
-
-    onConfirmClick(e) {
-        e.preventDefault();
-        const dest = this.checkForErrors();
-        if (!dest) {
             return;
         }
         this.emit("input-confirm", {
@@ -76,6 +62,17 @@ module.exports = class {
             src: this.state.filenameSrc.trim()
         });
         this.setActive(false);
+    }
+
+    onFormSubmit(e) {
+        e.preventDefault();
+        this.process();
+        return false;
+    }
+
+    onConfirmClick(e) {
+        e.preventDefault();
+        this.process();
     }
 
     onFilenameChange(e) {
