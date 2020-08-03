@@ -118,6 +118,17 @@
     position: absolute;
 }
 
+.z3-ap-f-ace {
+    width: 100%;
+    height: 500px;
+    border: 1px solid $grey-lightest;
+    border-radius: 4px
+}
+
+.z3-ap-f-textEditorArea {
+    position: relative;
+}
+
 @media (max-width: 768px) {
 
     .z3-ap-f-tree-wrap {

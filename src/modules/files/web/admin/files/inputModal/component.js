@@ -5,7 +5,8 @@ module.exports = class {
             filenameSrc: "",
             filenameDest: "",
             title: "",
-            mode: ""
+            mode: "",
+            error: null
         };
         this.state = state;
         this.func = {
@@ -19,6 +20,7 @@ module.exports = class {
     setActive(active) {
         this.setState({
             active,
+            error: false
         });
         if (active) {
             setTimeout(() => this.getEl("z3_ap_f_inputModal_filename").focus(), 10);
@@ -48,11 +50,29 @@ module.exports = class {
         this.setActive(false);
     }
 
+    checkForErrors() {
+        const dest = this.state.filenameDest.trim();
+        if (!dest || !dest.length) {
+            this.setState("error", true);
+            return false;
+        }
+        return dest;
+    }
+
+    onFormSubmit(e) {
+        e.preventDefault();
+        this.onConfirmClick(e);
+    }
+
     onConfirmClick(e) {
         e.preventDefault();
+        const dest = this.checkForErrors();
+        if (!dest) {
+            return;
+        }
         this.emit("input-confirm", {
             mode: this.state.mode,
-            dest: this.state.filenameDest.trim(),
+            dest,
             src: this.state.filenameSrc.trim()
         });
         this.setActive(false);

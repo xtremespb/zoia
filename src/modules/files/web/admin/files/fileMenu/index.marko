@@ -32,7 +32,7 @@
                 </span>&nbsp;${out.global.i18n.t("doDelete")}
               </a>
             </li>
-            <if(!state.directory)>
+            <if(!state.directory && !state.ro)>
               <li>
                 <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="edit">
                   <span class="icon">

@@ -1,7 +1,23 @@
+/* eslint-disable import/no-webpack-loader-syntax */
 const axios = require("axios");
+const ace = process.browser ? require("ace-builds") : null;
 const throttle = require("lodash.throttle");
 const Cookies = require("../../../../../shared/lib/cookies").default;
 const Query = require("../../../../../shared/lib/query").default;
+
+if (process.browser) {
+    ace.config.setModuleUrl("ace/mode/html_worker", require("file-loader?name=npm.ace-builds.worker-html.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/worker-html.js"));
+    ace.config.setModuleUrl("ace/mode/html", require("file-loader?name=npm.ace-builds.mode-html.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/mode-html.js"));
+    ace.config.setModuleUrl("ace/mode/css_worker", require("file-loader?name=npm.ace-builds.worker-css.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/worker-css.js"));
+    ace.config.setModuleUrl("ace/mode/css", require("file-loader?name=npm.ace-builds.mode-css.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/mode-css.js"));
+    ace.config.setModuleUrl("ace/mode/javascript_worker", require("file-loader?name=npm.ace-builds.worker-javascript.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/worker-javascript.js"));
+    ace.config.setModuleUrl("ace/mode/javascript", require("file-loader?name=npm.ace-builds.mode-javascript.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/mode-javascript.js"));
+    ace.config.setModuleUrl("ace/mode/text", require("file-loader?name=npm.ace-builds.mode-text.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/mode-text.js"));
+    ace.config.setModuleUrl("ace/mode/json_worker", require("file-loader?name=npm.ace-builds.worker-json.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/worker-json.js"));
+    ace.config.setModuleUrl("ace/mode/json", require("file-loader?name=npm.ace-builds.mode-json.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/mode-json.js"));
+    ace.config.setModuleUrl("ace/mode/markdown", require("file-loader?name=npm.ace-builds.mode-markdown.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/mode-markdown.js"));
+    ace.config.setModuleUrl("ace/theme/chrome", require("file-loader?name=npm.ace-builds.theme-chrome.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/theme-chrome.js"));
+}
 
 module.exports = class {
     onCreate(input, out) {
@@ -13,7 +29,11 @@ module.exports = class {
             clipboard: {},
             tree: {},
             loading: false,
-            error: null
+            loadingFile: false,
+            error: null,
+            errorFile: null,
+            currentMode: "list",
+            currentFile: null
         };
         this.state = state;
         this.cookieOptions = out.global.cookieOptions;
@@ -38,6 +58,27 @@ module.exports = class {
         if (this.query.get("d")) {
             this.tree.func.selectNode(this.state.dir.split("/").filter(i => i));
         }
+        [this.aceEditorElement] = this.getEl("z3_ap_f_textEditorWrap").getElementsByTagName("div");
+        this.aceEditor = ace.edit(this.aceEditorElement);
+        this.aceOptions = {
+            mode: "ace/mode/html",
+            theme: "ace/theme/chrome",
+            fontSize: "16px",
+            wrap: true,
+            useSoftTabs: true,
+            tabSize: 2
+        };
+        this.aceEditor.setOptions(this.aceOptions);
+        // const value = this.aceEditor.getSession().getValue();
+        // Remove annotations, e.g.
+        // "Non-space characters found without seeing a doctype first. Expected e.g. <!DOCTYPE html>."
+        this.aceEditor.getSession().on("changeAnnotation", () => {
+            const annotations = this.aceEditor.getSession().getAnnotations();
+            const annotationsFiltered = annotations.filter(a => a && !a.text.match(/DOCTYPE html/));
+            if (annotations.length > annotationsFiltered.length) {
+                this.aceEditor.getSession().setAnnotations(annotationsFiltered);
+            }
+        });
     }
 
     setLoadingList(state) {
@@ -48,6 +89,11 @@ module.exports = class {
     setLoadingTree(state) {
         this.tree.func.setLoading(state);
         this.state.error = null;
+    }
+
+    setLoadingFile(state) {
+        this.state.loadingFile = state;
+        this.state.errorFile = null;
     }
 
     onWindowResize() {
@@ -62,7 +108,7 @@ module.exports = class {
 
     onContextMenu(e) {
         e.preventDefault();
-        this.getComponent("z3_ap_f_fileMenu").func.setActive(true, e.pageX, e.pageY, e.currentTarget.dataset.id, e.currentTarget.dataset.directory);
+        this.getComponent("z3_ap_f_fileMenu").func.setActive(true, e.pageX, e.pageY, e.currentTarget.dataset.id, e.currentTarget.dataset.directory, e.currentTarget.dataset.ro);
     }
 
     onContextMenuHide(e) {
@@ -142,6 +188,10 @@ module.exports = class {
         this.state.error = null;
     }
 
+    onFileErrorDeleteClick() {
+        this.state.errorFile = null;
+    }
+
     async onTreeItemClick(data) {
         this.state.dir = data.path.length ? `/${data.path.join("/")}` : "/";
         this.query.replace({
@@ -160,6 +210,11 @@ module.exports = class {
             });
             await this.loadFilesList();
             this.tree.func.selectNode(currentPath);
+        } else {
+            Object.assign(document.createElement("a"), {
+                target: "_blank",
+                href: `/api/files/download?dir=${this.state.dir}&name=${data.name}`
+            }).click();
         }
     }
 
@@ -434,11 +489,15 @@ module.exports = class {
         case "createFile":
             this.processCreateNew(data, "file");
             break;
+        case "zip":
+            this.processCreateZIP(data, "file");
+            break;
         }
     }
 
-    onFileEdit(data) {
-        console.log(data.uid);
+    async onFileEdit(data) {
+        this.setState("currentFile", data.uid);
+        await this.loadFile();
     }
 
     onFileCutCopy(data, mode) {
@@ -449,5 +508,150 @@ module.exports = class {
             filesCount: 1
         };
         this.setState("clipboard", clipboardData);
+    }
+
+    async loadFile() {
+        if (this.loading) {
+            return;
+        }
+        this.setLoadingList(true);
+        this.setLoadingTree(true);
+        try {
+            const res = await axios({
+                method: "post",
+                url: "/api/files/load",
+                data: {
+                    dir: this.state.dir,
+                    name: this.state.currentFile
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            if (res && res.data) {
+                if (res.data.mime) {
+                    switch (res.data.mime) {
+                    case "application/javascript":
+                        this.aceOptions.mode = "ace/mode/javascript";
+                        break;
+                    case "text/css":
+                        this.aceOptions.mode = "ace/mode/javascript";
+                        break;
+                    case "text/html":
+                        this.aceOptions.mode = "ace/mode/html";
+                        break;
+                    case "application/json":
+                        this.aceOptions.mode = "ace/mode/json";
+                        break;
+                    case "text/markdown":
+                        this.aceOptions.mode = "ace/mode/markdown";
+                        break;
+                    default:
+                        this.aceOptions.mode = "ace/mode/text";
+                        break;
+                    }
+                    this.aceEditor.setOptions(this.aceOptions);
+                }
+                if (res.data.content) {
+                    this.setState("currentMode", "edit");
+                    setTimeout(() => {
+                        this.aceEditor.getSession().setValue(res.data.content);
+                        this.aceEditor.focus();
+                    }, 10);
+                }
+            }
+        } catch (e) {
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            if (files) {
+                this.state.error = `${this.state.error}: ${files}`;
+            }
+        }
+    }
+
+    async onFileSave() {
+        if (this.state.loadingFile) {
+            return;
+        }
+        this.setLoadingFile(true);
+        try {
+            await axios({
+                method: "post",
+                url: "/api/files/save",
+                data: {
+                    dir: this.state.dir,
+                    name: this.state.currentFile,
+                    content: this.aceEditor.getSession().getValue()
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setLoadingFile(false);
+            this.setState("currentMode", "list");
+            this.loadFilesList();
+            setTimeout(() => this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success"), 10);
+        } catch (e) {
+            this.setLoadingFile(false);
+            this.state.errorFile = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            if (files) {
+                this.state.error = `${this.state.errorFile}: ${files}`;
+            }
+        }
+    }
+
+    returnToListMode() {
+        this.setState("currentMode", "list");
+        this.loadFilesList();
+    }
+
+    onZIPClick() {
+        if (this.loading || !this.state.checkedCount) {
+            return;
+        }
+        this.inputModal.func.setMode("zip");
+        this.inputModal.func.setTitle(this.i18n.t("doZIP"));
+        this.inputModal.func.setFilename("");
+        this.inputModal.func.setActive(true);
+    }
+
+    async processCreateZIP(data) {
+        if (this.loading) {
+            return;
+        }
+        this.setLoadingList(true);
+        this.setLoadingTree(true);
+        const name = data.dest.toLowerCase().match(/\.zip$/) ? data.dest : `${data.dest}.zip`;
+        try {
+            await axios({
+                method: "post",
+                url: "/api/files/zip",
+                data: {
+                    dir: this.state.dir,
+                    name,
+                    files: Object.keys(this.state.checked)
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
+            this.loadData();
+        } catch (e) {
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            if (files) {
+                this.state.error = `${this.state.error}: ${files}`;
+            }
+        }
     }
 };

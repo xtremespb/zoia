@@ -27,5 +27,9 @@
     "btnConfirm": "Confirm",
     "couldNotUpload": "Could not upload one or more files",
     "createDir": "New Directory",
-    "doCreateFile": "New File"
+    "doCreateFile": "New File",
+    "btnSave": "Save",
+    "binaryFile": "Could not edit a binary file",
+    "invalidFileSize": "File is too large to edit",
+    "doZIP": "Create ZIP Archive"
 }

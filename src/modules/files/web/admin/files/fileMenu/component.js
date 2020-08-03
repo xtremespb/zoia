@@ -5,7 +5,8 @@ module.exports = class {
             positionLeft: "0px",
             positionTop: "0px",
             active: false,
-            directory: false
+            directory: false,
+            ro: false
         };
         this.state = state;
         this.func = {
@@ -13,7 +14,7 @@ module.exports = class {
         };
     }
 
-    setActive(active, positionLeft = 0, positionTop = 0, uid = null, directory = false) {
+    setActive(active, positionLeft = 0, positionTop = 0, uid = null, directory = false, ro = false) {
         if (!active) {
             this.setState({
                 active,
@@ -25,7 +26,8 @@ module.exports = class {
             positionLeft: `${positionLeft}px`,
             positionTop: `${positionTop}px`,
             uid,
-            directory
+            directory,
+            ro
         });
     }
 

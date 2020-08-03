@@ -8,7 +8,7 @@
       </header>
       <section class="modal-card-body">
         <div>
-          <input class="input" type="text" placeholder=state.filenameSrc value=state.filenameDest on-change("onFilenameChange") key="z3_ap_f_inputModal_filename"/>
+          <input class=`input${state.error ? " is-danger" : ""}` type="text" placeholder=state.filenameSrc value=state.filenameDest on-change("onFilenameChange") key="z3_ap_f_inputModal_filename"/>
         </div>
       </section>
       <footer class="modal-card-foot">

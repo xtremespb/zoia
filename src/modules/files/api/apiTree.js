@@ -8,8 +8,8 @@ const recursiveReadDir = async (root, tree = {
     id: "/",
     c: []
 }) => {
-    const files = (await fs.readdir(root)).sort(utils.sortAsc);
-    await Promise.all(files.filter(i => i !== "node_modules" && !i.match(/^\./)).map(async f => {
+    const files = (await fs.readdir(root)).filter(i => i !== "node_modules" && !i.match(/^\./));
+    await Promise.all(files.map(async f => {
         const dir = path.resolve(`${root}/${f}`);
         const stats = await fs.lstat(path.resolve(`${root}/${f}`));
         if (stats.isDirectory()) {
@@ -23,8 +23,11 @@ const recursiveReadDir = async (root, tree = {
             tree.c.push(res);
         }
     }));
-    if (tree.c && !tree.c.length) {
-        delete tree.c;
+    if (tree.c) {
+        tree.c = tree.c.sort(utils.sortById);
+        if (!tree.c.length) {
+            delete tree.c;
+        }
     }
     return tree;
 };

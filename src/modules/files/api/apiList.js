@@ -1,6 +1,9 @@
 import path from "path";
 import fs from "fs-extra";
 import mime from "mime-types";
+import {
+    isBinary
+} from "istextorbinary";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
 import utils from "../../../shared/lib/utils";
@@ -59,6 +62,9 @@ export default () => ({
                 if (stats.isFile()) {
                     data.size = utils.formatBytes(stats.size);
                     data.mime = f.indexOf(".") > 0 ? mime.lookup(f) || "application/octet-stream" : "application/octet-stream";
+                    if ((f.indexOf(".") > 0 && isBinary(f)) || stats.size > req.zoiaModulesConfig["files"].maxFileEditSizeBytes) {
+                        data.ro = true;
+                    }
                 }
                 return data;
             }))).filter(i => i && i.name !== "node_modules" && !i.name.match(/^\./)).sort(utils.sortByName).sort((a, b) => a.dir && !b.dir ? -1 : !a.dir && b.dir ? 1 : 0);

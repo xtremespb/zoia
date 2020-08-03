@@ -31,6 +31,7 @@
     "mFormErr.invalidUsernameOrPassword": "Invalid username or password",
     "mFormErr.shouldMatch": "Should match",
     "mFormErr.invalidCaptcha": "Invalid captcha code",
+    "mFormErr.uploadError": "Could not upload file(s) to the server",
     "mTable.deleteTitle": "Delete",
     "mTable.deleteDesc": "The following item(s) will be deleted",
     "mTable.delete": "Delete",

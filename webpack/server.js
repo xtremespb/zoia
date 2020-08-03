@@ -25,7 +25,7 @@ module.exports = (markoPlugin, argv) => ({
     },
     target: "node",
     externals: [/^[^./!]/],
-    optimization: {
+    optimization: argv.mode === "production" ? {
         splitChunks: false,
         minimizer: [
             new TerserPlugin({
@@ -35,7 +35,7 @@ module.exports = (markoPlugin, argv) => ({
                 extractComments: false,
             })
         ]
-    },
+    } : {},
     output: {
         libraryTarget: "commonjs2",
         path: path.resolve(`${__dirname}/../build/bin`),

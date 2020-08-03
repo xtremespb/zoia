@@ -31,6 +31,7 @@
     "mFormErr.invalidUsernameOrPassword": "Неправильное имя пользователя или пароль",
     "mFormErr.shouldMatch": "Не совпадает",
     "mFormErr.invalidCaptcha": "Введен неверный защитный код",
+    "mFormErr.uploadError": "Ошибка во время загрузки файла",
     "mTable.deleteTitle": "Удаление",
     "mTable.deleteDesc": "Следующая запись (записи) будут удалены",
     "mTable.delete": "Удалить",

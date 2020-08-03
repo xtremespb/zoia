@@ -41,6 +41,15 @@ export default {
         }
         return 0;
     },
+    sortById(a, b) {
+        if (a.id.toLowerCase() < b.id.toLowerCase()) {
+            return -1;
+        }
+        if (a.id.toLowerCase() > b.id.toLowerCase()) {
+            return 1;
+        }
+        return 0;
+    },
     sortAsc(a, b) {
         if (a < b) {
             return -1;

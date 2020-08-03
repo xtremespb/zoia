@@ -45,8 +45,8 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
             }
         ]
     },
-    devtool: "source-map",
-    optimization: {
+    devtool: argv.maps ? "source-map" : false,
+    optimization: argv.mode === "production" ? {
         splitChunks: {
             chunks: "all",
             automaticNameDelimiter: "_",
@@ -75,7 +75,7 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
                 extractComments: false,
             })
         ]
-    },
+    } : {},
     output: {
         filename: "[name].[contenthash:8].js",
         path: path.resolve(`${__dirname}/../build/public/${argv.type === "update" ? "update" : "zoia"}`),
@@ -91,8 +91,8 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
             chunkFilename: "[name]_[contenthash:8].css",
             ignoreOrder: true
         }),
-        new OptimizeCSSPlugin(),
-        new CssoWebpackPlugin(),
+        argv.mode === "production" ? new OptimizeCSSPlugin() : () => {},
+        argv.mode === "production" ? new CssoWebpackPlugin() : () => {},
         markoPlugin.browser,
     ]
 });
