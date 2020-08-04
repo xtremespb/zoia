@@ -7,8 +7,9 @@ import apiRename from "./apiRename";
 import apiNew from "./apiNew";
 import apiFileLoad from "./apiFileLoad";
 import apiFileSave from "./apiFileSave";
-import apiDownload from "./apiDownload";
+import binDownload from "./binDownload";
 import apiZIP from "./apiZIP";
+import apiUnZIP from "./apiUnZIP";
 
 export default fastify => {
     fastify.post("/api/files/list", apiList());
@@ -20,6 +21,7 @@ export default fastify => {
     fastify.post("/api/files/new", apiNew());
     fastify.post("/api/files/load", apiFileLoad());
     fastify.post("/api/files/save", apiFileSave());
-    fastify.get("/api/files/download", apiDownload());
+    fastify.get("/zoia/files/download", binDownload());
     fastify.post("/api/files/zip", apiZIP());
+    fastify.post("/api/files/unzip", apiUnZIP());
 };

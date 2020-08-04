@@ -2,3 +2,15 @@
     width: 200px;
     word-wrap: break-word;
 }
+
+.z3-ap-ps-tree-wrap {
+    width: 250px;
+}
+
+@media (max-width: 768px) {
+
+    .z3-ap-ps-tree-wrap {
+        width: unset;
+    }
+
+}

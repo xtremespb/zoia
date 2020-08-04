@@ -1,5 +1,14 @@
-<div class="column is-one-third z3-ap-f-item-wrap" data-id=input.file.name data-directory=(input.file.dir ? "true" : null) data-ro=(input.file.ro ? "true" : null)>
+<div class="column is-one-third z3-ap-f-item-wrap" data-id=input.file.name data-directory=(input.file.dir ? "true" : null) data-ro=(input.file.ro ? "true" : null) data-zip=(input.file.zip ? "true" : null)>
   <div class=`z3-ap-f-item columns is-mobile is-gapless ${input.file.dir ? "z3-ap-f-item-dir" : "z3-ap-f-item-file"}`>
+    <div class="column is-narrow">
+      <div class="z3-pretty p-icon z3-ap-f-item-checkbox">
+        <input type="checkbox" checked=input.checked on-change("onCheckboxChange") data-id=input.file.name/>
+        <div class="state">
+          <i class="icon mdi mdi-check"/>
+          <label/>
+        </div>
+      </div>
+    </div>
     <div class="column is-auto z3-ap-f-item-name">
       <a href="" on-click("onFileClick") data-name=input.file.name data-dir=(input.file.dir ? "true" : null)>
         <span class="icon z3-ap-f-item-icon">
@@ -11,14 +20,5 @@
     <if(input.file.size)>
       <div class="column is-narrow z3-ap-f-item-details">${input.file.size.size}&nbsp;${out.global.i18n.t(input.file.size.unit)}</div>
     </if>
-    <div class="column is-narrow">
-      <div class="z3-pretty p-icon z3-ap-f-item-checkbox">
-        <input type="checkbox" checked=input.checked on-change("onCheckboxChange") data-id=input.file.name/>
-        <div class="state">
-          <i class="icon mdi mdi-check"/>
-          <label/>
-        </div>
-      </div>
-    </div>
   </div>
 </div>

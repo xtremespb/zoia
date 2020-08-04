@@ -69,7 +69,6 @@ module.exports = class {
             tabSize: 2
         };
         this.aceEditor.setOptions(this.aceOptions);
-        // const value = this.aceEditor.getSession().getValue();
         // Remove annotations, e.g.
         // "Non-space characters found without seeing a doctype first. Expected e.g. <!DOCTYPE html>."
         this.aceEditor.getSession().on("changeAnnotation", () => {
@@ -108,7 +107,7 @@ module.exports = class {
 
     onContextMenu(e) {
         e.preventDefault();
-        this.getComponent("z3_ap_f_fileMenu").func.setActive(true, e.pageX, e.pageY, e.currentTarget.dataset.id, e.currentTarget.dataset.directory, e.currentTarget.dataset.ro);
+        this.getComponent("z3_ap_f_fileMenu").func.setActive(true, e.pageX, e.pageY, e.currentTarget.dataset.id, e.currentTarget.dataset.directory, e.currentTarget.dataset.ro, e.currentTarget.dataset.zip);
     }
 
     onContextMenuHide(e) {
@@ -213,7 +212,7 @@ module.exports = class {
         } else {
             Object.assign(document.createElement("a"), {
                 target: "_blank",
-                href: `/api/files/download?dir=${this.state.dir}&name=${data.name}`
+                href: `/zoia/files/download?dir=${this.state.dir}&name=${data.name}`
             }).click();
         }
     }
@@ -386,6 +385,9 @@ module.exports = class {
             this.deleteModal.func.setFiles(data.uid);
             this.deleteModal.func.setActive(true);
             break;
+        case "unzip":
+            this.processExtractZIP(data);
+            break;
         }
     }
 
@@ -490,7 +492,7 @@ module.exports = class {
             this.processCreateNew(data, "file");
             break;
         case "zip":
-            this.processCreateZIP(data, "file");
+            this.processCreateZIP(data);
             break;
         }
     }
@@ -554,13 +556,11 @@ module.exports = class {
                     }
                     this.aceEditor.setOptions(this.aceOptions);
                 }
-                if (res.data.content) {
-                    this.setState("currentMode", "edit");
-                    setTimeout(() => {
-                        this.aceEditor.getSession().setValue(res.data.content);
-                        this.aceEditor.focus();
-                    }, 10);
-                }
+                this.setState("currentMode", "edit");
+                setTimeout(() => {
+                    this.aceEditor.getSession().setValue(res.data.content || "");
+                    this.aceEditor.focus();
+                }, 10);
             }
         } catch (e) {
             this.setLoadingList(false);
@@ -635,6 +635,39 @@ module.exports = class {
                     dir: this.state.dir,
                     name,
                     files: Object.keys(this.state.checked)
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            this.getComponent(`files_mnotify`).func.show(this.i18n.t("operationSuccess"), "is-success");
+            this.loadData();
+        } catch (e) {
+            this.setLoadingList(false);
+            this.setLoadingTree(false);
+            this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            if (files) {
+                this.state.error = `${this.state.error}: ${files}`;
+            }
+        }
+    }
+
+    async processExtractZIP(data) {
+        if (this.loading) {
+            return;
+        }
+        this.setLoadingList(true);
+        this.setLoadingTree(true);
+        try {
+            await axios({
+                method: "post",
+                url: "/api/files/unzip",
+                data: {
+                    dir: this.state.dir,
+                    name: data.uid
                 },
                 headers: {
                     Authorization: `Bearer ${this.token}`

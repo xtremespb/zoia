@@ -51,7 +51,8 @@ module.exports = class {
         this.func = {
             autoFocus: this.autoFocus.bind(this),
             loadData: this.loadData.bind(this),
-            setProgress: this.setProgress.bind(this)
+            setProgress: this.setProgress.bind(this),
+            setData: this.setData.bind(this)
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -499,9 +500,12 @@ module.exports = class {
         const validationResult = this.validate(serialized);
         this.visualizeErrors(validationResult.errorData);
         if (validationResult.failed) {
-            return;
+            return false;
         }
-        await this.upload(this.serialize(false));
+        const data = this.serialize(false);
+        this.emit("form-submit", data);
+        await this.upload(data);
+        return false;
     }
 
     onButtonClick(obj) {
@@ -534,6 +538,12 @@ module.exports = class {
         return data;
     }
 
+    setData(data) {
+        this.setState("data", this.deserialize(data));
+        setTimeout(this.autoFocus.bind(this), 0);
+        setTimeout(this.emitFieldsUpdate.bind(this), 0);
+    }
+
     async loadData() {
         if (!this.input.load) {
             return;
@@ -564,10 +574,11 @@ module.exports = class {
                     }
                     this.setState("errors", errors);
                 }
-                const data = this.deserialize(result.data.data);
-                this.setState("data", data);
-                setTimeout(this.autoFocus.bind(this), 0);
-                setTimeout(this.emitFieldsUpdate.bind(this), 0);
+                // const data = this.deserialize(result.data.data);
+                // this.setState("data", data);
+                // setTimeout(this.autoFocus.bind(this), 0);
+                // setTimeout(this.emitFieldsUpdate.bind(this), 0);
+                this.setData(result.data.data);
             }
         } catch (e) {
             // eslint-disable-next-line no-console

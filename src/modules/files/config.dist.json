@@ -3,5 +3,5 @@
         "admin": "/admin/files"
     },
     "root": "./",
-    "maxFileEditSizeBytes": 524288
+    "maxFileEditSizeBytes": 1048576
 }

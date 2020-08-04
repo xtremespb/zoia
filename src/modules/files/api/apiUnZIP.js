@@ -1,9 +1,7 @@
 import path from "path";
 import fs from "fs-extra";
-import {
-    isBinary
-} from "istextorbinary";
 import mime from "mime-types";
+import extract from "extract-zip";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
 import fileLoadData from "./data/fileLoad.json";
@@ -54,33 +52,14 @@ export default () => ({
                 if (srcFile.indexOf(srcDir) !== 0 || (!stats.isFile() && !stats.isDirectory())) {
                     errors.push(req.body.name);
                 }
+                if (!errors.length && mime.lookup(req.body.name) !== "application/zip") {
+                    errors.push(req.body.name);
+                }
                 if (!errors.length) {
-                    // Open file
-                    data.content = await fs.readFile(srcFile, {
-                        encoding: "utf-8"
+                    await extract(srcFile, {
+                        dir: srcDir
                     });
                 }
-                if (data.content.length > req.zoiaModulesConfig["files"].maxFileEditSizeBytes) {
-                    rep.requestError(rep, {
-                        failed: true,
-                        error: "One or more file(s) could not be processed",
-                        errorKeyword: "invalidFileSize",
-                        errorData: [],
-                        files: errors
-                    });
-                    return;
-                }
-                if (isBinary(req.body.name, data.content)) {
-                    rep.requestError(rep, {
-                        failed: true,
-                        error: "One or more file(s) could not be processed",
-                        errorKeyword: "binaryFile",
-                        errorData: [],
-                        files: errors
-                    });
-                    return;
-                }
-                data.mime = req.body.name.indexOf(".") > 0 ? mime.lookup(req.body.name) || "application/octet-stream" : "application/octet-stream";
             } catch (e) {
                 errors.push(req.body.name);
             }

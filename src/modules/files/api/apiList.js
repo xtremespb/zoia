@@ -65,6 +65,9 @@ export default () => ({
                     if ((f.indexOf(".") > 0 && isBinary(f)) || stats.size > req.zoiaModulesConfig["files"].maxFileEditSizeBytes) {
                         data.ro = true;
                     }
+                    if (data.mime === "application/zip") {
+                        data.zip = true;
+                    }
                 }
                 return data;
             }))).filter(i => i && i.name !== "node_modules" && !i.name.match(/^\./)).sort(utils.sortByName).sort((a, b) => a.dir && !b.dir ? -1 : !a.dir && b.dir ? 1 : 0);

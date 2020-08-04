@@ -147,14 +147,14 @@ import icons from "../../../data/mime.json"
       <div class="z3-ap-f-files columns is-multiline">
         <for|file| of=state.files>
           <if(file.dir)>
-            <item icon="folder-outline" file=file on-file-click("onFileClick") on-checkbox-change("onCheckboxChange") checked=state.checked[file.name]/>
+            <listItem icon="folder-outline" file=file on-file-click("onFileClick") on-checkbox-change("onCheckboxChange") checked=state.checked[file.name]/>
           </if>
         </for>
       </div>
       <div class="z3-ap-f-files columns is-multiline">
         <for|file| of=state.files>
           <if(!file.dir)>
-            <item icon=(icons[file.mime] || "file-outline") file=file on-file-click("onFileClick") on-checkbox-change("onCheckboxChange") checked=state.checked[file.name]/>
+            <listItem icon=(icons[file.mime] || "file-outline") file=file on-file-click("onFileClick") on-checkbox-change("onCheckboxChange") checked=state.checked[file.name]/>
           </if>
         </for>
       </div>

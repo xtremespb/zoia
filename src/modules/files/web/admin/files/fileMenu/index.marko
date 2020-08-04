@@ -41,6 +41,15 @@
                 </a>
               </li>
             </if>
+            <if(state.zip)>
+              <li>
+                <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="unzip">
+                  <span class="icon">
+                    <i class="mdi mdi-archive-arrow-down-outline"/>
+                  </span>&nbsp;${out.global.i18n.t("unzip")}
+                </a>
+              </li>
+            </if>
           </ul>
         </div>
       </div>

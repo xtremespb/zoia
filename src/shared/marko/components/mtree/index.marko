@@ -3,14 +3,30 @@ style.scss {
 }
 
 <div class="z3-mtr-wrap" id=input.id>
+  <if(input.controls)>
+    <div class="field has-addons">
+      <p class="control">
+        <button class="button" disabled=state.loading on-click("onAddClick")>
+          <span class="icon">
+            <i class="mdi mdi-18px mdi-folder-plus-outline"/>
+          </span>
+        </button>
+      </p>
+      <p class="control">
+        <button class="button" disabled=(state.loading || (state.root && state.root.uuid === state.selected))>
+          <span class="icon">
+            <i class="mdi mdi-18px mdi-trash-can-outline"/>
+          </span>
+        </button>
+      </p>
+    </div>
+  </if>
   <if(state.root)>
     <mtreeItem data=state.root level=0 key=state.root.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
   </if>
-  <if(state.data && state.data.length)>
-    <for|item| of=state.data>
-      <mtreeItem data=item level=1 key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
-    </for>
-  </if>
+  <for|item| of=state.data>
+    <mtreeItem data=item level=1 key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
+  </for>
   <if(state.loading)>
     <div class="z3-mtr-loading">
       <span class="button is-white is-loading is-large z3-mtr-loading-spinner">&nbsp;</span>

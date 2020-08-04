@@ -21,5 +21,10 @@
     "css": "CSS",
     "cssHelpText": "Additional cascading style sheets for this page",
     "js": "JavaScript",
-    "jsHelpText": "Additional JavaScript code for this page"
+    "jsHelpText": "Additional JavaScript code for this page",
+    "addFolder": "Add Folder",
+    "deleteFolder": "Delete Folder",
+    "btnConfirm": "Save",
+    "btnCancel": "Cancel",
+    "folderId": "Folder ID"
 }

@@ -1,0 +1,25 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "__form": {
+                "type": "string"
+            }
+        },
+        "required": ["__form"]
+    },
+    "root": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_\\-/\\.]+$",
+                "minLength": 1,
+                "maxLength": 64
+            }
+        },
+        "required": ["id"]
+    },
+    "part": {},
+    "files": {}
+}

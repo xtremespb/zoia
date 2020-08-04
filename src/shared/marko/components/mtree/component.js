@@ -4,7 +4,7 @@ const {
 } = require("uuid");
 
 module.exports = class {
-    onCreate() {
+    onCreate(input, out) {
         const state = {
             loading: false,
             data: [],
@@ -15,8 +15,10 @@ module.exports = class {
         this.func = {
             initData: this.initData.bind(this),
             selectNode: this.selectNode.bind(this),
-            setLoading: this.setLoading.bind(this)
+            setLoading: this.setLoading.bind(this),
+            addChild: this.addChild.bind(this),
         };
+        this.i18n = out.global.i18n;
     }
 
     initTree(data, level = 1) {
@@ -134,7 +136,31 @@ module.exports = class {
         });
     }
 
+    onAddClick() {
+        const data = cloneDeep(this.state.data);
+        const path = this.getPathByUUID(this.state.selected, data);
+        const item = this.findNodeByUUID(this.state.selected, data) || this.state.root;
+        this.emit("add", {
+            uuid: this.state.selected,
+            path,
+            item
+        });
+    }
+
     setLoading(state) {
         this.state.loading = state;
+    }
+
+    addChild(data, uuid = this.state.selected) {
+        const stateData = cloneDeep(this.state.data);
+        if (uuid === this.state.root.uuid) {
+            stateData.push(data);
+            this.setState("data", stateData);
+        } else {
+            const item = this.findNodeByUUID(uuid, stateData);
+            item.c = item.c || [];
+            item.c.push(data);
+        }
+        this.setStateDirty("data", stateData);
     }
 };

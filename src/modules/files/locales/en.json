@@ -31,5 +31,6 @@
     "btnSave": "Save",
     "binaryFile": "Could not edit a binary file",
     "invalidFileSize": "File is too large to edit",
-    "doZIP": "Create ZIP Archive"
+    "doZIP": "Create ZIP Archive",
+    "unzip": "Extract here"
 }

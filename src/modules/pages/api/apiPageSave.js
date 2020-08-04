@@ -44,7 +44,7 @@ export default () => ({
                 await utils.cleanRemovedFiles(req, this.mongo.db, extendedValidation, dbItem, data);
             }
             // Upload files
-            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles, C.UPLOAD_AUTH, C.UPLOAD_ADMIN))) {
+            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles))) {
                 return;
             }
             // Process case and trim
