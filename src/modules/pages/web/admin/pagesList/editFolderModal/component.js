@@ -9,11 +9,14 @@ module.exports = class {
             active: false,
             title: "",
             error: null,
+            uuid: null
         };
         this.state = state;
         this.func = {
             setActive: this.setActive.bind(this),
             setTitle: this.setTitle.bind(this),
+            setData: this.setData.bind(this),
+            setUUID: this.setUUID.bind(this),
         };
         this.i18n = out.global.i18n;
         this.languages = out.global.languages;
@@ -37,18 +40,19 @@ module.exports = class {
         });
     }
 
-    onCloseClick() {
-        this.setActive(false);
+    setUUID(uuid = "") {
+        this.setState({
+            uuid
+        });
     }
 
-    process() {
-        // Do somehting
+    onCloseClick() {
         this.setActive(false);
     }
 
     onConfirmClick(e) {
         e.preventDefault();
-        this.process();
+        this.getComponent("folderEditForm").func.submitForm();
     }
 
     onFormSubmit(data) {
@@ -63,6 +67,14 @@ module.exports = class {
             isVisible: true,
             isOpen: false
         };
-        this.emit("folder-save", item);
+        this.emit("folder-save", {
+            item,
+            uuid: this.state.uuid
+        });
+        this.setActive(false);
+    }
+
+    setData(data) {
+        this.getComponent("folderEditForm").func.setData(data);
     }
 };

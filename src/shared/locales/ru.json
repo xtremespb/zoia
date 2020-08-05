@@ -46,5 +46,9 @@
     "KB": "Кб",
     "MB": "Мб",
     "GB": "Гб",
-    "TB": "Тб"
+    "TB": "Тб",
+    "deleteModalTitle": "Удаление",
+    "deleteModalText": "Следующие элементы будут удалены",
+    "btnConfirm": "Подтвердить",
+    "btnCancel": "Отмена"
 }

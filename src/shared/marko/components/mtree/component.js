@@ -17,8 +17,14 @@ module.exports = class {
             selectNode: this.selectNode.bind(this),
             setLoading: this.setLoading.bind(this),
             addChild: this.addChild.bind(this),
+            saveChild: this.saveChild.bind(this),
+            selectNodeByUUID: this.selectNodeByUUID.bind(this),
         };
         this.i18n = out.global.i18n;
+    }
+
+    onMount() {
+        this.deleteModal = this.getComponent("z3_ap_mt_deleteModal");
     }
 
     initTree(data, level = 1) {
@@ -94,6 +100,31 @@ module.exports = class {
         }
     }
 
+    selectNodeByUUID(uuid) {
+        let data = this.state.data || [];
+        const path = this.getPathByUUID(uuid, data);
+        path.map((p, i) => {
+            if (!data || !data.length) {
+                return;
+            }
+            const node = this.findNodeById(p, data);
+            if (node && data) {
+                node.isVisible = true;
+                // node.isOpen = path.length - 1 !== i;
+                node.isOpen = (node.c && node.c.length && node.c[0].isVisible) || path.length - 1 !== i;
+                if (path.length - 1 === i) {
+                    this.state.selected = node.uuid;
+                } else if (node.c) {
+                    node.c.map(n => n.isVisible = true);
+                }
+            }
+            data = node && node.c ? node.c : null;
+        });
+        if (!path.length && this.state.root) {
+            this.state.selected = this.state.root.uuid;
+        }
+    }
+
     getPathByUUID(uuid, data, path = []) {
         let res = [];
         data.map(i => {
@@ -136,19 +167,26 @@ module.exports = class {
         });
     }
 
-    onAddClick() {
+    setLoading(state) {
+        this.state.loading = state;
+    }
+
+    emitAddEdit(mode) {
         const data = cloneDeep(this.state.data);
         const path = this.getPathByUUID(this.state.selected, data);
         const item = this.findNodeByUUID(this.state.selected, data) || this.state.root;
-        this.emit("add", {
+        this.emit(mode, {
             uuid: this.state.selected,
             path,
             item
         });
     }
 
-    setLoading(state) {
-        this.state.loading = state;
+    onAddClick(e) {
+        if (e.target.disabled ? e.target.disabled : e.target.parentNode.disabled ? e.target.parentNode.disabled : e.target.parentNode.parentNode.disabled ? e.target.parentNode.parentNode.disabled : false) {
+            return;
+        }
+        this.emitAddEdit("add");
     }
 
     addChild(data, uuid = this.state.selected) {
@@ -162,5 +200,31 @@ module.exports = class {
             item.c.push(data);
         }
         this.setStateDirty("data", stateData);
+    }
+
+    onEditClick(e) {
+        if (e.target.disabled ? e.target.disabled : e.target.parentNode.disabled ? e.target.parentNode.disabled : e.target.parentNode.parentNode.disabled ? e.target.parentNode.parentNode.disabled : false) {
+            return;
+        }
+        this.emitAddEdit("edit");
+    }
+
+    saveChild(uuid, data) {
+        const stateData = cloneDeep(this.state.data);
+        const item = this.findNodeByUUID(uuid, stateData);
+        Object.keys(data).map(k => {
+            if (k !== "uuid") {
+                item[k] = data[k];
+            }
+        });
+        this.setStateDirty("data", stateData);
+    }
+
+    onDeleteClick(e) {
+        if (e.target.disabled ? e.target.disabled : e.target.parentNode.disabled ? e.target.parentNode.disabled : e.target.parentNode.parentNode.disabled ? e.target.parentNode.parentNode.disabled : false) {
+            return;
+        }
+        this.deleteModal.func.setActive(true);
+        this.deleteModal.func.setItems("123");
     }
 };

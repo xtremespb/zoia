@@ -52,7 +52,8 @@ module.exports = class {
             autoFocus: this.autoFocus.bind(this),
             loadData: this.loadData.bind(this),
             setProgress: this.setProgress.bind(this),
-            setData: this.setData.bind(this)
+            setData: this.setData.bind(this),
+            submitForm: this.submitForm.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -494,8 +495,12 @@ module.exports = class {
         }
     }
 
+    async submitForm() {
+        this.onFormSubmit();
+    }
+
     async onFormSubmit(e) {
-        e.preventDefault();
+        e ? e.preventDefault() : null;
         const serialized = this.serialize(true);
         const validationResult = this.validate(serialized);
         this.visualizeErrors(validationResult.errorData);

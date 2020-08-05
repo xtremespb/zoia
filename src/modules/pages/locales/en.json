@@ -23,6 +23,7 @@
     "js": "JavaScript",
     "jsHelpText": "Additional JavaScript code for this page",
     "addFolder": "Add Folder",
+    "editFolder": "Edit Folder",
     "deleteFolder": "Delete Folder",
     "btnConfirm": "Save",
     "btnCancel": "Cancel",

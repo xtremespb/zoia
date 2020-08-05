@@ -14,7 +14,7 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
   </h1>
   <div class="columns is-variable is-1 z3-ap-noselect">
     <div class="column is-narrow z3-ap-ps-tree-wrap">
-      <mtree key="z3_ap_ps_tree" id="z3_ap_ps_tree" on-item-click("onTreeItemClick") on-add("onFolderAddClick") controls=true/>
+      <mtree key="z3_ap_ps_tree" id="z3_ap_ps_tree" on-item-click("onTreeItemClick") on-add("onFolderAddClick") on-edit("onFolderEditClick") controls=true/>
     </div>
     <div class="column">
       <mtable css="table is-striped is-hoverable is-fullwidth" dataSource={

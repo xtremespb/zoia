@@ -13,7 +13,14 @@ style.scss {
         </button>
       </p>
       <p class="control">
-        <button class="button" disabled=(state.loading || (state.root && state.root.uuid === state.selected))>
+        <button class="button" disabled=(state.loading || (state.root && state.root.uuid === state.selected)) on-click("onEditClick")>
+          <span class="icon">
+            <i class="mdi mdi-18px mdi-folder-edit-outline"/>
+          </span>
+        </button>
+      </p>
+      <p class="control">
+        <button class="button" disabled=(state.loading || (state.root && state.root.uuid === state.selected)) on-click("onDeleteClick")>
           <span class="icon">
             <i class="mdi mdi-18px mdi-trash-can-outline"/>
           </span>
@@ -33,3 +40,4 @@ style.scss {
     </div>
   </if>
 </div>
+<deleteModal key="z3_ap_mt_deleteModal" on-delete-confirm("onDeleteConfirm")/>

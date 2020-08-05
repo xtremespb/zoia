@@ -93,10 +93,26 @@ module.exports = class {
 
     onFolderAddClick() { // Param: data
         this.editModal.func.setTitle(this.i18n.t("addFolder"));
+        this.editModal.func.setUUID(null);
+        this.editModal.func.setData({});
+        this.editModal.func.setActive(true);
+    }
+
+    onFolderEditClick(data) { // Param: data
+        this.editModal.func.setTitle(this.i18n.t("editFolder"));
+        this.editModal.func.setUUID(data.uuid);
+        this.editModal.func.setData({
+            id: data.item.id,
+            ...data.item.data
+        });
         this.editModal.func.setActive(true);
     }
 
     onFolderSave(data) {
-        this.tree.func.addChild(data);
+        if (data.uuid) {
+            this.tree.func.saveChild(data.uuid, data.item);
+        } else {
+            this.tree.func.addChild(data.item);
+        }
     }
 };
