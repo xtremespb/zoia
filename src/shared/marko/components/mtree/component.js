@@ -25,6 +25,37 @@ module.exports = class {
 
     onMount() {
         this.deleteModal = this.getComponent("z3_ap_mt_deleteModal");
+        window.addEventListener("click", this.onContextMenuHide.bind(this));
+    }
+
+    onContextMenu(e) {
+        console.log("onContextMenu");
+        e.preventDefault();
+        this.getComponent("z3_ap_mt_treeMenu").func.setActive(true, e.pageX, e.pageY, e.currentTarget.dataset.id, e.currentTarget.dataset.directory, e.currentTarget.dataset.ro, e.currentTarget.dataset.zip);
+    }
+
+    onContextMenuHide(e) {
+        console.log("onContextMenuHide");
+        const menu = document.getElementById("z3_ap_mt_menu");
+        if (menu && !menu.contains(e.target)) {
+            this.getComponent("z3_ap_mt_treeMenu").func.setActive(false);
+        }
+    }
+
+    bindContextMenu() {
+        const items = document.querySelectorAll(".z3-mtr-item-wrap");
+        Array.from(items).map(i => {
+            i.addEventListener("contextmenu", this.onContextMenu.bind(this));
+            i.addEventListener("longtap", this.onContextMenu.bind(this));
+        });
+    }
+
+    unbindContextMenu() {
+        const items = document.querySelectorAll(".z3-mtr-item-wrap");
+        Array.from(items).map(i => {
+            i.removeEventListener("contextmenu", this.onContextMenu.bind(this));
+            i.removeEventListener("longtap", this.onContextMenu.bind(this));
+        });
     }
 
     initTree(data, level = 1) {
@@ -40,6 +71,7 @@ module.exports = class {
     }
 
     initData(data, selected) {
+        this.unbindContextMenu();
         const root = cloneDeep(data);
         const uuid = root.uuid || uuidv4();
         this.state.root = {
@@ -51,6 +83,7 @@ module.exports = class {
         };
         this.state.selected = selected || uuid;
         this.state.data = this.initTree(cloneDeep(data.c));
+        setTimeout(() => this.bindContextMenu(), 10);
     }
 
     findNodeByUUID(uuid, data) {
@@ -64,6 +97,18 @@ module.exports = class {
             }
         });
         return node;
+    }
+
+    removeNodeByUUID(uuid, data) {
+        return data.map(i => {
+            if (i.uuid === uuid) {
+                i = null;
+            }
+            if (i && i.c && i.c.length) {
+                i.c = this.removeNodeByUUID(uuid, i.c);
+            }
+            return i;
+        }).filter(i => i);
     }
 
     findNodeById(id, data) {
@@ -190,6 +235,7 @@ module.exports = class {
     }
 
     addChild(data, uuid = this.state.selected) {
+        this.unbindContextMenu();
         const stateData = cloneDeep(this.state.data);
         if (uuid === this.state.root.uuid) {
             stateData.push(data);
@@ -200,6 +246,7 @@ module.exports = class {
             item.c.push(data);
         }
         this.setStateDirty("data", stateData);
+        setTimeout(() => this.bindContextMenu(), 10);
     }
 
     onEditClick(e) {
@@ -210,6 +257,7 @@ module.exports = class {
     }
 
     saveChild(uuid, data) {
+        this.unbindContextMenu();
         const stateData = cloneDeep(this.state.data);
         const item = this.findNodeByUUID(uuid, stateData);
         Object.keys(data).map(k => {
@@ -218,13 +266,25 @@ module.exports = class {
             }
         });
         this.setStateDirty("data", stateData);
+        setTimeout(() => this.bindContextMenu(), 10);
     }
 
     onDeleteClick(e) {
+        this.unbindContextMenu();
         if (e.target.disabled ? e.target.disabled : e.target.parentNode.disabled ? e.target.parentNode.disabled : e.target.parentNode.parentNode.disabled ? e.target.parentNode.parentNode.disabled : false) {
             return;
         }
+        const stateData = cloneDeep(this.state.data);
+        const item = this.findNodeByUUID(this.state.selected, stateData);
         this.deleteModal.func.setActive(true);
-        this.deleteModal.func.setItems("123");
+        this.deleteModal.func.setItems(item.t);
+        setTimeout(() => this.bindContextMenu(), 10);
+    }
+
+    onDeleteConfirm() {
+        const stateData = cloneDeep(this.state.data);
+        const stateDataProcessed = this.removeNodeByUUID(this.state.selected, stateData);
+        this.state.selected = this.state.root.uuid;
+        this.setStateDirty("data", stateDataProcessed);
     }
 };

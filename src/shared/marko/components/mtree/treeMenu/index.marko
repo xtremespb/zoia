@@ -1,0 +1,26 @@
+<if(state.active)>
+  <div id="z3_ap_mt_menu" class="z3-ap-mt-menu" style=`top:${state.positionTop};left:${state.positionLeft}`>
+    <div class="card z3-ap-mt-menu-wrap">
+      <div class="card-content z3-ap-mt-menu-inner-wrap">
+        <div class="menu">
+          <ul class="menu-list">
+            <li>
+              <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="rename">
+                <span class="icon">
+                  <i class="mdi mdi-arrow-up"/>
+                </span>&nbsp;${out.global.i18n.t("moveUpGeneric")}
+              </a>
+            </li>
+            <li>
+              <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="cut">
+                <span class="icon">
+                  <i class="mdi mdi-arrow-down"/>
+                </span>&nbsp;${out.global.i18n.t("moveDownGeneric")}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</if>

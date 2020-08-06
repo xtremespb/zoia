@@ -50,5 +50,7 @@
     "deleteModalTitle": "Delete",
     "deleteModalText": "The following item(s) will be deleted",
     "btnConfirmGeneric": "Confirm",
-    "btnCancelGeneric": "Cancel"
+    "btnCancelGeneric": "Cancel",
+    "moveUpGeneric": "Move Up",
+    "moveDownGeneric": "Move Down"
 }

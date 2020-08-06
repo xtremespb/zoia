@@ -50,5 +50,7 @@
     "deleteModalTitle": "Удаление",
     "deleteModalText": "Следующие элементы будут удалены",
     "btnConfirm": "Подтвердить",
-    "btnCancel": "Отмена"
+    "btnCancel": "Отмена",
+    "moveUpGeneric": "Переместить вверх",
+    "moveDownGeneric": "Переместить вниз"
 }
