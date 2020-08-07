@@ -19,15 +19,21 @@ module.exports = class {
         this.tree = this.getComponent("z3_ap_mt_tree");
     }
 
-    initData(root, data) {
-        console.log("Init data");
-        console.log(root);
-        console.log(data);
-        this.setStateDirty({
-            root: cloneDeep(root),
-            data: cloneDeep(data),
+    initTree(data, level = 1) {
+        return data.map(i => {
+            i.isVisible = level < 2;
+            i.isOpen = false;
+            if (i.c) {
+                i.c = this.initTree(i.c, level + 1);
+            }
+            return i;
         });
-        this.setStateDirty("selected", root.uid);
+    }
+
+    initData(root, data) {
+        this.state.root = cloneDeep(root);
+        this.state.data = this.initTree(cloneDeep(data));
+        this.state.selected = root.uuid;
     }
 
     setActive(state) {

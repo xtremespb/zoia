@@ -6,7 +6,7 @@
       <button class="delete" aria-label="close" on-click("onCloseClick")/>
     </header>
     <section class="modal-card-body">
-      ROOT: ${JSON.stringify(state.root)} DATA: ${JSON.stringify(state.data)} SELECTED: ${state.selected}<if(state.root)>
+      <if(state.root)>
         <mtreeItem data=state.root level=0 key=state.root.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
       </if>
       <for|item, order| of=state.data>
