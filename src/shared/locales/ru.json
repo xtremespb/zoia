@@ -52,5 +52,6 @@
     "btnConfirm": "Подтвердить",
     "btnCancel": "Отмена",
     "moveUpGeneric": "Переместить вверх",
-    "moveDownGeneric": "Переместить вниз"
+    "moveDownGeneric": "Переместить вниз",
+    "moveGeneric": "Переместить"
 }

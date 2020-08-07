@@ -5,9 +5,8 @@ module.exports = class {
             positionLeft: "0px",
             positionTop: "0px",
             active: false,
-            directory: false,
-            ro: false,
-            zip: false
+            order: 0,
+            len: 0
         };
         this.state = state;
         this.func = {
@@ -15,7 +14,7 @@ module.exports = class {
         };
     }
 
-    setActive(active, positionLeft = 0, positionTop = 0, uid = null) {
+    setActive(active, positionLeft = 0, positionTop = 0, uid = null, order = 0, len = 0) {
         if (!active) {
             this.setState({
                 active,
@@ -27,6 +26,8 @@ module.exports = class {
             positionLeft: `${positionLeft}px`,
             positionTop: `${positionTop}px`,
             uid,
+            order: parseInt(order, 10),
+            len: parseInt(len, 10),
         });
     }
 
@@ -47,7 +48,8 @@ module.exports = class {
         } = this.processMenuItemClick(e);
         this.emit("item-click", {
             uid,
-            cmd
+            cmd,
+            order: this.state.order
         });
     }
 };

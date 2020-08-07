@@ -1,0 +1,21 @@
+<div class=`z3-ap-noselect modal${state.active ? " is-active" : ""}`>
+  <div class="modal-background" on-click("onCloseClick")/>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">${out.global.i18n.t("moveGeneric")}</p>
+      <button class="delete" aria-label="close" on-click("onCloseClick")/>
+    </header>
+    <section class="modal-card-body">
+      ROOT: ${JSON.stringify(state.root)} DATA: ${JSON.stringify(state.data)} SELECTED: ${state.selected}<if(state.root)>
+        <mtreeItem data=state.root level=0 key=state.root.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
+      </if>
+      <for|item, order| of=state.data>
+        <mtreeItem data=item level=1 key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected/>
+      </for>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-primary" on-click("onConfirmClick")>${out.global.i18n.t("btnConfirmGeneric")}</button>
+      <button class="button" on-click("onCloseClick")>${out.global.i18n.t("btnCancelGeneric")}</button>
+    </footer>
+  </div>
+</div>

@@ -21,21 +21,21 @@ module.exports = class {
             selectNodeByUUID: this.selectNodeByUUID.bind(this),
         };
         this.i18n = out.global.i18n;
+        this.controls = input.controls || false;
     }
 
     onMount() {
         this.deleteModal = this.getComponent("z3_ap_mt_deleteModal");
+        this.moveModal = this.getComponent("z3_ap_mt_moveModal");
         window.addEventListener("click", this.onContextMenuHide.bind(this));
     }
 
     onContextMenu(e) {
-        console.log("onContextMenu");
         e.preventDefault();
-        this.getComponent("z3_ap_mt_treeMenu").func.setActive(true, e.pageX, e.pageY, e.currentTarget.dataset.id, e.currentTarget.dataset.directory, e.currentTarget.dataset.ro, e.currentTarget.dataset.zip);
+        this.getComponent("z3_ap_mt_treeMenu").func.setActive(true, e.pageX, e.pageY, e.currentTarget.dataset.id, e.currentTarget.dataset.order, e.currentTarget.dataset.len);
     }
 
     onContextMenuHide(e) {
-        console.log("onContextMenuHide");
         const menu = document.getElementById("z3_ap_mt_menu");
         if (menu && !menu.contains(e.target)) {
             this.getComponent("z3_ap_mt_treeMenu").func.setActive(false);
@@ -43,7 +43,7 @@ module.exports = class {
     }
 
     bindContextMenu() {
-        const items = document.querySelectorAll(".z3-mtr-item-wrap");
+        const items = document.querySelectorAll(".z3-mtr-subitem");
         Array.from(items).map(i => {
             i.addEventListener("contextmenu", this.onContextMenu.bind(this));
             i.addEventListener("longtap", this.onContextMenu.bind(this));
@@ -51,7 +51,7 @@ module.exports = class {
     }
 
     unbindContextMenu() {
-        const items = document.querySelectorAll(".z3-mtr-item-wrap");
+        const items = document.querySelectorAll(".z3-mtr-subitem");
         Array.from(items).map(i => {
             i.removeEventListener("contextmenu", this.onContextMenu.bind(this));
             i.removeEventListener("longtap", this.onContextMenu.bind(this));
@@ -97,6 +97,19 @@ module.exports = class {
             }
         });
         return node;
+    }
+
+    findNodesByUUID(uuid, data) {
+        let nodes;
+        data.map(i => {
+            if (i.uuid === uuid) {
+                nodes = data;
+            }
+            if (!nodes && i.c) {
+                nodes = this.findNodesByUUID(uuid, i.c);
+            }
+        });
+        return nodes;
     }
 
     removeNodeByUUID(uuid, data) {
@@ -286,5 +299,28 @@ module.exports = class {
         const stateDataProcessed = this.removeNodeByUUID(this.state.selected, stateData);
         this.state.selected = this.state.root.uuid;
         this.setStateDirty("data", stateDataProcessed);
+    }
+
+    onMenuItemClick(data) {
+        const stateData = cloneDeep(this.state.data);
+        const nodes = this.findNodesByUUID(data.uid, stateData);
+        switch (data.cmd) {
+        case "up":
+            const u1 = cloneDeep(nodes[data.order]);
+            const u2 = cloneDeep(nodes[data.order - 1]);
+            nodes[data.order] = u2;
+            nodes[data.order - 1] = u1;
+            break;
+        case "down":
+            const d1 = cloneDeep(nodes[data.order]);
+            const d2 = cloneDeep(nodes[data.order + 1]);
+            nodes[data.order] = d2;
+            nodes[data.order + 1] = d1;
+            break;
+        case "move":
+            this.moveModal.func.initData(this.state.root, this.state.data);
+            this.moveModal.func.setActive(true);
+        }
+        this.setStateDirty("data", stateData);
     }
 };

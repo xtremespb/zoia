@@ -52,5 +52,6 @@
     "btnConfirmGeneric": "Confirm",
     "btnCancelGeneric": "Cancel",
     "moveUpGeneric": "Move Up",
-    "moveDownGeneric": "Move Down"
+    "moveDownGeneric": "Move Down",
+    "moveGeneric": "Move"
 }
