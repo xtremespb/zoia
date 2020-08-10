@@ -290,7 +290,7 @@ module.exports = class {
         const stateData = cloneDeep(this.state.data);
         const item = this.findNodeByUUID(this.state.selected, stateData);
         this.deleteModal.func.setActive(true);
-        this.deleteModal.func.setItems(item.t);
+        this.deleteModal.func.setItems(item.t || item.id);
         setTimeout(() => this.bindContextMenu(), 10);
     }
 
@@ -302,7 +302,9 @@ module.exports = class {
     }
 
     onMenuItemClick(data) {
+        this.setStateDirty("selected", data.uid);
         const stateData = cloneDeep(this.state.data);
+        const item = this.findNodeByUUID(this.state.selected, stateData);
         const nodes = this.findNodesByUUID(data.uid, stateData);
         switch (data.cmd) {
         case "up":
@@ -319,8 +321,33 @@ module.exports = class {
             break;
         case "move":
             this.moveModal.func.initData(this.state.root, this.state.data);
+            this.moveModal.func.setTitle(item.t || item.id);
             this.moveModal.func.setActive(true);
         }
         this.setStateDirty("data", stateData);
+    }
+
+    onMoveConfirm(uid) {
+        if (uid === this.state.selected) {
+            return;
+        }
+        const data = cloneDeep(this.state.data);
+        const itemSrc = cloneDeep(this.findNodeByUUID(this.state.selected, data));
+        const dataProcessed = this.removeNodeByUUID(this.state.selected, data) || [];
+        if (uid === this.state.root.uuid) {
+            // Shall be moved to the root
+            dataProcessed.push(itemSrc);
+        } else {
+            // Shall be moved to the tree
+            const itemDest = this.findNodeByUUID(uid, dataProcessed);
+            if (itemDest) {
+                itemDest.c = itemDest.c || [];
+                itemDest.c.push(itemSrc);
+            }
+        }
+        this.setStateDirty("data", dataProcessed);
+        this.unbindContextMenu();
+        setTimeout(() => this.bindContextMenu(), 10);
+        this.selectNodeByUUID(this.state.selected);
     }
 };

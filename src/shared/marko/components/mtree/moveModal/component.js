@@ -6,12 +6,14 @@ module.exports = class {
             active: false,
             data: [],
             root: null,
-            selected: null
+            selected: null,
+            title: ""
         };
         this.state = state;
         this.func = {
             setActive: this.setActive.bind(this),
             initData: this.initData.bind(this),
+            setTitle: this.setTitle.bind(this),
         };
     }
 
@@ -40,13 +42,17 @@ module.exports = class {
         this.state.active = state;
     }
 
+    setTitle(title) {
+        this.state.title = title;
+    }
+
     onCloseClick() {
         this.setActive(false);
     }
 
     onConfirmClick() {
         this.setActive(false);
-        this.emit("move-confirm");
+        this.emit("move-confirm", this.state.selected);
     }
 
     findNodeByUUID(uuid, data) {

@@ -20,7 +20,7 @@ style.scss {
         </button>
       </p>
       <p class="control">
-        <button class="button" disabled=(state.loading || (state.root && state.root.uuid === state.selected)) on-click("onDeleteClick")>
+        <button class="button is-danger" disabled=(state.loading || (state.root && state.root.uuid === state.selected)) on-click("onDeleteClick")>
           <span class="icon">
             <i class="mdi mdi-18px mdi-trash-can-outline"/>
           </span>
