@@ -5,6 +5,7 @@ const webpack = require("webpack");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const OptimizeCSSPlugin = require("optimize-css-assets-webpack-plugin");
 const CssoWebpackPlugin = require("csso-webpack-plugin").default;
+const babelConfig = require("./babel.config");
 
 module.exports = (moduleDirs, markoPlugin, argv) => ({
     name: "Client Part",
@@ -13,7 +14,12 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
         extensions: [".js", ".json", ".marko"]
     },
     module: {
-        rules: [{
+        rules: [argv.mode === "production" ? {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader",
+                options: babelConfig()
+            } : {}, {
                 test: /\.marko$/,
                 use: ["babel-loader", "@marko/webpack/loader"],
             },
@@ -41,7 +47,7 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "babel-loader"
+                loader: "babel-loader",
             }
         ]
     },
