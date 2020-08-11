@@ -32,7 +32,7 @@ style.scss {
     <mtreeItem data=state.root level=0 key=state.root.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected controls=input.controls/>
   </if>
   <for|item, order| of=state.data>
-    <mtreeItem data=item level=1 key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected controls=input.controls order=order len=state.data.length/>
+    <mtreeItem data=item level=1 key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected controls=input.controls order=order len=state.data.length isDraggable=(input.controls ? true : null)/>
   </for>
   <if(state.loading)>
     <div class="z3-mtr-loading">

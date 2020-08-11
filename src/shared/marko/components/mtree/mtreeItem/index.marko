@@ -23,7 +23,7 @@ style.scss {
         <i class="mdi mdi-checkbox-blank-outline"/>
       </span>
     </else>
-    <a href="" data-id=input.data.uuid data-order=input.order data-len=input.len on-click("onItemClick") class=`z3-mtr-item-wrap${input.level > 0 ? " z3-mtr-subitem" : ""}`>
+    <a href="" data-id=input.data.uuid data-order=input.order data-len=input.len on-click("onItemClick") class=`z3-mtr-item-wrap${input.level > 0 ? " z3-mtr-subitem" : ""}` draggable=`${input.isDraggable || false}`>
       <span class="icon z3-mtr-icon-wrap">
         <i class=`z3-mtr-icon z3-mtr-icon-folder${input.data.isOpen ? "-open" : ""}`/>
       </span>
@@ -33,7 +33,7 @@ style.scss {
   <if(input.data.c)>
     $ const level = input.level + 1;
     <for|item| of=input.data.c>
-      <mtreeItem data=item level=level key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=input.selected/>
+      <mtreeItem data=item level=level key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=input.selected draggable=`${input.isDraggable || false}`/>
     </for>
   </if>
 </if>
