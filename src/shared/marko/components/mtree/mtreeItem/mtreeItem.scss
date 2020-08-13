@@ -32,3 +32,11 @@
 .z3-mtr-tree-item {
     white-space: nowrap;
 }
+
+.z3-mtr-drop-gap {
+    height: 5px;
+}
+
+.z3-mtr-drop-gap-over {
+    border: 1px dashed $grey-lightest;
+}
