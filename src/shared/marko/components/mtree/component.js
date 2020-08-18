@@ -2,6 +2,7 @@ const cloneDeep = require("lodash.clonedeep");
 const {
     v4: uuidv4
 } = require("uuid");
+const Utils = require("./utils");
 
 module.exports = class {
     onCreate(input, out) {
@@ -9,7 +10,8 @@ module.exports = class {
             loading: false,
             data: [],
             root: null,
-            selected: null
+            selected: null,
+            dragging: false
         };
         this.state = state;
         this.func = {
@@ -22,6 +24,7 @@ module.exports = class {
         };
         this.i18n = out.global.i18n;
         this.controls = input.controls || false;
+        this.utils = new Utils();
     }
 
     onMount() {
@@ -86,61 +89,13 @@ module.exports = class {
         setTimeout(() => this.bindContextMenu(), 10);
     }
 
-    findNodeByUUID(uuid, data) {
-        let node;
-        data.map(i => {
-            if (i.uuid === uuid) {
-                node = i;
-            }
-            if (!node && i.c) {
-                node = this.findNodeByUUID(uuid, i.c);
-            }
-        });
-        return node;
-    }
-
-    findNodesByUUID(uuid, data) {
-        let nodes;
-        data.map(i => {
-            if (i.uuid === uuid) {
-                nodes = data;
-            }
-            if (!nodes && i.c) {
-                nodes = this.findNodesByUUID(uuid, i.c);
-            }
-        });
-        return nodes;
-    }
-
-    removeNodeByUUID(uuid, data) {
-        return data.map(i => {
-            if (i.uuid === uuid) {
-                i = null;
-            }
-            if (i && i.c && i.c.length) {
-                i.c = this.removeNodeByUUID(uuid, i.c);
-            }
-            return i;
-        }).filter(i => i);
-    }
-
-    findNodeById(id, data) {
-        let node;
-        data.map(i => {
-            if (i.id === id) {
-                node = i;
-            }
-        });
-        return node;
-    }
-
     selectNode(path) {
         let data = this.state.data || [];
         path.map((p, i) => {
             if (!data || !data.length) {
                 return;
             }
-            const node = this.findNodeById(p, data);
+            const node = this.utils.findNodeById(p, data);
             if (node && data) {
                 node.isVisible = true;
                 // node.isOpen = path.length - 1 !== i;
@@ -160,12 +115,12 @@ module.exports = class {
 
     selectNodeByUUID(uuid) {
         let data = this.state.data || [];
-        const path = this.getPathByUUID(uuid, data);
+        const path = this.utils.getPathByUUID(uuid, data);
         path.map((p, i) => {
             if (!data || !data.length) {
                 return;
             }
-            const node = this.findNodeById(p, data);
+            const node = this.utils.findNodeById(p, data);
             if (node && data) {
                 node.isVisible = true;
                 // node.isOpen = path.length - 1 !== i;
@@ -183,32 +138,9 @@ module.exports = class {
         }
     }
 
-    getPathByUUID(uuid, data, path = []) {
-        let res = [];
-        data.map(i => {
-            if (res.length) {
-                return;
-            }
-            path.push(i.id);
-            if (i.uuid === uuid) {
-                res = path;
-                return;
-            }
-            if (i.c) {
-                const sr = this.getPathByUUID(uuid, i.c, path);
-                if (sr.length) {
-                    res = path;
-                    return;
-                }
-            }
-            path.pop();
-        });
-        return res;
-    }
-
     onOpenCloseClick(uuid) {
         const data = cloneDeep(this.state.data);
-        const item = this.findNodeByUUID(uuid, data);
+        const item = this.utils.findNodeByUUID(uuid, data);
         item.isOpen = !item.isOpen;
         (item.c || []).map(i => i.isVisible = item.isOpen);
         this.state.data = data;
@@ -217,8 +149,8 @@ module.exports = class {
     onItemClick(uuid) {
         this.state.selected = uuid;
         const data = cloneDeep(this.state.data);
-        const path = this.getPathByUUID(uuid, data);
-        const item = this.findNodeByUUID(uuid, data);
+        const path = this.utils.getPathByUUID(uuid, data);
+        const item = this.utils.findNodeByUUID(uuid, data);
         this.emit("item-click", {
             item,
             path
@@ -231,8 +163,8 @@ module.exports = class {
 
     emitAddEdit(mode) {
         const data = cloneDeep(this.state.data);
-        const path = this.getPathByUUID(this.state.selected, data);
-        const item = this.findNodeByUUID(this.state.selected, data) || this.state.root;
+        const path = this.utils.getPathByUUID(this.state.selected, data);
+        const item = this.utils.findNodeByUUID(this.state.selected, data) || this.state.root;
         this.emit(mode, {
             uuid: this.state.selected,
             path,
@@ -254,12 +186,15 @@ module.exports = class {
             stateData.push(data);
             this.setState("data", stateData);
         } else {
-            const item = this.findNodeByUUID(uuid, stateData);
+            const item = this.utils.findNodeByUUID(uuid, stateData);
             item.c = item.c || [];
             item.c.push(data);
         }
         this.setStateDirty("data", stateData);
         setTimeout(() => this.bindContextMenu(), 10);
+        const selected = cloneDeep(this.state.selected);
+        this.selectNodeByUUID(uuid);
+        setTimeout(() => this.selectNodeByUUID(selected), 10);
     }
 
     onEditClick(e) {
@@ -272,7 +207,7 @@ module.exports = class {
     saveChild(uuid, data) {
         this.unbindContextMenu();
         const stateData = cloneDeep(this.state.data);
-        const item = this.findNodeByUUID(uuid, stateData);
+        const item = this.utils.findNodeByUUID(uuid, stateData);
         Object.keys(data).map(k => {
             if (k !== "uuid") {
                 item[k] = data[k];
@@ -288,7 +223,7 @@ module.exports = class {
             return;
         }
         const stateData = cloneDeep(this.state.data);
-        const item = this.findNodeByUUID(this.state.selected, stateData);
+        const item = this.utils.findNodeByUUID(this.state.selected, stateData);
         this.deleteModal.func.setActive(true);
         this.deleteModal.func.setItems(item.t || item.id);
         setTimeout(() => this.bindContextMenu(), 10);
@@ -296,7 +231,7 @@ module.exports = class {
 
     onDeleteConfirm() {
         const stateData = cloneDeep(this.state.data);
-        const stateDataProcessed = this.removeNodeByUUID(this.state.selected, stateData);
+        const stateDataProcessed = this.utils.removeNodeByUUID(this.state.selected, stateData);
         this.state.selected = this.state.root.uuid;
         this.setStateDirty("data", stateDataProcessed);
     }
@@ -304,8 +239,8 @@ module.exports = class {
     onMenuItemClick(data) {
         this.setStateDirty("selected", data.uid);
         const stateData = cloneDeep(this.state.data);
-        const item = this.findNodeByUUID(this.state.selected, stateData);
-        const nodes = this.findNodesByUUID(data.uid, stateData);
+        const item = this.utils.findNodeByUUID(this.state.selected, stateData);
+        const nodes = this.utils.findNodesByUUID(data.uid, stateData);
         switch (data.cmd) {
         case "up":
             const u1 = cloneDeep(nodes[data.order]);
@@ -332,14 +267,14 @@ module.exports = class {
             return;
         }
         const data = cloneDeep(this.state.data);
-        const itemSrc = cloneDeep(this.findNodeByUUID(this.state.selected, data));
-        const dataProcessed = this.removeNodeByUUID(this.state.selected, data) || [];
+        const itemSrc = cloneDeep(this.utils.findNodeByUUID(this.state.selected, data));
+        const dataProcessed = this.utils.removeNodeByUUID(this.state.selected, data) || [];
         if (uid === this.state.root.uuid) {
             // Shall be moved to the root
             dataProcessed.push(itemSrc);
         } else {
             // Shall be moved to the tree
-            const itemDest = this.findNodeByUUID(uid, dataProcessed);
+            const itemDest = this.utils.findNodeByUUID(uid, dataProcessed);
             if (itemDest) {
                 itemDest.c = itemDest.c || [];
                 itemDest.c.push(itemSrc);
@@ -349,5 +284,57 @@ module.exports = class {
         this.unbindContextMenu();
         setTimeout(() => this.bindContextMenu(), 10);
         this.selectNodeByUUID(this.state.selected);
+    }
+
+    onGapDrop(dropData) {
+        const [id, gapId, isTop] = dropData.split(/,/);
+        const data = cloneDeep(this.state.data);
+        const itemSrc = cloneDeep(this.utils.findNodeByUUID(id, data));
+        const dataProcessed = this.utils.removeNodeByUUID(id, data) || [];
+        const gapNodes = this.utils.findNodesByUUID(gapId, dataProcessed);
+        if (!gapNodes || !gapNodes.length) {
+            return;
+        }
+        if (isTop) {
+            gapNodes.unshift(itemSrc);
+        } else {
+            const idx = gapNodes.findIndex(i => i.uuid === gapId);
+            gapNodes.splice(idx + 1, 0, itemSrc);
+        }
+        this.setStateDirty("data", dataProcessed);
+        this.unbindContextMenu();
+        setTimeout(() => this.bindContextMenu(), 10);
+        this.setState("dragging", false);
+        const selected = cloneDeep(this.state.selected);
+        this.selectNodeByUUID(id);
+        setTimeout(() => this.selectNodeByUUID(selected), 10);
+    }
+
+    onItemDrop(dropData) {
+        const [id, itemId] = dropData.split(/,/);
+        const data = cloneDeep(this.state.data);
+        const itemSrc = cloneDeep(this.utils.findNodeByUUID(id, data));
+        const dataProcessed = this.utils.removeNodeByUUID(id, data) || [];
+        const newNode = this.utils.findNodeByUUID(itemId, dataProcessed);
+        if (!newNode) {
+            return;
+        }
+        newNode.c = newNode.c || [];
+        newNode.c.push(itemSrc);
+        this.setStateDirty("data", dataProcessed);
+        this.unbindContextMenu();
+        setTimeout(() => this.bindContextMenu(), 10);
+        this.setState("dragging", false);
+        const selected = cloneDeep(this.state.selected);
+        this.selectNodeByUUID(id);
+        setTimeout(() => this.selectNodeByUUID(selected), 10);
+    }
+
+    onItemDragStart() {
+        this.setState("dragging", true);
+    }
+
+    onItemDragEnd() {
+        this.setState("dragging", false);
     }
 };

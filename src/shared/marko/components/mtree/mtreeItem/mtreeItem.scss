@@ -35,8 +35,9 @@
 
 .z3-mtr-drop-gap {
     height: 5px;
+    border: 1px dashed $grey-lightest;
 }
 
 .z3-mtr-drop-gap-over {
-    border: 1px dashed $grey-lightest;
+    border: 1px dashed $grey;
 }

@@ -1,4 +1,5 @@
 const cloneDeep = require("lodash.clonedeep");
+const Utils = require("../utils");
 
 module.exports = class {
     onCreate() {
@@ -15,6 +16,7 @@ module.exports = class {
             initData: this.initData.bind(this),
             setTitle: this.setTitle.bind(this),
         };
+        this.utils = new Utils();
     }
 
     onMount() {
@@ -55,45 +57,9 @@ module.exports = class {
         this.emit("move-confirm", this.state.selected);
     }
 
-    findNodeByUUID(uuid, data) {
-        let node;
-        data.map(i => {
-            if (i.uuid === uuid) {
-                node = i;
-            }
-            if (!node && i.c) {
-                node = this.findNodeByUUID(uuid, i.c);
-            }
-        });
-        return node;
-    }
-
-    getPathByUUID(uuid, data, path = []) {
-        let res = [];
-        data.map(i => {
-            if (res.length) {
-                return;
-            }
-            path.push(i.id);
-            if (i.uuid === uuid) {
-                res = path;
-                return;
-            }
-            if (i.c) {
-                const sr = this.getPathByUUID(uuid, i.c, path);
-                if (sr.length) {
-                    res = path;
-                    return;
-                }
-            }
-            path.pop();
-        });
-        return res;
-    }
-
     onOpenCloseClick(uuid) {
         const data = cloneDeep(this.state.data);
-        const item = this.findNodeByUUID(uuid, data);
+        const item = this.utils.findNodeByUUID(uuid, data);
         item.isOpen = !item.isOpen;
         (item.c || []).map(i => i.isVisible = item.isOpen);
         this.state.data = data;
