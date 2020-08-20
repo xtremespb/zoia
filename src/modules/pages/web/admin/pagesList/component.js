@@ -7,7 +7,6 @@ module.exports = class {
         this.state = {
             processValue: null,
             error: null,
-            tree: {},
             dir: "/",
             loading: false
         };
@@ -22,6 +21,7 @@ module.exports = class {
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
         this.tree = this.getComponent("z3_ap_ps_tree");
+        this.table = this.getComponent("z3_ap_ps_table");
         this.editModal = this.getComponent("z3_ap_ps_editModal");
         // eslint-disable-next-line no-unused-vars
         this.state.processValue = (id, value, column, row) => {
@@ -36,10 +36,6 @@ module.exports = class {
         await this.loadTree();
     }
 
-    async onTreeItemClick(data) {
-        this.state.dir = data.path.length ? `/${data.path.join("/")}` : "/";
-    }
-
     setLoadingTree(state) {
         this.tree.func.setLoading(state);
     }
@@ -49,13 +45,13 @@ module.exports = class {
         try {
             const res = await axios({
                 method: "post",
-                url: "/api/pages/tree",
+                url: "/api/pages/tree/load",
                 headers: {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            this.state.tree = res.data.tree || {};
-            this.tree.func.initData(res.data.tree);
+            const tree = res.data.tree || {};
+            this.tree.func.initData(tree);
             this.setLoadingTree(false);
         } catch (e) {
             this.setLoadingTree(false);
@@ -77,7 +73,7 @@ module.exports = class {
     onTopButtonClick(data) {
         switch (data.button) {
         case "btnReload":
-            this.getComponent("pagesTable").func.dataRequest();
+            this.table.func.dataRequest();
             break;
         case "btnAdd":
             window.router.navigate("pages.edit", {
@@ -113,6 +109,36 @@ module.exports = class {
             this.tree.func.saveChild(data.uuid, data.item);
         } else {
             this.tree.func.addChild(data.item);
+        }
+    }
+
+    // User has clicked a tree item
+    async onTreeItemClick(data) {
+        const dir = data.path.length ? `/${data.path.join("/")}` : "/";
+        this.state.dir = dir;
+        this.table.func.dataRequest({
+            dir
+        });
+    }
+
+    // Tree has been changed
+    async onTreeDataChange(data) {
+        this.setLoadingTree(true);
+        try {
+            await axios({
+                method: "post",
+                url: "/api/pages/tree/save",
+                data: {
+                    tree: data.data.c
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setLoadingTree(false);
+        } catch (e) {
+            this.setLoadingTree(false);
+            this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
         }
     }
 };

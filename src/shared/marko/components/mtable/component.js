@@ -88,7 +88,7 @@ module.exports = class {
         this.setState("loading", state);
     }
 
-    async loadData() {
+    async loadData(extras = {}) {
         this.setLoading(true);
         this.setChecked(false);
         this.setState("anyCheckboxSelected", false);
@@ -100,7 +100,8 @@ module.exports = class {
             sortId: this.state.sortId,
             sortDirection: this.state.sortDirection,
             searchText: this.state.searchText,
-            itemsPerPage: this.state.itemsPerPage
+            itemsPerPage: this.state.itemsPerPage,
+            ...extras
         };
         try {
             const response = await axios(source);
@@ -125,14 +126,14 @@ module.exports = class {
         }
     }
 
-    async dataRequest() {
+    async dataRequest(extras) {
         this.emit("data-request", {
             page: this.state.page,
             sortId: this.state.sortId,
             sortDirection: this.state.sortDirection
         });
         if (this.state.dataSource) {
-            await this.loadData();
+            await this.loadData(extras);
         }
     }
 

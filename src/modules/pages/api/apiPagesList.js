@@ -59,7 +59,7 @@ export default () => ({
                 data,
                 count,
                 limit,
-                pagesCount: Math.ceil(count / limit)
+                pagesCount: Math.ceil(count / limit),
             });
             return;
         } catch (e) {

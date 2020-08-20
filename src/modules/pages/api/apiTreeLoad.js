@@ -11,9 +11,12 @@ export default () => ({
                 return;
             }
             // Get tree
+            const treeData = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
+                _id: "pages_data"
+            });
             const tree = {
                 id: "/",
-                c: []
+                c: treeData ? treeData.tree : []
             };
             // Send result
             rep.successJSON(rep, {

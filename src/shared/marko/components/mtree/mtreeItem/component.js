@@ -55,20 +55,20 @@ module.exports = class {
 
     onItemDragEnter(e) {
         e.preventDefault();
-        this.state.overItem = true;
+        this.state.overItem = this.state.overItem ? this.state.overItem + 1 : 1;
     }
 
     onItemDragLeave(e) {
         e.preventDefault();
-        this.state.overItem = false;
+        this.state.overItem = this.state.overItem ? this.state.overItem - 1 : 0;
     }
 
     onItemDrop(e) {
+        this.state.overItem = 0;
         if (!e.dataTransfer.getData("text/plain") || !e.dataTransfer.getData("text/plain").match(/^__ztr__/)) {
             e.preventDefault();
             return;
         }
-        this.onItemDragLeave(e);
         const id = e.dataTransfer.getData("text/plain").replace(/^__ztr__/, "");
         this.emit("item-drop", `${id},${this.itemId}`);
     }

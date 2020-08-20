@@ -23,6 +23,7 @@ module.exports = class {
             selectNodeByUUID: this.selectNodeByUUID.bind(this),
         };
         this.i18n = out.global.i18n;
+        this.language = out.global.language;
         this.controls = input.controls || false;
         this.utils = new Utils();
     }
@@ -66,6 +67,7 @@ module.exports = class {
             i.isVisible = level < 2;
             i.isOpen = false;
             i.uuid = i.uuid || uuidv4();
+            i.t = i.data && i.data[this.language] ? i.data[this.language] : i.id;
             if (i.c) {
                 i.c = this.initTree(i.c, level + 1);
             }
@@ -195,6 +197,7 @@ module.exports = class {
         const selected = cloneDeep(this.state.selected);
         this.selectNodeByUUID(uuid);
         setTimeout(() => this.selectNodeByUUID(selected), 10);
+        setTimeout(() => this.onTreeDataChanged(), 10);
     }
 
     onEditClick(e) {
@@ -215,6 +218,7 @@ module.exports = class {
         });
         this.setStateDirty("data", stateData);
         setTimeout(() => this.bindContextMenu(), 10);
+        setTimeout(() => this.onTreeDataChanged(), 10);
     }
 
     onDeleteClick(e) {
@@ -234,6 +238,7 @@ module.exports = class {
         const stateDataProcessed = this.utils.removeNodeByUUID(this.state.selected, stateData);
         this.state.selected = this.state.root.uuid;
         this.setStateDirty("data", stateDataProcessed);
+        setTimeout(() => this.onTreeDataChanged(), 10);
     }
 
     onMenuItemClick(data) {
@@ -260,6 +265,7 @@ module.exports = class {
             this.moveModal.func.setActive(true);
         }
         this.setStateDirty("data", stateData);
+        setTimeout(() => this.onTreeDataChanged(), 10);
     }
 
     onMoveConfirm(uid) {
@@ -284,6 +290,7 @@ module.exports = class {
         this.unbindContextMenu();
         setTimeout(() => this.bindContextMenu(), 10);
         this.selectNodeByUUID(this.state.selected);
+        setTimeout(() => this.onTreeDataChanged(), 10);
     }
 
     onGapDrop(dropData) {
@@ -308,6 +315,7 @@ module.exports = class {
         const selected = cloneDeep(this.state.selected);
         this.selectNodeByUUID(id);
         setTimeout(() => this.selectNodeByUUID(selected), 10);
+        setTimeout(() => this.onTreeDataChanged(), 10);
     }
 
     onItemDrop(dropData) {
@@ -328,6 +336,7 @@ module.exports = class {
         const selected = cloneDeep(this.state.selected);
         this.selectNodeByUUID(id);
         setTimeout(() => this.selectNodeByUUID(selected), 10);
+        setTimeout(() => this.onTreeDataChanged(), 10);
     }
 
     onItemDragStart() {
@@ -336,5 +345,37 @@ module.exports = class {
 
     onItemDragEnd() {
         this.setState("dragging", false);
+    }
+
+    serializeData(dataInput) {
+        const data = (dataInput || cloneDeep(this.state.data)).map(i => {
+            delete i.isOpen;
+            delete i.isVisible;
+            delete i.t;
+            delete i.uuid;
+            if (i.c && i.c.length) {
+                i.c = this.serializeData(i.c);
+            } else {
+                delete i.c;
+            }
+            return i;
+        });
+        return data;
+    }
+
+    onTreeDataChanged() {
+        const stateData = cloneDeep(this.state.data);
+        const data = this.state.root ? {
+            id: this.state.root.id,
+            c: this.serializeData()
+        } : this.serializeData();
+        const {
+            selected
+        } = this.state;
+        const path = this.utils.getPathByUUID(selected, stateData);
+        this.emit("data-change", {
+            data,
+            path
+        });
     }
 };

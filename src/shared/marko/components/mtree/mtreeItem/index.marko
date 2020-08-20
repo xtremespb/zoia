@@ -7,7 +7,7 @@ $ const level = parseInt(input.level, 10);
   <if(input.order === 0 && level === 1 && input.dragging)>
     <mtreeGap marginLeft=((level - 1) * 24) id=input.data.uuid on-gap-drop("onGapDrop") isTop=true/>
   </if>
-  <div style=`margin-left:${(level - 1) * 24}px;` class="z3-mtr-tree-item">
+  <div style=`margin-left:${(level - 1) * 24}px;` class="z3-mtr-tree-item" on-dragover("onItemDragOver") on-dragenter("onItemDragEnter") on-dragleave("onItemDragLeave") on-drop("onItemDrop")>
     <if(input.data.c && input.data.c.length)>
       <a href="" data-id=input.data.uuid on-click("onOpenCloseClick")>
         <if(input.data.isOpen)>
@@ -27,7 +27,7 @@ $ const level = parseInt(input.level, 10);
         <i class="mdi mdi-checkbox-blank-outline"/>
       </span>
     </else>
-    <a href="" data-id=input.data.uuid data-order=input.order data-len=input.len on-click("onItemClick") class=`z3-mtr-item-wrap${level > 0 ? " z3-mtr-subitem" : ""}` draggable=`${input.isDraggable || false}` on-dragstart("onTreeItemDragStart") on-dragend("onTreeItemDragEnd") on-dragover("onItemDragOver") on-dragenter("onItemDragEnter") on-dragleave("onItemDragLeave") on-drop("onItemDrop")>
+    <a href="" data-id=input.data.uuid data-order=input.order data-len=input.len on-click("onItemClick") class=`z3-mtr-item-wrap${level > 0 ? " z3-mtr-subitem" : ""}${state.overItem ? " z3-mtr-tree-item-over" : ""}` draggable=`${input.isDraggable || false}` on-dragstart("onTreeItemDragStart") on-dragend("onTreeItemDragEnd")>
       <span class="icon z3-mtr-icon-wrap">
         <i class=`z3-mtr-icon z3-mtr-icon-folder${input.data.isOpen ? "-open" : ""}`/>
       </span>
@@ -39,7 +39,7 @@ $ const level = parseInt(input.level, 10);
       <if(index === 0 && input.dragging && input.data.isOpen)>
         <mtreeGap marginLeft=((level + 1) * 24) id=item.uuid on-gap-drop("onGapDrop") isTop=true/>
       </if>
-      <mtreeItem data=item level=(level + 1) order=index key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=input.selected isDraggable=input.isDraggable on-gap-drop("onGapDrop") on-item-drop("onItemDropEvent") on-drag-start("onTreeItemComponentDragStart") on-drag-end("onTreeItemComponentDragEnd") dragging=input.dragging/>
+      <mtreeItem data=item level=(level + 1) order=index key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=input.selected isDraggable=input.isDraggable on-gap-drop("onGapDrop") on-item-drop("onItemDropEvent") on-drag-start("onTreeItemComponentDragStart") on-drag-end("onTreeItemComponentDragEnd") dragging=input.dragging len=input.len/>
     </for>
   </if>
   <if(level > 0 && input.dragging)>

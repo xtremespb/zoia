@@ -14,19 +14,20 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
   </h1>
   <div class="columns is-variable is-1 z3-ap-noselect">
     <div class="column is-narrow z3-ap-ps-tree-wrap">
-      <mtree key="z3_ap_ps_tree" id="z3_ap_ps_tree" on-item-click("onTreeItemClick") on-add("onFolderAddClick") on-edit("onFolderEditClick") controls=true/>
+      <mtree key="z3_ap_ps_tree" id="z3_ap_ps_tree" on-item-click("onTreeItemClick") on-add("onFolderAddClick") on-edit("onFolderEditClick") controls=true on-data-change("onTreeDataChange")/>
     </div>
     <div class="column">
-      <mtable css="table is-striped is-hoverable is-fullwidth" dataSource={
+      <mtable key="z3_ap_ps_table" css="table is-striped is-hoverable is-fullwidth" dataSource={
         method: "post",
         url: "/api/pages/list",
         data: {
-          language: out.global.language
+          language: out.global.language,
+          dir: state.dir
         },
         headers: {
           Authorization: `Bearer ${token}`
         }
-      } id="pages" key="pagesTable" columns=[
+      } id="pages" columns=[
         {
           id: "path",
           title: out.global.i18n.t("path"),

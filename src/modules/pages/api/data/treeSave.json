@@ -1,0 +1,36 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "tree": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "pattern": "^[a-zA-Z0-9_\\-/\\.]+$",
+                            "minLength": 1,
+                            "maxLength": 64
+                        },
+                        "data": {
+                            "type": "object"
+                        },
+                        "c": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/properties/tree/items"
+                            },
+                            "minItems": 0,
+                            "uniqueItems": false
+
+                        }
+                    },
+                    "required": ["id"]
+                },
+                "minItems": 0,
+                "uniqueItems": false
+            }
+        }
+    }
+}
