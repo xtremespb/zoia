@@ -5,7 +5,7 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue"];
 
 module.exports = class {
     onCreate(input) {
@@ -71,6 +71,11 @@ module.exports = class {
             return false;
         case "checkboxes":
             return [];
+        case "keyvalue":
+            return {
+                data: "",
+                    label: ""
+            };
         default:
             return null;
         }
@@ -349,6 +354,9 @@ module.exports = class {
         if (field.type === "file" && !Array.isArray(value)) {
             valueProcess = [];
         }
+        if (field.type === "keyvalue") {
+            valueProcess = value.data;
+        }
         return valueProcess;
     }
 
@@ -602,5 +610,9 @@ module.exports = class {
 
     onCaptcha(secret) {
         this.captchaSecret = secret;
+    }
+
+    onGetKeyValue(data) {
+        this.emit("get-key-value", data);
     }
 };

@@ -9,6 +9,7 @@ module.exports = class {
         if (this.input.id !== "new") {
             this.getComponent("pageEditForm").loadData();
         }
+        this.folderSelectModal = this.getComponent("z3_ap_pe_folderModal");
     }
 
     async onFormPostSuccess() {
@@ -29,5 +30,16 @@ module.exports = class {
 
     onUnauthorized() {
         window.location.href = this.i18n.getLocalizedURL(`${this.routes.login}?_=${new Date().getTime()}`, this.language);
+    }
+
+    onGetKeyValue(data) {
+        console.log("onGetKeyValue from Pages");
+        console.log(data);
+        this.folderSelectModal.func.setActive(true);
+    }
+
+    onFolderSelectConfirm(data) {
+        console.log("onFolderSelectConfirm from Pages");
+        console.log(data);
     }
 };

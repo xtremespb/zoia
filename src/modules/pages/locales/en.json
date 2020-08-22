@@ -27,5 +27,6 @@
     "deleteFolder": "Delete Folder",
     "btnConfirm": "Save",
     "btnCancel": "Cancel",
-    "folderId": "Folder ID"
+    "folderId": "Folder ID",
+    "folderSelectModalTitle": "Select Folder"
 }

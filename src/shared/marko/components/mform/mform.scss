@@ -113,6 +113,11 @@
     margin-top: -3px;
 }
 
+.mf-ctl-keyvalue-wrap {
+    white-space: nowrap;
+    margin-right: 45px;
+}
+
 @media (max-width: 1024px) {
 
     .z3-mf-captcha-input,

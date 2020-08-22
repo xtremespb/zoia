@@ -246,3 +246,26 @@ ACE
     <p class="help is-danger">${input.errors[input.item.id]}</p>
   </if>
 </if>
+<!--
+Key-Value Input
+-->
+<if(input.item.type === "keyvalue")>
+  <label class="label">
+    ${input.item.label}:<if(input.item.mandatory)>
+      &nbsp;<span class="has-text-danger">*</span>
+    </if>
+  </label>
+  <div class="control" class="mf-ctl-keyvalue-wrap">
+    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value.label on-change("onFieldValueChange") data-id=input.item.id readonly/>&nbsp;<button class="button is-light" data-id=input.item.id on-click("onKeyValueButtonClick")>
+      <span class="icon is-small">
+        <i class="mdi mdi-dots-horizontal"/>
+      </span>
+    </button>
+  </div>
+  <if(input.item.helpText)>
+    <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  </if>
+</if>

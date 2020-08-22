@@ -183,4 +183,12 @@ module.exports = class {
         this.setState("toggleAce", toggle);
         this.forceUpdate();
     }
+
+    onKeyValueButtonClick(e) {
+        e.preventDefault();
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        this.emit("get-key-value", {
+            id: dataset.id,
+        });
+    }
 };

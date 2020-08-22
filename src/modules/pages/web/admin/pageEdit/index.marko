@@ -30,12 +30,20 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
   } fields=[
     [
       {
+        id: "dir",
+        type: "keyvalue",
+        label: out.global.i18n.t("path"),
+        helpText: out.global.i18n.t("pathHelpText"),
+        wrapCSS: "z3-is-medium",
+        autoFocus: true,
+        mandatory: true,
+        shared: true
+      }, {
         id: "path",
         type: "text",
         label: out.global.i18n.t("path"),
         helpText: out.global.i18n.t("pathHelpText"),
         wrapCSS: "z3-is-medium",
-        autoFocus: true,
         mandatory: true,
         shared: true
       },
@@ -103,5 +111,6 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
         }
       ]
     }
-  ] formType="formData" validation=pageEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=languageTabs tabsActive=[languageTabs[0].id]/>
+  ] formType="formData" validation=pageEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=languageTabs tabsActive=[languageTabs[0].id] on-get-key-value("onGetKeyValue")/>
+  <folderModal key="z3_ap_pe_folderModal" on-confirm("onFolderSelectConfirm")/>
 </div>
