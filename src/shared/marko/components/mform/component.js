@@ -53,7 +53,10 @@ module.exports = class {
             loadData: this.loadData.bind(this),
             setProgress: this.setProgress.bind(this),
             setData: this.setData.bind(this),
+            setValue: this.setValue.bind(this),
+            getValue: this.getValue.bind(this),
             submitForm: this.submitForm.bind(this),
+            setError: this.setError.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -73,8 +76,7 @@ module.exports = class {
             return [];
         case "keyvalue":
             return {
-                data: "",
-                    label: ""
+                data: "", label: ""
             };
         default:
             return null;
@@ -229,6 +231,19 @@ module.exports = class {
             this.state.tabs.map(tab => data[tab.id][obj.id] = value);
         }
         this.setState("data", data);
+    }
+
+    setValue(id, value) {
+        const data = cloneDeep(this.state.data);
+        data[this.state.activeTabId][id] = value;
+        if (this.fieldsFlat.find(f => f.id === id).shared) {
+            this.state.tabs.map(tab => data[tab.id][id] = value);
+        }
+        this.setState("data", data);
+    }
+
+    getValue(id) {
+        return this.state.data[this.state.activeTabId][id];
     }
 
     onRemoveArrItem(obj) {
@@ -614,5 +629,9 @@ module.exports = class {
 
     onGetKeyValue(data) {
         this.emit("get-key-value", data);
+    }
+
+    setError(error) {
+        this.state.error = error;
     }
 };

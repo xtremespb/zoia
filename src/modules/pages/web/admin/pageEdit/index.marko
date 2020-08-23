@@ -32,17 +32,18 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
       {
         id: "dir",
         type: "keyvalue",
-        label: out.global.i18n.t("path"),
-        helpText: out.global.i18n.t("pathHelpText"),
+        label: out.global.i18n.t("dir"),
+        helpText: out.global.i18n.t("dirHelpText"),
         wrapCSS: "z3-is-medium",
         autoFocus: true,
         mandatory: true,
-        shared: true
+        shared: true,
+        emptyArrayLabel: "/"
       }, {
-        id: "path",
+        id: "filename",
         type: "text",
-        label: out.global.i18n.t("path"),
-        helpText: out.global.i18n.t("pathHelpText"),
+        label: out.global.i18n.t("filename"),
+        helpText: out.global.i18n.t("filenameHelpText"),
         wrapCSS: "z3-is-medium",
         mandatory: true,
         shared: true
@@ -112,5 +113,5 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
       ]
     }
   ] formType="formData" validation=pageEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=languageTabs tabsActive=[languageTabs[0].id] on-get-key-value("onGetKeyValue")/>
-  <folderModal key="z3_ap_pe_folderModal" on-confirm("onFolderSelectConfirm")/>
+  <folderModal key="z3_ap_pe_folderModal" on-confirm("onFolderSelectConfirm") on-got-tree-data("onGotTreeData") on-tree-loading-error("onTreeLoadingError")/>
 </div>

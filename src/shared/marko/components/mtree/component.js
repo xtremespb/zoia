@@ -21,6 +21,10 @@ module.exports = class {
             addChild: this.addChild.bind(this),
             saveChild: this.saveChild.bind(this),
             selectNodeByUUID: this.selectNodeByUUID.bind(this),
+            getSelected: this.getSelected.bind(this),
+            getSelectedPath: this.getSelectedPath.bind(this),
+            getSelectedLabel: this.getSelectedLabel.bind(this),
+            getPathLabel: this.getPathLabel.bind(this),
         };
         this.i18n = out.global.i18n;
         this.language = out.global.language;
@@ -377,5 +381,34 @@ module.exports = class {
             data,
             path
         });
+    }
+
+    getSelected() {
+        return this.state.selected;
+    }
+
+    getSelectedPath() {
+        return this.utils.getPathByUUID(this.state.selected, this.state.data);
+    }
+
+    getSelectedLabel() {
+        const node = this.utils.findNodeByUUID(this.state.selected, this.state.data);
+        return node ? node.t || node.id : "";
+    }
+
+    getPathLabel(path) {
+        let data = this.state.data || [];
+        let label = "";
+        path.map((p, i) => {
+            if (!data || !data.length) {
+                return;
+            }
+            const node = this.utils.findNodeById(p, data);
+            if (node && data && path.length - 1 === i) {
+                label = node.t || node.id;
+            }
+            data = node && node.c ? node.c : null;
+        });
+        return label;
     }
 };

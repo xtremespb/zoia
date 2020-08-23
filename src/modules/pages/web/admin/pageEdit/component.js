@@ -5,11 +5,19 @@ module.exports = class {
         this.routes = out.global.routes;
     }
 
-    onMount() {
-        if (this.input.id !== "new") {
-            this.getComponent("pageEditForm").loadData();
-        }
+    async onMount() {
+        this.treeLoadingError = false;
+        this.pageEditForm = this.getComponent("pageEditForm");
         this.folderSelectModal = this.getComponent("z3_ap_pe_folderModal");
+        if (this.input.id !== "new") {
+            await this.pageEditForm.func.loadData();
+        } else {
+            this.pageEditForm.func.setValue("dir", {
+                data: [],
+                label: ""
+            });
+        }
+        await this.folderSelectModal.func.loadTree();
     }
 
     async onFormPostSuccess() {
@@ -32,14 +40,35 @@ module.exports = class {
         window.location.href = this.i18n.getLocalizedURL(`${this.routes.login}?_=${new Date().getTime()}`, this.language);
     }
 
-    onGetKeyValue(data) {
-        console.log("onGetKeyValue from Pages");
-        console.log(data);
+    onGetKeyValue() {
+        if (this.treeLoadingError) {
+            return;
+        }
         this.folderSelectModal.func.setActive(true);
+        const dir = this.pageEditForm.func.getValue("dir");
+        if (dir && dir.data) {
+            this.folderSelectModal.func.selectPath(dir.data);
+        }
     }
 
     onFolderSelectConfirm(data) {
-        console.log("onFolderSelectConfirm from Pages");
-        console.log(data);
+        this.pageEditForm.func.setValue("dir", {
+            data: data.path,
+            label: data.label
+        });
+    }
+
+    onGotTreeData() {
+        const data = this.pageEditForm.func.getValue("dir");
+        const label = this.folderSelectModal.func.getPathLabel(data) || "";
+        this.pageEditForm.func.setValue("dir", {
+            data,
+            label
+        });
+    }
+
+    onTreeLoadingError() {
+        this.pageEditForm.func.setError(this.i18n.t("cannotLoadFoldersTree"));
+        this.treeLoadingError = true;
     }
 };

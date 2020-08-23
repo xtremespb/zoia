@@ -48,7 +48,7 @@ export default () => ({
                 return;
             }
             // Process case and trim
-            data.path = data.path.trim().toLowerCase();
+            data.filename = data.filename && typeof data.filename === "string" ? data.filename.trim().toLowerCase() : "";
             // Check for path duplicates
             if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["pages"].collectionPages, {
                     path: data.path,

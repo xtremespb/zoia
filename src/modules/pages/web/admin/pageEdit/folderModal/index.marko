@@ -3,14 +3,23 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">${out.global.i18n.t("folderSelectModalTitle")}</p>
-      <button class="delete" aria-label="close" on-click("onCloseClick")/>
+      <if(!state.loading)>
+        <button class="delete" aria-label="close" on-click("onCloseClick")/>
+      </if>
     </header>
     <section class="modal-card-body">
-      OK
+      <if(state.error)>
+        <div class="notification is-danger">
+          <button class="delete" on-click("onErrorDeleteClick")/>
+          ${state.error}
+        </div>
+      </if>
+      <mtree key="z3_ap_ps_tree" id="z3_ap_ps_tree" on-add("onFolderAddClick") on-edit("onFolderEditClick") on-data-change("onTreeDataChange") controls=true/>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-danger" on-click("onConfirmClick")>${out.global.i18n.t("btnConfirmGeneric")}</button>
-      <button class="button" on-click("onCloseClick")>${out.global.i18n.t("btnCancelGeneric")}</button>
+      <button class=`button is-primary${state.loading ? " is-loading" : ""}` on-click("onConfirmClick")>${out.global.i18n.t("btnConfirmGeneric")}</button>
+      <button class=`button${state.loading ? " is-loading" : ""}` on-click("onCloseClick")>${out.global.i18n.t("btnCancelGeneric")}</button>
     </footer>
   </div>
 </div>
+<editFolderModal key="z3_ap_ps_editModal" on-folder-save("onFolderSave")/>

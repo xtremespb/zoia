@@ -1,6 +1,7 @@
 {
     "moduleTitle": "Pages",
-    "path": "Path",
+    "dir": "Folder",
+    "filename": "Filename",
     "title": "Title",
     "actions": "Actions",
     "add": "Add",
@@ -11,7 +12,8 @@
     "pageEdit": "Edit Page",
     "save": "Save",
     "cancel": "Cancel",
-    "pathHelpText": "Should start with a slash, e.g. /index",
+    "dirHelpText": "A folder where this page should be located",
+    "filenameHelpText": "Page filename (empty for root)",
     "titleHelpText": "Displayed in browser window",
     "mFormErr.pathAlreadyExists": "Page with this path already exists",
     "content": "Content",
@@ -28,5 +30,7 @@
     "btnConfirm": "Save",
     "btnCancel": "Cancel",
     "folderId": "Folder ID",
-    "folderSelectModalTitle": "Select Folder"
+    "folderSelectModalTitle": "Select Folder",
+    "couldNotLoadDataFromServer": "Could not load data from server",
+    "cannotLoadFoldersTree": "Could not load folder data from server, please refresh this page"
 }

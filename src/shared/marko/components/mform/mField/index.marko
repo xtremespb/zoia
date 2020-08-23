@@ -255,8 +255,10 @@ Key-Value Input
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
-  <div class="control" class="mf-ctl-keyvalue-wrap">
-    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value.label on-change("onFieldValueChange") data-id=input.item.id readonly/>&nbsp;<button class="button is-light" data-id=input.item.id on-click("onKeyValueButtonClick")>
+  <div class="mf-ctl-keyvalue-wrap">
+    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` type=(input.item.textType || "text") placeholder=input.item.placeholder value=(input.value.data && Array.isArray(input.value.data) && input.value.data.length === 0 && input.item.emptyArrayLabel ? input.item.emptyArrayLabel : input.value.label) on-change("onFieldValueChange") data-id=input.item.id readonly/>
+    &nbsp;
+    <button type="button" class="button is-light" data-id=input.item.id on-click("onKeyValueButtonClick")>
       <span class="icon is-small">
         <i class="mdi mdi-dots-horizontal"/>
       </span>
