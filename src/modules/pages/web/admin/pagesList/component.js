@@ -121,7 +121,7 @@ module.exports = class {
 
     // User has clicked a tree item
     async onTreeItemClick(data) {
-        const dir = data.path.length ? data.path.join("/") : "/";
+        const dir = data.path.length ? data.path.join("/") : "";
         this.state.dir = dir;
         this.table.func.dataRequest({
             dir
