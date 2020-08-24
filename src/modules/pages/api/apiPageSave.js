@@ -49,6 +49,9 @@ export default () => ({
             }
             // Process case and trim
             data.filename = data.filename && typeof data.filename === "string" ? data.filename.trim().toLowerCase() : "";
+            // Compute paths
+            data.dirString = `${data.dir.join("/")}`;
+            data.fullPath = `${data.dirString}${data.filename ? `/${data.filename}` : ""}`;
             // Check for path duplicates
             if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["pages"].collectionPages, {
                     path: data.path,

@@ -51,7 +51,7 @@ module.exports = class {
         if (window.__z3_mtable_data[this.input.id]) {
             // Restore state from saved data
             Object.keys(this.initialState).map(k => this.setState(k, window.__z3_mtable_data[this.input.id][k]));
-        } else {
+        } else if (!this.input.noAutoDataRequest) {
             // Request new data
             this.dataRequest();
         }

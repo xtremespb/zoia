@@ -33,6 +33,9 @@ export default () => ({
                 });
                 return;
             }
+            data.dir = {
+                data: data.dir
+            };
             rep.successJSON(rep, {
                 data
             });

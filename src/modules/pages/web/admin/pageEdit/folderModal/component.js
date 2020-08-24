@@ -93,6 +93,7 @@ module.exports = class {
             this.state.treeDataTemp = null;
             this.emit("got-tree-data");
         } catch (e) {
+            console.log(e);
             this.setLoadingTree(false);
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
             this.emit("tree-loading-error");

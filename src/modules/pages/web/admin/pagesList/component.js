@@ -7,7 +7,7 @@ module.exports = class {
         this.state = {
             processValue: null,
             error: null,
-            dir: "/",
+            dir: "",
             loading: false
         };
         this.i18n = out.global.i18n;
@@ -34,6 +34,13 @@ module.exports = class {
             this.getComponent(`pagesList_mnotify`).func.show(this.i18n.t("dataSaveSuccess"), "is-success");
         }
         await this.loadTree();
+        if (this.input.dirData) {
+            this.state.dir = this.input.dirData.join("/");
+            this.tree.func.selectNode(this.input.dirData);
+        }
+        await this.table.func.dataRequest({
+            dir: this.state.dir
+        });
     }
 
     setLoadingTree(state) {
@@ -50,8 +57,8 @@ module.exports = class {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            const tree = res.data.tree || {};
-            this.tree.func.initData(tree);
+            const treeData = res.data.tree || {};
+            this.tree.func.initData(treeData);
             this.setLoadingTree(false);
         } catch (e) {
             this.setLoadingTree(false);
@@ -114,7 +121,7 @@ module.exports = class {
 
     // User has clicked a tree item
     async onTreeItemClick(data) {
-        const dir = data.path.length ? `/${data.path.join("/")}` : "/";
+        const dir = data.path.length ? data.path.join("/") : "/";
         this.state.dir = dir;
         this.table.func.dataRequest({
             dir

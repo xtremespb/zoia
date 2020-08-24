@@ -29,8 +29,8 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
         }
       } id="pages" columns=[
         {
-          id: "path",
-          title: out.global.i18n.t("path"),
+          id: "dir",
+          title: out.global.i18n.t("dir"),
           css: "z3-ap-ps-list-path",
           sortable: true
         },
@@ -81,7 +81,7 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
           displayText: true,
           tooltip: false
         }
-      ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="path" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
+      ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="title" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
         title: "path",
         source: {
           method: "post",
@@ -91,7 +91,7 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
             Authorization: `Bearer ${token}`
           }
         }
-      } on-unauthorized("onUnauthorized") autoItemsPerPage=true/>
+      } on-unauthorized("onUnauthorized") autoItemsPerPage=true noAutoDataRequest=true/>
     </div>
   </div>
   <mnotify key=`pagesList_mnotify`/>

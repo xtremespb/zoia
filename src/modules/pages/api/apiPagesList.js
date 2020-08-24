@@ -2,6 +2,32 @@ import Auth from "../../../shared/lib/auth";
 import pagesListData from "./data/pagesList.json";
 import C from "../../../shared/lib/constants";
 
+const findNodeById = (id, data) => {
+    let node;
+    data.map(i => {
+        if (i.id === id) {
+            node = i;
+        }
+    });
+    return node;
+};
+
+const getPathLabel = (path, language, treeData) => {
+    let data = treeData;
+    let label = "";
+    path.map((p, i) => {
+        if (!data || !data.length) {
+            return;
+        }
+        const node = findNodeById(p, data);
+        if (node && data && path.length - 1 === i) {
+            label = node.data[language] || node.id;
+        }
+        data = node && node.c ? node.c : null;
+    });
+    return label;
+};
+
 export default () => ({
     schema: {
         body: pagesListData.schema
@@ -21,6 +47,11 @@ export default () => ({
             return;
         }
         try {
+            // Get tree
+            const treeData = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
+                _id: "pages_data"
+            });
+            // Get pages data
             const langProjection = {};
             Object.keys(req.zoiaConfig.languages).map(i => {
                 langProjection[`${i}.title`] = 1;
@@ -32,7 +63,13 @@ export default () => ({
                     ...langProjection
                 }
             };
-            req.body.sortId = req.body.sortId === "title" ? `${req.body.language}.${req.body.sortId}` : req.body.sortId;
+            switch (req.body.sortId) {
+            case "title":
+                req.body.sortId = `${req.body.language}.${req.body.sortId}`;
+                break;
+            case "dir":
+                req.body.sortId = "dirString";
+            }
             const query = {};
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = pagesListData.search.map(c => {
@@ -44,6 +81,9 @@ export default () => ({
                     return sr;
                 });
             }
+            if (typeof req.body.dir === "string") {
+                query.dirString = req.body.dir;
+            }
             const count = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).count();
             const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
@@ -51,7 +91,7 @@ export default () => ({
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
             const data = (await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).toArray()).map(i => ({
                 _id: i._id,
-                path: i.path,
+                dir: getPathLabel(i.dir, req.body.language, treeData.tree) || i.dirString || "/",
                 title: i[req.body.language] ? i[req.body.language].title : ""
             }));
             // Send response

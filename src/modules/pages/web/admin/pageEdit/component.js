@@ -21,18 +21,21 @@ module.exports = class {
     }
 
     async onFormPostSuccess() {
-        if (window.__z3_mtable_func && window.__z3_mtable_func["pages"]) {
-            await window.__z3_mtable_func["pages"].loadData();
-        }
+        // if (window.__z3_mtable_func && window.__z3_mtable_func["pages"]) {
+        //     await window.__z3_mtable_func["pages"].loadData();
+        // }
         window.router.navigate("pages", {
-            successNotification: true
+            successNotification: true,
+            dirData: this.pageEditForm.func.getValue("dir").data
         });
     }
 
     onButtonClick(obj) {
         switch (obj.id) {
         case "btnCancel":
-            window.router.navigate("pages");
+            window.router.navigate("pages", {
+                dirData: this.pageEditForm.func.getValue("dir").data
+            });
         }
     }
 
@@ -59,7 +62,9 @@ module.exports = class {
     }
 
     onGotTreeData() {
-        const data = this.pageEditForm.func.getValue("dir");
+        const {
+            data
+        } = this.pageEditForm.func.getValue("dir");
         const label = this.folderSelectModal.func.getPathLabel(data) || "";
         this.pageEditForm.func.setValue("dir", {
             data,

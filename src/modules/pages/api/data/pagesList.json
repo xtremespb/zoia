@@ -9,7 +9,7 @@
             },
             "sortId": {
                 "type": "string",
-                "enum": ["path", "title"]
+                "enum": ["dir", "title"]
             },
             "sortDirection": {
                 "type": "string",
@@ -30,13 +30,19 @@
                 "pattern": "^[a-z]{2}$",
                 "minLength": 2,
                 "maxLength": 2
+            },
+            "dir": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 128
             }
         },
         "required": ["page", "sortId", "sortDirection", "language"]
     },
     "projection": {
         "_id": 1,
-        "path": 1
+        "dir": 1,
+        "dirString": 1
     },
-    "search": ["path", "title"]
+    "search": ["dirString", "title"]
 }
