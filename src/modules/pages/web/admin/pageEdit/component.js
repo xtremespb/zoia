@@ -9,13 +9,15 @@ module.exports = class {
         this.treeLoadingError = false;
         this.pageEditForm = this.getComponent("pageEditForm");
         this.folderSelectModal = this.getComponent("z3_ap_pe_folderModal");
-        if (this.input.id !== "new") {
-            await this.pageEditForm.func.loadData();
-        } else {
+        if (this.input.id === "new") {
+            const data = this.input.dir ? this.input.dir.data : [];
+            const label = this.input.dir ? this.input.dir.label : "";
             this.pageEditForm.func.setValue("dir", {
-                data: [],
-                label: ""
+                data,
+                label
             });
+        } else {
+            await this.pageEditForm.func.loadData();
         }
         await this.folderSelectModal.func.loadTree();
     }

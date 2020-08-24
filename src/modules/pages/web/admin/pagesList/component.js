@@ -77,14 +77,20 @@ module.exports = class {
         }
     }
 
-    onTopButtonClick(data) {
-        switch (data.button) {
+    onTopButtonClick(obj) {
+        switch (obj.button) {
         case "btnReload":
             this.table.func.dataRequest();
             break;
         case "btnAdd":
+            const data = this.tree.func.getSelectedPath();
+            const label = this.tree.func.getSelectedLabel();
             window.router.navigate("pages.edit", {
-                id: "new"
+                id: "new",
+                dir: {
+                    data,
+                    label
+                }
             });
             break;
         }
