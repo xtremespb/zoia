@@ -65,7 +65,7 @@ module.exports = class {
             uuid: data.__default.uuid || uuidv4(),
             c: [],
             isVisible: true,
-            isOpen: false
+            isOpen: false,
         };
         this.emit("folder-save", {
             item,

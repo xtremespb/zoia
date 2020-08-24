@@ -13,6 +13,14 @@
                             "minLength": 1,
                             "maxLength": 64
                         },
+                        "uuid": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                        },
+                        "checksum": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{32}$"
+                        },
                         "data": {
                             "type": "object"
                         },
@@ -26,7 +34,7 @@
 
                         }
                     },
-                    "required": ["id"]
+                    "required": ["id", "uuid", "checksum"]
                 },
                 "minItems": 0,
                 "uniqueItems": false

@@ -2,6 +2,19 @@ import treeSave from "./data/treeSave.json";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
 
+const filterTree = data => data.map(i => {
+    const item = {
+        id: i.id,
+        uuid: i.uuid,
+        data: i.data,
+        checksum: i.checksum
+    };
+    if (i.c) {
+        item.c = filterTree(i.c);
+    }
+    return item;
+});
+
 export default () => ({
     schema: {
         body: treeSave.root
@@ -25,7 +38,7 @@ export default () => ({
                 _id: "pages_data"
             }, {
                 $set: {
-                    tree: req.body.tree
+                    tree: filterTree(req.body.tree)
                 }
             }, {
                 upsert: true

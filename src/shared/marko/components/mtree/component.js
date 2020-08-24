@@ -2,6 +2,7 @@ const cloneDeep = require("lodash.clonedeep");
 const {
     v4: uuidv4
 } = require("uuid");
+const md5 = require("crypto-js/md5");
 const Utils = require("./utils");
 
 module.exports = class {
@@ -66,14 +67,27 @@ module.exports = class {
         });
     }
 
-    initTree(data, level = 1) {
-        return data.map(i => {
+    calcChecksum(data, level = 1, parent = "", parentIndex = 0) {
+        let prev = "";
+        return data.map((i, index) => {
+            i.checksum = md5(`${i.uuid}-${parent || i.uuid}-${level}-${prev || i.uuid}-${index}-${parentIndex}`).toString();
+            if (i.c) {
+                i.c = this.calcChecksum(i.c, level + 1, i.uuid, index);
+            }
+            prev = i.uuid;
+            return i;
+        });
+    }
+
+    initTree(data, level = 1, parent = "/") {
+        return data.map((i, index) => {
             i.isVisible = level < 2;
             i.isOpen = false;
             i.uuid = i.uuid || uuidv4();
+            i.checksum = i.checksum || md5(`${parent}-${level}-${index}`).toString();
             i.t = i.data && i.data[this.language] ? i.data[this.language] : i.id;
             if (i.c) {
-                i.c = this.initTree(i.c, level + 1);
+                i.c = this.initTree(i.c, level + 1, i.uuid);
             }
             return i;
         });
@@ -83,12 +97,14 @@ module.exports = class {
         this.unbindContextMenu();
         const root = cloneDeep(data);
         const uuid = root.uuid || uuidv4();
+        const checksum = root.checksum || md5("-0-0").toString();
         this.state.root = {
             ...root,
             isVisible: true,
             isOpen: true,
             c: [],
-            uuid
+            uuid,
+            checksum
         };
         this.state.selected = selected || uuid;
         this.state.data = this.initTree(cloneDeep(data.c));
@@ -196,7 +212,7 @@ module.exports = class {
             item.c = item.c || [];
             item.c.push(data);
         }
-        this.setStateDirty("data", stateData);
+        this.setStateDirty("data", this.calcChecksum(stateData));
         setTimeout(() => this.bindContextMenu(), 10);
         const selected = cloneDeep(this.state.selected);
         this.selectNodeByUUID(uuid);
@@ -241,7 +257,7 @@ module.exports = class {
         const stateData = cloneDeep(this.state.data);
         const stateDataProcessed = this.utils.removeNodeByUUID(this.state.selected, stateData);
         this.state.selected = this.state.root.uuid;
-        this.setStateDirty("data", stateDataProcessed);
+        this.setStateDirty("data", this.calcChecksum(stateDataProcessed));
         setTimeout(() => this.onTreeDataChanged(), 10);
     }
 
@@ -268,7 +284,7 @@ module.exports = class {
             this.moveModal.func.setTitle(item.t || item.id);
             this.moveModal.func.setActive(true);
         }
-        this.setStateDirty("data", stateData);
+        this.setStateDirty("data", this.calcChecksum(stateData));
         setTimeout(() => this.onTreeDataChanged(), 10);
     }
 
@@ -290,7 +306,7 @@ module.exports = class {
                 itemDest.c.push(itemSrc);
             }
         }
-        this.setStateDirty("data", dataProcessed);
+        this.setStateDirty("data", this.calcChecksum(dataProcessed));
         this.unbindContextMenu();
         setTimeout(() => this.bindContextMenu(), 10);
         this.selectNodeByUUID(this.state.selected);
@@ -312,7 +328,7 @@ module.exports = class {
             const idx = gapNodes.findIndex(i => i.uuid === gapId);
             gapNodes.splice(idx + 1, 0, itemSrc);
         }
-        this.setStateDirty("data", dataProcessed);
+        this.setStateDirty("data", this.calcChecksum(dataProcessed));
         this.unbindContextMenu();
         setTimeout(() => this.bindContextMenu(), 10);
         this.setState("dragging", false);
@@ -333,7 +349,7 @@ module.exports = class {
         }
         newNode.c = newNode.c || [];
         newNode.c.push(itemSrc);
-        this.setStateDirty("data", dataProcessed);
+        this.setStateDirty("data", this.calcChecksum(dataProcessed));
         this.unbindContextMenu();
         setTimeout(() => this.bindContextMenu(), 10);
         this.setState("dragging", false);
@@ -351,14 +367,19 @@ module.exports = class {
         this.setState("dragging", false);
     }
 
-    serializeData(dataInput) {
+    serializeData(dataInput, keepUUID = false, keepChecksum = false) {
         const data = (dataInput || cloneDeep(this.state.data)).map(i => {
             delete i.isOpen;
             delete i.isVisible;
             delete i.t;
-            delete i.uuid;
+            if (!keepUUID) {
+                delete i.uuid;
+            }
+            if (!keepChecksum) {
+                delete i.checksum;
+            }
             if (i.c && i.c.length) {
-                i.c = this.serializeData(i.c);
+                i.c = this.serializeData(i.c, keepUUID, keepChecksum);
             } else {
                 delete i.c;
             }
@@ -368,11 +389,13 @@ module.exports = class {
     }
 
     onTreeDataChanged() {
+        const keepUUID = this.input.keepuuid || false;
+        const keepChecksum = this.input.keepchecksum || false;
         const stateData = cloneDeep(this.state.data);
         const data = this.state.root ? {
             id: this.state.root.id,
-            c: this.serializeData()
-        } : this.serializeData();
+            c: this.serializeData(null, keepUUID, keepChecksum)
+        } : this.serializeData(null, keepUUID, keepChecksum);
         const {
             selected
         } = this.state;

@@ -31,6 +31,7 @@
         "bcrypt": "^5.0.0",
         "colors": "^1.4.0",
         "command-line-args": "^5.1.1",
+        "crypto-js": "^4.0.0",
         "cryptr": "^6.0.2",
         "extract-zip": "^2.0.1",
         "fastify": "^3.2.1",
