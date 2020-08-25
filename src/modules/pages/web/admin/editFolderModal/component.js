@@ -9,7 +9,7 @@ module.exports = class {
             active: false,
             title: "",
             error: null,
-            uuid: null
+            uuid: null,
         };
         this.state = state;
         this.func = {
@@ -17,6 +17,7 @@ module.exports = class {
             setTitle: this.setTitle.bind(this),
             setData: this.setData.bind(this),
             setUUID: this.setUUID.bind(this),
+            setTreeData: this.setTreeData.bind(this),
         };
         this.i18n = out.global.i18n;
         this.languages = out.global.languages;
@@ -57,13 +58,21 @@ module.exports = class {
 
     onFormSubmit(data) {
         const langData = cloneDeep(data.__default);
+        if (this.treeNodes && this.treeNodes.length) {
+            const id = langData.id.trim();
+            const duplicate = (this.dataOrigin.id && this.dataOrigin.id !== id && this.treeNodes.indexOf(id) > -1) || (!this.dataOrigin.id && this.treeNodes.indexOf(id) > -1);
+            if (duplicate) {
+                this.state.error = this.i18n.t("duplicateTreeId");
+                return;
+            }
+        }
         delete langData.id;
         const item = {
             id: data.__default.id,
             t: langData[this.language],
             data: langData,
             uuid: data.__default.uuid || uuidv4(),
-            c: [],
+            c: this.treeLeaf ? this.treeLeaf.c || [] : [],
             isVisible: true,
             isOpen: false,
         };
@@ -76,5 +85,15 @@ module.exports = class {
 
     setData(data) {
         this.getComponent("folderEditForm").func.setData(data);
+        this.dataOrigin = cloneDeep(data);
+    }
+
+    setTreeData(leaf, nodes) {
+        this.treeLeaf = leaf;
+        this.treeNodes = nodes;
+    }
+
+    onErrorDeleteClick() {
+        this.state.error = null;
     }
 };

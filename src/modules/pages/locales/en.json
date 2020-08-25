@@ -32,5 +32,6 @@
     "folderId": "Folder ID",
     "folderSelectModalTitle": "Select Folder",
     "couldNotLoadDataFromServer": "Could not load data from server",
-    "cannotLoadFoldersTree": "Could not load folder data from server, please refresh this page"
+    "cannotLoadFoldersTree": "Could not load folder data from server, please refresh this page",
+    "duplicateTreeId": "Another folder with such ID already exists"
 }

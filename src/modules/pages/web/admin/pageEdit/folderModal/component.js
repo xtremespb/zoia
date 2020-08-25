@@ -104,6 +104,7 @@ module.exports = class {
         this.editModal.func.setTitle(this.i18n.t("addFolder"));
         this.editModal.func.setUUID(null);
         this.editModal.func.setData({});
+        this.editModal.func.setTreeData(this.tree.func.getSelectedNode(), this.tree.func.getSelectedNodeIds());
         this.editModal.func.setActive(true);
     }
 
@@ -114,6 +115,7 @@ module.exports = class {
             id: data.item.id,
             ...data.item.data
         });
+        this.editModal.func.setTreeData(this.tree.func.getSelectedNode(), this.tree.func.getSelectedNeighboursIds());
         this.editModal.func.setActive(true);
     }
 

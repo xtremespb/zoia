@@ -26,6 +26,9 @@ module.exports = class {
             getSelectedPath: this.getSelectedPath.bind(this),
             getSelectedLabel: this.getSelectedLabel.bind(this),
             getPathLabel: this.getPathLabel.bind(this),
+            getSelectedNodeIds: this.getSelectedNodeIds.bind(this),
+            getSelectedNode: this.getSelectedNode.bind(this),
+            getSelectedNeighboursIds: this.getSelectedNeighboursIds.bind(this),
         };
         this.i18n = out.global.i18n;
         this.language = out.global.language;
@@ -68,26 +71,25 @@ module.exports = class {
     }
 
     calcChecksum(data, level = 1, parent = "", parentIndex = 0) {
-        let prev = "";
+        let prev;
         return data.map((i, index) => {
-            i.checksum = md5(`${i.uuid}-${parent || i.uuid}-${level}-${prev || i.uuid}-${index}-${parentIndex}`).toString();
+            i.checksum = md5(`${i.id}-${parent || i.id}-${level}-${prev || i.id}-${index}-${parentIndex}`).toString();
             if (i.c) {
-                i.c = this.calcChecksum(i.c, level + 1, i.uuid, index);
+                i.c = this.calcChecksum(i.c, level + 1, i.id, index);
             }
-            prev = i.uuid;
+            prev = i.id;
             return i;
         });
     }
 
-    initTree(data, level = 1, parent = "/") {
-        return data.map((i, index) => {
+    initTree(data, level = 1) {
+        return data.map(i => {
             i.isVisible = level < 2;
             i.isOpen = false;
             i.uuid = i.uuid || uuidv4();
-            i.checksum = i.checksum || md5(`${parent}-${level}-${index}`).toString();
             i.t = i.data && i.data[this.language] ? i.data[this.language] : i.id;
             if (i.c) {
-                i.c = this.initTree(i.c, level + 1, i.uuid);
+                i.c = this.initTree(i.c, level + 1);
             }
             return i;
         });
@@ -107,7 +109,8 @@ module.exports = class {
             checksum
         };
         this.state.selected = selected || uuid;
-        this.state.data = this.initTree(cloneDeep(data.c));
+        const dataTree = this.initTree(cloneDeep(data.c));
+        this.state.data = this.calcChecksum(dataTree);
         setTimeout(() => this.bindContextMenu(), 10);
     }
 
@@ -410,6 +413,11 @@ module.exports = class {
         return this.state.selected;
     }
 
+    getSelectedNode() {
+        const stateData = cloneDeep(this.state.data);
+        return this.utils.findNodeByUUID(this.state.selected, stateData);
+    }
+
     getSelectedPath() {
         return this.utils.getPathByUUID(this.state.selected, this.state.data);
     }
@@ -433,5 +441,19 @@ module.exports = class {
             data = node && node.c ? node.c : null;
         });
         return label;
+    }
+
+    getSelectedNodeIds() {
+        const stateData = cloneDeep(this.state.data);
+        const nodes = this.state.selected === this.state.root.uuid ? stateData : this.utils.findNodeByUUID(this.state.selected, stateData).c || [];
+        const ids = nodes.map(n => n.id.trim());
+        return ids;
+    }
+
+    getSelectedNeighboursIds() {
+        const stateData = cloneDeep(this.state.data);
+        const nodes = this.utils.findNodesByUUID(this.state.selected, stateData) || [];
+        const ids = nodes.map(n => n.id.trim());
+        return ids;
     }
 };

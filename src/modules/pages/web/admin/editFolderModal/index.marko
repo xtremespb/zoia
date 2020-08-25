@@ -13,6 +13,12 @@ $ const langFields = Object.keys(out.global.languages).map(id => ({
       <p class="modal-card-title">${state.title}</p>
     </header>
     <section class="modal-card-body">
+      <if(state.error)>
+        <div class="notification is-danger">
+          <button class="delete" on-click("onErrorDeleteClick")/>
+          ${state.error}
+        </div>
+      </if>
       <mform key="folderEditForm" id="folderEdit" fields=[
         {
           id: "id",

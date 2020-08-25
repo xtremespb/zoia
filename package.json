@@ -79,7 +79,7 @@
         "babel-loader": "^8.1.0",
         "bulma": "^0.9.0",
         "bulma-extensions": "^6.2.7",
-        "css-loader": "^4.2.1",
+        "css-loader": "^4.2.2",
         "csso-webpack-plugin": "^2.0.0-beta.1",
         "eslint": "^7.7.0",
         "eslint-config-airbnb-base": "^14.2.0",
@@ -92,11 +92,11 @@
         "pretty-checkbox": "^3.0.3",
         "router5": "^8.0.1",
         "router5-plugin-browser": "^8.0.1",
-        "sass-loader": "^9.0.3",
+        "sass-loader": "^10.0.0",
         "style-loader": "^1.2.1",
         "webpack": "^4.44.1",
         "webpack-cli": "^3.3.12",
         "webpack-fix-style-only-entries": "^0.5.1",
-        "webpack-node-externals": "^2.5.1"
+        "webpack-node-externals": "^2.5.2"
     }
 }
