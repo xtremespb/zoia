@@ -16,6 +16,10 @@ module.exports = class {
             selectPath: this.selectPath.bind(this),
             getPathLabel: this.getPathLabel.bind(this),
             loadTree: this.loadTree.bind(this),
+            getUUIDLabel: this.getUUIDLabel.bind(this),
+            isRoot: this.isRoot.bind(this),
+            getRoot: this.getRoot.bind(this),
+            selectUUID: this.selectUUID.bind(this),
         };
         this.cookieOptions = out.global.cookieOptions;
         this.siteOptions = out.global.siteOptions;
@@ -44,8 +48,8 @@ module.exports = class {
     }
 
     async onConfirmClick() {
-        const path = this.tree.func.getSelectedPath();
-        const label = this.tree.func.getSelectedLabel();
+        const uuid = this.tree.func.getSelected();
+        const label = this.tree.func.getRoot().uuid === uuid ? "/" : this.tree.func.getSelectedLabel() || "";
         if (!this.state.loading) {
             if (this.state.treeDataTemp) {
                 this.setLoadingTree(true);
@@ -70,7 +74,7 @@ module.exports = class {
             }
             this.setActive(false);
             this.emit("confirm", {
-                path,
+                uuid,
                 label
             });
         }
@@ -93,7 +97,6 @@ module.exports = class {
             this.state.treeDataTemp = null;
             this.emit("got-tree-data");
         } catch (e) {
-            console.log(e);
             this.setLoadingTree(false);
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
             this.emit("tree-loading-error");
@@ -145,7 +148,23 @@ module.exports = class {
         this.tree.func.selectNode(path);
     }
 
+    selectUUID(uuid) {
+        this.tree.func.selectNodeByUUID(uuid);
+    }
+
     getPathLabel(path) {
         return this.tree.func.getPathLabel(path);
+    }
+
+    getUUIDLabel(uuid) {
+        return this.tree.func.getUUIDLabel(uuid);
+    }
+
+    isRoot() {
+        return this.tree.func.getSelected() === this.tree.func.getRoot().uuid;
+    }
+
+    getRoot() {
+        return this.tree.func.getRoot();
     }
 };

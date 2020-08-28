@@ -236,8 +236,27 @@ ACE
       </button>
     </if>
   </label>
+  <if(input.item.wysiwyg)>
+    <div class="tabs is-toggle is-small mb-1">
+      <ul>
+        <li class=(state.modeAce === "ace" ? "is-active" : "")>
+          <a on-click("onAceModeChange") data-id="ace">ACE</a>
+        </li>
+        <li class=(state.modeAce === "ck" ? "is-active" : "")>
+          <a on-click("onAceModeChange") data-id="ck">CKEditor</a>
+        </li>
+      </ul>
+    </div>
+  </if>
   <div class="control" id=input.item.id key=`mf_ctl_${input.item.id}` style=`display:${input.item.toggle ? (state.toggleAce[input.item.id] ? "block" : "none") : "block"}`>
-    <div class="z3-mf-ace"/>
+    <div id=`${input.item.id}_ace` style=(state.modeAce === "ace" ? "" : "position:absolute;left:-100000px;top:left:-100000px;")>
+      <div class="z3-mf-ace"/>
+    </div>
+    <if(input.item.wysiwyg)>
+      <div style=(state.modeAce === "ck" ? "" : "position:absolute;left:-100000px;top:left:-100000px;")>
+        <div class="z3-mf-ckeditor" key=`mf_ctl_ckeditor_${input.item.id}` no-update/>
+      </div>
+    </if>
   </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>

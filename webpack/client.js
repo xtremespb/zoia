@@ -100,5 +100,8 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
         argv.mode === "production" ? new OptimizeCSSPlugin() : () => {},
         argv.mode === "production" ? new CssoWebpackPlugin() : () => {},
         markoPlugin.browser,
-    ]
+    ],
+    performance: {
+        hints: false
+    }
 });

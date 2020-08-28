@@ -72,7 +72,7 @@ module.exports = class {
             t: langData[this.language],
             data: langData,
             uuid: data.__default.uuid || uuidv4(),
-            c: this.treeLeaf ? this.treeLeaf.c || [] : [],
+            c: this.treeLeaf && this.dataOrigin.id ? this.treeLeaf.c || [] : [],
             isVisible: true,
             isOpen: false,
         };

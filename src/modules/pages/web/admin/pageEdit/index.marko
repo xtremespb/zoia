@@ -39,7 +39,8 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
         mandatory: true,
         shared: true,
         emptyArrayLabel: "/"
-      }, {
+      },
+      {
         id: "filename",
         type: "text",
         label: out.global.i18n.t("filename"),
@@ -59,7 +60,8 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
       id: "content",
       type: "ace",
       label: out.global.i18n.t("content"),
-      helpText: out.global.i18n.t("contentHelpText")
+      helpText: out.global.i18n.t("contentHelpText"),
+      wysiwyg: true
     },
     {
       id: "css",

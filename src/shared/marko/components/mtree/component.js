@@ -26,9 +26,12 @@ module.exports = class {
             getSelectedPath: this.getSelectedPath.bind(this),
             getSelectedLabel: this.getSelectedLabel.bind(this),
             getPathLabel: this.getPathLabel.bind(this),
+            getUUIDLabel: this.getUUIDLabel.bind(this),
             getSelectedNodeIds: this.getSelectedNodeIds.bind(this),
             getSelectedNode: this.getSelectedNode.bind(this),
             getSelectedNeighboursIds: this.getSelectedNeighboursIds.bind(this),
+            isRootSelected: this.isRootSelected.bind(this),
+            getRoot: this.getRoot.bind(this),
         };
         this.i18n = out.global.i18n;
         this.language = out.global.language;
@@ -104,6 +107,7 @@ module.exports = class {
             ...root,
             isVisible: true,
             isOpen: true,
+            isRoot: true,
             c: [],
             uuid,
             checksum
@@ -178,6 +182,7 @@ module.exports = class {
         const item = this.utils.findNodeByUUID(uuid, data);
         this.emit("item-click", {
             item,
+            root: this.state.root.uuid === uuid,
             path
         });
     }
@@ -261,7 +266,7 @@ module.exports = class {
         const stateDataProcessed = this.utils.removeNodeByUUID(this.state.selected, stateData);
         this.state.selected = this.state.root.uuid;
         this.setStateDirty("data", this.calcChecksum(stateDataProcessed));
-        setTimeout(() => this.onTreeDataChanged(), 10);
+        setTimeout(() => this.onTreeDataChanged(true), 10);
     }
 
     onMenuItemClick(data) {
@@ -391,7 +396,7 @@ module.exports = class {
         return data;
     }
 
-    onTreeDataChanged() {
+    onTreeDataChanged(setRootSelected = false) {
         const keepUUID = this.input.keepuuid || false;
         const keepChecksum = this.input.keepchecksum || false;
         const stateData = cloneDeep(this.state.data);
@@ -407,10 +412,21 @@ module.exports = class {
             data,
             path
         });
+        if (setRootSelected) {
+            setTimeout(() => this.onItemClick(this.state.root.uuid), 10);
+        }
     }
 
     getSelected() {
         return this.state.selected;
+    }
+
+    isRootSelected() {
+        return this.state.root.uuid === this.state.selected;
+    }
+
+    getRoot() {
+        return this.state.root;
     }
 
     getSelectedNode() {
@@ -441,6 +457,12 @@ module.exports = class {
             data = node && node.c ? node.c : null;
         });
         return label;
+    }
+
+    getUUIDLabel(uuid) {
+        const data = cloneDeep(this.state.data);
+        const node = this.utils.findNodeByUUID(uuid, data);
+        return node ? node.t || node.id : null;
     }
 
     getSelectedNodeIds() {

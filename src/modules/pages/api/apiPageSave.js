@@ -50,11 +50,11 @@ export default () => ({
             // Process case and trim
             data.filename = data.filename && typeof data.filename === "string" ? data.filename.trim().toLowerCase() : "";
             // Compute paths
-            data.dirString = `${data.dir.join("/")}`;
-            data.fullPath = `${data.dirString}${data.filename ? `/${data.filename}` : ""}`;
+            // ...
             // Check for path duplicates
             if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["pages"].collectionPages, {
-                    path: data.path,
+                    dir: data.dir,
+                    filename: data.filename,
                     _id: {
                         $ne: id ? new ObjectId(id) : null
                     }
@@ -101,7 +101,8 @@ export default () => ({
             const update = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).updateOne(id ? {
                 _id: new ObjectId(id)
             } : {
-                path: data.path
+                dir: data.dir,
+                filename: data.filename,
             }, {
                 $set: {
                     ...data,

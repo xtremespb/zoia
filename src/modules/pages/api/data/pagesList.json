@@ -9,7 +9,7 @@
             },
             "sortId": {
                 "type": "string",
-                "enum": ["dir", "title"]
+                "enum": ["dir", "title", "filename"]
             },
             "sortDirection": {
                 "type": "string",
@@ -33,16 +33,15 @@
             },
             "dir": {
                 "type": "string",
-                "minLength": 0,
-                "maxLength": 128
+                "pattern": "^$|^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
             }
         },
         "required": ["page", "sortId", "sortDirection", "language"]
     },
     "projection": {
         "_id": 1,
-        "dir": 1,
-        "dirString": 1
+        "filename": 1,
+        "dir": 1
     },
-    "search": ["dirString", "title"]
+    "search": ["filename", "title"]
 }

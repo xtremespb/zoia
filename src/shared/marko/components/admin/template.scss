@@ -22,7 +22,7 @@
 .z3-ap-side-menu-area {
     min-height: 100%;
     background-color: $white-bis;
-    box-shadow: 1px 0 5px -2px $grey;
+    box-shadow: 1px 0 5px -2px $grey-lighter;
     z-index: 10;
 }
 
@@ -73,15 +73,16 @@
 .z3-ap-head-thin {
     font-size: 220%;
     font-weight: 200;
-    border-bottom: 1px solid $white-ter;
+    border-bottom: 1px solid $white-bis;
     margin: -10px -20px 20px;
     padding-left: 20px;
     z-index: 9;
-    background: repeating-linear-gradient(-55deg,
-            $white-bis,
-            $white-bis 5px,
-            $white-ter 5px,
-            $white-ter 10px);
+    // background: repeating-linear-gradient(-55deg,
+    //         $white-bis,
+    //         $white-bis 5px,
+    //         $white-ter 5px,
+    //         $white-ter 10px);
+    background: $grey-lightest;
 }
 
 .z3-ap-mdi-29px.mdi-set,

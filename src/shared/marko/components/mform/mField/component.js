@@ -1,5 +1,7 @@
 /* eslint-disable import/no-webpack-loader-syntax */
 const ace = process.browser ? require("ace-builds") : null;
+const ClassicEditor = process.browser ? require("@ckeditor/ckeditor5-build-classic") : null;
+const beautify = require("js-beautify");
 const throttle = require("lodash.throttle");
 const {
     v4: uuidv4
@@ -25,7 +27,8 @@ module.exports = class {
         const state = {
             captchaData: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
             captchaSecret: "",
-            toggleAce: {}
+            toggleAce: {},
+            modeAce: "ace"
         };
         this.state = state;
         this.item = input.item;
@@ -33,6 +36,24 @@ module.exports = class {
             setFocus: this.setFocus.bind(this),
             reloadCaptcha: this.reloadCaptcha.bind(this),
             performUpdate: this.performUpdate.bind(this)
+        };
+        this.beautifyOptions = {
+            indent_size: "2",
+            indent_char: " ",
+            max_preserve_newlines: "5",
+            preserve_newlines: true,
+            keep_array_indentation: false,
+            break_chained_methods: false,
+            indent_scripts: "normal",
+            brace_style: "expand",
+            space_before_conditional: true,
+            unescape_strings: false,
+            jslint_happy: false,
+            end_with_newline: false,
+            wrap_line_length: "80",
+            indent_inner_html: true,
+            comma_first: false,
+            e4x: false
         };
     }
 
@@ -46,6 +67,9 @@ module.exports = class {
 
     updateAce() {
         this.aceEditor.getSession().setValue(this.input.value || "");
+        if (this.item.wysiwyg) {
+            this.ckEditor.setData(this.input.value || "");
+        }
     }
 
     async reloadCaptcha() {
@@ -65,7 +89,7 @@ module.exports = class {
         await this.reloadCaptcha();
         switch (this.item.type) {
         case "ace":
-            [this.aceEditorElement] = document.getElementById(this.item.id).getElementsByTagName("div");
+            [this.aceEditorElement] = document.getElementById(`${this.item.id}_ace`).getElementsByTagName("div");
             this.aceEditor = ace.edit(this.aceEditorElement);
             const aceDefaults = {
                 mode: "ace/mode/html",
@@ -86,6 +110,10 @@ module.exports = class {
                     id: this.item.id,
                     value
                 });
+                // if (this.item.wysiwyg) {
+                //     this.wysiwygNoUpdate = true;
+                //     this.ckEditor.setData(value);
+                // }
             });
             // Remove annotations, e.g.
             // "Non-space characters found without seeing a doctype first. Expected e.g. <!DOCTYPE html>."
@@ -96,6 +124,18 @@ module.exports = class {
                     this.aceEditor.getSession().setAnnotations(annotationsFiltered);
                 }
             });
+            if (this.item.wysiwyg) {
+                this.ckEditorElement = this.getEl(`mf_ctl_ckeditor_${this.input.item.id}`);
+                this.ckEditor = await ClassicEditor.create(this.ckEditorElement);
+                this.ckEditor.model.document.on("change:data", () => {
+                    const value = this.ckEditor.getData();
+                    this.emit("value-change", {
+                        type: "input",
+                        id: this.item.id,
+                        value
+                    });
+                });
+            }
             break;
         }
     }
@@ -179,6 +219,9 @@ module.exports = class {
         toggle[id] = !toggle[id];
         if (toggle[id]) {
             setTimeout(() => this.aceEditor.getSession().setValue(this.input.value || ""), 100);
+            if (this.item.wysiwyg) {
+                setTimeout(() => this.ckEditor.setData(this.input.value || ""), 100);
+            }
         }
         this.setState("toggleAce", toggle);
         this.forceUpdate();
@@ -190,5 +233,18 @@ module.exports = class {
         this.emit("get-key-value", {
             id: dataset.id,
         });
+    }
+
+    onAceModeChange(e) {
+        e.preventDefault();
+        const {
+            id
+        } = e.target.dataset;
+        if (id !== this.state.modeAce) {
+            this.setState("modeAce", id);
+            const value = id === "ace" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value;
+            setTimeout(() => this.aceEditor.getSession().setValue(value || ""), 10);
+            setTimeout(() => this.ckEditor.setData(this.input.value || ""), 10);
+        }
     }
 };

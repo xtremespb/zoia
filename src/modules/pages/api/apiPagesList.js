@@ -2,30 +2,25 @@ import Auth from "../../../shared/lib/auth";
 import pagesListData from "./data/pagesList.json";
 import C from "../../../shared/lib/constants";
 
-const findNodeById = (id, data) => {
+const findNodeByUUID = (uuid, data) => {
     let node;
     data.map(i => {
-        if (i.id === id) {
+        if (i.uuid === uuid) {
             node = i;
+        }
+        if (!node && i.c) {
+            node = findNodeByUUID(uuid, i.c);
         }
     });
     return node;
 };
 
-const getPathLabel = (path, language, treeData) => {
-    let data = treeData;
-    let label = "";
-    path.map((p, i) => {
-        if (!data || !data.length) {
-            return;
-        }
-        const node = findNodeById(p, data);
-        if (node && data && path.length - 1 === i) {
-            label = node.data[language] || node.id;
-        }
-        data = node && node.c ? node.c : null;
-    });
-    return label;
+const getLabel = (uuid, language, treeData) => {
+    if (!uuid) {
+        return "/";
+    }
+    const node = findNodeByUUID(uuid, treeData);
+    return node ? node.data[language] || node.id : null;
 };
 
 export default () => ({
@@ -67,10 +62,10 @@ export default () => ({
             case "title":
                 req.body.sortId = `${req.body.language}.${req.body.sortId}`;
                 break;
-            case "dir":
-                req.body.sortId = "dirString";
             }
-            const query = {};
+            const query = {
+                dir: req.body.dir
+            };
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = pagesListData.search.map(c => {
                     const sr = {};
@@ -81,9 +76,6 @@ export default () => ({
                     return sr;
                 });
             }
-            if (typeof req.body.dir === "string") {
-                query.dirString = req.body.dir;
-            }
             const count = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).count();
             const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
@@ -91,7 +83,8 @@ export default () => ({
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
             const data = (await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).toArray()).map(i => ({
                 _id: i._id,
-                dir: getPathLabel(i.dir, req.body.language, treeData.tree) || i.dirString || "/",
+                dir: treeData ? getLabel(i.dir, req.body.language, treeData.tree) || "/" : "/",
+                filename: i.filename,
                 title: i[req.body.language] ? i[req.body.language].title : ""
             }));
             // Send response

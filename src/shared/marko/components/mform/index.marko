@@ -4,7 +4,7 @@ style.scss {
 
 <div class="z3-mf-wrap">
   <if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
-    <div class=`tabs is-boxed ${input.tabsCSS || ""} ${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-tabs" : ""}`>
+    <div class=`tabs is-toggle is-toggle-rounded ${input.tabsCSS || ""} ${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-tabs" : ""}`>
       <ul>
         <for|tab| of=state.tabs>
           <li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>

@@ -10,8 +10,8 @@ module.exports = class {
         this.pageEditForm = this.getComponent("pageEditForm");
         this.folderSelectModal = this.getComponent("z3_ap_pe_folderModal");
         if (this.input.id === "new") {
-            const data = this.input.dir ? this.input.dir.data : [];
-            const label = this.input.dir ? this.input.dir.label : "";
+            const data = this.input.dir ? this.input.dir.data : "";
+            const label = this.input.dir ? this.input.dir.label : "/";
             this.pageEditForm.func.setValue("dir", {
                 data,
                 label
@@ -52,13 +52,13 @@ module.exports = class {
         this.folderSelectModal.func.setActive(true);
         const dir = this.pageEditForm.func.getValue("dir");
         if (dir && dir.data) {
-            this.folderSelectModal.func.selectPath(dir.data);
+            this.folderSelectModal.func.selectUUID(dir.data);
         }
     }
 
     onFolderSelectConfirm(data) {
         this.pageEditForm.func.setValue("dir", {
-            data: data.path,
+            data: this.folderSelectModal.func.getRoot().uuid === data.uuid ? "" : data.uuid,
             label: data.label
         });
     }
@@ -67,7 +67,7 @@ module.exports = class {
         const {
             data
         } = this.pageEditForm.func.getValue("dir");
-        const label = this.folderSelectModal.func.getPathLabel(data) || "";
+        const label = !data || this.folderSelectModal.func.getRoot().uuid === data ? "/" : this.folderSelectModal.func.getUUIDLabel(data) || "";
         this.pageEditForm.func.setValue("dir", {
             data,
             label

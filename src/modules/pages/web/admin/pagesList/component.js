@@ -35,8 +35,8 @@ module.exports = class {
         }
         await this.loadTree();
         if (this.input.dirData) {
-            this.state.dir = this.input.dirData.join("/");
-            this.tree.func.selectNode(this.input.dirData);
+            this.state.dir = this.input.dirData;
+            this.tree.func.selectNodeByUUID(this.input.dirData);
         }
         await this.table.func.dataRequest({
             dir: this.state.dir
@@ -83,14 +83,14 @@ module.exports = class {
             this.table.func.dataRequest();
             break;
         case "btnAdd":
-            const data = this.tree.func.getSelectedPath();
-            const label = this.tree.func.getSelectedLabel();
+            const data = this.tree.func.isRootSelected() ? "" : this.tree.func.getSelected();
+            const label = this.tree.func.isRootSelected() ? "/" : this.tree.func.getSelectedLabel();
             window.router.navigate("pages.edit", {
                 id: "new",
                 dir: {
                     data,
                     label
-                }
+                },
             });
             break;
         }
@@ -129,7 +129,7 @@ module.exports = class {
 
     // User has clicked a tree item
     async onTreeItemClick(data) {
-        const dir = data.path.length ? data.path.join("/") : "";
+        const dir = data.root ? "" : data.item.uuid;
         this.state.dir = dir;
         this.table.func.dataRequest({
             dir
