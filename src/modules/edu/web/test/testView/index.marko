@@ -1,0 +1,71 @@
+style.scss {
+  @import "./moduleView.scss";
+}
+
+<h1 class="title">${out.global.i18n.t("test")}</h1>
+<nav class="breadcrumb" aria-label="breadcrumbs">
+  <ul>
+    <li>
+      <a href=out.global.i18n.getLocalizedURL(out.global.routes.index)>${out.global.i18n.t("programs")}</a>
+    </li>
+    <li>
+      <a href=out.global.i18n.getLocalizedURL(`${out.global.routes.index}/program/${out.global.programId}`)>${out.global.program.title}</a>
+    </li>
+    <li>
+      <a href=out.global.i18n.getLocalizedURL(`${out.global.routes.index}/module/${out.global.programId}/${out.global.moduleData.id}`)>${out.global.moduleData.title}</a>
+    </li>
+    <li class="is-active">
+      <a>${out.global.i18n.t("test")}</a>
+    </li>
+  </ul>
+</nav>
+<if(out.global.sessionData.timeRemain || out.global.sessionData.timeWait)>
+  <timeCounter timeRemain=out.global.sessionData.timeRemain timeWait=out.global.sessionData.timeWait/>
+</if>
+<if(out.global.sessionData.timeRemain || out.global.sessionData.noTimeLimit)>
+  <div class="z3-edu-testView-question-wrap z3-edu-testView-noselect">
+    <if(state.currentQuestionData)>
+      <h1 class=`subtitle${state.currentQuestionData.correctCount > 1 ? " mb-2" : ""}`>${state.currentQuestionIndex + 1}. ${state.currentQuestionData.title}</h1>
+      <if(state.currentQuestionData.correctCount > 1)>
+        <div class="mb-2 has-text-weight-light">${out.global.i18n.t("correctCount")}: ${state.currentQuestionData.correctCount}</div>
+      </if>
+      <for|answer| of=state.currentQuestionData.answers>
+        <if(state.currentQuestionData.correctCount > 1)>
+          <div>
+            <div class="z3-pretty p-icon">
+              <input type="checkbox" data-id=answer.id on-click("onCheckboxClick") checked=(state.currentAnswers.indexOf(answer.id) > -1)/>
+              <div class="state">
+                <i class="icon mdi mdi-check"/>
+                <label>${answer.text}</label>
+              </div>
+            </div>
+          </div>
+        </if>
+        <else>
+          <div>
+            <div class="z3-pretty p-icon p-round">
+              <input type="radio" name="z3_edu_testView_radio" data-id=answer.id on-click("onRadioClick") checked=(state.currentAnswers.indexOf(answer.id) > -1)/>
+              <div class="state">
+                <i class="icon mdi mdi-checkbox-blank-circle"/>
+                <label>${answer.text}</label>
+              </div>
+            </div>
+          </div>
+        </else>
+      </for>
+      <div class="buttons mt-5">
+        <if(state.currentQuestionIndex > 0)>
+          <button class="button is-primary" on-click("onPrevQuestionClick")>${out.global.i18n.t("prev")}</button>
+        </if>
+        <if(state.currentQuestionIndex < state.sessionData.questions.length - 1)>
+          <button class="button is-primary" on-click("onNextQuestionClick")>${out.global.i18n.t("next")}</button>
+        </if>
+      </div>
+    </if>
+    <if(state.loading)>
+      <div class="z3-edu-testView-loading">
+        <span class="button is-white is-loading is-large z3-edu-testView-loading-spinner">&nbsp;</span>
+      </div>
+    </if>
+  </div>
+</if>

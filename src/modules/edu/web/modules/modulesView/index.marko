@@ -1,0 +1,32 @@
+style.scss {
+  @import "./modulesView.scss";
+}
+
+<h1 class="title">${out.global.program.title}</h1>
+<nav class="breadcrumb" aria-label="breadcrumbs">
+  <ul>
+    <li>
+      <a href=out.global.i18n.getLocalizedURL(out.global.routes.index)>${out.global.i18n.t("programs")}</a>
+    </li>
+    <li class="is-active">
+      <a>${out.global.program.title}</a>
+    </li>
+  </ul>
+</nav>
+<div class="columns is-multiline">
+  <for|module| of=out.global.program.modules>
+    <div class="column is-one-third " style="display:flex">
+      <div class="box z3-edu-pv-module-tile">
+        <div>
+          <div class="mb-3">
+            <strong>${module.title}</strong>
+          </div>
+          <p>${module.desc}</p>
+        </div>
+        <div class="mt-3">
+          <a href=out.global.i18n.getLocalizedURL(`${out.global.routes.index}/module/${out.global.programId}/${module.id}`) class="button is-primary is-rounded">${out.global.i18n.t("view")}</a>
+        </div>
+      </div>
+    </div>
+  </for>
+</div>

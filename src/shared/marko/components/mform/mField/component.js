@@ -66,9 +66,10 @@ module.exports = class {
     }
 
     updateAce() {
-        this.aceEditor.getSession().setValue(this.input.value || "");
+        const value = this.state.modeAce === "ace" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value;
+        this.aceEditor.getSession().setValue(value);
         if (this.item.wysiwyg) {
-            this.ckEditor.setData(this.input.value || "");
+            this.ckEditor.setData(value);
         }
     }
 

@@ -1,0 +1,21 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "program": {
+                "type": "string"
+            },
+            "module": {
+                "type": "string"
+            },
+            "test": {
+                "type": "string"
+            },
+            "id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            }
+        },
+        "required": ["program", "module", "test", "id"]
+    }
+}

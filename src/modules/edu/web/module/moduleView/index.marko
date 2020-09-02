@@ -1,0 +1,26 @@
+style.scss {
+  @import "./moduleView.scss";
+}
+
+<h1 class="title">${out.global.moduleData.title}</h1>
+<nav class="breadcrumb" aria-label="breadcrumbs">
+  <ul>
+    <li>
+      <a href=out.global.i18n.getLocalizedURL(out.global.routes.index)>${out.global.i18n.t("programs")}</a>
+    </li>
+    <li>
+      <a href=out.global.i18n.getLocalizedURL(`${out.global.routes.index}/program/${out.global.programId}`)>${out.global.program.title}</a>
+    </li>
+    <li class="is-active">
+      <a>${out.global.moduleData.title}</a>
+    </li>
+  </ul>
+</nav>
+<div class="mb-5">${out.global.moduleData.desc}</div>
+<if(out.global.moduleData.tests)>
+  <div class="buttons">
+    <for|t| of=Object.keys(out.global.moduleData.tests)>
+      <a href=out.global.i18n.getLocalizedURL(`${out.global.routes.index}/test/${out.global.programId}/${out.global.moduleId}/${t}`) class="button is-primary is-rounded">${out.global.moduleData.tests[t]}</a>
+    </for>
+  </div>
+</if>

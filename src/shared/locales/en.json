@@ -11,6 +11,8 @@
     "forbiddenError": "Forbidden",
     "forbiddenErrorMsg": "You don't have permission to access the requested resource.",
     "dataSaveSuccess": "Data has been successfully saved",
+    "mForm.ace": "Source",
+    "mForm.ck": "WYSIWYG",
     "mForm.save": "Save",
     "mForm.cancel": "Cancel",
     "mForm.settings": "Settings",

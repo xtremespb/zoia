@@ -1,0 +1,11 @@
+{
+    "moduleTitle": "Education",
+    "programs": "Programs",
+    "view": "View",
+    "test": "Test",
+    "waitTime": "Time until the next attempt",
+    "remainTime": "Remaining time",
+    "correctCount": "Correct answers count",
+    "prev": "Previous",
+    "next": "Next"
+}

@@ -90,7 +90,7 @@
         "file-loader": "^6.0.0",
         "imask": "^6.0.5",
         "node-sass": "^4.14.1",
-        "optimize-css-assets-webpack-plugin": "^5.0.3",
+        "optimize-css-assets-webpack-plugin": "^5.0.4",
         "pretty-checkbox": "^3.0.3",
         "router5": "^8.0.1",
         "router5-plugin-browser": "^8.0.1",

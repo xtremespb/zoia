@@ -43,6 +43,7 @@
         "default-case": "off",
         "class-methods-use-this": "off",
         "no-cond-assign": "off",
-        "no-new": "off"
+        "no-new": "off",
+        "consistent-return": "off"
     }
 }
