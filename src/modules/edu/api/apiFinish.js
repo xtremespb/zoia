@@ -1,15 +1,14 @@
-import cloneDeep from "lodash/cloneDeep";
 import crypto from "crypto";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
-import eduQuestions from "./data/eduQuestions.json";
+import eduFinish from "./data/eduFinish.json";
 import {
     tests
 } from "../shared/data";
 
 export default () => ({
     schema: {
-        body: eduQuestions.root
+        body: eduFinish.root
     },
     attachValidation: true,
     async handler(req, rep) {
@@ -44,27 +43,32 @@ export default () => ({
                 });
                 return;
             }
-            const questionDb = sessionDb.questions.find(q => q.id === req.body.id);
-            if (!questionDb) {
-                rep.requestError(rep, {
-                    failed: true,
-                    error: "Could not find test ID",
-                    errorKeyword: "idNotFound",
-                    errorData: []
-                });
-                return;
-            }
             const answers = sessionDb.answers || {};
-            const questionData = cloneDeep(tests[`${req.body.program}_${req.body.module}_${req.body.test}`].questions[questionDb.index]);
-            questionData.correctCount = questionData.correct.length;
-            questionData.answers = questionData.answers.map((a, i) => ({
-                text: a,
-                id: crypto.createHash("md5").update(`${user._id}_${req.body.id}_${i}`).digest("hex")
-            })).sort(() => Math.random() - 0.5);
-            questionData.id = req.body.id;
-            questionData.userAnswers = answers[questionDb.id] || [];
-            delete questionData.correct;
-            return rep.successJSON(rep, questionData);
+            let correctCount = 0;
+            sessionDb.questions.map(q => {
+                const correctAnswers = testData.questions[q.index].correct.map(c => crypto.createHash("md5").update(`${user._id}_${q.id}_${c - 1}`).digest("hex")).sort();
+                const userAnswers = answers[q.id] ? answers[q.id].sort() : [];
+                // Compare arrays
+                const isCorrect = correctAnswers.reduce((a, b) => a && userAnswers.includes(b), true);
+                correctCount = isCorrect ? correctCount + 1 : correctCount;
+            });
+            const correctPercentage = parseInt((100 / testData.questions.length) * correctCount, 10);
+            await this.mongo.db.collection("eduSessions").updateOne({
+                _id: testSession
+            }, {
+                $set: {
+                    result: {
+                        success: correctPercentage >= testData.successPercentage,
+                        correctCount,
+                        correctPercentage,
+                        completedAt: new Date()
+                    },
+                    attempts: sessionDb.attempts ? sessionDb.attempts + 1 : 1
+                },
+            }, {
+                upsert: false,
+            });
+            return rep.successJSON(rep, {});
         } catch (e) {
             rep.logError(req, null, e);
             return Promise.reject(e);

@@ -23,7 +23,7 @@
                     "maxLength": 24,
                     "pattern": "^[a-f0-9]+$"
                 },
-                "minItems": 1,
+                "minItems": 0,
                 "uniqueItems": true
             }
         },

@@ -2,7 +2,7 @@ style.scss {
   @import "./moduleView.scss";
 }
 
-<h1 class="title">${out.global.i18n.t("test")}</h1>
+<h1 class="title">${out.global.moduleData.tests[out.global.testId]}</h1>
 <nav class="breadcrumb" aria-label="breadcrumbs">
   <ul>
     <li>
@@ -54,11 +54,10 @@ style.scss {
         </else>
       </for>
       <div class="buttons mt-5">
-        <if(state.currentQuestionIndex > 0)>
-          <button class="button is-primary" on-click("onPrevQuestionClick")>${out.global.i18n.t("prev")}</button>
-        </if>
-        <if(state.currentQuestionIndex < state.sessionData.questions.length - 1)>
-          <button class="button is-primary" on-click("onNextQuestionClick")>${out.global.i18n.t("next")}</button>
+        <button class="button is-primary" on-click("onPrevQuestionClick") disabled=(state.currentQuestionIndex === 0)>${out.global.i18n.t("prev")}</button>
+        <button class="button is-primary" on-click("onNextQuestionClick") disabled=(state.currentQuestionIndex === state.sessionData.questions.length - 1)>${out.global.i18n.t("next")}</button>
+        <if(state.currentQuestionIndex === state.sessionData.questions.length - 1)>
+          <button class="button is-success" on-click("onFinishClick")>${out.global.i18n.t("finish")}</button>
         </if>
       </div>
     </if>

@@ -1,15 +1,14 @@
-import cloneDeep from "lodash/cloneDeep";
 import crypto from "crypto";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
-import eduAnswer from "./data/eduAnswer.json";
+import eduAnswers from "./data/eduAnswers.json";
 import {
     tests
 } from "../shared/data";
 
 export default () => ({
     schema: {
-        body: eduAnswer.root
+        body: eduAnswers.root
     },
     attachValidation: true,
     async handler(req, rep) {
@@ -54,15 +53,18 @@ export default () => ({
                 });
                 return;
             }
-            const questionData = cloneDeep(tests[`${req.body.program}_${req.body.module}_${req.body.test}`].questions[questionDb.index]);
-            questionData.correctCount = questionData.correct.length;
-            questionData.answers = questionData.answers.map((a, i) => ({
-                text: a,
-                id: crypto.createHash("md5").update(`${user._id}_${req.body.id}_${i}`).digest("hex")
-            })).sort(() => Math.random() - 0.5);
-            questionData.id = req.body.id;
-            delete questionData.correct;
-            return rep.successJSON(rep, questionData);
+            const answers = sessionDb.answers || {};
+            answers[req.body.id] = req.body.answers;
+            await this.mongo.db.collection("eduSessions").updateOne({
+                _id: testSession
+            }, {
+                $set: {
+                    answers
+                },
+            }, {
+                upsert: false,
+            });
+            return rep.successJSON(rep, {});
         } catch (e) {
             rep.logError(req, null, e);
             return Promise.reject(e);

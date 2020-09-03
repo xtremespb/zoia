@@ -1,0 +1,17 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "program": {
+                "type": "string"
+            },
+            "module": {
+                "type": "string"
+            },
+            "test": {
+                "type": "string"
+            }
+        },
+        "required": ["program", "module", "test"]
+    }
+}

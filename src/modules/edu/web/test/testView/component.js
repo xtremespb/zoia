@@ -2,6 +2,9 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const Cookies = require("../../../../../shared/lib/cookies").default;
 
+const DIRECTION_PREV = true;
+const DIRECTION_NEXT = false;
+
 module.exports = class {
     onCreate(input, out) {
         const state = {
@@ -43,7 +46,58 @@ module.exports = class {
                 }
             });
             this.state.loading = false;
-            this.setState("currentQuestionData", res.data);
+            const data = cloneDeep(res.data);
+            delete data.userAnswers;
+            this.setState("currentQuestionData", data);
+            this.setState("currentAnswers", res.data.userAnswers);
+        } catch (e) {
+            this.state.loading = false;
+            console.log(e);
+        }
+    }
+
+    async saveAnswers(id, answers) {
+        this.state.loading = true;
+        try {
+            await axios({
+                method: "post",
+                url: "/api/edu/answers",
+                data: {
+                    program: this.programId,
+                    module: this.moduleData.id,
+                    test: this.testId,
+                    id,
+                    answers
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.state.loading = false;
+            return true;
+        } catch (e) {
+            this.state.loading = false;
+            console.log(e);
+            return false;
+        }
+    }
+
+    async finishTest() {
+        this.state.loading = true;
+        try {
+            await axios({
+                method: "post",
+                url: "/api/edu/finish",
+                data: {
+                    program: this.programId,
+                    module: this.moduleData.id,
+                    test: this.testId,
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.state.loading = false;
         } catch (e) {
             this.state.loading = false;
             console.log(e);
@@ -69,17 +123,32 @@ module.exports = class {
         this.setState("currentAnswers", [e.target.dataset.id]);
     }
 
-    async onPrevQuestionClick() {
-        const currentQuestionIndex = this.state.currentQuestionIndex - 1;
+    async goPrevNext(direction) {
+        if (!await this.saveAnswers(this.state.sessionData.questions[this.state.currentQuestionIndex].id, this.state.currentAnswers)) {
+            return;
+        }
+        const currentQuestionIndex = direction === DIRECTION_PREV ? this.state.currentQuestionIndex - 1 : this.state.currentQuestionIndex + 1;
         this.setState("currentQuestionIndex", currentQuestionIndex);
         this.setState("currentAnswers", []);
         await this.loadQuestion(this.state.sessionData.questions[currentQuestionIndex].id);
     }
 
-    async onNextQuestionClick() {
-        const currentQuestionIndex = this.state.currentQuestionIndex + 1;
-        this.setState("currentQuestionIndex", currentQuestionIndex);
-        this.setState("currentAnswers", []);
-        await this.loadQuestion(this.state.sessionData.questions[currentQuestionIndex].id);
+    onPrevQuestionClick() {
+        if (this.state.currentQuestionIndex > 0) {
+            this.goPrevNext(DIRECTION_PREV);
+        }
+    }
+
+    onNextQuestionClick() {
+        if (this.state.currentQuestionIndex < this.state.sessionData.questions.length - 1) {
+            this.goPrevNext(DIRECTION_NEXT);
+        }
+    }
+
+    async onFinishClick() {
+        if (!await this.saveAnswers(this.state.sessionData.questions[this.state.currentQuestionIndex].id, this.state.currentAnswers)) {
+            return;
+        }
+        await this.finishTest();
     }
 };
