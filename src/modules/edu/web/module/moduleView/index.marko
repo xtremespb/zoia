@@ -20,7 +20,8 @@ style.scss {
 <if(out.global.moduleData.tests)>
   <div class="buttons">
     <for|t| of=Object.keys(out.global.moduleData.tests)>
-      <a href=out.global.i18n.getLocalizedURL(`${out.global.routes.index}/test/${out.global.programId}/${out.global.moduleId}/${t}`) class="button is-primary is-rounded">${out.global.moduleData.tests[t]}</a>
+      <button on-click("onStartTestClick") data-test=t data-url=out.global.i18n.getLocalizedURL(`${out.global.routes.index}/test/${out.global.programId}/${out.global.moduleId}/${t}`) class="button is-primary is-rounded">${out.global.moduleData.tests[t].title}</button>
     </for>
   </div>
 </if>
+<confirmModal key="z3_edu_mv_confirmModal" on-confirm("onConfirmTestStart")/>

@@ -47,10 +47,16 @@ export default (programs, tests) => ({
             if (testData.timeLimit) {
                 sessionData.timeRemain = sessionData.timestampStart + testData.timeLimit - sessionData.timestampNow;
                 sessionData.timeLimit = testData.timeLimit;
-                if (testData.timeWait && sessionData.timeRemain < 0) {
-                    sessionData.timestampResume = sessionData.timestampStart + testData.timeLimit + testData.timeWait;
-                    sessionData.timeWait = sessionData.timestampResume - sessionData.timestampNow;
-                    delete sessionData.timeRemain;
+                if (testData.timeWait) {
+                    if (sessionData.result && !sessionData.result.success) {
+                        sessionData.timeRemain = -sessionData.timeLimit;
+                        sessionData.timestampStart = parseInt(sessionData.result.completedAt.getTime() / 1000, 10);
+                    }
+                    if (sessionData.timeRemain < 0) {
+                        sessionData.timestampResume = sessionData.timestampStart + testData.timeLimit + testData.timeWait;
+                        sessionData.timeWait = sessionData.timestampResume - sessionData.timestampNow;
+                        delete sessionData.timeRemain;
+                    }
                 }
                 if (sessionData.timeWait <= 0) {
                     await this.mongo.db.collection("eduSessions").updateOne({

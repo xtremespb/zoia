@@ -1,13 +1,35 @@
+style.scss {
+  @import "./timeCounter.scss";
+}
+
 $ function formatSeconds(val) {
   var date = new Date(1970, 0, 1);
   date.setSeconds(val);
   return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
 }
 <if(state.remain || state.wait)>
-  <div class="notification is-warning">
-    <if(state.remain)>${out.global.i18n.t("remainTime")}: <strong>${formatSeconds(state.remain)}</strong></if>
+  <if(state.wait)>
+    <div class="mb-5">${out.global.i18n.t("waitTimeDesc")}</div>
+  </if>
+  <div class="notification is-warning mb-0">
+    <if(state.remain)>
+      <div>
+        ${out.global.i18n.t("remainTime")}: <strong>${formatSeconds(state.remain)}</strong>
+      </div>
+    </if>
     <else>
-      <if(state.wait)>${out.global.i18n.t("waitTime")}: <strong>${formatSeconds(state.wait)}</strong></if>
+      <if(state.wait)>
+        ${out.global.i18n.t("waitTime")}: <strong>${formatSeconds(state.wait)}</strong>
+      </if>
     </else>
   </div>
+  <if(state.remain)>
+    <progress class=`progress is-small z3-edu-timeCounter-progress${state.remainPercentage < 20 ? " is-danger" : ""}` value=state.remainPercentage max="100">15%</progress>
+  </if>
+</if>
+<if(state.timeOut)>
+  <div class="notification is-info">${out.global.i18n.t("timeOut")}</div>
+</if>
+<if(state.waitOver)>
+  <div class="notification is-info">${out.global.i18n.t("waitOver")}</div>
 </if>

@@ -12,7 +12,12 @@ module.exports = class {
             currentQuestionData: null,
             currentAnswers: [],
             sessionData: out.global.sessionData,
-            loading: false
+            loading: false,
+            timeOut: false,
+            testFinished: false,
+            error: null,
+            result: out.global.sessionData.result,
+            attempts: out.global.sessionData.attempts,
         };
         this.state = state;
         this.cookieOptions = out.global.cookieOptions;
@@ -24,12 +29,14 @@ module.exports = class {
     }
 
     onMount() {
+        this.confirmModal = this.getComponent("z3_edu_tv_confirmModal");
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
         this.loadQuestion(this.state.sessionData.questions[this.state.currentQuestionIndex].id);
     }
 
     async loadQuestion(id) {
+        this.state.error = null;
         this.state.loading = true;
         try {
             const res = await axios({
@@ -52,11 +59,12 @@ module.exports = class {
             this.setState("currentAnswers", res.data.userAnswers);
         } catch (e) {
             this.state.loading = false;
-            console.log(e);
+            this.state.error = this.i18n.t("serverErrorQuestion");
         }
     }
 
     async saveAnswers(id, answers) {
+        this.state.error = null;
         this.state.loading = true;
         try {
             await axios({
@@ -77,15 +85,16 @@ module.exports = class {
             return true;
         } catch (e) {
             this.state.loading = false;
-            console.log(e);
+            this.state.error = this.i18n.t("serverErrorAnswer");
             return false;
         }
     }
 
     async finishTest() {
+        this.state.error = null;
         this.state.loading = true;
         try {
-            await axios({
+            const data = await axios({
                 method: "post",
                 url: "/api/edu/finish",
                 data: {
@@ -98,9 +107,13 @@ module.exports = class {
                 }
             });
             this.state.loading = false;
+            this.setState("result", data.data.result);
+            this.setState("attempts", data.data.attempts);
+            this.setState("result", data.data.result);
+            this.setState("testFinished", true);
         } catch (e) {
             this.state.loading = false;
-            console.log(e);
+            this.state.error = this.i18n.t("serverErrorFinish");
         }
     }
 
@@ -146,9 +159,28 @@ module.exports = class {
     }
 
     async onFinishClick() {
+        this.confirmModal.func.setTitle(this.i18n.t("confirmationTitle"));
+        this.confirmModal.func.setMessage(this.i18n.t("testFinishConfirmation"));
+        this.confirmModal.func.setURL(null);
+        this.confirmModal.func.setActive(true);
+    }
+
+    onTimeOut() {
+        this.setState("timeOut", true);
+    }
+
+    onErrorCloseClick() {
+        this.setState("error", null);
+    }
+
+    async onConfirmTestFinish() {
         if (!await this.saveAnswers(this.state.sessionData.questions[this.state.currentQuestionIndex].id, this.state.currentAnswers)) {
             return;
         }
         await this.finishTest();
+    }
+
+    onResultCloseClick() {
+        this.setState("result", null);
     }
 };

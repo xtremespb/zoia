@@ -52,23 +52,31 @@ export default () => ({
                 const isCorrect = correctAnswers.reduce((a, b) => a && userAnswers.includes(b), true);
                 correctCount = isCorrect ? correctCount + 1 : correctCount;
             });
-            const correctPercentage = parseInt((100 / testData.questions.length) * correctCount, 10);
+            const questionsCount = testData.questions.length;
+            const correctPercentage = parseInt((100 / questionsCount) * correctCount, 10);
+            const result = {
+                success: correctPercentage >= testData.successPercentage,
+                questionsCount,
+                correctCount,
+                correctPercentage,
+                successPercentage: testData.successPercentage,
+                completedAt: new Date()
+            };
+            const attempts = sessionDb.attempts ? sessionDb.attempts + 1 : 1;
             await this.mongo.db.collection("eduSessions").updateOne({
                 _id: testSession
             }, {
                 $set: {
-                    result: {
-                        success: correctPercentage >= testData.successPercentage,
-                        correctCount,
-                        correctPercentage,
-                        completedAt: new Date()
-                    },
-                    attempts: sessionDb.attempts ? sessionDb.attempts + 1 : 1
+                    result,
+                    attempts
                 },
             }, {
                 upsert: false,
             });
-            return rep.successJSON(rep, {});
+            return rep.successJSON(rep, {
+                result,
+                attempts
+            });
         } catch (e) {
             rep.logError(req, null, e);
             return Promise.reject(e);
