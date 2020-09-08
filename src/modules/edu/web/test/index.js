@@ -33,6 +33,7 @@ export default (programs, tests) => ({
             id: uuid()
         })).sort(() => Math.random() - 0.5);
         try {
+            // Get current session
             const sessionDb = await this.mongo.db.collection("eduSessions").findOneAndUpdate({
                 _id: testSession
             }, {
@@ -41,44 +42,100 @@ export default (programs, tests) => ({
                 returnOriginal: true,
                 upsert: true,
             });
-            const sessionData = sessionDb.value || defaults;
+            // If there is no session, use default values
+            let sessionData = sessionDb.value || defaults;
+            // Calculate "test started at" UNIX timestamp based on session creation time
             sessionData.timestampStart = parseInt(sessionData.createdAt.getTime() / 1000, 10);
+            // Get current UNIX timestamp
             sessionData.timestampNow = parseInt(new Date().getTime() / 1000, 10);
+            // Set "result" value from the latest history item
+            sessionData.result = sessionData.recentAttempt && sessionData.history && sessionData.history[sessionData.recentAttempt - 1] ? sessionData.history[sessionData.recentAttempt - 1] : null;
+            // If current test has a time limit set
             if (testData.timeLimit) {
+                // Calculate remaining time (seconds)
                 sessionData.timeRemain = sessionData.timestampStart + testData.timeLimit - sessionData.timestampNow;
+                // Put test time limit (seconds) into result
                 sessionData.timeLimit = testData.timeLimit;
+                // If there is a waiting time between attempts
                 if (testData.timeWait) {
-                    if (sessionData.result && !sessionData.result.success) {
-                        sessionData.timeRemain = -sessionData.timeLimit;
-                        sessionData.timestampStart = parseInt(sessionData.result.completedAt.getTime() / 1000, 10);
-                    }
-                    if (sessionData.timeRemain < 0) {
-                        sessionData.timestampResume = sessionData.timestampStart + testData.timeLimit + testData.timeWait;
+                    // If there was a recent "failed" attempt
+                    if (sessionData.recentAttempt && sessionData.history && sessionData.history[sessionData.recentAttempt - 1] && !sessionData.history[sessionData.recentAttempt - 1].success) {
+                        // Get the "test completed at" UNIX timestamp
+                        const completedAt = parseInt(sessionData.history[sessionData.recentAttempt - 1].completedAt.getTime() / 1000, 10);
+                        // Calculate the UNIX timestamp when the next test attempt can be started at
+                        sessionData.timestampResume = completedAt + testData.timeWait;
+                        // Calculate the remaining waiting time (seconds)
                         sessionData.timeWait = sessionData.timestampResume - sessionData.timestampNow;
+                        // We don't need remaining time because we do already have the waiting time set
+                        delete sessionData.timeRemain;
+                    } else if (sessionData.timeRemain && sessionData.timeRemain < 0) {
+                        // If there is no remaining time left
+                        // Calculate the UNIX timestamp when the next test attempt can be started at
+                        sessionData.timestampResume = sessionData.timestampStart + testData.timeLimit + testData.timeWait;
+                        // Calculate the remaining waiting time (seconds)
+                        sessionData.timeWait = sessionData.timestampResume - sessionData.timestampNow;
+                        // We don't need remaining time because we do already have the waiting time set
                         delete sessionData.timeRemain;
                     }
                 }
+                // If the waiting time is over
                 if (sessionData.timeWait <= 0) {
+                    // Reset answers & result in the current session
+                    // Set new randomized questions etc.
                     await this.mongo.db.collection("eduSessions").updateOne({
                         _id: testSession
                     }, {
-                        $set: defaults,
+                        $set: {
+                            ...defaults,
+                            answers: {},
+                            recentAttempt: null
+                        },
                     }, {
                         upsert: true,
                     });
+                    sessionData = {
+                        ...sessionData,
+                        ...defaults,
+                        result: null
+                    };
+                    // Set new "test started at" UNIX timestamp
                     sessionData.timestampStart = parseInt(defaults.createdAt.getTime() / 1000, 10);
+                    // Calculate "remaining time" (in seconds)
                     sessionData.timeRemain = sessionData.timestampStart + testData.timeLimit - sessionData.timestampNow;
+                    // Delete obsolete values
                     delete sessionData.timeWait;
                     delete sessionData.timestampResume;
                 }
             } else {
+                // There are no time limits
                 sessionData.noTimeLimit = true;
+                // If there was a result already, reset
+                if (sessionData.recentAttempt) {
+                    await this.mongo.db.collection("eduSessions").updateOne({
+                        _id: testSession
+                    }, {
+                        $set: {
+                            ...defaults,
+                            answers: {},
+                            recentAttempt: null
+                        },
+                    }, {
+                        upsert: true,
+                    });
+                    sessionData = {
+                        ...sessionData,
+                        ...defaults,
+                        result: null
+                    };
+                }
             }
+            // Get Questions
             sessionData.questions = sessionData.questions.map(q => ({
                 id: q.id,
                 title: testData.questions[q.index].title
             }));
             sessionData.questionsCount = sessionData.questions.length;
+            // Render the template
             const render = await template.stream({
                 $global: {
                     serializedGlobals: {

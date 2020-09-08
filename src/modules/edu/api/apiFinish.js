@@ -54,7 +54,7 @@ export default () => ({
             });
             const questionsCount = testData.questions.length;
             const correctPercentage = parseInt((100 / questionsCount) * correctCount, 10);
-            const result = {
+            const testResult = {
                 success: correctPercentage >= testData.successPercentage,
                 questionsCount,
                 correctCount,
@@ -62,20 +62,21 @@ export default () => ({
                 successPercentage: testData.successPercentage,
                 completedAt: new Date()
             };
-            const attempts = sessionDb.attempts ? sessionDb.attempts + 1 : 1;
+            const history = sessionDb.history || [];
+            history.push(testResult);
             await this.mongo.db.collection("eduSessions").updateOne({
                 _id: testSession
             }, {
                 $set: {
-                    result,
-                    attempts
+                    recentAttempt: history.length,
+                    history
                 },
             }, {
                 upsert: false,
             });
             return rep.successJSON(rep, {
-                result,
-                attempts
+                result: testResult,
+                attempts: history.length
             });
         } catch (e) {
             rep.logError(req, null, e);
