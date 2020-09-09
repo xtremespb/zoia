@@ -203,12 +203,13 @@ module.exports = class {
     }
 
     onColumnClick(e) {
-        if (e.target.dataset.sortable === undefined) {
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        if (dataset.sortable === undefined) {
             return;
         }
         const {
             id
-        } = e.target.dataset;
+        } = dataset;
         if (id === this.state.sortId) {
             this.state.sortDirection = this.state.sortDirection === "asc" ? "desc" : "asc";
         } else {
@@ -220,10 +221,11 @@ module.exports = class {
     }
 
     onPageClick(e) {
-        if (e.target.dataset.page === this.state.page) {
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        if (dataset.page === this.state.page) {
             return;
         }
-        this.setState("page", e.target.dataset.page);
+        this.setState("page", dataset.page);
         this.dataRequest();
     }
 
@@ -246,8 +248,9 @@ module.exports = class {
     }
 
     onTopButtonClick(e) {
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
         // Process "generic" deletion data
-        if (this.input.genericDelete && e.target.dataset.button === "btnDeleteSelectedGeneric") {
+        if (this.input.genericDelete && dataset.button === "btnDeleteSelectedGeneric") {
             this.setState("deleteDialogActive", true);
             const ids = Object.keys(this.state.checkboxes).map(i => this.state.checkboxes[i] ? i.replace(/^i/, "") : null).filter(i => i !== undefined && i !== null);
             this.setState("deleteDialogIds", ids);
@@ -258,7 +261,7 @@ module.exports = class {
         }
         // Emit button event
         this.emit("top-button-click", {
-            button: e.target.dataset.button
+            button: dataset.button
         });
     }
 

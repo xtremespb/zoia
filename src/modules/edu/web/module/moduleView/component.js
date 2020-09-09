@@ -9,13 +9,10 @@ module.exports = class {
     }
 
     onStartTestClick(e) {
-        const {
-            url,
-            test
-        } = e.target.dataset;
-        this.confirmModal.func.setTitle(this.moduleData.tests[test].title);
-        this.confirmModal.func.setMessage(this.moduleData.tests[test].descDialog);
-        this.confirmModal.func.setURL(url);
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        this.confirmModal.func.setTitle(this.moduleData.tests[dataset.test].title);
+        this.confirmModal.func.setMessage(this.moduleData.tests[dataset.test].descDialog);
+        this.confirmModal.func.setURL(dataset.url);
         this.confirmModal.func.setActive(true);
     }
 

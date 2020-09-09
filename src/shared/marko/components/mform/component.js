@@ -112,10 +112,8 @@ module.exports = class {
     }
 
     onTabClick(e) {
-        const {
-            id
-        } = e.target.dataset;
-        this.setState("activeTabId", id);
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        this.setState("activeTabId", dataset.id);
         setTimeout(this.emitFieldsUpdate.bind(this), 0);
         setTimeout(this.autoFocus.bind(this), 0);
     }
