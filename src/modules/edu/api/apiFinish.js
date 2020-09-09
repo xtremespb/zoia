@@ -43,13 +43,43 @@ export default () => ({
                 });
                 return;
             }
+            // Check time limit
+            if (testData.timeLimit) {
+                const timestampStart = parseInt(sessionDb.createdAt.getTime() / 1000, 10);
+                const timestampNow = parseInt(new Date().getTime() / 1000, 10);
+                const timeRemain = timestampStart + testData.timeLimit - timestampNow;
+                let timeWait = -1;
+                if (sessionDb.recentAttempt && sessionDb.history && sessionDb.history[sessionDb.recentAttempt - 1] && !sessionDb.history[sessionDb.recentAttempt - 1].success) {
+                    const completedAt = parseInt(sessionDb.history[sessionDb.recentAttempt - 1].completedAt.getTime() / 1000, 10);
+                    const timestampResume = completedAt + testData.timeWait;
+                    timeWait = timestampResume - timestampNow;
+                }
+                if (timeRemain <= 0 || timeWait >= 0) {
+                    rep.requestError(rep, {
+                        failed: true,
+                        error: "No time left",
+                        errorKeyword: "timeOver",
+                        errorData: []
+                    });
+                    return;
+                }
+            }
             const answers = sessionDb.answers || {};
             let correctCount = 0;
+            const incorrect = {};
             sessionDb.questions.map(q => {
-                const correctAnswers = testData.questions[q.index].correct.map(c => crypto.createHash("md5").update(`${user._id}_${q.id}_${c - 1}`).digest("hex")).sort();
+                const allAnswers = testData.questions[q.index].answers.map((c, i) => crypto.createHash("md5").update(`${user._id}_${q.id}_${i}`).digest("hex"));
+                const correctAnswers = testData.questions[q.index].correct.map(c => crypto.createHash("md5").update(`${user._id}_${q.id}_${c - 1}`).digest("hex"));
                 const userAnswers = answers[q.id] ? answers[q.id].sort() : [];
+                const userAnswerIds = allAnswers.map((a, i) => userAnswers.indexOf(a) >= 0 ? i + 1 : null).filter(i => i);
                 // Compare arrays
-                const isCorrect = correctAnswers.reduce((a, b) => a && userAnswers.includes(b), true);
+                const isCorrect = correctAnswers.sort().reduce((a, b) => a && userAnswers.includes(b), true);
+                if (!isCorrect) {
+                    incorrect[q.index + 1] = {
+                        correct: testData.questions[q.index].correct,
+                        user: userAnswerIds
+                    };
+                }
                 correctCount = isCorrect ? correctCount + 1 : correctCount;
             });
             const questionsCount = testData.questions.length;
@@ -60,8 +90,11 @@ export default () => ({
                 correctCount,
                 correctPercentage,
                 successPercentage: testData.successPercentage,
-                completedAt: new Date()
+                completedAt: new Date(),
             };
+            if ((testData.incorrectHistoryOnSuccess && testResult.success) || (testData.incorrectHistoryOnFail && !testResult.success)) {
+                testResult.incorrect = incorrect;
+            }
             const history = sessionDb.history || [];
             history.push(testResult);
             await this.mongo.db.collection("eduSessions").updateOne({

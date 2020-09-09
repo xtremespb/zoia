@@ -54,6 +54,27 @@ export default () => ({
                 });
                 return;
             }
+            // Check time limit
+            if (testData.timeLimit) {
+                const timestampStart = parseInt(sessionDb.createdAt.getTime() / 1000, 10);
+                const timestampNow = parseInt(new Date().getTime() / 1000, 10);
+                const timeRemain = timestampStart + testData.timeLimit - timestampNow;
+                let timeWait = -1;
+                if (sessionDb.recentAttempt && sessionDb.history && sessionDb.history[sessionDb.recentAttempt - 1] && !sessionDb.history[sessionDb.recentAttempt - 1].success) {
+                    const completedAt = parseInt(sessionDb.history[sessionDb.recentAttempt - 1].completedAt.getTime() / 1000, 10);
+                    const timestampResume = completedAt + testData.timeWait;
+                    timeWait = timestampResume - timestampNow;
+                }
+                if (timeRemain <= 0 || timeWait >= 0) {
+                    rep.requestError(rep, {
+                        failed: true,
+                        error: "No time left",
+                        errorKeyword: "timeOver",
+                        errorData: []
+                    });
+                    return;
+                }
+            }
             const answers = sessionDb.answers || {};
             const questionData = cloneDeep(tests[`${req.body.program}_${req.body.module}_${req.body.test}`].questions[questionDb.index]);
             questionData.correctCount = questionData.correct.length;

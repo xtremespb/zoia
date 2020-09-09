@@ -1,0 +1,43 @@
+{
+    "title": "Program 1",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Hac habitasse platea dictumst quisque sagittis purus sit amet volutpat. Orci dapibus ultrices in iaculis. Habitasse platea dictumst quisque sagittis purus sit amet. Ut tristique et egestas quis ipsum. Nulla malesuada pellentesque elit eget gravida cum sociis natoque. Mi quis hendrerit dolor magna eget est lorem ipsum dolor. Suspendisse in est ante in nibh mauris cursus. In nibh mauris cursus mattis molestie a. Ac turpis egestas sed tempus urna et pharetra pharetra.",
+    "descFull": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare arcu odio ut sem nulla pharetra diam sit. Nunc consequat interdum varius sit amet mattis vulputate. Ornare arcu dui vivamus arcu felis bibendum ut tristique et. Aliquam sem fringilla ut morbi tincidunt augue interdum. Sed viverra tellus in hac habitasse platea dictumst vestibulum. Quis commodo odio aenean sed adipiscing diam donec adipiscing tristique. Aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed. Euismod in pellentesque massa placerat duis ultricies. Nisl pretium fusce id velit ut tortor pretium. Lectus mauris ultrices eros in cursus. Orci dapibus ultrices in iaculis nunc sed. Erat nam at lectus urna duis convallis. Mauris ultrices eros in cursus. Ut porttitor leo a diam sollicitudin tempor id eu. Congue eu consequat ac felis donec et odio pellentesque diam. Vitae tempus quam pellentesque nec. Neque sodales ut etiam sit amet nisl purus in. Cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl. Porttitor massa id neque aliquam vestibulum.",
+    "modules": [{
+            "id": "module1",
+            "title": "Sample Module",
+            "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur massa mauris, tincidunt vel ante semper, iaculis pharetra massa. Aliquam erat volutpat. Phasellus sit amet odio elementum, aliquam turpis in, mollis odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mattis at velit ultrices venenatis.",
+            "tests": {
+                "test1": {
+                    "title": "With time",
+                    "descDialog": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna condimentum mattis pellentesque id nibh tortor id aliquet. Tincidunt vitae semper quis lectus nulla at. Euismod in pellentesque massa placerat. Sit amet porttitor eget dolor morbi non arcu risus quis. Et malesuada fames ac turpis egestas maecenas pharetra convallis posuere. Nulla facilisi nullam vehicula ipsum a arcu cursus vitae. Amet facilisis magna etiam tempor orci eu.",
+                    "descRuntime": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                },
+                "test2": {
+                    "title": "Without time",
+                    "descDialog": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Augue interdum velit euismod in pellentesque massa placerat duis. Dui accumsan sit amet nulla facilisi morbi tempus. Facilisis magna etiam tempor orci eu lobortis elementum nibh tellus. Duis ultricies lacus sed turpis tincidunt id aliquet.",
+                    "descRuntime": "Lorem ipsum dolor sit amet, euismod in pellentesque massa placerat duis."
+                }
+            }
+        },
+        {
+            "id": "module2",
+            "title": "Another Module",
+            "desc": "Proin vitae tincidunt felis. Duis nec ante quis nisi sodales mollis. Sed condimentum massa pellentesque quam lacinia, vel pharetra ligula consequat. Suspendisse dictum interdum ex sit amet fringilla. Suspendisse sed sapien sem. Sed ac lectus eleifend, consectetur est et, varius urna."
+        },
+        {
+            "id": "module3",
+            "title": "Third Module",
+            "desc": "Proin vitae tincidunt felis. Duis nec ante quis nisi sodales mollis. Sed condimentum massa pellentesque quam lacinia, vel pharetra ligula consequat. Suspendisse dictum interdum ex sit amet fringilla. Suspendisse sed sapien sem. Sed ac lectus eleifend, consectetur est et, varius urna."
+        },
+        {
+            "id": "module4",
+            "title": "Fourth Module",
+            "desc": "Proin vitae tincidunt felis. Duis nec ante quis nisi sodales mollis. Sed condimentum massa pellentesque quam lacinia, vel pharetra ligula consequat. Suspendisse dictum interdum ex sit amet fringilla. Suspendisse sed sapien sem. Sed ac lectus eleifend, consectetur est et, varius urna."
+        },
+        {
+            "id": "module5",
+            "title": "Sample Module 6",
+            "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur massa mauris, tincidunt vel ante semper, iaculis pharetra massa. Aliquam erat volutpat. Phasellus sit amet odio elementum, aliquam turpis in, mollis odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mattis at velit ultrices venenatis."
+        }
+    ]
+}

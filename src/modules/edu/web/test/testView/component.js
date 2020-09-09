@@ -26,13 +26,16 @@ module.exports = class {
         this.programId = out.global.programId;
         this.moduleData = out.global.moduleData;
         this.testId = out.global.testId;
+        this.initQuestion = out.global.sessionData.timeRemain || out.global.sessionData.noTimeLimit;
     }
 
     onMount() {
         this.confirmModal = this.getComponent("z3_edu_tv_confirmModal");
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
-        this.loadQuestion(this.state.sessionData.questions[this.state.currentQuestionIndex].id);
+        if (this.initQuestion) {
+            this.loadQuestion(this.state.sessionData.questions[this.state.currentQuestionIndex].id);
+        }
     }
 
     async loadQuestion(id) {
