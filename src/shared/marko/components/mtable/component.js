@@ -228,19 +228,20 @@ module.exports = class {
     }
 
     onActionButtonClick(e) {
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
         // Process "generic" deletion data
-        if (this.input.genericDelete && e.target.dataset.action === "btnDeleteGeneric") {
+        if (this.input.genericDelete && dataset.action === "btnDeleteGeneric") {
             this.setState("deleteDialogActive", true);
-            this.setState("deleteDialogIds", [e.target.dataset.id]);
+            this.setState("deleteDialogIds", [dataset.id]);
             if (this.input.genericDelete.title) {
-                const titles = this.state.data.map(item => e.target.dataset.id === item.id || e.target.dataset.id === item._id ? item[this.input.genericDelete.title] : null).filter(item => item);
+                const titles = this.state.data.map(item => dataset.id === item.id || dataset.id === item._id ? item[this.input.genericDelete.title] : null).filter(item => item);
                 this.setState("deleteDialogTitles", titles);
             }
         }
         // Emit action event
         this.emit("action-click", {
-            action: e.target.dataset.action,
-            id: e.target.dataset.id
+            action: dataset.action,
+            id: dataset.id
         });
     }
 

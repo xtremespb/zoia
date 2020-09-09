@@ -70,9 +70,9 @@ module.exports = class {
     onActionClick(data) {
         switch (data.action) {
         case "btnEdit":
-            window.router.navigate("pages.edit", {
+            setTimeout(() => window.router.navigate("pages.edit", {
                 id: data.id
-            });
+            }), 10);
             break;
         }
     }
