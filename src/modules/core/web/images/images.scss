@@ -1,0 +1,28 @@
+@import "../../../../shared/marko/components/admin/variables.scss";
+
+.z3-cr-images-html {
+    height: 100%;
+}
+
+.z3-cr-images-body {
+    height: 100%;
+}
+
+.z3-cr-images-header {
+    flex: 0 0 auto;
+}
+
+.z3-cr-images-content {
+    flex: 1 0 auto;
+}
+
+.z3-cr-images-footer {
+    flex: 0 0 auto;
+}
+
+.z3-cr-images-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}

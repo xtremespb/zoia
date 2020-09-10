@@ -1,0 +1,67 @@
+style.scss {
+  @import "../../../../shared/marko/components/admin/variables.scss";
+  @import "~@mdi/font/scss/materialdesignicons.scss";
+  @import "../../../../shared/fonts/source-sans-pro/source-sans-pro.css";
+  @import "~bulma/bulma";
+  @import "~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass";
+  @import "./images.scss";
+}
+
+<!DOCTYPE html>
+<html class="z3-cr-images-html">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>${out.global.pageTitle} | ${out.global.siteMetadata.title}</title>
+    <if(out.global.extraCSS)>
+      <style type="text/css">$!{out.global.extraCSS}</style>
+    </if>
+  </head>
+  <body class="z3-cr-images-body">
+    <div class="container z3-cr-images-container">
+      <header class="z3-cr-images-header pt-6">
+        <div class="columns is-mobile is-multiline mb-0 z3-ap-f-toolbar-wrap">
+          <div class="column is-narrow">
+            <div class="field has-addons">
+              <p class="control">
+                <button class="button tooltip" data-tooltip=out.global.i18n.t("refresh")>
+                  <span class="icon">
+                    <i class="mdi mdi-24px mdi-reload"/>
+                  </span>
+                </button>
+              </p>
+            </div>
+          </div>
+          <div class="column is-narrow">
+            <div class="field has-addons">
+              <p class="control">
+                <button class="button tooltip" data-tooltip=out.global.i18n.t("selectAll")>
+                  <span class="icon">
+                    <i class="mdi mdi-24px mdi-checkbox-marked-outline"/>
+                  </span>
+                </button>
+              </p>
+              <p class="control">
+                <button class="button tooltip" data-tooltip=out.global.i18n.t("selectNone")>
+                  <span class="icon">
+                    <i class="mdi mdi-24px mdi-checkbox-blank-outline"/>
+                  </span>
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+      <section class="z3-cr-images-content pt-3"/>
+      <footer class="footer z3-cr-images-footer pb-3 pt-3 mt-3">
+        <div class="buttons">
+          <button class="button is-primary">${out.global.i18n.t("btnSelect")}</button>
+          <button class="button">${out.global.i18n.t("btnCancel")}</button>
+        </div>
+      </footer>
+    </div>
+    <if(out.global.extraJS)>
+      <script type="text/javascript">$!{out.global.extraJS}</script>
+    </if>
+  </body>
+</html>
