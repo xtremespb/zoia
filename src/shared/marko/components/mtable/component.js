@@ -158,8 +158,7 @@ module.exports = class {
     }
 
     setCheckboxes(e) {
-        const checked = e.target.checked || false;
-        this.setChecked(checked);
+        this.setChecked(e.target.checked);
         this.anyCheckboxCheck();
         this.forceUpdate();
     }

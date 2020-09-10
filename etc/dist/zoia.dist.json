@@ -92,6 +92,7 @@
     },
     "routes": {
         "download": "/zoia/core/download",
+        "imagesBrowser": "/zoia/core/images",
         "login": "/users/login"
     },
     "telegram": {

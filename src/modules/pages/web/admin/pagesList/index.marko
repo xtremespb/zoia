@@ -88,7 +88,7 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
           tooltip: false
         }
       ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="title" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
-        title: "path",
+        title: "title",
         source: {
           method: "post",
           url: "/api/pages/edit/delete",

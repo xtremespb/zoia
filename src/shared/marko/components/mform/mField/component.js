@@ -156,10 +156,20 @@ module.exports = class {
     }
 
     onFieldValueChange(e) {
+        const event = Object.keys(e.target.dataset).length ? {
+            dataset: e.target.dataset,
+            value: e.target.value
+        } : Object.keys(e.target.parentNode.dataset).length ? {
+            dataset: e.target.parentNode.dataset,
+            value: e.target.parentNode.value
+        } : Object.keys(e.target.parentNode.parentNode.dataset).length ? {
+            dataset: e.target.parentNode.parentNode.dataset,
+            value: e.target.parentNode.parentNode.value
+        } : {};
         this.emit("value-change", {
             type: "input",
-            id: e.target.dataset.id,
-            value: e.target.value
+            id: event.dataset.id,
+            value: event.value
         });
     }
 
@@ -199,26 +209,26 @@ module.exports = class {
     }
 
     onFileRemove(e) {
+        const dataset = e.target ? (Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {}) : e;
         this.emit("remove-arr-item", {
-            id: e.target.dataset.id,
-            itemid: e.target.dataset.itemid
+            id: dataset.id,
+            itemid: dataset.itemid
         });
     }
 
     onButtonClick(e) {
+        const dataset = e.target ? (Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {}) : e;
         this.emit("button-click", {
-            id: e.target.dataset.id
+            id: dataset.id
         });
     }
 
     onAceToggleClick(e) {
         e.preventDefault();
-        const {
-            id
-        } = e.target.dataset;
+        const dataset = e.target ? (Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {}) : e;
         const toggle = cloneDeep(this.state.toggleAce);
-        toggle[id] = !toggle[id];
-        if (toggle[id]) {
+        toggle[dataset.id] = !toggle[dataset.id];
+        if (toggle[dataset.id]) {
             setTimeout(() => this.aceEditor.getSession().setValue(this.input.value || ""), 100);
             if (this.item.wysiwyg) {
                 setTimeout(() => this.ckEditor.setData(this.input.value || ""), 100);
@@ -238,12 +248,10 @@ module.exports = class {
 
     onAceModeChange(e) {
         e.preventDefault();
-        const {
-            id
-        } = e.target.dataset;
-        if (id !== this.state.modeAce) {
-            this.setState("modeAce", id);
-            const value = id === "ace" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value;
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        if (dataset.id !== this.state.modeAce) {
+            this.setState("modeAce", dataset.id);
+            const value = dataset.id === "ace" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value;
             setTimeout(() => this.aceEditor.getSession().setValue(value || ""), 10);
             setTimeout(() => this.ckEditor.setData(this.input.value || ""), 10);
         }

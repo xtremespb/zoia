@@ -136,7 +136,8 @@ module.exports = class {
     }
 
     onRadioClick(e) {
-        this.setState("currentAnswers", [e.target.dataset.id]);
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        this.setState("currentAnswers", [dataset.id]);
     }
 
     async goPrevNext(direction) {
