@@ -88,7 +88,8 @@
         "registry": "registry"
     },
     "directories": {
-        "files": "build/files"
+        "files": "build/files",
+        "images": "build/public/images"
     },
     "routes": {
         "download": "/zoia/core/download",

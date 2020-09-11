@@ -4,5 +4,6 @@
     "btnCancel": "Cancel",
     "refresh": "Refresh",
     "selectAll": "Select All",
-    "selectNone": "Select None"
+    "selectNone": "Select None",
+    "couldNotLoadDataFromServer": "Could not load data from server"
 }

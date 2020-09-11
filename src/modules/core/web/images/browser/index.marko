@@ -1,5 +1,59 @@
-style.scss {
-  @import "./browser.scss";
-}
-
-<div>OK</div>
+<header class="z3-cr-images-header pt-6">
+  <div class="columns is-mobile is-multiline mb-0 z3-ap-f-toolbar-wrap">
+    <div class="column is-narrow">
+      <div class="field has-addons">
+        <p class="control">
+          <button class="button tooltip" data-tooltip=out.global.i18n.t("refresh")>
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-reload"/>
+            </span>
+          </button>
+        </p>
+      </div>
+    </div>
+    <div class="column is-narrow">
+      <div class="field has-addons">
+        <p class="control">
+          <button class="button tooltip" data-tooltip=out.global.i18n.t("selectAll")>
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-checkbox-marked-outline"/>
+            </span>
+          </button>
+        </p>
+        <p class="control">
+          <button class="button tooltip" data-tooltip=out.global.i18n.t("selectNone")>
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-checkbox-blank-outline"/>
+            </span>
+          </button>
+        </p>
+      </div>
+    </div>
+  </div>
+  <if(state.error)>
+    <div class="notification is-danger">
+      <button class="delete" on-click("onErrorDeleteClick")/>
+      ${state.error}
+    </div>
+  </if>
+</header>
+<section class="z3-cr-images-content pt-3">
+  <if(state.files && state.files.length)>
+    <div class="columns is-multiline is-mobile z3-cr-images-files-wrap" on-click("onBrowserItemsClick")>
+      <for|file| of=state.files>
+        <browserItem file=file selected=state.selected/>
+      </for>
+    </div>
+  </if>
+</section>
+<footer class="footer z3-cr-images-footer pb-3 pt-3 mt-3">
+  <div class="buttons">
+    <button class="button is-primary">${out.global.i18n.t("btnSelect")}</button>
+    <button class="button">${out.global.i18n.t("btnCancel")}</button>
+  </div>
+</footer>
+<if(state.loading)>
+  <div class="z3-cr-images-loading">
+    <span class="button is-white is-loading is-large z3-cr-images-loading-spinner">&nbsp;</span>
+  </div>
+</if>
