@@ -1,0 +1,46 @@
+<div class=`z3-ap-noselect modal${state.active ? " is-active" : ""}`>
+  <div class="modal-background" on-click("onCloseClick")/>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">${out.global.i18n.t("uploadTitle")}</p>
+      <button class="delete" aria-label="close" on-click("onCloseClick")/>
+    </header>
+    <section class="modal-card-body">
+      <if(state.progress)>
+        <progress class="progress" value=state.percentCompleted max="100">${state.percentCompleted}%</progress>
+      </if>
+      <else>
+        <if(state.error)>
+          <div class="notification is-danger">
+            <button class="delete" on-click("onErrorDeleteClick")/>
+            ${state.error}
+          </div>
+        </if>
+        <div class=`z3-cr-images-upload-area${state.dropAreaHighlight ? " has-background-light" : ""}` key="z3_cr_images_upload_area">
+          <div class="file">
+            <input class="file-input" type="file" multiple key="z3_cr_images_upload_files" on-change("onFileInputChange")/>
+            <span>${out.global.i18n.t("dragOrClickToUpload")}</span>
+          </div>
+        </div>
+        <if(state.files.length)>
+          <div class="mt-3">
+            <for|file, i| of=state.files>
+              <div class=`${file.error ? "has-text-danger" : ""}`>
+                ${file.name} (${file.size})
+                <a class="icon" href="" data-id=i on-click("onFileRemoveClick")>
+                  <i class="mdi mdi-18px mdi-close"/>
+                </a>
+              </div>
+            </for>
+          </div>
+        </if>
+      </else>
+    </section>
+    <footer class="modal-card-foot">
+      <button class=`button is-primary${state.progress ? " is-loading" : ""}` on-click("onConfirmClick")>${out.global.i18n.t("btnUpload")}</button>
+      <if(!state.progress)>
+        <button class="button" on-click("onCloseClick")>${out.global.i18n.t("btnCancel")}</button>
+      </if>
+    </footer>
+  </div>
+</div>

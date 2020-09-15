@@ -1,4 +1,6 @@
-<div class=`z3-cr-images-item${input.selected === input.file.name ? " z3-cr-images-item-selected" : ""}` data-file=input.file.name>
+<div class=`z3-cr-images-item${input.selected.indexOf(input.file.name) > -1 ? " z3-cr-images-item-selected" : ""}` data-file=input.file.name on-longtap("onDoubleClick") on-dblclick("onDoubleClick")>
   <div class=`z3-cr-images-item-img ${input.file.dir ? "z3-cr-images-item-img-dir" : "z3-cr-images-item-img-pic"}`/>
-  <div class=`z3-cr-images-item-text${input.selected === input.file.name ? " z3-cr-images-item-text-selected" : ""}`>${input.file.name}</div>
+  <div class=`z3-cr-images-item-text${input.selected.indexOf(input.file.name) > -1 ? " z3-cr-images-item-text-selected" : ""}`>
+    <div class="z3-cr-images-item-text-label">${input.file.name}</div>
+  </div>
 </div>

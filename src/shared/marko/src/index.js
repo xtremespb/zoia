@@ -153,7 +153,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
         // Register FormBody and Multipart
         fastify.register(fastifyFormbody);
         fastify.register(fastifyMultipart, {
-            addToBody: true
+            attachFieldsToBody: true,
         });
         // Register URL Data Processor
         fastify.register(fastifyURLData);

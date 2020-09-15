@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs-extra";
+import Jimp from "jimp";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
 
@@ -7,8 +8,8 @@ export default () => ({
     async handler(req, rep) {
         try {
             const currentDirValue = await req.body.currentDir.value;
-            const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
-            const currentDir = currentDirValue ? path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}/${currentDirValue}`).replace(/\\/gm, "/") : root;
+            const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}`).replace(/\\/gm, "/");
+            const currentDir = currentDirValue ? path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}/${currentDirValue}`).replace(/\\/gm, "/") : root;
             try {
                 await fs.promises.access(currentDir);
                 const statsSrc = await fs.lstat(currentDir);
@@ -43,8 +44,33 @@ export default () => ({
                         errors.push(f);
                         return;
                     }
-                    await fs.writeFile(destFile, req.body[f][0].data);
+                    const destThumbFile = path.resolve(`${currentDir}/.tn_${f}`).replace(/\\/gm, "/");
+                    try {
+                        const thumb = await Jimp.read(fileData);
+                        if (req.zoiaModulesConfig["core"].images.sizeThumb) {
+                            await thumb.scaleToFit(req.zoiaModulesConfig["core"].images.sizeThumb, Jimp.AUTO);
+                        }
+                        if (req.zoiaModulesConfig["core"].images.qualityThumb) {
+                            await thumb.quality(req.zoiaModulesConfig["core"].images.qualityThumb);
+                        }
+                        const thumbBuffer = await thumb.getBufferAsync(Jimp.MIME_JPEG);
+                        await fs.writeFile(destThumbFile, thumbBuffer);
+                        const img = await Jimp.read(fileData);
+                        if (req.zoiaModulesConfig["core"].images.sizeFull) {
+                            await img.scaleToFit(req.zoiaModulesConfig["core"].images.sizeFull, Jimp.AUTO);
+                        }
+                        if (req.zoiaModulesConfig["core"].images.qualityFull) {
+                            await img.quality(req.zoiaModulesConfig["core"].images.qualityFull);
+                        }
+                        const imgBuffer = await img.getBufferAsync(Jimp.MIME_JPEG);
+                        await fs.writeFile(destFile, imgBuffer);
+                    } catch (e) {
+                        console.log(e);
+                        errors.push(f);
+                        return;
+                    }
                 } catch (e) {
+                    console.log(e);
                     errors.push(f);
                 }
             }));
@@ -62,6 +88,7 @@ export default () => ({
             rep.successJSON(rep, {});
             return;
         } catch (e) {
+            console.log(e);
             rep.logError(req, null, e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);

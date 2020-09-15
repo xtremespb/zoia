@@ -5,5 +5,12 @@
     "refresh": "Refresh",
     "selectAll": "Select All",
     "selectNone": "Select None",
-    "couldNotLoadDataFromServer": "Could not load data from server"
+    "couldNotLoadDataFromServer": "Could not load data from server",
+    "nonExistentDirectory": "Requested directory doesn't exist",
+    "levelUp": "Level Up",
+    "couldNotProcess": "Could not process one or more files",
+    "upload": "Upload",
+    "uploadTitle": "Upload file(s)",
+    "btnUpload": "Upload",
+    "dragOrClickToUpload": "Click here to select files or drag them onto this area"
 }

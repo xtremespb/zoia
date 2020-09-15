@@ -14,6 +14,7 @@
 
 .z3-cr-images-content {
     flex: 1 0 auto;
+    user-select: none;
 }
 
 .z3-cr-images-footer {
@@ -63,7 +64,8 @@
 }
 
 .z3-cr-images-item-selected {
-    border: 1px solid $yellow;
+    border: 1px solid $grey-lighter;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.29);
 }
 
 .z3-cr-images-item-img {
@@ -89,18 +91,55 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: $white-bis;
+}
+
+.z3-cr-images-item-text-label {
     font-size: 90%;
     padding: 3px;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
     text-overflow: ellipsis;
-    background-color: $white-bis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .z3-cr-images-files-wrap {
     margin-left: 0 !important;
-    overflow-y: auto;
-    height: calc(100vh - 200px);
+    margin-right: 0 !important;
 }
 
 .z3-cr-images-item-text-selected {
     background-color: $yellow;
+}
+
+.z3-cr-images-files-error {
+    width: 100%;
+}
+
+.z3-cr-images-header-title {
+    font-size: 220%;
+    font-weight: 200;
+    margin-bottom: 10px;
+}
+
+.z3-cr-images-upload-area {
+    background: $white;
+    border: 1px dashed $grey-lighter;
+    padding: 15px;
+    text-align: center;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.z3-cr-images-upload-area>.file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.z3-cr-images-upload-area>.file>.file-input {
+    cursor: pointer;
 }
