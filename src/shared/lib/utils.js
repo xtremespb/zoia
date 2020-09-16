@@ -96,14 +96,15 @@ export default {
         await Promise.allSettled(uploadFiles.map(async f => {
             try {
                 const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${f.id}`);
-                await fs.writeFile(filename, req.body[f.id][0].data);
+                const fileData = await req.body[f.id].toBuffer();
+                await fs.writeFile(filename, fileData);
                 await db.collection(req.zoiaConfig.collections.files).updateOne({
                     _id: f.id
                 }, {
                     $set: {
                         name: f.name,
                         mime: mime.lookup(f.name) || "application/octet-stream",
-                        size: req.body[f.id][0].data.length,
+                        size: fileData.length,
                         admin,
                         auth
                     }

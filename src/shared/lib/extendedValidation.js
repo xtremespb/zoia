@@ -13,7 +13,7 @@ export default class {
         this.parts = parts;
     }
 
-    _validateFiles(data, part = null) {
+    async _validateFiles(data, part = null) {
         // There is no body
         // We will validate serialized data
         if (!this.body) {
@@ -106,7 +106,7 @@ export default class {
             }
         });
         const errors = [];
-        Object.keys(this.schemas.files).map(i => {
+        await Promise.allSettled(Object.keys(this.schemas.files).map(async i => {
             const schema = this.schemas.files[i];
             const files = gotFiles[i] || [];
             if (schema.minAmount && files.length < schema.minAmount && ((part && !this.schemas.root.properties[i]) || (!part && this.schemas.root.properties[i]))) {
@@ -125,8 +125,8 @@ export default class {
                     message: `Amount of files is more than ${schema.maxAmount}`
                 });
             }
-            files.map(f => {
-                const file = this.body[f][0];
+            await Promise.allSettled(files.map(async f => {
+                const file = this.body[f] ? await this.body[f].toBuffer() : null;
                 if (!file) {
                     errors.push({
                         keyword: "missing",
@@ -162,8 +162,8 @@ export default class {
                         message: `File size ${file.data.length} is more than ${schema.maxSizeBytes} (${f})`
                     });
                 }
-            });
-        });
+            }));
+        }));
         return errors;
     }
 
@@ -171,13 +171,13 @@ export default class {
         this.parts = parts;
     }
 
-    validate(data) {
+    async validate(data) {
         try {
-            const formData = this.body && this.body.__form ? JSON.parse(this.body.__form) : this.body || data;
+            const formData = this.body && this.body.__form ? JSON.parse(await this.body.__form.value) : this.body || data;
             // const formData = this.body || data || JSON.parse(this.body.__form);
             let errors = [];
             if (this.schemas.part) {
-                this.parts.map(part => {
+                Promise.allSettled(this.parts.map(async part => {
                     if (formData[part]) {
                         const valid = this.ajv.validate(this.schemas.part, formData[part]);
                         if (!valid) {
@@ -186,20 +186,20 @@ export default class {
                                 part
                             }))];
                         }
-                        const fileErrors = this._validateFiles(formData[part], part);
+                        const fileErrors = await this._validateFiles(formData[part], part);
                         if (fileErrors.length) {
                             errors = [...errors, ...fileErrors];
                         }
                         delete formData[part];
                     }
-                });
+                }));
             }
             if (this.schemas.root) {
                 const valid = this.ajv.validate(this.schemas.root, formData);
                 if (!valid) {
                     errors = [...errors, ...this.ajv.errors];
                 }
-                const fileErrors = this._validateFiles(formData);
+                const fileErrors = await this._validateFiles(formData);
                 if (fileErrors.length) {
                     errors = [...errors, ...fileErrors];
                 }
@@ -218,9 +218,9 @@ export default class {
         }
     }
 
-    getData() {
+    async getData() {
         const data = {};
-        const formData = this.body && this.body.__form ? JSON.parse(this.body.__form) : this.body || {};
+        const formData = this.body && this.body.__form ? JSON.parse(await this.body.__form.value) : this.body || {};
         this.parts.map(part => {
             if (formData[part]) {
                 data[part] = {};
@@ -237,8 +237,8 @@ export default class {
         return data;
     }
 
-    getFiles() {
-        const formData = this.body && this.body.__form ? JSON.parse(this.body.__form) : null;
+    async getFiles() {
+        const formData = this.body && this.body.__form ? JSON.parse(await this.body.__form.value) : null;
         if (!formData) {
             return [];
         }

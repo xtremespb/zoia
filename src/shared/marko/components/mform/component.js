@@ -466,18 +466,18 @@ module.exports = class {
         if (this.input.formType === "formData") {
             uploadData = new FormData();
             const serializedFlat = this.flatten(data);
-            Object.keys(serializedFlat).map(i => {
-                if (serializedFlat[i] && serializedFlat[i] instanceof File) {
-                    uploadData.append(serializedFlat[i].zuid, serializedFlat[i]);
-                }
-            });
-            uploadData.append("__form", JSON.stringify(this.filterSerialized(data)));
             if (this.input.save.extras) {
                 Object.keys(this.input.save.extras).map(e => uploadData.append(e, this.input.save.extras[e]));
             }
             if (this.captchaSecret) {
                 uploadData.append("captchaSecret", this.captchaSecret);
             }
+            uploadData.append("__form", JSON.stringify(this.filterSerialized(data)));
+            Object.keys(serializedFlat).map(i => {
+                if (serializedFlat[i] && serializedFlat[i] instanceof File) {
+                    uploadData.append(serializedFlat[i].zuid, serializedFlat[i]);
+                }
+            });
         } else {
             uploadData = this.filterSerialized(data);
             if (this.input.save.extras) {
@@ -506,6 +506,8 @@ module.exports = class {
                 const errorKeyword = e.response.data.error.errorKeyword || (e.response.data.error.errorData && e.response.data.error.errorData.length && e.response.data.error.errorData[0] && e.response.data.error.errorData[0].keyword) ? e.response.data.error.errorKeyword ? e.response.data.error.errorKeyword : e.response.data.error.errorData[0].keyword : null;
                 if (errorKeyword) {
                     this.setState("error", this.i18n.t(`mFormErr.${errorKeyword || "general"}`));
+                } else {
+                    this.setState("error", this.i18n.t(`mFormErr.server`));
                 }
                 if (e.response.data.error.errorData) {
                     this.visualizeErrors(e.response.data.error.errorData, false);
@@ -513,6 +515,7 @@ module.exports = class {
             } else {
                 this.setState("error", this.i18n.t(`mFormErr.server`));
             }
+            this.getEl(`${this.input.id}_mForm_Wrap`).scrollIntoView();
         }
     }
 

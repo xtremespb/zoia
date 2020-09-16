@@ -25,7 +25,7 @@ style.scss {
     </div>
   </if>
   <if(state.error)>
-    <div class="notification is-danger">${state.error}</div>
+    <div class="notification is-danger" key=`${input.id}_mForm_Error`>${state.error}</div>
   </if>
   <form on-submit("onFormSubmit") key=`${input.id}_mForm_Wrap`>
     <fieldset disabled=state.disabled class=`z3-mf-fields-wrap z3-mf-noselect${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-fields-border" : ""}`>
