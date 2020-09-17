@@ -96,7 +96,6 @@ export default {
         await Promise.allSettled(uploadFiles.map(async f => {
             try {
                 const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${f.id}`);
-                console.log(`${formData.files[f.id].filePath} --> ${filename}`);
                 await fs.move(formData.files[f.id].filePath, filename);
                 await db.collection(req.zoiaConfig.collections.files).updateOne({
                     _id: f.id
@@ -112,7 +111,6 @@ export default {
                     upsert: true
                 });
             } catch (e) {
-                console.log(e);
                 uploadError = true;
             }
         }));
