@@ -2,8 +2,8 @@ import Ajv from "ajv";
 import cloneDeep from "lodash/cloneDeep";
 
 export default class {
-    constructor(body, root = {}, part = {}, files = {}, parts = []) {
-        this.body = body;
+    constructor(data, root = {}, part = {}, files = {}, parts = []) {
+        this.data = data;
         this.ajv = new Ajv();
         this.schemas = {
             root: parts.length === 1 && parts[0] === "__default" ? null : root,
@@ -16,7 +16,7 @@ export default class {
     async _validateFiles(data, part = null) {
         // There is no body
         // We will validate serialized data
-        if (!this.body) {
+        if (!this.data) {
             const errors = [];
             Object.keys(this.schemas.files).map(f => {
                 // If it's shared and there is no "part" defined, don't check
@@ -106,7 +106,7 @@ export default class {
             }
         });
         const errors = [];
-        await Promise.allSettled(Object.keys(this.schemas.files).map(async i => {
+        Object.keys(this.schemas.files).map(i => {
             const schema = this.schemas.files[i];
             const files = gotFiles[i] || [];
             if (schema.minAmount && files.length < schema.minAmount && ((part && !this.schemas.root.properties[i]) || (!part && this.schemas.root.properties[i]))) {
@@ -125,8 +125,8 @@ export default class {
                     message: `Amount of files is more than ${schema.maxAmount}`
                 });
             }
-            await Promise.allSettled(files.map(async f => {
-                const file = this.body[f] ? await this.body[f].toBuffer() : null;
+            files.map(async f => {
+                const file = this.data.files[f];
                 if (!file) {
                     errors.push({
                         keyword: "missing",
@@ -136,7 +136,7 @@ export default class {
                     });
                     return;
                 }
-                if (schema.allowedMimeTypes && Array.isArray(schema.allowedMimeTypes) && schema.allowedMimeTypes.indexOf(file.mimetype) === -1) {
+                if (schema.allowedMimeTypes && Array.isArray(schema.allowedMimeTypes) && schema.allowedMimeTypes.indexOf(file.mimeType) === -1) {
                     errors.push({
                         keyword: "allowedMimeTypes",
                         dataPath: `.${i}`,
@@ -145,25 +145,25 @@ export default class {
                     });
                     return;
                 }
-                if (schema.minSizeBytes && file.data.length < schema.minSizeBytes) {
+                if (schema.minSizeBytes && file.length < schema.minSizeBytes) {
                     errors.push({
                         keyword: "minSizeBytes",
                         dataPath: `.${i}`,
                         part,
-                        message: `File size ${file.data.length} is less than ${schema.minSizeBytes} (${f})`
+                        message: `File size ${file.length} is less than ${schema.minSizeBytes} (${f})`
                     });
                     return;
                 }
-                if (schema.maxSizeBytes && file.data.length > schema.maxSizeBytes) {
+                if (schema.maxSizeBytes && file.length > schema.maxSizeBytes) {
                     errors.push({
                         keyword: "maxSizeBytes",
                         dataPath: `.${i}`,
                         part,
-                        message: `File size ${file.data.length} is more than ${schema.maxSizeBytes} (${f})`
+                        message: `File size ${file.length} is more than ${schema.maxSizeBytes} (${f})`
                     });
                 }
-            }));
-        }));
+            });
+        });
         return errors;
     }
 
@@ -173,7 +173,7 @@ export default class {
 
     async validate(data) {
         try {
-            const formData = this.body && this.body.__form ? JSON.parse(await this.body.__form.value) : this.body || data;
+            const formData = this.data && this.data.fields && this.data.fields.__form ? JSON.parse(this.data.fields.__form) : this.data || data;
             // const formData = this.body || data || JSON.parse(this.body.__form);
             let errors = [];
             if (this.schemas.part) {
@@ -220,7 +220,7 @@ export default class {
 
     async getData() {
         const data = {};
-        const formData = this.body && this.body.__form ? JSON.parse(await this.body.__form.value) : this.body || {};
+        const formData = this.data && this.data.fields && this.data.fields.__form ? JSON.parse(this.data.fields.__form) : this.data || {};
         this.parts.map(part => {
             if (formData[part]) {
                 data[part] = {};
@@ -238,7 +238,7 @@ export default class {
     }
 
     async getFiles() {
-        const formData = this.body && this.body.__form ? JSON.parse(await this.body.__form.value) : null;
+        const formData = this.data && this.data.fields && this.data.fields.__form ? JSON.parse(this.data.fields.__form) : null;
         if (!formData) {
             return [];
         }
@@ -290,8 +290,8 @@ export default class {
                             (item || []).map(ai => {
                                 if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
                                     delete ai.upload;
-                                    if (this.body && this.body[ai.id] && this.body[ai.id][0] && this.body[ai.id][0].data) {
-                                        ai.size = this.body[ai.id][0].data.length;
+                                    if (this.data && this.data.files && this.data.files[ai.id]) {
+                                        ai.size = this.data.files[ai.id].size;
                                     }
                                 }
                             });
@@ -307,8 +307,8 @@ export default class {
                     (item || []).map(ai => {
                         if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
                             delete ai.upload;
-                            if (this.body && this.body[ai.id] && this.body[ai.id][0] && this.body[ai.id][0].data) {
-                                ai.size = this.body[ai.id][0].data.length;
+                            if (this.data && this.data.files && this.data.files[ai.id]) {
+                                ai.size = this.data.files[ai.id].size;
                             }
                         }
                     });

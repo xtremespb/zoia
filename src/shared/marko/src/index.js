@@ -25,6 +25,7 @@ import notFoundErrorHandler from "./notFoundErrorHandler";
 import response from "../../lib/response";
 import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
+import multipart from "../../lib/multipart";
 import fastifyRateLimit from "../../lib/rateLimit";
 
 (async () => {
@@ -141,6 +142,7 @@ import fastifyRateLimit from "../../lib/rateLimit";
         fastify.decorateRequest("zoiaModulesConfig", modulesConfig);
         fastify.decorate("ExtendedValidation", extendedValidation);
         fastify.decorateRequest("ExtendedValidation", extendedValidation);
+        fastify.decorateRequest("Multipart", multipart);
         fastify.decorate("zoiaPackageJson", packageJson);
         fastify.decorateRequest("zoiaPackageJson", packageJson);
         fastify.decorate("zoiaBuildJson", buildJson);

@@ -1,7 +1,6 @@
 import {
     ObjectId
 } from "mongodb";
-import sendToWormhole from "stream-wormhole";
 import minify from "@node-minify/core";
 import csso from "@node-minify/csso";
 import terser from "@node-minify/terser";
@@ -20,22 +19,12 @@ export default () => ({
             rep.unauthorizedError(rep);
             return;
         }
-        console.log("WE ARE IN!");
-        const data = req.files();
-        console.log(data);
-        // eslint-disable-next-line no-restricted-syntax
-        for await (const part of data) {
-            if (part.file) {
-                part.toBuffer();
-                await sendToWormhole(part.file);
-            }
-            delete part.fields;
-        }
-        console.log("O U T !!! ==-=-=-=-=-=-=-=-=-=-=-=-==");
         // Initialize validator
-        const extendedValidation = new req.ExtendedValidation(req.body, pageEdit.root, pageEdit.part, pageEdit.files, Object.keys(req.zoiaConfig.languages));
+        const multipart = new req.Multipart(req);
+        const formData = await multipart.processRequest();
+        const extendedValidation = new req.ExtendedValidation(formData, pageEdit.root, pageEdit.part, pageEdit.files, Object.keys(req.zoiaConfig.languages));
         // Perform validation
-        const extendedValidationResult = await extendedValidation.validate();
+        const extendedValidationResult = extendedValidation.validate();
         // Check if there are any validation errors
         if (extendedValidationResult.failed) {
             rep.logError(req, extendedValidationResult.message);
@@ -43,11 +32,10 @@ export default () => ({
             return;
         }
         // Get ID from body
-        const bodyId = req.body.id ? await req.body.id.value : null;
-        const id = bodyId && typeof bodyId === "string" && bodyId.match(/^[a-f0-9]{24}$/) ? bodyId : undefined;
+        const id = formData.fields.id && typeof formData.fields.id === "string" && formData.fields.id.match(/^[a-f0-9]{24}$/) ? formData.fields.id : undefined;
         try {
             // Get data from form body
-            const dataRaw = await extendedValidation.getData();
+            const dataRaw = extendedValidation.getData();
             const data = extendedValidation.filterDataFiles(dataRaw);
             // Get files from body
             const uploadFiles = await extendedValidation.getFiles();

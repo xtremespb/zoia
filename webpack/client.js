@@ -103,5 +103,9 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
     ],
     performance: {
         hints: false
+    },
+    node: {
+        fs: "empty",
+        "fs-extra": "empty"
     }
 });
