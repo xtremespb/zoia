@@ -38,7 +38,7 @@ export default () => ({
             const dataRaw = extendedValidation.getData();
             const data = extendedValidation.filterDataFiles(dataRaw);
             // Get files from body
-            const uploadFiles = await extendedValidation.getFiles();
+            const uploadFiles = extendedValidation.getFiles();
             // Delete files which are removed
             if (id) {
                 const dbItem = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).findOne({
@@ -47,7 +47,7 @@ export default () => ({
                 await utils.cleanRemovedFiles(req, this.mongo.db, extendedValidation, dbItem, data);
             }
             // Upload files
-            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles))) {
+            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles, formData))) {
                 return;
             }
             // Process case and trim

@@ -218,7 +218,7 @@ export default class {
         }
     }
 
-    async getData() {
+    getData() {
         const data = {};
         const formData = this.data && this.data.fields && this.data.fields.__form ? JSON.parse(this.data.fields.__form) : this.data || {};
         this.parts.map(part => {
@@ -237,7 +237,7 @@ export default class {
         return data;
     }
 
-    async getFiles() {
+    getFiles() {
         const formData = this.data && this.data.fields && this.data.fields.__form ? JSON.parse(this.data.fields.__form) : null;
         if (!formData) {
             return [];

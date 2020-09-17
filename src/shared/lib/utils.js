@@ -77,7 +77,7 @@ export default {
             }));
         }
     },
-    async saveFiles(req, rep, db, uploadFiles, auth = false, admin = false) {
+    async saveFiles(req, rep, db, uploadFiles, formData, auth = false, admin = false) {
         const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
             $or: uploadFiles.map(f => ({
                 _id: f.id
@@ -96,15 +96,15 @@ export default {
         await Promise.allSettled(uploadFiles.map(async f => {
             try {
                 const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${f.id}`);
-                const fileData = await req.body[f.id].toBuffer();
-                await fs.writeFile(filename, fileData);
+                console.log(`${formData.files[f.id].filePath} --> ${filename}`);
+                await fs.move(formData.files[f.id].filePath, filename);
                 await db.collection(req.zoiaConfig.collections.files).updateOne({
                     _id: f.id
                 }, {
                     $set: {
                         name: f.name,
                         mime: mime.lookup(f.name) || "application/octet-stream",
-                        size: fileData.length,
+                        size: formData.files[f.id].size,
                         admin,
                         auth
                     }
@@ -112,6 +112,7 @@ export default {
                     upsert: true
                 });
             } catch (e) {
+                console.log(e);
                 uploadError = true;
             }
         }));

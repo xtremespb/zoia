@@ -25,3 +25,4 @@ typings/
 /build/scripts
 /etc/*.json
 /logs
+/tmp
