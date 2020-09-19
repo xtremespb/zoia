@@ -20,8 +20,9 @@ export default () => ({
             return;
         }
         // Initialize validator
-        const multipart = new req.Multipart(req);
-        const formData = await multipart.processRequest();
+        // const multipart = new req.Multipart(req);
+        // const formData = await multipart.processRequest();
+        const formData = await req.processMultipart();
         const extendedValidation = new req.ExtendedValidation(formData, pageEdit.root, pageEdit.part, pageEdit.files, Object.keys(req.zoiaConfig.languages));
         // Perform validation
         const extendedValidationResult = extendedValidation.validate();
