@@ -49,8 +49,10 @@ export default () => ({
             }
             // Upload files
             if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles, formData))) {
+                await req.removeMultipartTempFiles(formData.files);
                 return;
             }
+            await req.removeMultipartTempFiles(formData.files);
             // Process case and trim
             data.filename = data.filename && typeof data.filename === "string" ? data.filename.trim().toLowerCase() : "";
             // Compute paths

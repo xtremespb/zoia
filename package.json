@@ -35,6 +35,7 @@
         "command-line-args": "^5.1.1",
         "crypto-js": "^4.0.0",
         "cryptr": "^6.0.2",
+        "deepmerge": "^4.2.2",
         "extract-zip": "^2.0.1",
         "fastify": "^3.4.1",
         "fastify-cookie": "^4.1.0",

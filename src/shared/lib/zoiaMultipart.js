@@ -40,21 +40,32 @@ const fastifyMultipart = (fastify, options, done) => {
     function processMultipartRequest() {
         const request = this.raw;
         return new Promise((resolve, reject) => {
-            const fields = {};
-            const files = {};
+            const multipartFields = {};
+            const multipartFiles = {};
             let filesCount = 0;
             let filesProcessed = 0;
+            // Get Busboy instance
             const busboy = getBusboyInstance({
                 headers: request.headers
             });
-            busboy.on("file", async (fieldname, file, filename, encoding, mimeType) => {
+            // doResolveFiles
+            const doResolveFiles = async () => {
+                if (filesProcessed === filesCount) {
+                    resolve({
+                        fields: multipartFields,
+                        files: multipartFiles
+                    });
+                }
+            }
+            // onFile Handler
+            const onFile = async (fieldname, file, filename, encoding, mimeType) => {
                 filesCount += 1;
                 const tempName = uuid();
                 try {
                     const filePath = fastify.zoiaConfig.directories.tmp ? path.join("..", "..", fastify.zoiaConfig.directories.tmp, tempName) : path.join(os.tmpdir(), tempName);
                     await saveFile(file, filePath);
                     const fileStat = await fs.stat(filePath);
-                    files[fieldname] = {
+                    multipartFiles[fieldname] = {
                         filePath,
                         filename,
                         tempName,
@@ -63,39 +74,60 @@ const fastifyMultipart = (fastify, options, done) => {
                         size: fileStat.size
                     };
                     filesProcessed += 1;
-                    if (filesProcessed === filesCount) {
-                        resolve({
-                            fields,
-                            files
-                        });
-                    }
+                    await doResolveFiles();
                 } catch (e) {
                     filesCount -= 1;
-                    if (filesProcessed === filesCount) {
-                        resolve({
-                            fields,
-                            files
-                        });
-                    }
+                    await doResolveFiles();
                 }
-            });
-            busboy.on("field", (fieldname, val) => { // , fieldnameTruncated, valTruncated, encoding, mimetype
-                fields[fieldname] = val;
-            });
-            busboy.on("error", e => reject(e));
-            busboy.on("finish", () => {
+            };
+            // onField Handler
+            const onField = (fieldname, val) => { // , fieldnameTruncated, valTruncated, encoding, mimetype
+                multipartFields[fieldname] = val;
+            };
+            // onError Handler
+            const onError = e => reject(e);
+            // Request close handler
+            const cleanup = async () => {
+                request.removeListener("close", cleanup);
+                busboy.removeListener("field", onField);
+                busboy.removeListener("file", onFile);
+                busboy.removeListener("close", cleanup);
+            };
+            // onFinish Handler
+            const onFinish = () => {
+                cleanup();
                 if (!filesCount) {
                     resolve({
-                        fields,
-                        files
+                        fields: multipartFields,
+                        files: multipartFiles
                     });
                 }
-            });
+            };
+            busboy.on("file", onFile);
+            busboy.on("field", onField);
+            busboy.on("error", onError);
+            busboy.on("finish", onFinish);
+            busboy.on("close", cleanup);
+            request.on("close", cleanup);
             request.pipe(busboy);
         });
     }
+    // Remove temporary files
+    const removeTemporaryFiles = async (multipartFiles = {}) => {
+        await Promise.allSettled(Object.keys(multipartFiles).map(async f => {
+            const file = multipartFiles[f];
+            try {
+                await fs.unlink(file.filePath);
+            } catch {
+                // Ignore
+            }
+        }));
+    };
+    // Add hanlders
     fastify.addContentTypeParser("multipart", setMultipart);
     fastify.decorateRequest("processMultipart", processMultipartRequest);
+    fastify.decorateRequest("removeMultipartTempFiles", removeTemporaryFiles);
+    // fastify.decorateRequest("cleanMultipartFiles", cleanMultipartFiles);
     done();
 };
 
