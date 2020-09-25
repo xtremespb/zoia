@@ -65,9 +65,9 @@
 </header>
 <section class="z3-cr-images-content pt-3">
   <if(state.files && state.files.length)>
-    <div class="columns is-multiline is-mobile z3-cr-images-files-wrap" on-click("onBrowserItemsClick") key="z3_cr_images_files_wrap">
+    <div class="columns is-multiline is-mobile z3-cr-images-files-wrap" on-click("onBrowserItemsClick") on-contextmenu("onContextMenu") key="z3_cr_images_files_wrap">
       <for|file| of=state.files>
-        <browserItem file=file selected=state.selected on-chdir("onChDir")/>
+        <browserItem file=file dir=state.dir selected=state.selected on-chdir("onChDir")/>
       </for>
     </div>
   </if>
@@ -84,3 +84,6 @@
   </div>
 </if>
 <uploadModal key="z3_cr_images_uploadModal" on-upload-success("onUploadSuccess") on-upload-error("onUploadError")/>
+<fileMenu key="z3_cr_images_fileMenu" on-item-click("onMenuItemClick")/>
+<deleteModal key="z3_cr_images_deleteModal" on-delete-confirm("onDeleteConfirm")/>
+<inputModal key="z3_cr_images_inputModal" on-input-confirm("onInputConfirm")/>

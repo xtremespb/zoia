@@ -48,15 +48,15 @@ const fastifyMultipart = (fastify, options, done) => {
             const busboy = getBusboyInstance({
                 headers: request.headers
             });
-            // doResolveFiles
-            const doResolveFiles = async () => {
+            // Resolve Files
+            const resolveFiles = async () => {
                 if (filesProcessed === filesCount) {
                     resolve({
                         fields: multipartFields,
                         files: multipartFiles
                     });
                 }
-            }
+            };
             // onFile Handler
             const onFile = async (fieldname, file, filename, encoding, mimeType) => {
                 filesCount += 1;
@@ -74,10 +74,10 @@ const fastifyMultipart = (fastify, options, done) => {
                         size: fileStat.size
                     };
                     filesProcessed += 1;
-                    await doResolveFiles();
+                    await resolveFiles();
                 } catch (e) {
                     filesCount -= 1;
-                    await doResolveFiles();
+                    await resolveFiles();
                 }
             };
             // onField Handler

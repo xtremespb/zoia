@@ -12,5 +12,12 @@
     "upload": "Upload",
     "uploadTitle": "Upload file(s)",
     "btnUpload": "Upload",
-    "dragOrClickToUpload": "Click here to select files or drag them onto this area"
+    "dragOrClickToUpload": "Click here to select files or drag them onto this area",
+    "chdir": "Change Directory",
+    "couldNotUpload": "Could not upload a file",
+    "rename": "Rename",
+    "cut": "Cut",
+    "copy": "Copy",
+    "delete": "Delete",
+    "btnConfirm": "Confirm"
 }

@@ -5,7 +5,6 @@ import fastifyURLData from "fastify-url-data";
 import fastifyCORS from "fastify-cors";
 import fastifyJWT from "fastify-jwt";
 import fastifyFormbody from "fastify-formbody";
-// import fastifyMultipart from "fastify-multipart";
 import fastifyCookie from "fastify-cookie";
 import fastifyStatic from "fastify-static";
 import Pino from "pino";
@@ -26,7 +25,6 @@ import response from "../../lib/response";
 import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
 import zoiaMultipart from "../../lib/zoiaMultipart";
-import multipart from "../../lib/multipart";
 import fastifyRateLimit from "../../lib/rateLimit";
 
 (async () => {
@@ -143,7 +141,6 @@ import fastifyRateLimit from "../../lib/rateLimit";
         fastify.decorateRequest("zoiaModulesConfig", modulesConfig);
         fastify.decorate("ExtendedValidation", extendedValidation);
         fastify.decorateRequest("ExtendedValidation", extendedValidation);
-        fastify.decorateRequest("Multipart", multipart);
         fastify.decorate("zoiaPackageJson", packageJson);
         fastify.decorateRequest("zoiaPackageJson", packageJson);
         fastify.decorate("zoiaBuildJson", buildJson);
@@ -155,9 +152,6 @@ import fastifyRateLimit from "../../lib/rateLimit";
         Object.keys(telegramHelpers).map(i => fastify.decorate(i, telegramHelpers[i]));
         // Register FormBody and Multipart
         fastify.register(fastifyFormbody);
-        // fastify.register(fastifyMultipart, {
-        //     attachFieldsToBody: false,
-        // });
         fastify.register(zoiaMultipart);
         // Register URL Data Processor
         fastify.register(fastifyURLData);

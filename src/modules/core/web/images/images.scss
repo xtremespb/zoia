@@ -26,6 +26,7 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
+    position: unset !important;
 }
 
 .z3-cr-images-loading {
@@ -142,4 +143,16 @@
 
 .z3-cr-images-upload-area>.file>.file-input {
     cursor: pointer;
+}
+
+.z3-cr-images-menu-inner-wrap {
+    padding: 2px !important;
+}
+
+.z3-cr-images-menu-wrap {
+    display: table;
+}
+
+.z3-cr-images-menu {
+    position: absolute;
 }

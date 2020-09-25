@@ -24,7 +24,6 @@ export default () => ({
                 return rep.code(204);
             }
             const srcFile = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${req.query.id}`).replace(/\\/gm, "/");
-            console.log(srcFile);
             try {
                 const stats = await fs.lstat(srcFile);
                 if (!stats.isFile() && !stats.isDirectory()) {

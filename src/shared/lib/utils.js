@@ -96,7 +96,7 @@ export default {
         await Promise.allSettled(uploadFiles.map(async f => {
             try {
                 const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${f.id}`);
-                await fs.copy(formData.files[f.id].filePath, filename);
+                await fs.move(formData.files[f.id].filePath, filename);
                 await db.collection(req.zoiaConfig.collections.files).updateOne({
                     _id: f.id
                 }, {

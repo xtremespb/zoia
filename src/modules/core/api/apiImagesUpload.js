@@ -7,7 +7,8 @@ import C from "../../../shared/lib/constants";
 export default () => ({
     async handler(req, rep) {
         try {
-            const currentDirValue = await req.body.currentDir.value;
+            const formData = await req.processMultipart();
+            const currentDirValue = formData.fields.currentDir;
             const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}`).replace(/\\/gm, "/");
             const currentDir = currentDirValue ? path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}/${currentDirValue}`).replace(/\\/gm, "/") : root;
             try {
@@ -33,18 +34,22 @@ export default () => ({
                 return;
             }
             // Check files
-            const filesValue = await req.body.filesList.value;
+            const filesValue = await formData.fields.filesList;
             const files = JSON.parse(filesValue);
             const errors = [];
             await Promise.allSettled(files.map(async f => {
                 try {
                     const destFile = path.resolve(`${currentDir}/${f}`).replace(/\\/gm, "/");
-                    const fileData = await req.body[f].toBuffer();
+                    const fileData = await fs.readFile(formData.files[f].filePath);
                     if (!fileData || destFile.indexOf(currentDir) !== 0) {
                         errors.push(f);
                         return;
                     }
-                    const destThumbFile = path.resolve(`${currentDir}/.tn_${f}`).replace(/\\/gm, "/");
+                    const destThumbFile = path.format({
+                        ...path.parse(path.resolve(`${currentDir}/.tn_${f}`).replace(/\\/gm, "/")),
+                        base: undefined,
+                        ext: ".jpg"
+                    });
                     try {
                         const thumb = await Jimp.read(fileData);
                         if (req.zoiaModulesConfig["core"].images.sizeThumb) {
@@ -65,15 +70,14 @@ export default () => ({
                         const imgBuffer = await img.getBufferAsync(Jimp.MIME_JPEG);
                         await fs.writeFile(destFile, imgBuffer);
                     } catch (e) {
-                        console.log(e);
                         errors.push(f);
                         return;
                     }
                 } catch (e) {
-                    console.log(e);
                     errors.push(f);
                 }
             }));
+            await req.removeMultipartTempFiles(formData.files);
             if (errors.length) {
                 rep.requestError(rep, {
                     failed: true,

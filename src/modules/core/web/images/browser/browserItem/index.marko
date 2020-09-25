@@ -1,5 +1,11 @@
 <div class=`z3-cr-images-item${input.selected.indexOf(input.file.name) > -1 ? " z3-cr-images-item-selected" : ""}` data-file=input.file.name on-longtap("onDoubleClick") on-dblclick("onDoubleClick")>
-  <div class=`z3-cr-images-item-img ${input.file.dir ? "z3-cr-images-item-img-dir" : "z3-cr-images-item-img-pic"}`/>
+  <if(input.file.hasThumb)>
+    $ const thumbFileName = `.tn_${input.file.name.substr(0, input.file.name.lastIndexOf("."))}.jpg`;
+    <div class="z3-cr-images-item-img" style=`background-image:url("/images/${input.dir.join("/")}/${thumbFileName}");background-size:cover`/>
+  </if>
+  <else>
+    <div class=`z3-cr-images-item-img ${input.file.dir ? "z3-cr-images-item-img-dir" : "z3-cr-images-item-img-pic"}`/>
+  </else>
   <div class=`z3-cr-images-item-text${input.selected.indexOf(input.file.name) > -1 ? " z3-cr-images-item-text-selected" : ""}`>
     <div class="z3-cr-images-item-text-label">${input.file.name}</div>
   </div>

@@ -6,7 +6,8 @@ import C from "../../../shared/lib/constants";
 export default () => ({
     async handler(req, rep) {
         try {
-            const currentDirValue = await req.body.currentDir.value;
+            const formData = await req.processMultipart();
+            const currentDirValue = formData.fields.currentDir;
             const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
             const currentDir = currentDirValue ? path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}/${currentDirValue}`).replace(/\\/gm, "/") : root;
             try {
@@ -32,22 +33,22 @@ export default () => ({
                 return;
             }
             // Check files
-            const filesValue = await req.body.filesList.value;
+            const filesValue = await formData.fields.filesList;
             const files = JSON.parse(filesValue);
             const errors = [];
             await Promise.allSettled(files.map(async f => {
                 try {
                     const destFile = path.resolve(`${currentDir}/${f}`).replace(/\\/gm, "/");
-                    const fileData = await req.body[f].toBuffer();
-                    if (!fileData || destFile.indexOf(currentDir) !== 0) {
+                    if (destFile.indexOf(currentDir) !== 0) {
                         errors.push(f);
                         return;
                     }
-                    await fs.writeFile(destFile, req.body[f][0].data);
+                    await fs.move(formData.files[f].filePath, destFile);
                 } catch (e) {
                     errors.push(f);
                 }
             }));
+            await req.removeMultipartTempFiles(formData.files);
             if (errors.length) {
                 rep.requestError(rep, {
                     failed: true,

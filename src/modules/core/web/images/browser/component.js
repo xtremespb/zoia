@@ -25,6 +25,9 @@ module.exports = class {
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
         this.uploadModal = this.getComponent("z3_cr_images_uploadModal");
+        this.contextMenu = this.getComponent("z3_cr_images_fileMenu");
+        this.inputModal = this.getComponent("z3_cr_images_inputModal");
+        document.addEventListener("click", () => this.contextMenu.setActive(false));
         this.loadFiles();
     }
 
@@ -56,6 +59,7 @@ module.exports = class {
     }
 
     onBrowserItemsClick(e) {
+        this.contextMenu.setActive(false);
         if (e.target.parentNode && e.target.parentNode.dataset && e.target.parentNode.dataset.file) {
             e.stopPropagation();
             let selected = [];
@@ -113,13 +117,28 @@ module.exports = class {
         }
     }
 
-    async onChDir(data) {
-        const dir = cloneDeep(this.state.dir);
-        dir.push(data.file.name);
-        if (await this.loadFiles(dir)) {
-            this.setState("selected", []);
-            this.setState("dir", dir);
+    onContextMenu(e) {
+        const fileData = e.target.parentNode && e.target.parentNode.dataset && e.target.parentNode.dataset.file ? e.target.parentNode.dataset.file : e.target.parentNode && e.target.parentNode.parentNode && e.target.parentNode.parentNode.dataset && e.target.parentNode.parentNode.dataset.file ? e.target.parentNode.parentNode.dataset.file : null;
+        if (fileData) {
+            e.stopPropagation();
+            e.preventDefault();
+            const file = this.state.files.find(i => i.name === fileData);
+            this.contextMenu.setActive(true, e.pageX, e.pageY, file, true);
+            this.setState("selected", [file.name]);
         }
+    }
+
+    async chDir(dir) {
+        const dirState = cloneDeep(this.state.dir);
+        dirState.push(dir);
+        if (await this.loadFiles(dirState)) {
+            this.setState("selected", []);
+            this.setState("dir", dirState);
+        }
+    }
+
+    async onChDir(data) {
+        await this.chDir(data.file.name);
     }
 
     onUploadSuccess() {
@@ -129,5 +148,67 @@ module.exports = class {
 
     onUploadError() {
         this.setError(this.i18n.t("couldNotUpload"));
+    }
+
+    rename(name) {
+        this.inputModal.func.setMode("rename");
+        this.inputModal.func.setTitle(this.i18n.t("rename"));
+        this.inputModal.func.setFilename(name);
+        this.inputModal.func.setActive(true);
+    }
+
+    async onDeleteConfirm() {
+        // TODO
+    }
+
+    async processRename(data) {
+        if (this.loading || data.src === data.dest) {
+            return;
+        }
+        this.state.loading = true;
+        try {
+            await axios({
+                method: "post",
+                url: "/api/core/images/rename",
+                data: {
+                    dir: this.state.dir.join("/"),
+                    src: data.src,
+                    dest: data.dest
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.state.loading = false;
+            this.setState("selected", []);
+            this.loadFiles();
+        } catch (e) {
+            this.state.loading = false;
+            let errorText = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            if (files) {
+                errorText = `${this.state.error}: ${files}`;
+            }
+            this.setError(errorText);
+        }
+    }
+
+    onInputConfirm(data) {
+        switch (data.mode) {
+        case "rename":
+            this.processRename(data);
+            break;
+        }
+    }
+
+    async onMenuItemClick(data) {
+        switch (data.cmd) {
+        case "chdir":
+            await this.chDir(data.name);
+            break;
+        case "rename":
+            await this.rename(data.name);
+            break;
+        }
     }
 };

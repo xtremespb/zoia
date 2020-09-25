@@ -58,6 +58,12 @@ export default () => ({
                     data.size = utils.formatBytes(stats.size);
                     data.mime = f.indexOf(".") > 0 ? mime.lookup(f) || "application/octet-stream" : "application/octet-stream";
                 }
+                try {
+                    await fs.promises.access(path.resolve(`${dir}/${`.tn_${f.substr(0, f.lastIndexOf("."))}.jpg`}`));
+                    data.hasThumb = true;
+                } catch {
+                    // Do nothing
+                }
                 return data;
             }))).filter(i => i && i.name !== "node_modules" && !i.name.match(/^\./)).sort(utils.sortByName).sort((a, b) => a.dir && !b.dir ? -1 : !a.dir && b.dir ? 1 : 0);
             // Send result
