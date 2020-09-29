@@ -6,6 +6,7 @@ import apiImagesRename from "./apiImagesRename";
 import apiImagesDelete from "./apiImagesDelete";
 import apiImagesPaste from "./apiImagesPaste";
 import apiImagesNewDir from "./apiImagesNewDir";
+import apiMFormImageUpload from "./apiMFormImageUpload.js";
 
 export default fastify => {
     fastify.post("/api/core/captcha", apiCaptcha());
@@ -16,4 +17,5 @@ export default fastify => {
     fastify.post("/api/core/images/delete", apiImagesDelete());
     fastify.post("/api/core/images/paste", apiImagesPaste());
     fastify.post("/api/core/images/newDir", apiImagesNewDir());
+    fastify.post("/api/core/mform/image/upload", apiMFormImageUpload());
 };

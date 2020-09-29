@@ -117,6 +117,9 @@ module.exports = class {
                     this.masked[field.id] = new InputMask(element, field.maskOptions);
                 }
             }
+            if (this.input.save) {
+                this.getComponent(`mf_cmp_${field.id}`).func.setHeaders(this.input.save.headers);
+            }
         });
         window.__zoiaCoreImagesBrowser = {
             insertImageURL: this.insertImageURL.bind(this)

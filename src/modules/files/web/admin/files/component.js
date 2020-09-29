@@ -97,11 +97,13 @@ module.exports = class {
 
     onWindowResize() {
         const tree = document.getElementById("z3_ap_f_tree");
-        if (!window.matchMedia("only screen and (max-width: 768px)").matches) {
-            const treeHeight = window.innerHeight - tree.getBoundingClientRect().top - 40;
-            tree.style.minHeight = `${treeHeight}px`;
-        } else {
-            tree.style.minHeight = "unset";
+        if (tree && tree.getBoundingClientRect()) {
+            if (!window.matchMedia("only screen and (max-width: 768px)").matches) {
+                const treeHeight = window.innerHeight - tree.getBoundingClientRect().top - 40;
+                tree.style.minHeight = `${treeHeight}px`;
+            } else {
+                tree.style.minHeight = "unset";
+            }
         }
     }
 

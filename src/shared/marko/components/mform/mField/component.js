@@ -10,6 +10,7 @@ const axios = require("axios");
 const {
     cloneDeep
 } = require("lodash");
+const CKEditorImageUploadAdapter = require("./CKEditorImageUploadAdapter");
 
 if (process.browser) {
     // require("ace-builds/webpack-resolver");
@@ -37,6 +38,7 @@ module.exports = class {
             reloadCaptcha: this.reloadCaptcha.bind(this),
             performUpdate: this.performUpdate.bind(this),
             insertImage: this.insertImage.bind(this),
+            setHeaders: this.setHeaders.bind(this),
         };
         this.beautifyOptions = {
             indent_size: "2",
@@ -129,10 +131,6 @@ module.exports = class {
                     id: this.item.id,
                     value
                 });
-                // if (this.item.wysiwyg) {
-                //     this.wysiwygNoUpdate = true;
-                //     this.ckEditor.setData(value);
-                // }
             });
             // Remove annotations, e.g.
             // "Non-space characters found without seeing a doctype first. Expected e.g. <!DOCTYPE html>."
@@ -146,6 +144,13 @@ module.exports = class {
             if (this.item.wysiwyg) {
                 this.ckEditorElement = this.getEl(`mf_ctl_ckeditor_${this.input.item.id}`);
                 this.ckEditor = await ClassicEditor.create(this.ckEditorElement);
+                this.ckEditor.plugins.get("FileRepository").createUploadAdapter = loader => {
+                    this.ckEditorImageUploadAdapter = new CKEditorImageUploadAdapter(loader, {
+                        url: "/api/core/mform/image/upload",
+                        headers: this.headers
+                    });
+                    return this.ckEditorImageUploadAdapter;
+                };
                 this.ckEditor.model.document.on("change:data", () => {
                     const value = this.ckEditor.getData();
                     this.emit("value-change", {
@@ -282,5 +287,9 @@ module.exports = class {
         const left = (window.screen.width - width) / 2;
         const top = (window.screen.height - height) / 4;
         window.open("/zoia/core/images", "", `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`);
+    }
+
+    setHeaders(headers) {
+        this.headers = headers;
     }
 };
