@@ -2,11 +2,11 @@ import path from "path";
 import fs from "fs-extra";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
-import imagesRenameData from "./data/imagesRename.json";
+import imagesNewDirData from "./data/imagesNewDir.json";
 
 export default () => ({
     schema: {
-        body: imagesRenameData.schema
+        body: imagesNewDirData.schema
     },
     attachValidation: true,
     async handler(req, rep) {
@@ -44,40 +44,23 @@ export default () => ({
             // Check files
             const errors = [];
             try {
-                const srcFile = path.resolve(`${srcDir}/${req.body.src}`).replace(/\\/gm, "/");
-                const destFile = path.resolve(`${srcDir}/${req.body.dest}`).replace(/\\/gm, "/");
+                const destFile = path.resolve(`${srcDir}/${req.body.name}`).replace(/\\/gm, "/");
                 try {
                     await fs.access(destFile, fs.F_OK);
-                    errors.push(req.body.src);
+                    errors.push(req.body.name);
                 } catch {
                     // Ignore
                 }
                 if (!errors.length) {
-                    const stats = await fs.lstat(srcFile);
-                    if (srcFile === destFile || srcFile.indexOf(srcDir) !== 0 || destFile.indexOf(srcDir) !== 0 || (!stats.isFile() && !stats.isDirectory())) {
-                        errors.push(req.body.src);
+                    if (destFile.indexOf(srcDir) !== 0) {
+                        errors.push(req.body.name);
                     }
                 }
                 if (!errors.length) {
-                    await fs.rename(srcFile, destFile);
-                    const srcThumb = path.format({
-                        ...path.parse(path.resolve(`${srcDir}/.tn_${req.body.src}`).replace(/\\/gm, "/")),
-                        base: undefined,
-                        ext: ".jpg"
-                    });
-                    const destThumb = path.format({
-                        ...path.parse(path.resolve(`${srcDir}/.tn_${req.body.dest}`).replace(/\\/gm, "/")),
-                        base: undefined,
-                        ext: ".jpg"
-                    });
-                    try {
-                        await fs.rename(srcThumb, destThumb);
-                    } catch {
-                        // Ignore
-                    }
+                    await fs.mkdir(destFile);
                 }
             } catch (e) {
-                errors.push(req.body.src);
+                errors.push(req.body.name);
             }
             if (errors.length) {
                 rep.requestError(rep, {

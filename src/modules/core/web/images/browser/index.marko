@@ -39,10 +39,48 @@
             </span>
           </button>
         </p>
+        <p class="control">
+          <button class="button tooltip" data-tooltip=out.global.i18n.t("createDir") on-click("onToolbarButtonClick") data-id="createDir" disabled=state.loading>
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-folder-plus-outline"/>
+            </span>
+          </button>
+        </p>
       </div>
     </div>
     <div class="column is-narrow">
       <div class="field has-addons">
+        <p class="control">
+          <button class="button tooltip" data-tooltip=out.global.i18n.t("copy") on-click("onToolbarButtonClick") data-id="copy" disabled=(state.loading || !state.selectedCount)>
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-content-copy"/>
+            </span>
+          </button>
+        </p>
+        <p class="control">
+          <button class="button tooltip" data-tooltip=out.global.i18n.t("cut") on-click("onToolbarButtonClick") data-id="cut" disabled=(state.loading || !state.selectedCount)>
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-content-cut"/>
+            </span>
+          </button>
+        </p>
+        <p class="control">
+          <button class="button tooltip" data-tooltip=`${state.clipboard.mode === "cut" ? out.global.i18n.t("cut") : out.global.i18n.t("copy")} → ${out.global.i18n.t("paste")}` disabled=(state.loading || !state.clipboard.filesCount || state.clipboard.src === state.dir.join("/")) on-click("onToolbarButtonClick") data-id="paste">
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-content-paste"/>
+            </span>
+            <if(state.clipboard.filesCount)>
+              <span class=`tag ${state.clipboard.mode === "copy" ? "is-info" : "is-warning"} z3-ap-f-paste-tag`>${state.clipboard.filesCount}</span>
+            </if>
+          </button>
+        </p>
+        <p class="control">
+          <button class="button tooltip" data-tooltip=out.global.i18n.t("delete") on-click("onToolbarButtonClick") data-id="delete" disabled=(state.loading || !state.selectedCount)>
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-trash-can-outline"/>
+            </span>
+          </button>
+        </p>
         <p class="control">
           <button class="button tooltip" data-tooltip=out.global.i18n.t("upload") on-click("onToolbarButtonClick") data-id="upload" disabled=state.loading>
             <span class="icon">
@@ -71,11 +109,14 @@
       </for>
     </div>
   </if>
+  <else>
+    <div>${out.global.i18n.t("noFilesInDirectory")}</div>
+  </else>
 </section>
-<footer class="footer z3-cr-images-footer pb-3 pt-3 mt-5 mb-5">
+<footer class="footer z3-cr-images-footer pb-3 pt-3 mt-5 mb-3">
   <div class="buttons">
-    <button class="button is-primary">${out.global.i18n.t("btnSelect")}</button>
-    <button class="button">${out.global.i18n.t("btnCancel")}</button>
+    <button class="button is-primary" disabled=(state.selectedCount !== 1) on-click("onSelect")>${out.global.i18n.t("btnSelect")}</button>
+    <button class="button" on-click("onCancel")>${out.global.i18n.t("btnCancel")}</button>
   </div>
 </footer>
 <if(state.loading)>
@@ -87,3 +128,4 @@
 <fileMenu key="z3_cr_images_fileMenu" on-item-click("onMenuItemClick")/>
 <deleteModal key="z3_cr_images_deleteModal" on-delete-confirm("onDeleteConfirm")/>
 <inputModal key="z3_cr_images_inputModal" on-input-confirm("onInputConfirm")/>
+<mnotify key=`core_images_mnotify`/>

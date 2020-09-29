@@ -245,6 +245,9 @@ ACE
         <li class=(state.modeAce === "ck" ? "is-active" : "")>
           <a on-click("onAceModeChange") data-id="ck">${out.global.i18n.t("mForm.ck")}</a>
         </li>
+        <li>
+          <a on-click("onImageBrowser")>${out.global.i18n.t("mForm.imageBrowser")}</a>
+        </li>
       </ul>
     </div>
   </if>
@@ -254,7 +257,7 @@ ACE
     </div>
     <if(input.item.wysiwyg)>
       <div style=(state.modeAce === "ck" ? "" : "position:absolute;left:-100000px;top:left:-100000px;")>
-        <div class="z3-mf-ckeditor" key=`mf_ctl_ckeditor_${input.item.id}` no-update/>
+        <div class="z3-mf-ckeditor" key=`mf_ctl_ckeditor_${input.item.id}` id=`mf_ctl_ckeditor_${input.item.id}` no-update/>
       </div>
     </if>
   </div>

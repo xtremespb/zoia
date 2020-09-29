@@ -19,5 +19,13 @@
     "cut": "Cut",
     "copy": "Copy",
     "delete": "Delete",
-    "btnConfirm": "Confirm"
+    "btnConfirm": "Confirm",
+    "operationSuccess": "Operation complete",
+    "deleteConfirmation": "Delete Confirmation",
+    "btnDelete": "Delete",
+    "deleteFilesText": "The following file(s) or folder(s) will be deleted and you won't be able to undo",
+    "couldNotDelete": "Could not delete one or more items",
+    "createDir": "Create Directory",
+    "paste": "Paste",
+    "noFilesInDirectory": "There are no files in the current directory"
 }

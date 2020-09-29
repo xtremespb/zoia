@@ -35,7 +35,8 @@ module.exports = class {
         this.func = {
             setFocus: this.setFocus.bind(this),
             reloadCaptcha: this.reloadCaptcha.bind(this),
-            performUpdate: this.performUpdate.bind(this)
+            performUpdate: this.performUpdate.bind(this),
+            insertImage: this.insertImage.bind(this),
         };
         this.beautifyOptions = {
             indent_size: "2",
@@ -61,6 +62,23 @@ module.exports = class {
         switch (this.item.type) {
         case "ace":
             throttle(this.updateAce.bind(this), 300)();
+            break;
+        }
+    }
+
+    insertImage(url) {
+        switch (this.item.type) {
+        case "ace":
+            if (this.state.modeAce === "ace") {
+                const imgTag = `<img src="${url}" alt=""/>`;
+                this.aceEditor.getSession().insert(this.aceEditor.getCursorPosition(), imgTag);
+            } else {
+                const viewFragment = this.ckEditor.data.processor.toView(`<img src="${url}" alt=""/>`);
+                const modelFragment = this.ckEditor.data.toModel(viewFragment);
+                this.ckEditor.model.change(writer => {
+                    writer.insert(modelFragment, this.ckEditor.model.document.selection.getFirstPosition());
+                });
+            }
             break;
         }
     }
@@ -255,5 +273,14 @@ module.exports = class {
             setTimeout(() => this.aceEditor.getSession().setValue(value || ""), 10);
             setTimeout(() => this.ckEditor.setData(this.input.value || ""), 10);
         }
+    }
+
+    onImageBrowser(e) {
+        e.preventDefault();
+        const width = window.screen.width > 768 ? window.screen.width / 2 : window.screen.width;
+        const height = window.screen.width > 768 ? window.screen.height / 2 : window.screen.height;
+        const left = (window.screen.width - width) / 2;
+        const top = (window.screen.height - height) / 4;
+        window.open("/zoia/core/images", "", `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`);
     }
 };

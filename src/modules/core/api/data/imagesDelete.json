@@ -1,0 +1,25 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "dir": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 255
+            },
+            "files": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                },
+                "minItems": 1,
+                "uniqueItems": true
+            }
+        },
+        "required": ["dir", "files"]
+    },
+    "projection": {},
+    "search": []
+}

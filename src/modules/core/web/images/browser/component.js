@@ -10,6 +10,8 @@ module.exports = class {
             loading: false,
             dir: [],
             error: null,
+            clipboard: {},
+            selectedCount: 0,
         };
         this.state = state;
         this.cookieOptions = out.global.cookieOptions;
@@ -27,6 +29,8 @@ module.exports = class {
         this.uploadModal = this.getComponent("z3_cr_images_uploadModal");
         this.contextMenu = this.getComponent("z3_cr_images_fileMenu");
         this.inputModal = this.getComponent("z3_cr_images_inputModal");
+        this.deleteModal = this.getComponent("z3_cr_images_deleteModal");
+        this.notify = this.getComponent("core_images_mnotify");
         document.addEventListener("click", () => this.contextMenu.setActive(false));
         this.loadFiles();
     }
@@ -82,7 +86,53 @@ module.exports = class {
             } else {
                 selected = [file];
             }
+            this.state.selectedCount = selected.length;
             this.setState("selected", selected);
+        }
+    }
+
+    initClipboardData(mode) {
+        return {
+            src: this.state.dir.join("/"),
+            mode,
+            files: this.state.selected,
+            filesCount: this.state.selected.length
+        };
+    }
+
+    async onPasteClick() {
+        if (this.loading || !this.state.clipboard.filesCount || this.state.clipboard.src === this.state.dir.join("/")) {
+            return;
+        }
+        this.state.loading = true;
+        try {
+            await axios({
+                method: "post",
+                url: "/api/core/images/paste",
+                data: {
+                    srcDir: this.state.clipboard.src,
+                    destDir: this.state.dir.join("/"),
+                    files: this.state.clipboard.files,
+                    mode: this.state.clipboard.mode
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.state.loading = false;
+            this.state.clipboard = {};
+            this.state.selected = [];
+            this.state.selectedCount = 0;
+            this.notify.func.show(this.i18n.t("operationSuccess"), "is-success");
+            this.loadFiles();
+        } catch (e) {
+            this.state.loading = false;
+            let errorText = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            if (files) {
+                errorText = `${errorText}: ${files}`;
+            }
+            this.setError(errorText);
         }
     }
 
@@ -95,9 +145,11 @@ module.exports = class {
             break;
         case "selectAll":
             this.setState("selected", this.state.files.map(f => f.name));
+            this.state.selectedCount = this.state.files.length;
             break;
         case "selectNone":
             this.setState("selected", []);
+            this.state.selectedCount = 0;
             break;
         case "levelUp":
             if (this.loading || !this.state.dir.length) {
@@ -107,12 +159,30 @@ module.exports = class {
             dir.pop();
             if (await this.loadFiles(dir)) {
                 this.setState("dir", dir);
+                this.state.selected = [];
+                this.state.selectedCount = 0;
             }
             break;
         case "upload":
             this.setError(null);
             this.uploadModal.func.setDir(this.state.dir.join("/"));
             this.uploadModal.func.setActive(true);
+            break;
+        case "createDir":
+            this.createDir();
+            break;
+        case "copy":
+        case "cut":
+            if (this.loading || !this.state.selectedCount) {
+                break;
+            }
+            this.setState("clipboard", this.initClipboardData(dataset.id));
+            break;
+        case "paste":
+            this.onPasteClick();
+            break;
+        case "delete":
+            await this.delete();
             break;
         }
     }
@@ -133,6 +203,7 @@ module.exports = class {
         dirState.push(dir);
         if (await this.loadFiles(dirState)) {
             this.setState("selected", []);
+            this.setState("selectedCount", 0);
             this.setState("dir", dirState);
         }
     }
@@ -158,7 +229,35 @@ module.exports = class {
     }
 
     async onDeleteConfirm() {
-        // TODO
+        this.state.loading = true;
+        try {
+            await axios({
+                method: "post",
+                url: "/api/core/images/delete",
+                data: {
+                    dir: this.state.dir.join("/"),
+                    files: this.state.selected
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.deleteItems = null;
+            this.state.loading = false;
+            this.state.selected = [];
+            this.state.selectedCount = 0;
+            this.notify.func.show(this.i18n.t("operationSuccess"), "is-success");
+            this.loadFiles();
+        } catch (e) {
+            this.deleteItems = null;
+            this.state.loading = false;
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            let errorText = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotDelete");
+            if (files) {
+                errorText = `${errorText}: ${files}`;
+            }
+            this.setError(errorText);
+        }
     }
 
     async processRename(data) {
@@ -180,14 +279,48 @@ module.exports = class {
                 }
             });
             this.state.loading = false;
+            this.state.selectedCount = 0;
             this.setState("selected", []);
             this.loadFiles();
+            this.notify.func.show(this.i18n.t("operationSuccess"), "is-success");
         } catch (e) {
             this.state.loading = false;
             let errorText = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
             const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
             if (files) {
-                errorText = `${this.state.error}: ${files}`;
+                errorText = `${errorText}: ${files}`;
+            }
+            this.setError(errorText);
+        }
+    }
+
+    async processCreateDir(name) {
+        if (this.loading) {
+            return;
+        }
+        this.state.loading = true;
+        try {
+            await axios({
+                method: "post",
+                url: "/api/core/images/newDir",
+                data: {
+                    dir: this.state.dir.join("/"),
+                    name,
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.state.loading = false;
+            this.setState("selected", []);
+            this.loadFiles();
+            this.notify.func.show(this.i18n.t("operationSuccess"), "is-success");
+        } catch (e) {
+            this.state.loading = false;
+            let errorText = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotProcess");
+            const files = e && e.response && e.response.data && e.response.data.error && e.response.data.error.files && e.response.data.error.files.length ? e.response.data.error.files.join(", ") : null;
+            if (files) {
+                errorText = `${errorText}: ${files}`;
             }
             this.setError(errorText);
         }
@@ -198,7 +331,25 @@ module.exports = class {
         case "rename":
             this.processRename(data);
             break;
+        case "createDir":
+            this.processCreateDir(data.dest);
+            break;
         }
+    }
+
+    async delete() {
+        if (this.loading || !this.state.selected.length) {
+            return;
+        }
+        this.deleteModal.func.setFiles(this.state.selected.join(", "));
+        this.deleteModal.func.setActive(true);
+    }
+
+    createDir() {
+        this.inputModal.func.setMode("createDir");
+        this.inputModal.func.setTitle(this.i18n.t("createDir"));
+        this.inputModal.func.setFilename("");
+        this.inputModal.func.setActive(true);
     }
 
     async onMenuItemClick(data) {
@@ -209,6 +360,29 @@ module.exports = class {
         case "rename":
             await this.rename(data.name);
             break;
+        case "delete":
+            await this.delete();
+            break;
+        case "copy":
+        case "cut":
+            if (this.loading || !this.state.selectedCount) {
+                break;
+            }
+            this.setState("clipboard", this.initClipboardData(data.cmd));
+        }
+    }
+
+    onCancel() {
+        window.close();
+    }
+
+    onSelect() {
+        if (this.state.selectedCount === 1 && window.opener) {
+            const item = this.state.files.find(i => i.name === this.state.selected[0]);
+            if (item && !item.dir) {
+                window.opener.__zoiaCoreImagesBrowser.insertImageURL(`/images/${this.state.dir.join("/")}/${item.name}`.replace(/\/+/g, "/"));
+                window.close();
+            }
         }
     }
 };

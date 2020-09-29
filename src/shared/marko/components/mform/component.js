@@ -99,6 +99,15 @@ module.exports = class {
         });
     }
 
+    insertImageURL(url) {
+        this.fieldsFlat.map(f => {
+            const component = this.getComponent(`mf_cmp_${f.id}`);
+            if (component && component.func.performUpdate) {
+                component.func.insertImage(url);
+            }
+        });
+    }
+
     onMount() {
         this.autoFocus();
         this.fieldsFlat.map(field => {
@@ -109,6 +118,9 @@ module.exports = class {
                 }
             }
         });
+        window.__zoiaCoreImagesBrowser = {
+            insertImageURL: this.insertImageURL.bind(this)
+        };
     }
 
     onTabClick(e) {
@@ -526,7 +538,7 @@ module.exports = class {
     async onFormSubmit(e) {
         e ? e.preventDefault() : null;
         const serialized = this.serialize(true);
-        const validationResult = this.validate(serialized);
+        const validationResult = await this.validate(serialized);
         this.visualizeErrors(validationResult.errorData);
         if (validationResult.failed) {
             return false;
