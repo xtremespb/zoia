@@ -1,0 +1,5 @@
+{
+    "id": "backup",
+    "icon": "backup-restore",
+    "admin": "/admin/backup"
+}

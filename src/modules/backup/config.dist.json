@@ -1,0 +1,15 @@
+{
+    "collectionBackup": "backup",
+    "database": {
+        "collections": {
+            "backup": {
+                "indexesAsc": ["filename", "timestamp"],
+                "indexesDesc": ["filename", "timestamp"]
+            }
+        }
+    },
+    "routes": {
+        "admin": "/admin/backup"
+    },
+    "setup": false
+}

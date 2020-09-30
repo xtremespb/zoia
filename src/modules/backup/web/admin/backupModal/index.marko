@@ -1,0 +1,27 @@
+<div class=`z3-ap-noselect modal${state.active ? " is-active" : ""}`>
+  <div class="modal-background" on-click("onCloseClick")/>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">${out.global.i18n.t("add")}</p>
+      <button class="delete" aria-label="close" on-click("onCloseClick")/>
+    </header>
+    <section class="modal-card-body">
+      <if(state.error)>
+        <div class="notification is-danger">${state.error}</div>
+      </if>
+      <if(!state.running)>
+        <div>${out.global.i18n.t("backupProcessDesc")}</div>
+      </if>
+      <else>
+        <div>${out.global.i18n.t("backupRunning")}</div>
+        <progress class="progress is-small is-primary" max="100"/>
+      </else>
+    </section>
+    <footer class="modal-card-foot">
+      <if(!state.running)>
+        <button class=`button is-primary${state.loading ? " is-loading" : ""}` on-click("onConfirmClick")>${out.global.i18n.t("btnConfirmGeneric")}</button>
+      </if>
+      <button class="button" on-click("onCloseClick")>${out.global.i18n.t("btnCancelGeneric")}</button>
+    </footer>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+{
+    "moduleTitle": "Backup",
+    "filename": "Filename",
+    "timestamp": "Timestamp",
+    "actions": "Actions",
+    "add": "Create backup",
+    "delete": "Delete",
+    "reload": "Reload",
+    "backupProcessDesc": "The backup process will take some time. You will be able to download your backup archive when finished.",
+    "backupRunning": "Backup process is currently running..."
+}
