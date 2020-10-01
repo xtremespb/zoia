@@ -10,10 +10,10 @@ export default () => ({
             return;
         }
         try {
-            const backupState = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
+            const backupDb = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
                 _id: "backup"
             });
-            if (backupState && backupState.running) {
+            if (backupDb && backupDb.running) {
                 rep.requestError(rep, {
                     failed: true,
                     error: "Backup process is already running",
@@ -23,7 +23,7 @@ export default () => ({
                 return;
             }
             setTimeout(async () => {
-                const resultUpdate = await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne({
+                await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne({
                     _id: "backup"
                 }, {
                     $set: {
@@ -32,9 +32,19 @@ export default () => ({
                 }, {
                     upsert: true
                 });
-                if (!resultUpdate || !resultUpdate.result || !resultUpdate.result.ok) {
-                    // Hmm
-                }
+                setTimeout(async () => {
+                    await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne({
+                        _id: "backup"
+                    }, {
+                        $set: {
+                            running: false,
+                            complete: true,
+                            errorKeyword: null
+                        }
+                    }, {
+                        upsert: true
+                    });
+                }, 5000);
             }, 1);
             // Send response
             rep.successJSON(rep, {});

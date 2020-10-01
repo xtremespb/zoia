@@ -13,6 +13,9 @@ export default routeId => ({
                 return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["backup"].routes.admin);
             }
             site.setAuth(auth);
+            const backupDb = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
+                _id: "backup"
+            });
             const render = await template.stream({
                 $global: {
                     serializedGlobals: {
@@ -21,6 +24,7 @@ export default routeId => ({
                         routeId: true,
                         routeParams: true,
                         routes: true,
+                        backupDb: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
@@ -30,6 +34,7 @@ export default routeId => ({
                     routes: {
                         ...req.zoiaModulesConfig["backup"].routes,
                     },
+                    backupDb,
                     ...site.getGlobals()
                 },
                 modules: req.zoiaModules,

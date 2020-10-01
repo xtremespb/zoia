@@ -3,7 +3,9 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">${out.global.i18n.t("add")}</p>
-      <button class="delete" aria-label="close" on-click("onCloseClick")/>
+      <if(!state.running)>
+        <button class="delete" aria-label="close" on-click("onCloseClick")/>
+      </if>
     </header>
     <section class="modal-card-body">
       <if(state.error)>
@@ -21,7 +23,7 @@
       <if(!state.running)>
         <button class=`button is-primary${state.loading ? " is-loading" : ""}` on-click("onConfirmClick")>${out.global.i18n.t("btnConfirmGeneric")}</button>
       </if>
-      <button class="button" on-click("onCloseClick")>${out.global.i18n.t("btnCancelGeneric")}</button>
+      <button class="button" on-click("onCloseClick") disabled=state.running>${out.global.i18n.t("btnCancelGeneric")}</button>
     </footer>
   </div>
 </div>

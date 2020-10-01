@@ -12,79 +12,88 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
       <i class="mdi z3-ap-mdi-29px mdi-dark mdi-backup-restore"/>
     </span>&nbsp;${out.global.i18n.t("moduleTitle")}
   </h1>
-  <mtable css="table is-striped is-hoverable is-fullwidth" dataSource={
-    method: "post",
-    url: "/api/backup/list",
-    data: {},
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  } id="backup" key="backupTable" columns=[
-    {
-      id: "filename",
-      title: out.global.i18n.t("filename"),
-      css: "z3-ap-backup-list-filename",
-      sortable: true
-    },
-    {
-      id: "timestamp",
-      sortable: true,
-      css: "z3-ap-backup-list-timestamp",
-      title: out.global.i18n.t("timestamp")
-    }
-  ] actions=[
-    {
-      id: "btnEdit",
-      css: "button is-small",
-      icon: "mdi mdi-lead-pencil",
-      text: out.global.i18n.t("edit"),
-      displayText: false,
-      tooltip: false
-    },
-    {
-      id: "btnDeleteGeneric",
-      css: "button is-small is-danger",
-      icon: "mdi mdi-trash-can-outline",
-      text: out.global.i18n.t("delete"),
-      displayText: false,
-      tooltip: false
-    }
-  ] buttons=[
-    {
-      id: "btnAdd",
-      css: "button",
-      icon: "mdi mdi-plus-circle-outline",
-      text: out.global.i18n.t("add"),
-      displayText: true,
-      tooltip: false
-    },
-    {
-      id: "btnDeleteSelectedGeneric",
-      css: "button is-danger",
-      icon: "mdi mdi-trash-can-outline",
-      text: out.global.i18n.t("delete"),
-      displayText: true,
-      tooltip: false
-    },
-    {
-      id: "btnReload",
-      css: "button",
-      icon: "mdi mdi-refresh",
-      text: out.global.i18n.t("reload"),
-      displayText: true,
-      tooltip: false
-    }
-  ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="timestamp" sortDirection="desc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
-    title: "filename",
-    source: {
+  <if(state.backupDb.running)>
+    <div>${out.global.i18n.t("backupRunning")}</div>
+    <progress class="progress is-small is-primary" max="100"/>
+    <div>
+      <button class=`button is-danger${state.loading ? " is-loading" : ""}` on-click("onAbortBackup") disabled=state.loading>${out.global.i18n.t("backupAbort")}</button>
+    </div>
+  </if>
+  <else>
+    <mtable css="table is-striped is-hoverable is-fullwidth" dataSource={
       method: "post",
-      url: "/api/backup/delete",
+      url: "/api/backup/list",
       data: {},
       headers: {
         Authorization: `Bearer ${token}`
       }
-    }
-  } on-unauthorized("onUnauthorized") autoItemsPerPage=true/>
-  <mnotify key=`backupList_mnotify`/>
+    } id="backup" key="backupTable" columns=[
+      {
+        id: "filename",
+        title: out.global.i18n.t("filename"),
+        css: "z3-ap-backup-list-filename",
+        sortable: true
+      },
+      {
+        id: "timestamp",
+        sortable: true,
+        css: "z3-ap-backup-list-timestamp",
+        title: out.global.i18n.t("timestamp")
+      }
+    ] actions=[
+      {
+        id: "btnEdit",
+        css: "button is-small",
+        icon: "mdi mdi-lead-pencil",
+        text: out.global.i18n.t("edit"),
+        displayText: false,
+        tooltip: false
+      },
+      {
+        id: "btnDeleteGeneric",
+        css: "button is-small is-danger",
+        icon: "mdi mdi-trash-can-outline",
+        text: out.global.i18n.t("delete"),
+        displayText: false,
+        tooltip: false
+      }
+    ] buttons=[
+      {
+        id: "btnAdd",
+        css: "button",
+        icon: "mdi mdi-plus-circle-outline",
+        text: out.global.i18n.t("add"),
+        displayText: true,
+        tooltip: false
+      },
+      {
+        id: "btnDeleteSelectedGeneric",
+        css: "button is-danger",
+        icon: "mdi mdi-trash-can-outline",
+        text: out.global.i18n.t("delete"),
+        displayText: true,
+        tooltip: false
+      },
+      {
+        id: "btnReload",
+        css: "button",
+        icon: "mdi mdi-refresh",
+        text: out.global.i18n.t("reload"),
+        displayText: true,
+        tooltip: false
+      }
+    ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="timestamp" sortDirection="desc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
+      title: "filename",
+      source: {
+        method: "post",
+        url: "/api/backup/delete",
+        data: {},
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    } on-unauthorized("onUnauthorized") autoItemsPerPage=true/>
+  </else>
 </div>
-<backupModal key="z3_ap_backupModal"/>
+<backupModal key="z3_ap_backupModal" on-backup-finish("onBackupFinish")/>
+<mnotify key=`backupList_mnotify`/>
