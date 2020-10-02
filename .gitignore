@@ -26,3 +26,4 @@ typings/
 /etc/*.json
 /logs
 /tmp
+/backup

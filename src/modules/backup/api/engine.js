@@ -3,6 +3,7 @@ import {
 } from "uuid";
 import path from "path";
 import fs from "fs-extra";
+import archiver from "archiver";
 
 const backupData = fs.readJSONSync(path.resolve(`${__dirname}/../etc/backup.json`));
 
@@ -20,20 +21,20 @@ export default class {
         await Promise.allSettled(this.modules.map(async m => {
             this.data[m] = this.data[m] || {};
             this.data[m].db = [];
-            await fs.ensureDir(path.resolve(`${__dirname}/../../tmp/backup/${this.id}/db/${m}`));
+            await fs.ensureDir(path.resolve(`${__dirname}/../../tmp/${this.id}/db/${m}`));
             const {
                 collections
             } = this.config[m];
             await Promise.allSettled(collections.map(async c => {
                 const data = await this.db.collection(c).find({}).toArray();
-                await fs.writeJSON(`${__dirname}/../../tmp/backup/${this.id}/db/${m}/${c}.json`, data);
+                await fs.writeJSON(`${__dirname}/../../tmp/${this.id}/db/${m}/${c}.json`, data);
                 this.data[m].db.push(c);
             }));
         }));
     }
 
     async backupDirs() {
-        const dest = path.resolve(`${__dirname}/../../tmp/backup/${this.id}/dirs`);
+        const dest = path.resolve(`${__dirname}/../../tmp/${this.id}/dirs`);
         await fs.ensureDir(dest);
         await Promise.allSettled(this.modules.map(async m => {
             this.data[m] = this.data[m] || {};
@@ -61,10 +62,43 @@ export default class {
             "package-lock.json": `root/package-lock.json`,
         };
         await Promise.allSettled(dirs.map(async d => fs.ensureDir(path.resolve(`${__dirname}/../../${d}`))));
-        await Promise.allSettled(Object.keys(core).map(async f => fs.copy(path.resolve(`${__dirname}/../../${f}`), path.resolve(`${__dirname}/../../tmp/backup/${this.id}/core/${core[f]}`))));
+        await Promise.allSettled(Object.keys(core).map(async f => fs.copy(path.resolve(`${__dirname}/../../${f}`), path.resolve(`${__dirname}/../../tmp/${this.id}/core/${core[f]}`))));
     }
 
-    async pack() {
-        await fs.writeJSON(path.resolve(`${__dirname}/../../tmp/backup/${this.id}/backup.json`), this.data);
+    async saveData() {
+        await fs.writeJSON(path.resolve(`${__dirname}/../../tmp/${this.id}/backup.json`), this.data);
+    }
+
+    saveBackup() {
+        return new Promise((resolve, reject) => {
+            const destFile = path.resolve(`${__dirname}/../../backup/${this.id}.bak`);
+            const archive = archiver("zip", {
+                zlib: {
+                    level: 9
+                }
+            });
+            const output = fs.createWriteStream(destFile);
+            archive.pipe(output);
+            const dirs = ["core", "db", "dirs"];
+            dirs.map(d => archive.directory(path.resolve(`${__dirname}/../../tmp/${this.id}/${d}`), d));
+            archive.file(path.resolve(`${__dirname}/../../tmp/${this.id}/backup.json`), {
+                name: "backup.json"
+            });
+            archive.finalize();
+            output.on("close", () => {
+                resolve(this.id);
+            });
+            archive.on("error", e => {
+                reject(e);
+            });
+        });
+    }
+
+    async cleanUp() {
+        try {
+            await fs.remove(path.resolve(`${__dirname}/../../tmp/${this.id}`));
+        } catch {
+            // Ignore
+        }
     }
 }

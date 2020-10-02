@@ -23,11 +23,55 @@ export default () => ({
                 });
                 return;
             }
-            const engine = new Engine(this.mongo.db);
-            await engine.backupCollections();
-            await engine.backupDirs();
-            await engine.backupCore();
-            await engine.pack();
+            setTimeout(async () => {
+                try {
+                    await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne({
+                        _id: "backup"
+                    }, {
+                        $set: {
+                            running: true,
+                            complete: false
+                        }
+                    }, {
+                        upsert: true
+                    });
+                    const engine = new Engine(this.mongo.db);
+                    await engine.backupCollections();
+                    await engine.backupDirs();
+                    await engine.backupCore();
+                    await engine.saveData();
+                    const filename = await engine.saveBackup();
+                    await engine.cleanUp();
+                    // Insert record into backup collection
+                    await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).insertOne({
+                        filename,
+                        timestamp: new Date()
+                    });
+                    // Set queue status
+                    await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne({
+                        _id: "backup"
+                    }, {
+                        $set: {
+                            running: false,
+                            complete: true
+                        }
+                    }, {
+                        upsert: true
+                    });
+                } catch (e) {
+                    await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne({
+                        _id: "backup"
+                    }, {
+                        $set: {
+                            running: false,
+                            complete: false,
+                            errorKeyword: e.message
+                        }
+                    }, {
+                        upsert: true
+                    });
+                }
+            }, 0);
             // Send response
             rep.successJSON(rep, {});
             return;

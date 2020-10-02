@@ -29,7 +29,6 @@ module.exports = class {
 
     async checkStatus() {
         try {
-            this.state.loading = true;
             const res = await axios({
                 method: "post",
                 url: "/api/backup/status",
@@ -37,21 +36,20 @@ module.exports = class {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            this.state.loading = false;
-            this.state.backupDb.running = false;
             if (res && res.data && res.data.backup) {
                 if (res.data.backup.running) {
                     setTimeout(this.checkStatus.bind(this), 1000);
                     return;
                 }
                 if (res.data.backup.complete) {
+                    this.state.backupDb.running = false;
                     await this.onBackupFinish();
                     return;
                 }
             }
+            this.state.backupDb.running = false;
             this.state.error = res && res.data && res.data.backup && res && res.data && res.data.backup.errorKeyword ? this.i18n.t(res.data.backup.errorKeyword) : this.i18n.t("couldNotBackup");
         } catch (e) {
-            this.state.loading = false;
             const errorText = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("serverError");
             this.notify.func.show(this.i18n.t(errorText), "is-danger");
         }
