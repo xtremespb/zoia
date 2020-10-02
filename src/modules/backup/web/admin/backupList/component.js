@@ -37,7 +37,6 @@ module.exports = class {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            console.log(res.data);
             this.state.loading = false;
             this.state.backupDb.running = false;
             if (res && res.data && res.data.backup) {

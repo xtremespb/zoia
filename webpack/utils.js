@@ -55,6 +55,7 @@ const rebuildMarkoTemplates = (argv) => {
 
 const generateModulesConfig = (moduleDirs, languages, argv) => {
     const modules = [];
+    const backup = {};
     fs.ensureDirSync(path.resolve(`${__dirname}/../logs`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../etc/modules`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../build/scripts`));
@@ -78,9 +79,17 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
         if (moduleConfig.setup && fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/setup.js`))) {
             fs.copyFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/setup.js`), path.resolve(`${__dirname}/../build/scripts/${dir}.js`));
         }
+        try {
+            const backupConfig = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/backup.json`));
+            backup[dir] = backupConfig;
+        } catch {
+            // Ignore
+        }
     });
     console.log("Writing modules.json...");
     fs.writeJSONSync(`${__dirname}/../build/etc/modules.json`, modules);
+    console.log("Writing backup.json...");
+    fs.writeJSONSync(`${__dirname}/../build/etc/backup.json`, backup);
     console.log("Writing build.json...");
     fs.writeJSONSync(`${__dirname}/../build/etc/build.json`, {
         date: new Date(),
@@ -91,7 +100,7 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
 };
 
 const ensureDirectories = () => {
-    const dirs = ["tmp", "logs", "build/etc", "build/bin", "build/public", "build/files"];
+    const dirs = ["tmp", "logs", "build/etc", "build/bin", "build/public", "build/files", "backup"];
     console.log(`Ensuring directories: ${dirs.join(", ")}`);
     dirs.map(d => fs.ensureDirSync(path.resolve(`${__dirname}/../${d}`)));
 };

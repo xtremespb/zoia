@@ -26,6 +26,8 @@ module.exports = class {
 
     setActive(state) {
         this.state.error = false;
+        this.state.loading = false;
+        this.state.running = false;
         this.state.active = state;
     }
 

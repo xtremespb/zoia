@@ -1,0 +1,4 @@
+{
+    "collections": ["captcha", "files", "registry", "rateLimit", "rateBan"],
+    "dirs": ["build/files", "build/public/images"]
+}

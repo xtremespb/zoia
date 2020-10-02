@@ -1,5 +1,6 @@
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
+import Engine from "./engine";
 
 export default () => ({
     async handler(req, rep) {
@@ -22,30 +23,11 @@ export default () => ({
                 });
                 return;
             }
-            setTimeout(async () => {
-                await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne({
-                    _id: "backup"
-                }, {
-                    $set: {
-                        running: true
-                    }
-                }, {
-                    upsert: true
-                });
-                setTimeout(async () => {
-                    await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne({
-                        _id: "backup"
-                    }, {
-                        $set: {
-                            running: false,
-                            complete: true,
-                            errorKeyword: null
-                        }
-                    }, {
-                        upsert: true
-                    });
-                }, 5000);
-            }, 1);
+            const engine = new Engine(this.mongo.db);
+            await engine.backupCollections();
+            await engine.backupDirs();
+            await engine.backupCore();
+            await engine.pack();
             // Send response
             rep.successJSON(rep, {});
             return;
