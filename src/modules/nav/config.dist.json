@@ -1,0 +1,9 @@
+{
+    "database": {
+        "collections": {}
+    },
+    "routes": {
+        "admin": "/admin/nav"
+    },
+    "setup": false
+}

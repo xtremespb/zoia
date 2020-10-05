@@ -8,13 +8,14 @@ import archiver from "archiver";
 const backupData = fs.readJSONSync(path.resolve(`${__dirname}/../etc/backup.json`));
 
 export default class {
-    constructor(db) {
+    constructor(db, config) {
         this.id = uuid();
         this.db = db;
         this.config = {};
         this.modules = Object.keys(backupData);
         this.modules.map(k => this.config[k] = backupData[k]);
         this.data = {};
+        this.config = config;
     }
 
     async backupCollections() {
@@ -71,7 +72,7 @@ export default class {
 
     saveBackup() {
         return new Promise((resolve, reject) => {
-            const destFile = path.resolve(`${__dirname}/../../backup/${this.id}.bak`);
+            const destFile = path.resolve(`${__dirname}/../../${this.config.directory}/${this.id}.bak`);
             const archive = archiver("zip", {
                 zlib: {
                     level: 9

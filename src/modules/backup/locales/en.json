@@ -1,7 +1,7 @@
 {
     "moduleTitle": "Backup",
     "filename": "Filename",
-    "timestamp": "Timestamp",
+    "timestamp": "Date",
     "actions": "Actions",
     "add": "Create backup",
     "delete": "Delete",
@@ -13,5 +13,6 @@
     "backupNotStarted": "The backup process is not started yet",
     "backupAbort": "Abort Operation",
     "operationSuccess": "Operation complete",
-    "couldNotBackup": "Could not create a backup file"
+    "couldNotBackup": "Could not create a backup file",
+    "download": "Download"
 }

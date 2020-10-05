@@ -9,7 +9,9 @@
         }
     },
     "routes": {
-        "admin": "/admin/backup"
+        "admin": "/admin/backup",
+        "download": "/admin/backup/download"
     },
+    "directory": "backup",
     "setup": false
 }

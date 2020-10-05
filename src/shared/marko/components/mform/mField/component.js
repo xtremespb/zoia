@@ -24,7 +24,7 @@ if (process.browser) {
 }
 
 module.exports = class {
-    onCreate(input) {
+    onCreate(input, out) {
         const state = {
             captchaData: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
             captchaSecret: "",
@@ -58,6 +58,7 @@ module.exports = class {
             comma_first: false,
             e4x: false
         };
+        this.i18n = out.global.i18n;
     }
 
     performUpdate() {
@@ -286,7 +287,7 @@ module.exports = class {
         const height = window.screen.width > 768 ? window.screen.height / 2 : window.screen.height;
         const left = (window.screen.width - width) / 2;
         const top = (window.screen.height - height) / 4;
-        window.open("/zoia/core/images", "", `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`);
+        window.open(this.i18n.getLocalizedURL("/zoia/core/images"), "", `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`);
     }
 
     setHeaders(headers) {

@@ -1,0 +1,14 @@
+style.scss {
+  @import "./navList.scss";
+}
+
+<div>
+  <h1 class="z3-ap-head-thin">
+    <span class="icon">
+      <i class="mdi z3-ap-mdi-29px mdi-dark mdi-text-box-outline"/>
+    </span>&nbsp;${out.global.i18n.t("moduleTitle")}
+  </h1>
+  <mtree key="z3_ap_nav_tree" id="z3_ap_nav_tree" on-item-click("onTreeItemClick") on-add("onFolderAddClick") on-edit("onFolderEditClick") controls=true on-data-change("onTreeDataChange") keepuuid=true keepchecksum=true/>
+  <mnotify key=`pagesList_mnotify`/>
+  <editFolderModal key="z3_ap_nav_editModal" on-folder-save("onFolderSave")/>
+</div>

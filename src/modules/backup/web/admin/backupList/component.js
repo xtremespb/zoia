@@ -17,7 +17,16 @@ module.exports = class {
     }
 
     onMount() {
-        this.state.processValue = (id, value) => value;
+        this.state.processValue = (id, value, column) => {
+            switch (column) {
+            case "filename":
+                return `${value}.bak`;
+            case "timestamp":
+                return `${new Date(value).toLocaleDateString()} ${new Date(value).toLocaleTimeString()}`;
+            default:
+                return value;
+            }
+        };
         this.backupModal = this.getComponent("z3_ap_backupModal");
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
@@ -57,7 +66,11 @@ module.exports = class {
 
     onActionClick(data) {
         switch (data.action) {
-        case "btnEdit":
+        case "btnDownload":
+            window.open(
+                `/admin/backup/download?id=${data.id}`,
+                "_blank"
+            );
             break;
         }
     }

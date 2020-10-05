@@ -6,3 +6,10 @@ $mdi-font-path: "~@mdi/font/fonts";
 @import "~bulma-extensions/bulma-tooltip/src/sass/index.sass";
 @import "~bulma-extensions/bulma-calendar/src/sass/index.sass";
 @import "./inputs.scss";
+
+.z3-dt-logo {
+    display: inline-block;
+    background-image: url(z3_dt_logo.svg);
+    width: 80px;
+    height: 26px;
+}

@@ -1,0 +1,21 @@
+.z3-ap-nav-list-dir {
+    width: 110px;
+    word-wrap: break-word;
+}
+
+.z3-ap-nav-list-filename {
+    width: 120px;
+    word-wrap: break-word;
+}
+
+.z3-ap-nav-tree-wrap {
+    width: 250px;
+}
+
+@media (max-width: 768px) {
+
+    .z3-ap-nav-tree-wrap {
+        width: unset;
+    }
+
+}

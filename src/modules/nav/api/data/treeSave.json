@@ -1,0 +1,50 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "tree": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "pattern": "^[a-zA-Z0-9_\\-/\\.]+$",
+                            "minLength": 1,
+                            "maxLength": 64
+                        },
+                        "url": {
+                            "type": "string",
+                            "pattern": "^[\\w]+$",
+                            "minLength": 1,
+                            "maxLength": 256
+                        },
+                        "uuid": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                        },
+                        "checksum": {
+                            "type": "string",
+                            "pattern": "^[a-f0-9]{32}$"
+                        },
+                        "data": {
+                            "type": "object"
+                        },
+                        "c": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/properties/tree/items"
+                            },
+                            "minItems": 0,
+                            "uniqueItems": false
+
+                        }
+                    },
+                    "required": ["id", "uuid", "checksum"]
+                },
+                "minItems": 0,
+                "uniqueItems": false
+            }
+        }
+    }
+}
