@@ -4,6 +4,7 @@ import {
 } from "uuid";
 import template from "./index.marko";
 import Auth from "../../../../shared/lib/auth";
+import C from "../../../../shared/lib/constants";
 
 export default (programs, tests) => ({
     async handler(req, rep) {
@@ -16,12 +17,13 @@ export default (programs, tests) => ({
             rep.callNotFound();
             return rep.code(204);
         }
-        const auth = new Auth(this.mongo.db, this, req, rep);
-        const site = new req.ZoiaSite(req, "edu");
+        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
+        const site = new req.ZoiaSite(req, "edu", this.mongo.db);
         if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
             auth.clearAuthCookie();
             return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["edu"].routes.index);
         }
+        site.setAuth(auth);
         const testData = tests[`${req.params.programId}_${req.params.moduleId}_${req.params.testId}`];
         const user = auth.getUser();
         const testSession = crypto.createHash("md5").update(`${user._id}_${req.params.programId}_${req.params.moduleId}_${req.params.testId}`).digest("hex");
@@ -161,7 +163,7 @@ export default (programs, tests) => ({
                         ...req.zoiaModulesConfig["edu"].routes,
                     },
                     sessionData,
-                    ...site.getGlobals(),
+                    ...await site.getGlobals(),
                 }
             });
             return rep.sendHTML(rep, render);

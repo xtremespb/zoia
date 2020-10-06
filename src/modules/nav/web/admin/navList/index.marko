@@ -8,6 +8,24 @@ style.scss {
       <i class="mdi z3-ap-mdi-29px mdi-dark mdi-text-box-outline"/>
     </span>&nbsp;${out.global.i18n.t("moduleTitle")}
   </h1>
+  <div class="mt-2 mb-3">
+    <p class="menu-label mb-0">${out.global.i18n.t("preview")}</p>
+    <div class="z3-ap-nav-preview-box">
+      <nav class="navbar">
+        <div class="navbar-brand">
+          <a role="button" class=`navbar-burger burger${state.burger ? " is-active" : ""}` aria-label="menu" aria-expanded="false" on-click("onBurgerClick")>
+            <span aria-hidden="true"/>
+            <span aria-hidden="true"/>
+            <span aria-hidden="true"/>
+          </a>
+        </div>
+        <div class=`navbar-menu${state.burger ? " is-active" : ""}`>$!{state.preview}</div>
+      </nav>
+    </div>
+  </div>
+  <if(state.error)>
+    <div class="notification is-danger">${state.error}</div>
+  </if>
   <mtree key="z3_ap_nav_tree" id="z3_ap_nav_tree" on-item-click("onTreeItemClick") on-add("onFolderAddClick") on-edit("onFolderEditClick") controls=true on-data-change("onTreeDataChange") keepuuid=true keepchecksum=true/>
   <mnotify key=`pagesList_mnotify`/>
   <editFolderModal key="z3_ap_nav_editModal" on-folder-save("onFolderSave")/>

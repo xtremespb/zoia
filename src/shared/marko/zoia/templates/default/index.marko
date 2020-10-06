@@ -2,6 +2,21 @@ style.scss {
   @import "./template.scss";
 }
 
+$ let navHTML = "";
+$ out.global.navData.map(i => {
+  if (i.c) {
+    navHTML += `<div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link">${i.data[out.global.language].title}</a><div class="navbar-dropdown">`;
+    i.c.map(c => {
+      navHTML += `<a class="navbar-item" href=${c.data[out.global.language].url}>${c.data[out.global.language].title}</a>`;
+    });
+    navHTML += "</div></div>";
+  } else {
+    navHTML += `<a class="navbar-item" href=${i.data[out.global.language].url}>${i.data[out.global.language].title}</a>`;
+  }
+});
+$ let langHTML = `<div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link">Language</a><div class="navbar-dropdown">`;
+$ Object.keys(out.global.languages).map(lang => (langHTML += `<a class="navbar-item" href=${out.global.i18n.getLocalizedURL(out.global.path, lang)}>${out.global.languages[lang]}</a>`));
+$ langHTML += "</div></div>";
 <!DOCTYPE html>
 <html>
   <head>
@@ -27,22 +42,16 @@ style.scss {
             </a>
           </div>
           <div id="z3NavbarDefault" class="navbar-menu">
-            <div class="navbar-start">
-              <a class="navbar-item">Home</a>
-              <a class="navbar-item">Documentation</a>
-              <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">More</a>
-                <div class="navbar-dropdown">
-                  <a class="navbar-item">About</a>
-                  <a class="navbar-item">Jobs</a>
-                  <a class="navbar-item">Contact</a>
-                  <hr class="navbar-divider"/>
-                  <a class="navbar-item">Report an issue</a>
-                </div>
-              </div>
-            </div>
+            <div class="navbar-start">$!{navHTML}</div>
             <div class="navbar-end">
-              
+              $!{langHTML}<if(out.global.authData)>
+                <div class="navbar-item has-dropdown is-hoverable">
+                  <a class="navbar-link">${out.global.authData.username}</a>
+                  <div class="navbar-dropdown">
+                    <a class="navbar-item" href=out.global.i18n.getLocalizedURL(`${out.global.logout}?_=${new Date().getTime()}`, out.global.language)>${out.global.i18n.t("logOut")}</a>
+                  </div>
+                </div>
+              </if>
             </div>
           </div>
         </nav>

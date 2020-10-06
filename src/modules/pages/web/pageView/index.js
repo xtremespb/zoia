@@ -1,6 +1,6 @@
 import cloneDeep from "lodash/cloneDeep";
 import template from "./index.marko";
-// import Auth from "../../../../shared/lib/auth";
+import Auth from "../../../../shared/lib/auth";
 
 const findNodeById = (id, data) => {
     let node;
@@ -30,9 +30,11 @@ const getUUIDByPath = (path, tree) => {
 
 export default () => ({
     async handler(req, rep) {
-        // const auth = new Auth(this.mongo.db, fastify, req, rep);
         try {
-            const site = new req.ZoiaSite(req, "pages");
+            const auth = new Auth(this.mongo.db, this, req, rep);
+            const site = new req.ZoiaSite(req, "pages", this.mongo.db);
+            await auth.getUserData();
+            site.setAuth(auth);
             const {
                 url
             } = site.i18n.getNonLocalizedURL(req);
@@ -93,7 +95,7 @@ export default () => ({
                     pageTitle: page[site.language].title,
                     extraCSS: page[site.language].cssMin,
                     extraJS: page[site.language].jsMin,
-                    ...site.getGlobals()
+                    ...await site.getGlobals()
                 },
                 content: page[site.language].contentMin
             });

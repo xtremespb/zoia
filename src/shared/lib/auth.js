@@ -10,12 +10,16 @@ import C from "./constants";
 
 export default class {
     constructor(db, fastify, req, rep, useBearer = C.USE_COOKIE_FOR_TOKEN) {
-        this.jwt = fastify.jwt;
+        try {
+            this.jwt = fastify.jwt;
+        } catch {
+            // Ignore
+        }
         this.db = db;
         this.user = null;
         this.req = req;
         this.rep = rep;
-        this.zoiaConfig = fastify.zoiaConfig;
+        this.zoiaConfig = req.zoiaConfig;
         this.collectionUsers = req.zoiaModulesConfig["users"].collectionUsers;
         this.ip = crypto.createHmac("md5", this.zoiaConfig.secret).update(req.ip).digest("hex");
         if (useBearer === C.USE_EVERYTHING_FOR_TOKEN) {

@@ -5,9 +5,9 @@ import moduleData from "../../module.json";
 
 export default () => ({
     async handler(req, rep) {
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
         try {
-            const site = new req.ZoiaSite(req, "nav");
+            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
+            const site = new req.ZoiaSite(req, "nav", this.mongo.db);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
                 return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["nav"].routes.admin);
@@ -27,7 +27,7 @@ export default () => ({
                         ...req.zoiaModulesConfig["nav"].routes,
                         ...req.zoiaConfig.routes
                     },
-                    ...site.getGlobals()
+                    ...await site.getGlobals()
                 },
                 modules: req.zoiaModules,
                 moduleId: moduleData.id,

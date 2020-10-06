@@ -6,7 +6,9 @@ module.exports = class {
     onCreate(input, out) {
         this.state = {
             error: null,
-            loading: false
+            loading: false,
+            burger: false,
+            preview: "",
         };
         this.i18n = out.global.i18n;
         this.language = out.global.language;
@@ -39,6 +41,7 @@ module.exports = class {
             });
             const treeData = res.data.tree || {};
             this.tree.func.initData(treeData);
+            this.buildNav(treeData.c);
             this.setLoadingTree(false);
         } catch (e) {
             this.setLoadingTree(false);
@@ -83,6 +86,22 @@ module.exports = class {
         // Do nothing
     }
 
+    buildNav(data) {
+        let html = "";
+        data.map(i => {
+            if (i.c) {
+                html += `<div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link">${i.data[this.language].title}</a><div class="navbar-dropdown">`;
+                i.c.map(c => {
+                    html += `<a class="navbar-item">${c.data[this.language].title}</a>`;
+                });
+                html += "</div></div>";
+            } else {
+                html += `<a class="navbar-item">${i.data[this.language].title}</a>`;
+            }
+        });
+        this.setState("preview", html);
+    }
+
     // Tree has been changed
     async onTreeDataChange(data) {
         this.setLoadingTree(true);
@@ -98,9 +117,15 @@ module.exports = class {
                 }
             });
             this.setLoadingTree(false);
+            this.buildNav(data.data.c);
         } catch (e) {
             this.setLoadingTree(false);
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
         }
+    }
+
+    onBurgerClick(e) {
+        e.preventDefault();
+        this.state.burger = !this.state.burger;
     }
 };

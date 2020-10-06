@@ -8,17 +8,18 @@ import C from "../../../../shared/lib/constants";
 
 export default () => ({
     async handler(req, rep) {
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
         if (!req.query.id || typeof req.query.id !== "string" || !req.query.id.match(/^[a-f0-9]{24}$/)) {
             rep.callNotFound();
             return rep.code(204);
         }
         try {
-            const site = new req.ZoiaSite(req, "backup");
+            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
+            const site = new req.ZoiaSite(req, "backup", this.mongo.db);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
                 return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["backup"].routes.admin);
             }
+            site.setAuth(auth);
             const file = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).findOne({
                 _id: new ObjectId(req.query.id)
             });

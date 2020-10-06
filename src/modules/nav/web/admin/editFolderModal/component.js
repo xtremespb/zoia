@@ -57,22 +57,21 @@ module.exports = class {
     }
 
     onFormSubmit(data) {
-        const langData = cloneDeep(data.__default);
+        const formData = cloneDeep(data);
         if (this.treeNodes && this.treeNodes.length) {
-            const id = langData.id.trim();
+            const id = formData.id.trim();
             const duplicate = (this.dataOrigin.id && this.dataOrigin.id !== id && this.treeNodes.indexOf(id) > -1) || (!this.dataOrigin.id && this.treeNodes.indexOf(id) > -1);
             if (duplicate) {
                 this.state.error = this.i18n.t("duplicateTreeId");
                 return;
             }
         }
-        delete langData.id;
+        delete formData.id;
         const item = {
-            id: data.__default.id,
-            url: data.__default.url,
-            t: langData[this.language],
-            data: langData,
-            uuid: data.__default.uuid || uuidv4(),
+            id: data.id,
+            t: formData[this.language].title,
+            data: formData,
+            uuid: data.uuid || uuidv4(),
             c: this.treeLeaf && this.dataOrigin.id ? this.treeLeaf.c || [] : [],
             isVisible: true,
             isOpen: false,

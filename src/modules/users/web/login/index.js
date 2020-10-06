@@ -3,12 +3,13 @@ import Auth from "../../../../shared/lib/auth";
 
 export default () => ({
     async handler(req, rep) {
-        const auth = new Auth(this.mongo.db, this, req, rep);
         try {
-            const site = new req.ZoiaSite(req, "users");
+            const auth = new Auth(this.mongo.db, this, req, rep);
+            const site = new req.ZoiaSite(req, "users", this.mongo.db);
             if (await auth.getUserData()) {
                 return rep.redirectToQuery(req, rep, site);
             }
+            site.setAuth(auth);
             const render = await template.stream({
                 $global: {
                     serializedGlobals: {
@@ -18,7 +19,7 @@ export default () => ({
                     },
                     template: req.zoiaTemplates.available[0],
                     pageTitle: site.i18n.t("login"),
-                    ...site.getGlobals()
+                    ...await site.getGlobals()
                 }
             });
             return rep.sendHTML(rep, render);

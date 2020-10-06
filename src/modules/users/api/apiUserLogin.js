@@ -18,8 +18,8 @@ export default () => ({
             rep.validationError(rep, req.validationError);
             return;
         }
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
         try {
+            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
             const tokenSigned = await auth.login(req.body.username.toLowerCase(), req.body.password);
             if (!tokenSigned) {
                 rep.unauthorizedError(rep, C.SEND_USERNAME_PASSWORD_FIELDS_ERROR);

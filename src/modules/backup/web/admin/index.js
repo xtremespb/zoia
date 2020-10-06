@@ -7,7 +7,7 @@ export default routeId => ({
     async handler(req, rep) {
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
         try {
-            const site = new req.ZoiaSite(req, "backup");
+            const site = new req.ZoiaSite(req, "backup", this.mongo.db);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
                 return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["backup"].routes.admin);
@@ -35,7 +35,7 @@ export default routeId => ({
                         ...req.zoiaModulesConfig["backup"].routes,
                     },
                     backupDb,
-                    ...site.getGlobals()
+                    ...await site.getGlobals()
                 },
                 modules: req.zoiaModules,
                 moduleId: moduleData.id,

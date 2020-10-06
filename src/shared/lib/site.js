@@ -8,17 +8,19 @@ import i18nCatalogs from "./i18nCatalogsNode";
 const config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
 
 export default class {
-    constructor(req, module) {
+    constructor(req, module, db) {
         this.moduleConfigUsers = req.zoiaModulesConfig["users"];
         this.module = module;
         this.catalogs = i18nCatalogs.getModuleCatalog(module);
         this.language = this.getLocaleFromURL(req);
+        this.config = req.zoiaConfig;
         this.languagesList = this.catalogs.languages;
         this.languages = config.languages;
         this.path = req.urlData().path;
         this.query = req.urlData().query;
         this.i18n = new I18n(this.languagesList);
         this.i18n.setLanguageCatalogs(this.catalogs.translationData);
+        this.db = db;
         this.serializedGlobals = {
             language: true,
             languages: true,
@@ -29,7 +31,8 @@ export default class {
             query: true,
             cookieOptions: true,
             authData: true,
-            logout: true
+            logout: true,
+            navData: true,
         };
         this.i18n.setLanguage(this.language);
     }
@@ -59,7 +62,10 @@ export default class {
         return this.serializedGlobals;
     }
 
-    getGlobals() {
+    async getGlobals() {
+        const navData = await this.db.collection(this.config.collections.registry).findOne({
+            _id: "nav_data"
+        });
         return {
             language: this.language,
             languages: this.languages,
@@ -71,7 +77,8 @@ export default class {
             query: this.query,
             cookieOptions: config.cookieOptions,
             authData: this.authData,
-            logout: this.moduleConfigUsers.routes.logout
+            logout: this.moduleConfigUsers.routes.logout,
+            navData: navData ? navData.tree : []
         };
     }
 }

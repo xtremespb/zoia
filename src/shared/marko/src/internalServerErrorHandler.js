@@ -1,11 +1,17 @@
 import errorInternal from "./errorInternal/index.marko";
+import Auth from "../../lib/auth";
+import C from "../../lib/constants";
 
-export default async (err, req, rep) => {
+export default async (err, req, rep, fastify) => {
     let errorCode;
     let errorText;
     let errorTitle;
     let errorMessage;
-    const site = new req.ZoiaSite(req);
+    const db = fastify.mongo.client.db(fastify.zoiaConfig.mongo.dbName);
+    const auth = new Auth(db, fastify, req, rep, C.USE_COOKIE_FOR_TOKEN);
+    const site = new req.ZoiaSite(req, null, db);
+    await auth.getUserData();
+    site.setAuth(auth);
     switch (err.code) {
     case 403:
         errorCode = 403;
@@ -32,7 +38,7 @@ export default async (err, req, rep) => {
                 ...site.getSerializedGlobals()
             },
             pageTitle: errorTitle,
-            ...site.getGlobals()
+            ...await site.getGlobals()
         },
         errorTitle,
         errorMessage

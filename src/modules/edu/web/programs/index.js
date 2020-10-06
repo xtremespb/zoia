@@ -4,11 +4,12 @@ import Auth from "../../../../shared/lib/auth";
 export default (programs) => ({
     async handler(req, rep) {
         const auth = new Auth(this.mongo.db, this, req, rep);
-        const site = new req.ZoiaSite(req, "edu");
+        const site = new req.ZoiaSite(req, "edu", this.mongo.db);
         if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
             auth.clearAuthCookie();
             return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["edu"].routes.index);
         }
+        site.setAuth(auth);
         try {
             const render = await template.stream({
                 $global: {
@@ -25,7 +26,7 @@ export default (programs) => ({
                     routes: {
                         ...req.zoiaModulesConfig["edu"].routes,
                     },
-                    ...site.getGlobals(),
+                    ...await site.getGlobals(),
                 }
             });
             return rep.sendHTML(rep, render);

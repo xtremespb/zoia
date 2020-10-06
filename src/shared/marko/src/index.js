@@ -165,10 +165,6 @@ import fastifyRateLimit from "../../lib/rateLimit";
         fastify.register(fastifyJWT, {
             secret: config.secret
         });
-        // Set handler for error 404
-        fastify.setNotFoundHandler((req, rep) => notFoundErrorHandler(req, rep));
-        // Set handler for error 500
-        fastify.setErrorHandler((err, req, rep) => internalServerErrorHandler(err, req, rep));
         // Load modules
         let moduleErrors;
         const modulesLoaded = [];
@@ -220,6 +216,10 @@ import fastifyRateLimit from "../../lib/rateLimit";
         if (!moduleErrors) {
             pino.info(`Module(s) loaded: ${[...new Set(modulesLoaded)].join(", ")}`);
         }
+        // Set handler for error 404
+        fastify.setNotFoundHandler((req, rep) => notFoundErrorHandler(req, rep, fastify));
+        // Set handler for error 500
+        fastify.setErrorHandler((err, req, rep) => internalServerErrorHandler(err, req, rep, fastify));
         // Start Web Server
         await fastify.listen(config.webServer.port, config.webServer.ip);
     } catch (e) {

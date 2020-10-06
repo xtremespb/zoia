@@ -7,7 +7,7 @@ export default () => ({
     async handler(req, rep) {
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
         try {
-            const site = new req.ZoiaSite(req, "admin");
+            const site = new req.ZoiaSite(req, "admin", this.mongo.db);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
                 return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["admin"].routes.admin);
@@ -22,7 +22,7 @@ export default () => ({
                     },
                     template: "admin",
                     pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
-                    ...site.getGlobals()
+                    ...await site.getGlobals()
                 },
                 modules: req.zoiaModules,
                 version: req.zoiaPackageJson.version,

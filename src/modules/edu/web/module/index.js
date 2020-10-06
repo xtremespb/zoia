@@ -1,5 +1,6 @@
 import template from "./index.marko";
 import Auth from "../../../../shared/lib/auth";
+import C from "../../../../shared/lib/constants";
 
 export default (programs) => ({
     async handler(req, rep) {
@@ -12,12 +13,13 @@ export default (programs) => ({
             rep.callNotFound();
             return rep.code(204);
         }
-        const auth = new Auth(this.mongo.db, this, req, rep);
-        const site = new req.ZoiaSite(req, "edu");
+        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
+        const site = new req.ZoiaSite(req, "edu", this.mongo.db);
         if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
             auth.clearAuthCookie();
             return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["edu"].routes.index);
         }
+        site.setAuth(auth);
         try {
             const render = await template.stream({
                 $global: {
@@ -40,7 +42,7 @@ export default (programs) => ({
                     routes: {
                         ...req.zoiaModulesConfig["edu"].routes,
                     },
-                    ...site.getGlobals(),
+                    ...await site.getGlobals(),
                 }
             });
             return rep.sendHTML(rep, render);
