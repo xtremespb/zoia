@@ -1,0 +1,19 @@
+import io from "socket.io-client"
+import Cookies from "../../../lib/cookies"
+
+class {
+  onCreate(input, out) {
+    if (!process.browser) {
+      return;
+    }
+    const cookies = new Cookies(out.global.cookieOptions);
+    const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
+    out.global.io = io();
+    out.global.io.on("connect", () => {
+      const data = out.global.io.emit("users.auth", { token });
+      console.log(data);
+    });
+  }
+}
+
+<span/>

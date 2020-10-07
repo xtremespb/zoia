@@ -2,6 +2,7 @@
     "adminPanel": "Admin Panel",
     "modules": "Modules",
     "logOut": "Log Out",
+    "signIn": "Sign In",
     "notFound": "Not Found",
     "notFoundMsg": "The page you are trying to reach couldn't be found on the server.",
     "internalError": "Internal Server Error",

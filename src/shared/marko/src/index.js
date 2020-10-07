@@ -26,6 +26,7 @@ import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
 import zoiaMultipart from "../../lib/zoiaMultipart";
 import fastifyRateLimit from "../../lib/rateLimit";
+import SocketIO from "../../lib/socketIO";
 
 (async () => {
     let buildJson;
@@ -150,6 +151,9 @@ import fastifyRateLimit from "../../lib/rateLimit";
         Object.keys(response).map(i => fastify.decorateReply(i, response[i]));
         Object.keys(utils).map(i => fastify.decorateReply(i, utils[i]));
         Object.keys(telegramHelpers).map(i => fastify.decorate(i, telegramHelpers[i]));
+        // Socket.IO
+        const socketIO = new SocketIO(fastify);
+        socketIO.setEvents();
         // Register FormBody and Multipart
         fastify.register(fastifyFormbody);
         fastify.register(zoiaMultipart);
@@ -213,6 +217,17 @@ import fastifyRateLimit from "../../lib/rateLimit";
             }));
             bot.launch();
         }
+        // Load all Socket.io modules
+        const socketIoModules = [];
+        await Promise.all(modules.map(async m => {
+            try {
+                const moduleSocket = await import(`../../../modules/${m.id}/socket.io/index.js`);
+                socketIoModules.push(moduleSocket.default);
+            } catch (e) {
+                // Ignore
+            }
+        }));
+        fastify.decorate("socketIoModules", socketIoModules);
         if (!moduleErrors) {
             pino.info(`Module(s) loaded: ${[...new Set(modulesLoaded)].join(", ")}`);
         }

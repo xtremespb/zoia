@@ -7,5 +7,10 @@
     "editFolder": "Edit Folder",
     "btnConfirm": "Save",
     "btnCancel": "Cancel",
-    "preview": "Preview"
+    "preview": "Preview",
+    "save": "Save",
+    "reset": "Reset",
+    "folderId": "Folder ID",
+    "folderIdHelpText": "Latin chars and numbers only",
+    "addFolder": "Add Folder"
 }

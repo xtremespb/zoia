@@ -28,7 +28,7 @@ $ langHTML += "</div></div>";
     </if>
   </head>
   <body>
-    <section class="section">
+    <section class="section pt-5 pb-4">
       <div class="container">
         <nav class="navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
@@ -44,14 +44,20 @@ $ langHTML += "</div></div>";
           <div id="z3NavbarDefault" class="navbar-menu">
             <div class="navbar-start">$!{navHTML}</div>
             <div class="navbar-end">
-              $!{langHTML}<if(out.global.authData)>
+              $!{langHTML}<if(out.global.authData && out.global.authData.username)>
                 <div class="navbar-item has-dropdown is-hoverable">
                   <a class="navbar-link">${out.global.authData.username}</a>
                   <div class="navbar-dropdown">
+                    <if(out.global.authData.status.indexOf("admin") > -1)>
+                      <a class="navbar-item" href=out.global.i18n.getLocalizedURL(out.global.admin, out.global.language)>${out.global.i18n.t("adminPanel")}</a>
+                    </if>
                     <a class="navbar-item" href=out.global.i18n.getLocalizedURL(`${out.global.logout}?_=${new Date().getTime()}`, out.global.language)>${out.global.i18n.t("logOut")}</a>
                   </div>
                 </div>
               </if>
+              <else>
+                <a class="navbar-item" href=`${out.global.login}?redirect=${out.global.path}`>${out.global.i18n.t("signIn")}</a>
+              </else>
             </div>
           </div>
         </nav>

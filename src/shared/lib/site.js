@@ -10,6 +10,7 @@ const config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`))
 export default class {
     constructor(req, module, db) {
         this.moduleConfigUsers = req.zoiaModulesConfig["users"];
+        this.moduleConfigAdmin = req.zoiaModulesConfig["admin"];
         this.module = module;
         this.catalogs = i18nCatalogs.getModuleCatalog(module);
         this.language = this.getLocaleFromURL(req);
@@ -31,7 +32,9 @@ export default class {
             query: true,
             cookieOptions: true,
             authData: true,
+            login: true,
             logout: true,
+            admin: true,
             navData: true,
         };
         this.i18n.setLanguage(this.language);
@@ -77,7 +80,9 @@ export default class {
             query: this.query,
             cookieOptions: config.cookieOptions,
             authData: this.authData,
+            login: this.moduleConfigUsers.routes.login,
             logout: this.moduleConfigUsers.routes.logout,
+            admin: this.moduleConfigAdmin.routes.admin,
             navData: navData ? navData.tree : []
         };
     }

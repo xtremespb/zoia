@@ -27,6 +27,10 @@ style.scss {
     <div class="notification is-danger">${state.error}</div>
   </if>
   <mtree key="z3_ap_nav_tree" id="z3_ap_nav_tree" on-item-click("onTreeItemClick") on-add("onFolderAddClick") on-edit("onFolderEditClick") controls=true on-data-change("onTreeDataChange") keepuuid=true keepchecksum=true/>
+  <div class="buttons mt-4">
+    <button class="button is-primary" disabled=(!state.changed || state.loading) on-click("treeDataSave")>${out.global.i18n.t("save")}</button>
+    <button class="button" on-click("loadTree") disabled=state.loading>${out.global.i18n.t("reset")}</button>
+  </div>
   <mnotify key=`pagesList_mnotify`/>
   <editFolderModal key="z3_ap_nav_editModal" on-folder-save("onFolderSave")/>
 </div>

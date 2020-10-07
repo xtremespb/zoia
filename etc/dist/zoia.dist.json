@@ -45,6 +45,10 @@
         "host": "127.0.0.1",
         "port": 6379
     },
+    "socketIO": {
+        "path": "/socket.io",
+        "serveClient": true
+    },
     "rateLimit": {
         "enabled": false,
         "redis": false,

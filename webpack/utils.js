@@ -49,7 +49,7 @@ const generateTemplatesJSON = (argv) => {
 const rebuildMarkoTemplates = (argv) => {
     const templates = require(`${__dirname}/../build/etc/templates.json`);
     console.log("Re-building Marko templates macro...");
-    const root = `<!-- This file is auto-generated, do not modify -->\n${templates.available.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
+    const root = `<!-- This file is auto-generated, do not modify -->\n${templates.available.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><socketIO/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
     fs.writeFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/zoia/index.marko`), root);
 };
 

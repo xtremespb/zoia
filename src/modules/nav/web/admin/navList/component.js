@@ -9,6 +9,8 @@ module.exports = class {
             loading: false,
             burger: false,
             preview: "",
+            changed: false,
+            data: null,
         };
         this.i18n = out.global.i18n;
         this.language = out.global.language;
@@ -30,6 +32,9 @@ module.exports = class {
     }
 
     async loadTree() {
+        if (this.state.loading) {
+            return;
+        }
         this.setLoadingTree(true);
         try {
             const res = await axios({
@@ -104,20 +109,31 @@ module.exports = class {
 
     // Tree has been changed
     async onTreeDataChange(data) {
+        this.buildNav(data.data.c);
+        this.state.changed = true;
+        this.state.data = data;
+    }
+
+    async treeDataSave() {
+        if (!this.state.changed) {
+            return;
+        }
         this.setLoadingTree(true);
         try {
             await axios({
                 method: "post",
                 url: "/api/nav/tree/save",
                 data: {
-                    tree: data.data.c
+                    tree: this.state.data.data.c
                 },
                 headers: {
                     Authorization: `Bearer ${this.token}`
                 }
             });
             this.setLoadingTree(false);
-            this.buildNav(data.data.c);
+            this.buildNav(this.state.data.data.c);
+            this.state.changed = false;
+            this.state.data = null;
         } catch (e) {
             this.setLoadingTree(false);
             this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
