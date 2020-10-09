@@ -13,3 +13,25 @@ $mdi-font-path: "~@mdi/font/fonts";
     width: 80px;
     height: 26px;
 }
+
+.z3-dt-body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.z3-dt-content {
+    flex: 1;
+}
+
+.z3-dt-footer {
+    background: $grey-lightest;
+}
+
+.z3-dt-nav {
+    background: $grey-lightest;
+}
+
+.z3-dt-navbar {
+    background: transparent !important;
+}

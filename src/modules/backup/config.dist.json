@@ -13,5 +13,5 @@
         "download": "/admin/backup/download"
     },
     "directory": "backup",
-    "setup": false
+    "setup": true
 }

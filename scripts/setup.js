@@ -81,7 +81,11 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
                     await Promise.all(collections.map(async c => {
                         try {
                             console.log(`* Creating collection: "${c}"`);
-                            await db.createCollection(c);
+                            try {
+                                await db.createCollection(c);
+                            } catch {
+                                // Ignore
+                            }
                             const {
                                 indexesAsc,
                                 indexesDesc,

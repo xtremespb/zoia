@@ -18,11 +18,13 @@ export default () => ({
                     serializedGlobals: {
                         template: true,
                         pageTitle: true,
+                        usersOnline: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
                     pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
-                    ...await site.getGlobals()
+                    usersOnline: Object.keys(req.io.sockets.sockets).length,
+                    ...await site.getGlobals(),
                 },
                 modules: req.zoiaModules,
                 version: req.zoiaPackageJson.version,

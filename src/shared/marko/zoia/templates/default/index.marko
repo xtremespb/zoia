@@ -27,10 +27,10 @@ $ langHTML += "</div></div>";
       <style type="text/css">$!{out.global.extraCSS}</style>
     </if>
   </head>
-  <body>
-    <section class="section pt-5 pb-4">
+  <body class="z3-dt-body">
+    <section class="section pt-5 pb-4 z3-dt-nav">
       <div class="container">
-        <nav class="navbar" role="navigation" aria-label="main navigation">
+        <nav class="navbar z3-dt-navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
             <a class="navbar-item" href=out.global.i18n.getLocalizedURL("/")>
               <div class="z3-dt-logo"/>
@@ -63,10 +63,13 @@ $ langHTML += "</div></div>";
         </nav>
       </div>
     </section>
-    <section class="section pt-0">
+    <section class="section pt-5 pb-0 z3-dt-content">
       <div class="container">
         <${input.renderBody}/>
       </div>
+    </section>
+    <section class="section pt-5 mt-0 pb-5 mb-0 z3-dt-footer is-size-7">
+      <div class="container">${out.global.i18n.t("sitePoweredByZoia")}. &copy; 2019-${new Date().getFullYear()} Michael A. Matveev.</div>
     </section>
     <if(out.global.extraJS)>
       <script type="text/javascript">$!{out.global.extraJS}</script>

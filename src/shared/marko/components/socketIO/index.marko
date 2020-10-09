@@ -11,7 +11,6 @@ class {
     out.global.io = io();
     out.global.io.on("connect", () => {
       const data = out.global.io.emit("users.auth", { token });
-      console.log(data);
     });
   }
 }
