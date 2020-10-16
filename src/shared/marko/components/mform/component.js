@@ -346,11 +346,11 @@ module.exports = class {
             if (!focus && Object.keys(errors[tab]).length) {
                 this.setState("activeTabId", tab);
                 const firstField = Object.keys(errors[tab])[0];
-                const firstFieldComponent = this.getComponent(firstField);
+                const firstFieldComponent = this.getComponent(`mf_cmp_${firstField}`);
                 if (firstFieldComponent) {
                     setTimeout(firstFieldComponent.func.setFocus.bind(this), 0);
+                    focus = true;
                 }
-                focus = true;
             }
         });
         if (generalError) {
@@ -360,7 +360,7 @@ module.exports = class {
         this.state.data = formData;
     }
 
-    validate(serialized) {
+    async validate(serialized) {
         const data = cloneDeep(serialized);
         if (!this.input.validation) {
             return {
@@ -368,7 +368,7 @@ module.exports = class {
                 errorData: []
             };
         }
-        const validationResult = this.extendedValidation.validate(data);
+        const validationResult = await this.extendedValidation.validate(data);
         this.fieldsFlat.map(field => {
             if (field.shouldMatch) {
                 const value1 = String(this.state.data[this.state.activeTabId][field.id]);

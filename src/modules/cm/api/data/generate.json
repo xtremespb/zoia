@@ -3,40 +3,57 @@
         "type": "object",
         "properties": {
             "cardNum": {
-                "type": "integer"
+                "type": "integer",
+                "minimum": 1
             },
             "cardType": {
-                "type": "integer"
+                "type": "integer",
+                "minimum": 1
             },
             "room": {
-                "type": "integer"
+                "type": "integer",
+                "minimum": 1
             },
             "customerName": {
-                "type": "string"
+                "type": "string",
+                "maxLength": 128
             },
             "customerBirthDate": {
-                "type": "string"
+                "type": "string",
+                "minLength": 10,
+                "maxLength": 10
             },
             "customerPhone": {
-                "type": "string"
+                "type": "string",
+                "minLength": 12,
+                "maxLength": 12
             },
             "customerEmail": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^(?:[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-])+@(?:[a-zA-Z0-9]|[^\\u0000-\\u007F])(?:(?:[a-zA-Z0-9-]|[^\\u0000-\\u007F]){0,61}(?:[a-zA-Z0-9]|[^\\u0000-\\u007F]))?(?:\\.(?:[a-zA-Z0-9]|[^\\u0000-\\u007F])(?:(?:[a-zA-Z0-9-]|[^\\u0000-\\u007F]){0,61}(?:[a-zA-Z0-9]|[^\\u0000-\\u007F]))?)*$",
+                "minLength": 5,
+                "maxLength": 254
             },
             "customerAddress": {
-                "type": "string"
+                "type": "string",
+                "maxLength": 256
             },
             "date": {
-                "type": "string"
+                "type": "string",
+                "minLength": 10,
+                "maxLength": 10
             },
             "price": {
-                "type": "number"
+                "type": "number",
+                "minimum": 1
             },
             "years": {
-                "type": "integer"
+                "type": "string"
             },
             "validity": {
-                "type": "string"
+                "type": "string",
+                "minLength": 10,
+                "maxLength": 10
             },
             "creditSum": {
                 "type": "number"

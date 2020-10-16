@@ -20,13 +20,14 @@ $ const common = out.global.common;
       wrapCSS: "z3-is-medium",
       mandatory: true,
       convert: "integer",
-      helpText: `${common.minCardNumber} - ${common.maxCardNumber}`
+      helpText: `${common.minCardNumber} - ${common.maxCardNumber}`,
+      autoFocus: true
     },
     {
       id: "cardType",
       type: "select",
       label: out.global.i18n.t("cardType"),
-      options: holdingData.cards.map((c, i) => ({ value: i + 1, label: c.id.toUpperCase() })),
+      options: [{ value: 0, label: "–" }, ...holdingData.cards.map((c, i) => ({ value: i + 1, label: c.id.toUpperCase() }))],
       defaultValue: "0",
       css: "is-fullwidth",
       wrapCSS: "z3-is-medium",
@@ -37,7 +38,7 @@ $ const common = out.global.common;
       id: "room",
       type: "select",
       label: out.global.i18n.t("room"),
-      options: holdingData.rooms.map((r, i) => ({ value: i + 1, label: r })),
+      options: [{ value: 0, label: "–" }, ...holdingData.rooms.map((r, i) => ({ value: i + 1, label: r }))],
       defaultValue: "0",
       convert: "integer",
       css: "is-fullwidth",
@@ -122,7 +123,6 @@ $ const common = out.global.common;
       id: "validity",
       type: "text",
       label: out.global.i18n.t("validity"),
-      convert: "integer",
       helpText: out.global.i18n.t("validityHelpText"),
       wrapCSS: "z3-is-small"
     },
@@ -137,7 +137,7 @@ $ const common = out.global.common;
     {
       id: "creditPercentage",
       type: "text",
-      convert: "integer",
+      convert: "float",
       label: out.global.i18n.t("creditPercentage"),
       helpText: out.global.i18n.t("creditPercentageHelpText"),
       wrapCSS: "z3-is-small"
