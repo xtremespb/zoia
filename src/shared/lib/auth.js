@@ -74,6 +74,17 @@ export default class {
         return this.user.status.indexOf(status) > -1;
     }
 
+    checkGroup(group) {
+        if (!this.user || !this.user.groups) {
+            return false;
+        }
+        return this.user.groups.indexOf(group) > -1;
+    }
+
+    getGroups() {
+        return this.user.groups || [];
+    }
+
     generateSid() {
         return uuid();
     }

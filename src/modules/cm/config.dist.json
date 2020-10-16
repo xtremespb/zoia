@@ -1,0 +1,8 @@
+{
+    "routes": {
+        "admin": "/admin/cm",
+        "frontend": "/cm"
+    },
+    "directory": "cm",
+    "setup": true
+}

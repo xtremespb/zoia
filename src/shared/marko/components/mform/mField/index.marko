@@ -41,7 +41,7 @@ File Input
     <div class="z3-mf-margin-small-top">
       <for|file, index| of=input.value>
         <div>
-          <if(file.data)>${file.name}</if>
+          <if(file.data || input.item.noDownload)>${file.name}</if>
           <else>
             <a href=`/zoia/core/download?id=${file.id}` target="_blank">${file.name}</a>
           </else>
@@ -79,6 +79,12 @@ Divider
 -->
 <if(input.item.type === "divider")>
   <div class="z3-mf-divider"/>
+</if>
+<!--
+Message
+-->
+<if(input.item.type === "message")>
+  <div class=(input.item.css || "")>${input.item.text || ""}</div>
 </if>
 <!--
 Select
@@ -257,7 +263,9 @@ ACE
     </div>
     <if(input.item.wysiwyg)>
       <div style=(state.modeAce === "ck" ? "" : "position:absolute;left:-100000px;top:left:-100000px;")>
-        <div class="z3-mf-ckeditor" key=`mf_ctl_ckeditor_${input.item.id}` id=`mf_ctl_ckeditor_${input.item.id}` no-update/>
+        <div no-update>
+          <div class="z3-mf-ckeditor" key=`mf_ctl_ckeditor_${input.item.id}` id=`mf_ctl_ckeditor_${input.item.id}` no-update/>
+        </div>
       </div>
     </if>
   </div>
@@ -277,7 +285,7 @@ Key-Value Input
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
-  <div class="mf-ctl-keyvalue-wrap">
+  <div class="z3-mf-ctl-keyvalue-wrap">
     <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` type=(input.item.textType || "text") placeholder=input.item.placeholder value=(input.value.data && Array.isArray(input.value.data) && input.value.data.length === 0 && input.item.emptyArrayLabel ? input.item.emptyArrayLabel : input.value.label) on-change("onFieldValueChange") data-id=input.item.id readonly/>
     &nbsp;
     <button type="button" class="button is-light" data-id=input.item.id on-click("onKeyValueButtonClick")>
@@ -286,6 +294,47 @@ Key-Value Input
       </span>
     </button>
   </div>
+  <if(input.item.helpText)>
+    <p class="help">${input.item.helpText}</p>
+  </if>
+  <if(input.errors[input.item.id])>
+    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  </if>
+</if>
+<!--
+Images Input
+-->
+<if(input.item.type === "images")>
+  <label class="label">
+    ${input.item.label}:<if(input.item.mandatory)>
+      &nbsp;<span class="has-text-danger">*</span>
+    </if>
+  </label>
+  <div class=`file${input.errors[input.item.id] ? " is-danger" : ""}`>
+    <label class="file-label">
+      <input class="file-input" type="file" multiple=input.item.multiple on-change("onFileInputChange") data-id=input.item.id/>
+      <a class="file-cta" key=`mf_ctl_${input.item.id}` tabindex="0">
+        <span class="file-icon">
+          <i class="mdi mdi-upload"/>
+        </span>
+        <span class="file-label">${input.item.buttonLabel}</span>
+      </a>
+    </label>
+  </div>
+  <if(input.value && input.value.length)>
+    <div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2">
+      <for|file, index| of=input.value>
+        <div class="z3-mf-image-wrap column is-narrow">
+          <if(file.data)>
+            <img src=window.URL.createObjectURL(file.data) class="z3-mf-image" on-contextmenu("onContextMenu") data-mfimageid=file.id/>
+          </if>
+          <else>
+            <a href=`/zoia/core/download?id=${file.id}` target="_blank">${file.name}</a>
+          </else>
+        </div>
+      </for>
+    </div>
+  </if>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>
   </if>

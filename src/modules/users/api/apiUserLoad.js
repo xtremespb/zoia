@@ -37,6 +37,7 @@ export default () => ({
                 return;
             }
             delete user.password;
+            user.groups = user.groups ? user.groups.join(", ") : "";
             rep.successJSON(rep, {
                 data: user
             });

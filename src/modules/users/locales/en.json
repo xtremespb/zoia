@@ -23,5 +23,7 @@
     "authorized": "Authorized, redirecting…",
     "mFormErr.userAlreadyExists": "User already exists in the database",
     "mFormErr.emailAlreadyExists": "E-mail already exists in the database",
-    "mFormErr.userNotFound": "User not found in the database"
+    "mFormErr.userNotFound": "User not found in the database",
+    "groups": "Groups",
+    "groupsHelpText": "List of groups, separated with comma"
 }

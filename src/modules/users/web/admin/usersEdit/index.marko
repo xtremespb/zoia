@@ -51,6 +51,14 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
         helpText: out.global.i18n.t("emailHelpText"),
         wrapCSS: "z3-is-large",
         mandatory: true
+      },
+      {
+        id: "groups",
+        type: "text",
+        label: out.global.i18n.t("groups"),
+        helpText: out.global.i18n.t("groupsHelpText"),
+        wrapCSS: "z3-is-large",
+        tags: true,
       }
     ],
     [

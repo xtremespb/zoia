@@ -1,0 +1,15 @@
+<admin modules=input.modules moduleId=input.moduleId>
+  <h1 class="z3-ap-head-thin">
+    <span class="icon">
+      <i class="mdi z3-ap-mdi-29px mdi-dark mdi-account-tie-outline"/>
+    </span>&nbsp;${out.global.i18n.t("moduleTitle")}
+  </h1>
+  <if(out.global.files && out.global.files.length)>
+    <div class="field">
+      <label class="label">${out.global.i18n.t("existingFiles")}</label>
+      <div class="control box mb-0">${out.global.files.join(", ")}</div>
+      <p class="help">${out.global.i18n.t("existingFilesHelpText")}</p>
+    </div>
+  </if>
+  <cmConfig/>
+</admin>

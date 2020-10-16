@@ -62,7 +62,7 @@ module.exports = class {
     }
 
     onWindowResize(reload) {
-        if (this.input.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches) {
+        if (this.input.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches && document.getElementById(`${this.input.id}_tableWrap`)) {
             const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_tableWrap`).getBoundingClientRect().top - 103) / 49, 10);
             if (itemsCount && this.state.itemsPerPage !== itemsCount) {
                 this.state.itemsPerPage = itemsCount > 0 ? itemsCount : 1;

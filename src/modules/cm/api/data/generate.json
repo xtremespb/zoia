@@ -1,0 +1,50 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "cardNum": {
+                "type": "integer"
+            },
+            "cardType": {
+                "type": "integer"
+            },
+            "room": {
+                "type": "integer"
+            },
+            "customerName": {
+                "type": "string"
+            },
+            "customerBirthDate": {
+                "type": "string"
+            },
+            "customerPhone": {
+                "type": "string"
+            },
+            "customerEmail": {
+                "type": "string"
+            },
+            "customerAddress": {
+                "type": "string"
+            },
+            "date": {
+                "type": "string"
+            },
+            "price": {
+                "type": "number"
+            },
+            "years": {
+                "type": "integer"
+            },
+            "validity": {
+                "type": "string"
+            },
+            "creditSum": {
+                "type": "number"
+            },
+            "creditPercentage": {
+                "type": "number"
+            }
+        },
+        "required": ["cardNum", "cardType", "room", "customerName", "customerBirthDate", "customerPhone", "customerAddress", "date", "price"]
+    }
+}

@@ -5,7 +5,7 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images"];
 
 module.exports = class {
     onCreate(input) {
@@ -109,6 +109,17 @@ module.exports = class {
     }
 
     onMount() {
+        this.contextMenu = this.getComponent("z3_mf_image_menu");
+        document.addEventListener("click", () => {
+            if (this.contextMenu) {
+                this.contextMenu.setActive(false);
+            }
+        });
+        window.addEventListener("scroll", () => {
+            if (this.contextMenu) {
+                this.contextMenu.setActive(false);
+            }
+        });
         this.autoFocus();
         this.fieldsFlat.map(field => {
             if (field.maskOptions) {
@@ -222,6 +233,7 @@ module.exports = class {
             value = Boolean(value);
             break;
         case "file":
+        case "images":
             const prev = data[this.state.activeTabId][obj.id] ? data[this.state.activeTabId][obj.id] : [];
             value = [...prev, ...Array.from(value)];
             break;
@@ -379,7 +391,7 @@ module.exports = class {
         if (field.convert) {
             valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value) : String(value);
         }
-        if (field.type === "file" && !Array.isArray(value)) {
+        if ((field.type === "file" || field.type === "images") && !Array.isArray(value)) {
             valueProcess = [];
         }
         if (field.type === "keyvalue") {
@@ -395,7 +407,12 @@ module.exports = class {
         this.fieldsFlat.map(field => {
             if (field.shared) {
                 const value = this.processSerializedValue(field, data[this.state.activeTabId][field.id]);
-                serialized[field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
+                if (field.tags) {
+                    const valueArr = value ? value.replace(/\s/gm, "").split(",") : [];
+                    serialized[field.id] = [...new Set(valueArr)];
+                } else {
+                    serialized[field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
+                }
                 // if (field.type === "file" && !Array.isArray(serialized[field.id])) {
                 //     serialized[field.id] = [];
                 // }
@@ -403,7 +420,12 @@ module.exports = class {
                 this.state.tabs.map(tab => {
                     serialized[tab.id] = serialized[tab.id] || {};
                     const value = this.processSerializedValue(field, data[tab.id][field.id]);
-                    serialized[tab.id][field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
+                    if (field.tags) {
+                        const valueArr = value ? value.replace(/\s/gm, "").split(",") : [];
+                        serialized[tab.id][field.id] = [...new Set(valueArr)];
+                    } else {
+                        serialized[tab.id][field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
+                    }
                     // if (field.type === "file" && !Array.isArray(serialized[tab.id][field.id])) {
                     //     serialized[tab.id][field.id] = [];
                     // }
@@ -431,7 +453,7 @@ module.exports = class {
             Object.keys(data[tab.id]).map(i => {
                 if (data[tab.id][i] && Array.isArray(data[tab.id][i])) {
                     data[tab.id][i].map(f => {
-                        if (typeof f === "object" && f.type === "file" && f.data) {
+                        if (typeof f === "object" && (f.type === "file" || f.type === "images") && f.data) {
                             delete f.data;
                             f.upload = true;
                         }
@@ -446,7 +468,7 @@ module.exports = class {
         Object.keys(data).map(i => {
             if (data[i] && Array.isArray(data[i])) {
                 data[i].map(f => {
-                    if (typeof f === "object" && f.type === "file" && f.data) {
+                    if (typeof f === "object" && (f.type === "file" || f.type === "images") && f.data) {
                         delete f.data;
                         f.upload = true;
                     }
@@ -649,5 +671,21 @@ module.exports = class {
 
     setError(error) {
         this.state.error = error;
+    }
+
+    onContextMenu(data) {
+        this.contextMenuId = data.fieldId;
+        this.contextMenu.setActive(true, data.x, data.y, data.id);
+    }
+
+    onMenuItemClick(data) {
+        this.contextMenu.setActive(false);
+        switch (data.cmd) {
+        case "delete":
+            this.onRemoveArrItem({
+                id: this.contextMenuId,
+                itemid: data.uid
+            });
+        }
     }
 };

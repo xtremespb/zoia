@@ -33,16 +33,16 @@ style.scss {
         <for|tItem, tIndex| of=input.fields>
           <if(typeof tItem === "object" && tItem.type)>
             <div class="field columns z3-mf-field-columns" key=`mf_cmp_${tItem.id}_wrap`>
-              <div class=`control column ${tItem.wrapCSS || ""}`>
-                <mField key=`mf_cmp_${tItem.id}` item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue")/>
+              <div class=`control column ${tItem.wrapCSS || ""}` style="position:unset">
+                <mField key=`mf_cmp_${tItem.id}` item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue") on-context-menu("onContextMenu")/>
               </div>
             </div>
           </if>
           <if(Array.isArray(tItem))>
             <div class="field columns is-gapless z3-mf-field-columns-group">
               <for|sItem, sIndex| of=tItem>
-                <div class=`control column ${sItem.wrapCSS || ""}` key=`mf_cmp_${sItem.id}_wrap`>
-                  <mField key=`mf_cmp_${sItem.id}` item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue")/>
+                <div class=`control column ${sItem.wrapCSS || ""}` key=`mf_cmp_${sItem.id}_wrap` style="position:unset">
+                  <mField key=`mf_cmp_${sItem.id}` item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue") on-context-menu("onContextMenu")/>
                 </div>
               </for>
             </div>
@@ -86,4 +86,5 @@ style.scss {
     </div>
   </if>
   <mnotify key=`${input.id}_mnotify`/>
+  <imageMenu key="z3_mf_image_menu" on-item-click("onMenuItemClick")/>
 </div>

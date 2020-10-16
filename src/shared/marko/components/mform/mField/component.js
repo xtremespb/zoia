@@ -21,6 +21,8 @@ if (process.browser) {
     ace.config.setModuleUrl("ace/mode/javascript", require("file-loader?name=npm.ace-builds.mode-javascript.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/mode-javascript.js"));
     ace.config.setModuleUrl("ace/mode/css", require("file-loader?name=npm.ace-builds.mode-css.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/mode-css.js"));
     ace.config.setModuleUrl("ace/theme/chrome", require("file-loader?name=npm.ace-builds.theme-chrome.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/theme-chrome.js"));
+    ace.config.setModuleUrl("ace/mode/json", require("file-loader?name=npm.ace-builds.mode-json.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/mode-json.js"));
+    ace.config.setModuleUrl("ace/mode/json_worker", require("file-loader?name=npm.ace-builds.worker-json.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/worker-json.js"));
 }
 
 module.exports = class {
@@ -292,5 +294,20 @@ module.exports = class {
 
     setHeaders(headers) {
         this.headers = headers;
+    }
+
+    onContextMenu(e) {
+        const fileId = e.target.dataset ? e.target.dataset.mfimageid : e.target.parentNode && e.target.parentNode.dataset && e.target.parentNode.dataset.mfimageid ? e.target.parentNode.dataset.mfimageid : e.target.parentNode && e.target.parentNode.parentNode && e.target.parentNode.parentNode.dataset && e.target.parentNode.parentNode.dataset.mfimageid ? e.target.parentNode.parentNode.dataset.mfimageid : null;
+        if (fileId) {
+            e.stopPropagation();
+            e.preventDefault();
+            // this.contextMenu.setActive(true, e.pageX, e.pageY, fileId);
+            this.emit("context-menu", {
+                x: e.pageX,
+                y: e.pageY,
+                id: fileId,
+                fieldId: this.input.item.id
+            });
+        }
     }
 };

@@ -74,6 +74,7 @@ export default () => ({
                     username: data.username,
                     email: data.email,
                     status: data.status,
+                    groups: data.groups,
                     modifiedAt: new Date(),
                     ...updateExtras
                 }

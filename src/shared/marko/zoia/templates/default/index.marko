@@ -47,7 +47,7 @@ $ langHTML += "</div></div>";
               $!{langHTML}<if(out.global.authData && out.global.authData.username)>
                 <div class="navbar-item has-dropdown is-hoverable">
                   <a class="navbar-link">${out.global.authData.username}</a>
-                  <div class="navbar-dropdown">
+                  <div class="navbar-dropdown is-right">
                     <if(out.global.authData.status.indexOf("admin") > -1)>
                       <a class="navbar-item" href=out.global.i18n.getLocalizedURL(out.global.admin, out.global.language)>${out.global.i18n.t("adminPanel")}</a>
                     </if>
@@ -68,7 +68,7 @@ $ langHTML += "</div></div>";
         <${input.renderBody}/>
       </div>
     </section>
-    <section class="section pt-5 mt-0 pb-5 mb-0 z3-dt-footer is-size-7">
+    <section class="section pt-5 mt-5 pb-5 mb-0 z3-dt-footer is-size-7">
       <div class="container">${out.global.i18n.t("sitePoweredByZoia")}. &copy; 2019-${new Date().getFullYear()} Michael A. Matveev.</div>
     </section>
     <if(out.global.extraJS)>

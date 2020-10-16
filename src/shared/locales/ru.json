@@ -55,8 +55,12 @@
     "deleteModalText": "Следующие элементы будут удалены",
     "btnConfirmGeneric": "Подтвердить",
     "btnCancelGeneric": "Отмена",
+    "btnPrimaryGeneric": "Основная",
+    "btnDeleteGeneric": "Удалить",
     "moveUpGeneric": "Переместить вверх",
     "moveDownGeneric": "Переместить вниз",
+    "moveLeftGeneric": "Переместить влево",
+    "moveRightGeneric": "Переместить вправо",
     "moveGeneric": "Переместить",
     "sitePoweredByZoia": "Сайт работает на системе ZOIA"
 }

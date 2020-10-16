@@ -55,8 +55,12 @@
     "deleteModalText": "The following item(s) will be deleted",
     "btnConfirmGeneric": "Confirm",
     "btnCancelGeneric": "Cancel",
+    "btnPrimaryGeneric": "Primary",
+    "btnDeleteGeneric": "Delete",
     "moveUpGeneric": "Move Up",
     "moveDownGeneric": "Move Down",
+    "moveLeftGeneric": "Move Left",
+    "moveRightGeneric": "Move Right",
     "moveGeneric": "Move",
     "sitePoweredByZoia": "Website is powered by ZOIA"
 }

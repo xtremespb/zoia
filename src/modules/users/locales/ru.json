@@ -23,5 +23,7 @@
     "authorized": "Успешная авторизация, осуществляется переход…",
     "mFormErr.userAlreadyExists": "Пользователь уже существует в системе",
     "mFormErr.emailAlreadyExists": "E-mail уже существует в системе",
-    "mFormErr.userNotFound": "Пользователь не найден в системе"
+    "mFormErr.userNotFound": "Пользователь не найден в системе",
+    "groups": "Группы",
+    "groupsHelpText": "Список групп, разделенных запятой"
 }
