@@ -89,7 +89,8 @@
     "commonTableItemsLimit": 20,
     "collections": {
         "files": "files",
-        "registry": "registry"
+        "registry": "registry",
+        "counters": "counters"
     },
     "directories": {
         "tmp": "tmp",

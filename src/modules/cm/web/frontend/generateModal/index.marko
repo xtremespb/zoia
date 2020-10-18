@@ -1,0 +1,20 @@
+<div class=`z3-ap-noselect modal${state.active ? " is-active" : ""}`>
+  <div class="modal-background" on-click("onCloseClick")/>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">${out.global.i18n.t("warnings")}</p>
+      <button class="delete" aria-label="close" on-click("onCloseClick")/>
+    </header>
+    <section class="modal-card-body">
+      <if(state.errors)>
+        <for|error| of=state.errors>
+          <div>${error}</div>
+        </for>
+      </if>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-primary" on-click("onConfirmClick") disabled=state.fatal>${out.global.i18n.t("btnConfirmGeneric")}</button>
+      <button class="button" on-click("onCloseClick") disabled=state.running>${out.global.i18n.t("btnCancelGeneric")}</button>
+    </footer>
+  </div>
+</div>

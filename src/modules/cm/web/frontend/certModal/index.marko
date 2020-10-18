@@ -1,0 +1,18 @@
+<div class=`z3-ap-noselect modal${state.active ? " is-active" : ""}`>
+  <div class="modal-background" on-click("onCloseClick")/>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">${out.global.i18n.t("success")}</p>
+      <button class="delete" aria-label="close" on-click("onCloseClick")/>
+    </header>
+    <section class="modal-card-body">
+      <div>${out.global.i18n.t("successNotice")}</div>
+      <div clas="mt-2">
+        <a href=`${out.global.routeDownload}?id=${state.id}`>${out.global.i18n.t("downloadCert")}</a>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button" on-click("onCloseClick") disabled=state.running>${out.global.i18n.t("close")}</button>
+    </footer>
+  </div>
+</div>

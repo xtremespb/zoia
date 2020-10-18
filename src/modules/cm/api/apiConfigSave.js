@@ -24,7 +24,7 @@ export default () => ({
             rep.validationError(rep, extendedValidationResult);
             return;
         }
-        const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${req.zoiaModulesConfig["cm"].directory}`).replace(/\\/gm, "/");
+        const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${req.zoiaModulesConfig["cm"].directoryTemplates}`).replace(/\\/gm, "/");
         // Get ID from body
         try {
             // Get data from form body
@@ -37,7 +37,7 @@ export default () => ({
                 let uploadError;
                 await Promise.allSettled(uploadFiles.map(async f => {
                     try {
-                        const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${req.zoiaModulesConfig["cm"].directory}/${f.name}`).replace(/\\/gm, "/");
+                        const filename = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${req.zoiaModulesConfig["cm"].directoryTemplates}/${f.name}`).replace(/\\/gm, "/");
                         if (filename.indexOf(root) !== 0) {
                             throw new Error("Invalid file path");
                         }

@@ -25,6 +25,7 @@ export default routeId => ({
                         routeParams: true,
                         routes: true,
                         backupDb: true,
+                        routeDownload: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
@@ -35,6 +36,7 @@ export default routeId => ({
                         ...req.zoiaModulesConfig["backup"].routes,
                     },
                     backupDb,
+                    routeDownload: req.zoiaModulesConfig["backup"].routes.download,
                     ...await site.getGlobals()
                 },
                 modules: req.zoiaModules,

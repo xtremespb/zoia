@@ -1,0 +1,27 @@
+<div class="tabs">
+  <ul>
+    <li class=(state.tab === "files" ? "is-active" : "")>
+      <a on-click("onTabClick") data-id="files">
+        <span>${out.global.i18n.t("tabFiles")}</span>
+      </a>
+    </li>
+    <li class=(state.tab === "config" ? "is-active" : "")>
+      <a on-click("onTabClick") data-id="config">
+        <span>${out.global.i18n.t("tabConfig")}</span>
+      </a>
+    </li>
+  </ul>
+</div>
+<if(state.tab === "config")>
+  <if(out.global.files && out.global.files.length)>
+    <div class="field">
+      <label class="label">${out.global.i18n.t("existingFiles")}</label>
+      <div class="control box mb-0">${out.global.files.join(", ")}</div>
+      <p class="help">${out.global.i18n.t("existingFilesHelpText")}</p>
+    </div>
+  </if>
+  <cmConfig/>
+</if>
+<if(state.tab === "files")>
+  <cmFiles/>
+</if>

@@ -57,6 +57,7 @@ module.exports = class {
             getValue: this.getValue.bind(this),
             submitForm: this.submitForm.bind(this),
             setError: this.setError.bind(this),
+            resetData: this.resetData.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -132,9 +133,14 @@ module.exports = class {
                 this.getComponent(`mf_cmp_${field.id}`).func.setHeaders(this.input.save.headers);
             }
         });
+        this.dataOnMount = cloneDeep(this.state.data);
         window.__zoiaCoreImagesBrowser = {
             insertImageURL: this.insertImageURL.bind(this)
         };
+    }
+
+    resetData() {
+        this.setState("data", this.dataOnMount);
     }
 
     onTabClick(e) {
@@ -389,7 +395,11 @@ module.exports = class {
     processSerializedValue(field, value) {
         let valueProcess = value;
         if (field.convert) {
-            valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value) : String(value);
+            if (!value || value === "") {
+                valueProcess = 0;
+            } else {
+                valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value) : String(value);
+            }
         }
         if ((field.type === "file" || field.type === "images") && !Array.isArray(value)) {
             valueProcess = [];
@@ -556,12 +566,12 @@ module.exports = class {
         }
     }
 
-    async submitForm() {
-        this.onFormSubmit();
+    async submitForm(noEmit) {
+        this.onFormSubmit(noEmit);
     }
 
     async onFormSubmit(e) {
-        e ? e.preventDefault() : null;
+        e && e.preventDefault ? e.preventDefault() : null;
         const serialized = this.serialize(true);
         const validationResult = await this.validate(serialized);
         this.visualizeErrors(validationResult.errorData);
@@ -569,7 +579,12 @@ module.exports = class {
             return false;
         }
         const data = this.serialize(false);
-        this.emit("form-submit", data);
+        if (e !== true) {
+            this.emit("form-submit", data);
+        }
+        if (this.input.manual && e !== true) {
+            return;
+        }
         await this.upload(data);
         return false;
     }

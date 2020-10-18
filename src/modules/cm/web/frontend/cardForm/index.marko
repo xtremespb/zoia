@@ -5,7 +5,7 @@ $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
 $ const holdingData = out.global.userHoldingData;
 $ const common = out.global.common;
-<mform key="cardForm" id="cardForm" save={
+<mform key="z3_cm_cardForm" id="cardForm" save={
   url: "/api/cm/card/generate",
   extras: {},
   headers: {
@@ -14,11 +14,10 @@ $ const common = out.global.common;
 } fields=[
   [
     {
-      id: "cardNum",
+      id: "cardNumber",
       type: "text",
-      label: out.global.i18n.t("cardNum"),
+      label: out.global.i18n.t("cardNumber"),
       wrapCSS: "z3-is-medium",
-      mandatory: true,
       convert: "integer",
       helpText: `${common.minCardNumber} - ${common.maxCardNumber}`,
       autoFocus: true
@@ -99,9 +98,9 @@ $ const common = out.global.common;
       id: "price",
       type: "text",
       label: out.global.i18n.t("price"),
+      helpText: out.global.i18n.t("priceHelpText"),
       wrapCSS: "z3-is-small",
       convert: "float",
-      mandatory: true
     },
     {
       id: "years",
@@ -120,18 +119,10 @@ $ const common = out.global.common;
   },
   [
     {
-      id: "validity",
-      type: "text",
-      label: out.global.i18n.t("validity"),
-      helpText: out.global.i18n.t("validityHelpText"),
-      wrapCSS: "z3-is-small"
-    },
-    {
       id: "creditSum",
       type: "text",
       label: out.global.i18n.t("creditSum"),
       convert: "float",
-      helpText: out.global.i18n.t("creditSumHelpText"),
       wrapCSS: "z3-is-small"
     },
     {
@@ -139,7 +130,6 @@ $ const common = out.global.common;
       type: "text",
       convert: "float",
       label: out.global.i18n.t("creditPercentage"),
-      helpText: out.global.i18n.t("creditPercentageHelpText"),
       wrapCSS: "z3-is-small"
     }
   ],
@@ -157,8 +147,17 @@ $ const common = out.global.common;
         buttonType: "submit",
         label: out.global.i18n.t("generate"),
         css: "is-primary"
+      },
+      {
+        id: "btnReset",
+        type: "button",
+        buttonType: "button",
+        label: out.global.i18n.t("reset"),
+        css: "is-warning"
       }
     ]
   }
-] validation=generate progressButtonId="btnGenerate" i18n=out.global.i18n/>
+] validation=generate progressButtonId="btnGenerate" i18n=out.global.i18n manual=true on-form-submit("onFormSubmit") on-button-click("onButtonClick") on-post-success("onFormPostSuccess")/>
 <mnotify key=`cardForm_mnotify`/>
+<generateModal key="z3_cm_generateModal" on-confirm-click("onConfirmClick")/>
+<certModal key="z3_cm_certModal"/>

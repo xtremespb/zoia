@@ -23,6 +23,10 @@
                 "indexesAsc": [],
                 "indexesDesc": [],
                 "expires": 86400
+            },
+            "counters": {
+                "indexesAsc": [],
+                "indexesDesc": []
             }
         }
     },

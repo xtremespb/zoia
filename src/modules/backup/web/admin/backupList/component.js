@@ -13,7 +13,7 @@ module.exports = class {
         this.routes = out.global.routes;
         this.cookieOptions = out.global.cookieOptions;
         this.siteOptions = out.global.siteOptions;
-        this.i18n = out.global.i18n;
+        this.routeDownload = out.global.routeDownload;
     }
 
     onMount() {
@@ -68,7 +68,7 @@ module.exports = class {
         switch (data.action) {
         case "btnDownload":
             window.open(
-                `/admin/backup/download?id=${data.id}`,
+                `${this.routeDownload}?id=${data.id}`,
                 "_blank"
             );
             break;

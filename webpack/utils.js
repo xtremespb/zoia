@@ -105,10 +105,19 @@ const ensureDirectories = () => {
     dirs.map(d => fs.ensureDirSync(path.resolve(`${__dirname}/../${d}`)));
 };
 
+const copyPublic = () => {
+    const publicFiles = [{
+        src: "favicon.ico",
+        dest: "zoia/favicon.ico"
+    }];
+    publicFiles.map(i => fs.copyFileSync(path.resolve(`${__dirname}/../src/public/${i.src}`), path.resolve(`${__dirname}/../build/public/${i.dest}`)));
+};
+
 module.exports = {
     cleanUpWeb,
     generateTemplatesJSON,
     rebuildMarkoTemplates,
     generateModulesConfig,
-    ensureDirectories
+    ensureDirectories,
+    copyPublic
 };

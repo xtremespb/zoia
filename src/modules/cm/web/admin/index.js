@@ -15,7 +15,7 @@ export default () => ({
                 return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["cm"].routes.admin);
             }
             site.setAuth(auth);
-            const dir = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${req.zoiaModulesConfig["cm"].directory}`);
+            const dir = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${req.zoiaModulesConfig["cm"].directoryTemplates}`);
             const files = await fs.readdir(dir);
             const render = await template.stream({
                 $global: {
@@ -23,11 +23,13 @@ export default () => ({
                         template: true,
                         pageTitle: true,
                         files: true,
+                        routeDownload: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
                     pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
                     files,
+                    routeDownload: req.zoiaModulesConfig["cm"].routes.download,
                     ...await site.getGlobals(),
                 },
                 modules: req.zoiaModules,

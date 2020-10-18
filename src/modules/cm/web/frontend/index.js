@@ -38,6 +38,7 @@ export default () => ({
                         common: true,
                         userHolding: true,
                         userHoldingData: true,
+                        routeDownload: true,
                         ...site.getSerializedGlobals()
                     },
                     template: req.zoiaTemplates.available[0],
@@ -45,6 +46,7 @@ export default () => ({
                     common: cmData.config.common && cmData.config && cmData.config.common ? cmData.config.common : {},
                     userHolding,
                     userHoldingData,
+                    routeDownload: req.zoiaModulesConfig["cm"].routes.download,
                     ...await site.getGlobals(),
                 }
             });

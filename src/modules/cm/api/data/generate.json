@@ -2,9 +2,8 @@
     "root": {
         "type": "object",
         "properties": {
-            "cardNum": {
-                "type": "integer",
-                "minimum": 1
+            "cardNumber": {
+                "type": "integer"
             },
             "cardType": {
                 "type": "integer",
@@ -44,16 +43,10 @@
                 "maxLength": 10
             },
             "price": {
-                "type": "number",
-                "minimum": 1
+                "type": "number"
             },
             "years": {
-                "type": "string"
-            },
-            "validity": {
-                "type": "string",
-                "minLength": 10,
-                "maxLength": 10
+                "type": "integer"
             },
             "creditSum": {
                 "type": "number"
@@ -62,6 +55,6 @@
                 "type": "number"
             }
         },
-        "required": ["cardNum", "cardType", "room", "customerName", "customerBirthDate", "customerPhone", "customerAddress", "date", "price"]
+        "required": ["cardNumber", "cardType", "room", "customerName", "customerBirthDate", "customerPhone", "customerAddress", "date", "price"]
     }
 }
