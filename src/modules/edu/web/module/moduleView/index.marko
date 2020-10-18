@@ -18,10 +18,17 @@ style.scss {
 </nav>
 <div class="mb-5">${out.global.moduleData.desc}</div>
 <if(out.global.moduleData.tests)>
-  <div class="buttons">
-    <for|t| of=Object.keys(out.global.moduleData.tests)>
-      <button on-click("onStartTestClick") data-test=t data-url=out.global.i18n.getLocalizedURL(`${out.global.routes.index}/test/${out.global.programId}/${out.global.moduleId}/${t}`) class="button is-primary is-rounded">${out.global.moduleData.tests[t].title}</button>
-    </for>
-  </div>
+  <for|t| of=Object.keys(out.global.moduleData.tests)>
+    <div class="column is-two-thirds box">
+      <div class="columns is-multiline">
+        <div class="column is-four-fifths is-vcentered">
+          <p class="has-text-weight-medium">${out.global.moduleData.tests[t].title}</p>
+        </div>
+        <div class="column is-one-fifth">
+          <button on-click("onStartTestClick") data-test=t data-url=out.global.i18n.getLocalizedURL(`${out.global.routes.index}/test/${out.global.programId}/${out.global.moduleId}/${t}`) class="button is-primary is-rounded">Start</button>
+        </div>
+      </div>
+    </div>
+  </for>
 </if>
 <confirmModal key="z3_edu_mv_confirmModal" on-confirm("onConfirmTestStart")/>

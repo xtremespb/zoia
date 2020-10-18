@@ -8,12 +8,12 @@
             "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur massa mauris, tincidunt vel ante semper, iaculis pharetra massa. Aliquam erat volutpat. Phasellus sit amet odio elementum, aliquam turpis in, mollis odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mattis at velit ultrices venenatis.",
             "tests": {
                 "test1": {
-                    "title": "With time",
+                    "title": "Test 1: Some very stupid Java Test",
                     "descDialog": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna condimentum mattis pellentesque id nibh tortor id aliquet. Tincidunt vitae semper quis lectus nulla at. Euismod in pellentesque massa placerat. Sit amet porttitor eget dolor morbi non arcu risus quis. Et malesuada fames ac turpis egestas maecenas pharetra convallis posuere. Nulla facilisi nullam vehicula ipsum a arcu cursus vitae. Amet facilisis magna etiam tempor orci eu.",
                     "descRuntime": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
                 },
                 "test2": {
-                    "title": "Without time",
+                    "title": "Test 1: Some very stupid Java Test with a very very very very OH MY GOOOD SOOOO very very very very looooooong name",
                     "descDialog": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Augue interdum velit euismod in pellentesque massa placerat duis. Dui accumsan sit amet nulla facilisi morbi tempus. Facilisis magna etiam tempor orci eu lobortis elementum nibh tellus. Duis ultricies lacus sed turpis tincidunt id aliquet.",
                     "descRuntime": "Lorem ipsum dolor sit amet, euismod in pellentesque massa placerat duis."
                 }
