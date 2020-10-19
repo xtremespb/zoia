@@ -15,6 +15,7 @@ import {
     MongoClient
 } from "mongodb";
 import crypto from "crypto";
+import template from "lodash/template";
 import logger from "../../lib/logger";
 import loggerHelpers from "../../lib/loggerHelpers";
 import telegramHelpers from "../../lib/telegramHelpers";
@@ -35,6 +36,8 @@ import SocketIO from "../../lib/socketIO";
     let pino;
     let modules;
     let packageJson;
+    let mailTemplate;
+    const mailTemplateComponents = {};
     const modulesConfig = {};
     try {
         buildJson = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/build.json`));
@@ -49,6 +52,13 @@ import SocketIO from "../../lib/socketIO";
         modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
         const defaultConfigs = [];
         pino.info(`Built-in template(s): ${templates.available.join(", ")}`);
+        const mailTemplateFile = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${config.email.template}.template`), "utf8");
+        mailTemplate = template(mailTemplateFile);
+        const availableMailComponents = fs.readdirSync(path.resolve(`${__dirname}/../../build/mail/components/${config.email.template}`));
+        availableMailComponents.map(c => {
+            const mailTemplateComponentFile = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/components/${config.email.template}/${c}`), "utf8");
+            mailTemplateComponents[c.replace(/\.template$/, "")] = template(mailTemplateComponentFile);
+        });
         modules.map(m => {
             try {
                 modulesConfig[m.id] = require(`../../../modules/${m.id}/config.dist.json`);
@@ -146,6 +156,10 @@ import SocketIO from "../../lib/socketIO";
         fastify.decorateRequest("zoiaPackageJson", packageJson);
         fastify.decorate("zoiaBuildJson", buildJson);
         fastify.decorateRequest("zoiaBuildJson", buildJson);
+        fastify.decorate("mailTemplate", mailTemplate);
+        fastify.decorateRequest("mailTemplate", mailTemplate);
+        fastify.decorate("mailTemplateComponents", mailTemplateComponents);
+        fastify.decorateRequest("mailTemplateComponents", mailTemplateComponents);
         Object.keys(loggerHelpers).map(i => fastify.decorateReply(i, loggerHelpers[i]));
         Object.keys(loggerHelpers).map(i => fastify.decorate(i, loggerHelpers[i]));
         Object.keys(response).map(i => fastify.decorateReply(i, response[i]));

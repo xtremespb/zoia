@@ -36,6 +36,7 @@ export default class {
             logout: true,
             admin: true,
             navData: true,
+            publicFiles: true,
         };
         this.i18n.setLanguage(this.language);
     }
@@ -83,7 +84,8 @@ export default class {
             login: this.moduleConfigUsers.routes.login,
             logout: this.moduleConfigUsers.routes.logout,
             admin: this.moduleConfigAdmin.routes.admin,
-            navData: navData ? navData.tree : []
+            navData: navData ? navData.tree : [],
+            publicFiles: config.routes.publicFiles
         };
     }
 }

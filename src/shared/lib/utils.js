@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import mime from "mime-types";
+import Jimp from "jimp";
 import {
     exec
 } from "child_process";
@@ -110,6 +111,69 @@ export default {
                 }, {
                     upsert: true
                 });
+            } catch (e) {
+                uploadError = true;
+            }
+        }));
+        if (uploadError) {
+            rep.requestError(rep, {
+                failed: true,
+                error: "Some files are not saved",
+                errorKeyword: "uploadError",
+                errorData: []
+            });
+            return false;
+        }
+        return true;
+    },
+    async saveImages(req, rep, db, uploadFiles, formData, auth = false, admin = false) {
+        const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
+            $or: uploadFiles.map(f => ({
+                _id: f.id
+            }))
+        }).count();
+        if (duplicates) {
+            rep.requestError(rep, {
+                failed: true,
+                error: "Some files are duplicated",
+                errorKeyword: "duplicateFiles",
+                errorData: []
+            });
+            return false;
+        }
+        let uploadError;
+        await Promise.allSettled(uploadFiles.map(async f => {
+            try {
+                const filename = path.format({
+                    ...path.parse(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}/${f.id}`).replace(/\\/gm, "/")),
+                    base: undefined,
+                    ext: ".jpg"
+                });
+                const filenameThumb = path.format({
+                    ...path.parse(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}/tn_${f.id}`).replace(/\\/gm, "/")),
+                    base: undefined,
+                    ext: ".jpg"
+                });
+                const fileData = await fs.readFile(formData.files[f.id].filePath);
+                const thumb = await Jimp.read(fileData);
+                if (req.zoiaModulesConfig["core"].images.sizeThumb) {
+                    await thumb.scaleToFit(req.zoiaModulesConfig["core"].images.sizeThumb, Jimp.AUTO);
+                }
+                if (req.zoiaModulesConfig["core"].images.qualityThumb) {
+                    await thumb.quality(req.zoiaModulesConfig["core"].images.qualityThumb);
+                }
+                const thumbBuffer = await thumb.getBufferAsync(Jimp.MIME_JPEG);
+                await fs.writeFile(filenameThumb, thumbBuffer);
+                const img = await Jimp.read(formData.files[f.id].filePath);
+                if (req.zoiaModulesConfig["core"].images.sizeFull) {
+                    await img.scaleToFit(req.zoiaModulesConfig["core"].images.sizeFull, Jimp.AUTO);
+                }
+                if (req.zoiaModulesConfig["core"].images.qualityFull) {
+                    await img.quality(req.zoiaModulesConfig["core"].images.qualityFull);
+                }
+                const imgBuffer = await img.getBufferAsync(Jimp.MIME_JPEG);
+                await fs.writeFile(filename, imgBuffer);
+                await fs.remove(formData.files[f.id].filePath);
             } catch (e) {
                 uploadError = true;
             }

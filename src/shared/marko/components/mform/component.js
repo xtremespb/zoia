@@ -289,6 +289,48 @@ module.exports = class {
         this.setState("data", data);
     }
 
+    onSetPrimaryArrItem(obj) {
+        const data = cloneDeep(this.state.data);
+        if (data[this.state.activeTabId][obj.id].length < 2) {
+            return;
+        }
+        const currentIndex = data[this.state.activeTabId][obj.id].findIndex(i => i.id === obj.itemid);
+        const element = data[this.state.activeTabId][obj.id][currentIndex];
+        data[this.state.activeTabId][obj.id].splice(currentIndex, 1);
+        data[this.state.activeTabId][obj.id].splice(0, 0, element);
+        this.setState("data", data);
+    }
+
+    onMoveLeftArrItem(obj) {
+        const data = cloneDeep(this.state.data);
+        if (data[this.state.activeTabId][obj.id].length < 2) {
+            return;
+        }
+        const currentIndex = data[this.state.activeTabId][obj.id].findIndex(i => i.id === obj.itemid);
+        if (currentIndex === 0) {
+            return;
+        }
+        const element = data[this.state.activeTabId][obj.id][currentIndex];
+        data[this.state.activeTabId][obj.id].splice(currentIndex, 1);
+        data[this.state.activeTabId][obj.id].splice(currentIndex - 1, 0, element);
+        this.setState("data", data);
+    }
+
+    onMoveRightArrItem(obj) {
+        const data = cloneDeep(this.state.data);
+        if (data[this.state.activeTabId][obj.id].length < 2) {
+            return;
+        }
+        const currentIndex = data[this.state.activeTabId][obj.id].findIndex(i => i.id === obj.itemid);
+        if (currentIndex === data[this.state.activeTabId][obj.id].length - 1) {
+            return;
+        }
+        const element = data[this.state.activeTabId][obj.id][currentIndex];
+        data[this.state.activeTabId][obj.id].splice(currentIndex, 1);
+        data[this.state.activeTabId][obj.id].splice(currentIndex + 1, 0, element);
+        this.setState("data", data);
+    }
+
     visualizeErrors(validationErrors, generalError = true) {
         let errorData = cloneDeep(validationErrors);
         const errors = {};
@@ -701,6 +743,25 @@ module.exports = class {
                 id: this.contextMenuId,
                 itemid: data.uid
             });
+            break;
+        case "primary":
+            this.onSetPrimaryArrItem({
+                id: this.contextMenuId,
+                itemid: data.uid
+            });
+            break;
+        case "left":
+            this.onMoveLeftArrItem({
+                id: this.contextMenuId,
+                itemid: data.uid
+            });
+            break;
+        case "right":
+            this.onMoveRightArrItem({
+                id: this.contextMenuId,
+                itemid: data.uid
+            });
+            break;
         }
     }
 };

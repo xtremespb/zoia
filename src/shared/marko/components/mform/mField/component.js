@@ -89,7 +89,7 @@ module.exports = class {
     }
 
     updateAce() {
-        const value = this.state.modeAce === "ace" && this.item.aceOptions.mode === "ace/mode/html" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value;
+        const value = (this.state.modeAce === "ace" && this.item.aceOptions && this.item.aceOptions.mode === "ace/mode/html" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value) || "";
         this.aceEditor.getSession().setValue(value);
         if (this.item.wysiwyg) {
             this.ckEditor.setData(value);
@@ -301,7 +301,6 @@ module.exports = class {
         if (fileId) {
             e.stopPropagation();
             e.preventDefault();
-            // this.contextMenu.setActive(true, e.pageX, e.pageY, fileId);
             this.emit("context-menu", {
                 x: e.pageX,
                 y: e.pageY,

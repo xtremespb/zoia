@@ -48,7 +48,7 @@ export default () => ({
                 await utils.cleanRemovedFiles(req, this.mongo.db, extendedValidation, dbItem, data);
             }
             // Upload files
-            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles, formData))) {
+            if (uploadFiles && uploadFiles.length && !(await utils.saveImages(req, rep, this.mongo.db, uploadFiles, formData))) {
                 await req.removeMultipartTempFiles(formData.files);
                 return;
             }

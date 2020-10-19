@@ -29,12 +29,16 @@
     "logLevel": "info",
     "trustProxy": true,
     "stackTrace": true,
-    "mailer": {
-        "service": "Yandex",
-        "auth": {
-            "user": "info@zoiajs.org",
-            "pass": ""
-        }
+    "email": {
+        "template": "default",
+        "mailer": {
+            "service": "Yandex",
+            "auth": {
+                "user": "",
+                "pass": ""
+            }
+        },
+        "from": "ZOIA <info@zoiajs.org>"
     },
     "mongo": {
         "url": "mongodb://127.0.0.1:27017",
@@ -79,11 +83,13 @@
     "siteMetadata": {
         "en": {
             "title": "Zoia Website",
-            "titleShort": "Zoia Website"
+            "titleShort": "Zoia Website",
+            "descShort": "Example Website powered by ZOIA"
         },
         "ru": {
             "title": "Сайт на Zoia",
-            "titleShort": "Сайт на Zoia"
+            "titleShort": "Сайт на Zoia",
+            "descShort": "Тестовый веб-сайт, запущенный на ZOIA"
         }
     },
     "commonTableItemsLimit": 20,
@@ -95,12 +101,14 @@
     "directories": {
         "tmp": "tmp",
         "files": "build/files",
-        "images": "build/public/images"
+        "images": "build/public/images",
+        "publicFiles": "build/public/files"
     },
     "routes": {
         "download": "/zoia/core/download",
         "imagesBrowser": "/zoia/core/images",
-        "login": "/users/login"
+        "login": "/users/login",
+        "publicFiles": "/files"
     },
     "telegram": {
         "enabled": false,

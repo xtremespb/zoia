@@ -21,6 +21,7 @@ module.exports = (env, argv) => {
     utils.generateTemplatesJSON(argv);
     utils.rebuildMarkoTemplates(argv);
     utils.copyPublic();
+    utils.copyMailTemplates(argv);
     console.log("Starting Webpack...");
     webpackConfig.push(configWebClient, configWebServer);
     return webpackConfig;

@@ -329,7 +329,7 @@ Images Input
             <img src=window.URL.createObjectURL(file.data) class="z3-mf-image" on-contextmenu("onContextMenu") data-mfimageid=file.id/>
           </if>
           <else>
-            <a href=`/zoia/core/download?id=${file.id}` target="_blank">${file.name}</a>
+            <img src=`${out.global.publicFiles}/tn_${file.id}.jpg` class="z3-mf-image" on-contextmenu("onContextMenu") data-mfimageid=file.id/>
           </else>
         </div>
       </for>

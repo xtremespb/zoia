@@ -6,12 +6,15 @@ import {
     v4 as uuid
 } from "uuid";
 import moment from "moment";
+import template from "lodash/template";
 import generateData from "./data/generate.json";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
+import Mailer from "../../../shared/lib/mailer";
 import Utils from "./utils";
 
 const utils = new Utils();
+const mailTemplateLegacy = template(fs.readFileSync(`${__dirname}/../mail/modules/cm/legacy.template`));
 
 export default () => ({
     schema: {
@@ -21,7 +24,7 @@ export default () => ({
     async handler(req, rep) {
         // Check permissions
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+        if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
             rep.unauthorizedError(rep);
             return;
         }
@@ -62,8 +65,8 @@ export default () => ({
             const holdingData = cmData.config.holdings[userHolding];
             const cardId = holdingData.cards[req.body.cardType - 1].id;
             const templatePath = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${req.zoiaModulesConfig["cm"].directoryTemplates}/${cardId}.docx`);
-            const template = await fs.readFile(templatePath, "binary");
-            const dataZip = new PizZip(template);
+            const templateData = await fs.readFile(templatePath, "binary");
+            const dataZip = new PizZip(templateData);
             const templateDoc = new Docxtemplater();
             templateDoc.loadZip(dataZip);
             const [dateDD, dateMM, dateYYYY] = req.body.date.split(/\./);
@@ -208,6 +211,8 @@ export default () => ({
                     return;
                 }
             }
+            const accountUsername = `L${cardNumber}`;
+            const accountPassword = `PC${parseInt(cardNumber, 10)}`;
             templateDoc.setData({
                 customerName: req.body.customerName,
                 customerBirthDate: req.body.customerBirthDate,
@@ -229,8 +234,8 @@ export default () => ({
                 componentsTotalCost,
                 components,
                 componentsOfficeCost,
-                accountUsername: `L${cardNumber}`,
-                accountPassword: `PC${parseInt(cardNumber, 10)}`,
+                accountUsername,
+                accountPassword,
             });
             templateDoc.render();
             const templateBuf = templateDoc.getZip().generate({
@@ -260,7 +265,7 @@ export default () => ({
                     name: `${userHolding}_${cardId}_${moment().format("DDMMYYYY_HHmm")}.pdf`,
                     size: stats.size,
                     date: new Date(),
-                    cardNumber: req.body.cardNumber,
+                    cardNumber,
                     customerName: req.body.customerName,
                     holding: userHolding,
                     cardType: cardId,
@@ -269,6 +274,20 @@ export default () => ({
             }, {
                 upsert: true
             });
+            if (req.body.customerEmail && cardId === "legacy") {
+                const mailer = new Mailer(this);
+                mailer.setRecepient(req.body.customerEmail);
+                mailer.setSubject("Legacy");
+                mailer.setHTML(this.mailTemplate({
+                    subject: "Legacy",
+                    preheader: "Ваш сертификат Legacy",
+                    content: mailTemplateLegacy({
+                        accountUsername,
+                        accountPassword
+                    })
+                }));
+                await mailer.send();
+            }
             // Send result
             rep.successJSON(rep, {
                 uid

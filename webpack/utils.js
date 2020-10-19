@@ -21,6 +21,11 @@ const cleanUpWeb = (argv) => {
     });
 };
 
+const copyMailTemplates = (argv) => {
+    fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/templates`), path.resolve(`${__dirname}/../build/mail/templates`));
+    fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/components`), path.resolve(`${__dirname}/../build/mail/components`));
+};
+
 const generateTemplatesJSON = (argv) => {
     const available = fs.readdirSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/zoia/templates`));
     const templatesJSON = {
@@ -59,10 +64,14 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
     fs.ensureDirSync(path.resolve(`${__dirname}/../logs`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../etc/modules`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../build/scripts`));
+    fs.ensureDirSync(path.resolve(`${__dirname}/../build/mail/modules`));
     moduleDirs.map(dir => {
         // In production / non-update mode, copy the configs of each module to etc/modules
         if (argv.mode === "production" && argv.type !== "update" && !fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) && fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/config.dist.json`))) {
             fs.copyFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/config.dist.json`), path.resolve(`${__dirname}/../etc/modules/${dir}.json`));
+        }
+        if (fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/mail`)) && !fs.existsSync(path.resolve(`${__dirname}/../build/mail/modules/${dir}`))) {
+            fs.copy(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/mail`), path.resolve(`${__dirname}/../build/mail/modules/${dir}`));
         }
         const moduleData = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/module.json`));
         const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) : require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/config.dist.json`));
@@ -100,7 +109,7 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
 };
 
 const ensureDirectories = () => {
-    const dirs = ["tmp", "logs", "build/etc", "build/bin", "build/public", "build/files"];
+    const dirs = ["tmp", "logs", "build/etc", "build/bin", "build/public", "build/files", "build/mail", "build/public/files"];
     console.log(`Ensuring directories: ${dirs.join(", ")}`);
     dirs.map(d => fs.ensureDirSync(path.resolve(`${__dirname}/../${d}`)));
 };
@@ -119,5 +128,6 @@ module.exports = {
     rebuildMarkoTemplates,
     generateModulesConfig,
     ensureDirectories,
-    copyPublic
+    copyPublic,
+    copyMailTemplates
 };

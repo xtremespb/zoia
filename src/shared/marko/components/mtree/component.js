@@ -90,7 +90,7 @@ module.exports = class {
             i.isVisible = level < 2;
             i.isOpen = false;
             i.uuid = i.uuid || uuidv4();
-            i.t = i.data && i.data[this.language] && i.data[this.language].title ? i.data[this.language].title : i.data && i.data[this.language] ? i.data[this.language] : i.id;
+            i.t = i.data && i.data[this.language] && i.data[this.language].title ? i.data[this.language].title : i.data && i.data[this.language] && typeof i.data[this.language] === "string" ? i.data[this.language] : i.id;
             if (i.c) {
                 i.c = this.initTree(i.c, level + 1);
             }

@@ -7,7 +7,7 @@ export default () => ({
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
         try {
             const site = new req.ZoiaSite(req, "cm", this.mongo.db);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            if (!(await auth.getUserData()) || !auth.checkStatus("active")) {
                 auth.clearAuthCookie();
                 return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["cm"].routes.frontend);
             }
