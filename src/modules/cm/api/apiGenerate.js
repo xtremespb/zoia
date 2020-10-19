@@ -53,7 +53,7 @@ export default () => ({
                     userHolding = h;
                 }
             });
-            if (!userHolding || !cmData.config.holdings[userHolding]) {
+            if (!userHolding || !cmData.config.holdings[userHolding] || req.body.room > cmData.config.holdings[userHolding].rooms.length) {
                 rep.requestError(rep, {
                     failed: true,
                     error: "Holding not found",
@@ -79,6 +79,7 @@ export default () => ({
             let {
                 cardNumber
             } = req.body;
+            let rangeIndex = 0;
             // Check legacy fields
             if (cardId === "legacy") {
                 if (!req.body.years || req.body.years < 1) {
@@ -119,9 +120,10 @@ export default () => ({
                 }
                 componentsTotalCost = (req.body.creditSum / 100) * req.body.creditPercentage * req.body.years;
                 let componentsArray;
-                cmData.config.legacy.ranges.map(range => {
+                cmData.config.legacy.ranges.map((range, index) => {
                     if (!componentsArray && componentsTotalCost > range.from && (!range.to || componentsTotalCost < range.to)) {
                         componentsArray = range.components;
+                        rangeIndex = index;
                     }
                 });
                 let selectedComponentsCost = 0;
@@ -211,7 +213,25 @@ export default () => ({
                     return;
                 }
             }
-            const accountUsername = `L${cardNumber}`;
+            let usernameLetter1;
+            let usernameLetter2;
+            if (rangeIndex < 27) {
+                usernameLetter1 = "A";
+            } else if (rangeIndex < 53) {
+                usernameLetter1 = "B";
+            } else {
+                usernameLetter1 = "C";
+            }
+            if (rangeIndex < 27) {
+                usernameLetter2 = String.fromCharCode(65 + rangeIndex);
+            } else if (rangeIndex < 53) {
+                usernameLetter2 = String.fromCharCode(65 + rangeIndex - 26);
+            } else {
+                usernameLetter2 = String.fromCharCode(65 + rangeIndex - 52);
+            }
+            const usernameHId = holdingData.id;
+            const usernameRId = cmData.config.holdings[userHolding].roomsId[req.body.room - 1];
+            const accountUsername = `L${usernameLetter1}${usernameLetter2}${usernameHId}${usernameRId}${cardNumber}`;
             const accountPassword = `PC${parseInt(cardNumber, 10)}`;
             templateDoc.setData({
                 customerName: req.body.customerName,
