@@ -1,4 +1,0 @@
-<p>Добрый день!</p>
-<p>Благодарим за приобретение сертификата Legacy.</p>
-<p><strong>Логин:</strong> <%= accountUsername || "" %></p>
-<p><strong>Пароль:</strong> <%= accountPassword || "" %></p>
