@@ -31,7 +31,10 @@ module.exports = class {
             captchaData: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
             captchaSecret: "",
             toggleAce: {},
-            modeAce: "ace"
+            modeAce: "ace",
+            visible: true,
+            enabled: true,
+            mandatory: input.item.mandatory
         };
         this.state = state;
         this.item = input.item;
@@ -41,6 +44,9 @@ module.exports = class {
             performUpdate: this.performUpdate.bind(this),
             insertImage: this.insertImage.bind(this),
             setHeaders: this.setHeaders.bind(this),
+            setVisible: this.setVisible.bind(this),
+            setEnabled: this.setEnabled.bind(this),
+            setMandatory: this.setMandatory.bind(this),
         };
         this.beautifyOptions = {
             indent_size: "2",
@@ -308,5 +314,17 @@ module.exports = class {
                 fieldId: this.input.item.id
             });
         }
+    }
+
+    setVisible(flag) {
+        this.state.visible = flag;
+    }
+
+    setEnabled(flag) {
+        this.state.enabled = flag;
+    }
+
+    setMandatory(flag) {
+        this.state.mandatory = flag;
     }
 };

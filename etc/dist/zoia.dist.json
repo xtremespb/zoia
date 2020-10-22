@@ -38,6 +38,7 @@
                 "pass": ""
             }
         },
+        "logoFile": "z3_mail_logo.png",
         "from": "ZOIA <info@zoiajs.org>"
     },
     "mongo": {
@@ -84,12 +85,16 @@
         "en": {
             "title": "Zoia Website",
             "titleShort": "Zoia Website",
-            "descShort": "Example Website powered by ZOIA"
+            "descShort": "Example Website powered by ZOIA",
+            "siteLink": "https://zoiajs.org",
+            "siteLinkText": "Example Website"
         },
         "ru": {
             "title": "Сайт на Zoia",
             "titleShort": "Сайт на Zoia",
-            "descShort": "Тестовый веб-сайт, запущенный на ZOIA"
+            "descShort": "Тестовый веб-сайт, запущенный на ZOIA",
+            "siteLink": "https://zoiajs.org",
+            "siteLinkText": "Тестовый веб-сайт"
         }
     },
     "commonTableItemsLimit": 20,

@@ -1,14 +1,14 @@
 <!--
 Text Input
 -->
-<if(input.item.type === "text")>
+<if(input.item.type === "text" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
   <div class="control">
-    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id disabled=!state.enabled/>
   </div>
   <if(input.item.helpText)>
     <p class="help">${input.item.helpText}</p>
@@ -20,9 +20,9 @@ Text Input
 <!--
 File Input
 -->
-<if(input.item.type === "file")>
+<if(input.item.type === "file" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
@@ -61,42 +61,42 @@ File Input
 <!--
 Button
 -->
-<if(input.item.type === "button")>
+<if(input.item.type === "button" && state.visible)>
   <button class=`button ${input.item.css || ""} ${input.progress && input.progressButtonId === input.item.id ? "is-loading" : ""}` type=input.item.buttonType data-id=input.item.id key=`mf_ctl_${input.item.id}` on-click("onButtonClick")>${input.item.label}</button>
 </if>
 <!--
 Button group
 -->
-<if(input.item.type === "buttons")>
+<if(input.item.type === "buttons" && state.visible)>
   <div class="buttons">
     <for|btn| of=input.item.data>
-      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick")>${btn.label}</button>
+      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick") disabled=!state.enabled>${btn.label}</button>
     </for>
   </div>
 </if>
 <!--
 Divider
 -->
-<if(input.item.type === "divider")>
+<if(input.item.type === "divider" && state.visible)>
   <div class="z3-mf-divider"/>
 </if>
 <!--
 Message
 -->
-<if(input.item.type === "message")>
+<if(input.item.type === "message" && state.visible)>
   <div class=(input.item.css || "")>${input.item.text || ""}</div>
 </if>
 <!--
 Select
 -->
-<if(input.item.type === "select")>
+<if(input.item.type === "select" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
   <div class=`select ${input.item.css || ""}${input.errors[input.item.id] ? " is-danger" : ""}`>
-    <select data-id=input.item.id key=`mf_ctl_${input.item.id}` value=input.value on-change("onFieldValueChange")>
+    <select data-id=input.item.id key=`mf_ctl_${input.item.id}` value=input.value on-change("onFieldValueChange") disabled=!state.enabled>
       <for|option| of=input.item.options>
         <option value=option.value selected=(input.value === String(option.value))>${option.label}</option>
       </for>
@@ -112,9 +112,9 @@ Select
 <!--
 Radio
 -->
-<if(input.item.type === "radio")>
+<if(input.item.type === "radio" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
@@ -135,9 +135,9 @@ Radio
 <!--
 Checkboxes
 -->
-<if(input.item.type === "checkboxes")>
+<if(input.item.type === "checkboxes" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
@@ -160,10 +160,10 @@ Checkboxes
 <!--
 Checkbox
 -->
-<if(input.item.type === "checkbox")>
+<if(input.item.type === "checkbox" && state.visible)>
   <if(input.item.label)>
     <label class="label">
-      ${input.item.label}:<if(input.item.mandatory)>
+      ${input.item.label}:<if(state.mandatory)>
         &nbsp;<span class="has-text-danger">*</span>
       </if>
     </label>
@@ -184,9 +184,9 @@ Checkbox
 <!--
 Captcha
 -->
-<if(input.item.type === "captcha")>
+<if(input.item.type === "captcha" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
@@ -210,9 +210,9 @@ Captcha
 <!--
 Textarea
 -->
-<if(input.item.type === "textarea")>
+<if(input.item.type === "textarea" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
@@ -229,9 +229,9 @@ Textarea
 <!--
 ACE
 -->
-<if(input.item.type === "ace")>
+<if(input.item.type === "ace" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
     <if(input.item.toggle)>
@@ -279,9 +279,9 @@ ACE
 <!--
 Key-Value Input
 -->
-<if(input.item.type === "keyvalue")>
+<if(input.item.type === "keyvalue" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
@@ -304,9 +304,9 @@ Key-Value Input
 <!--
 Images Input
 -->
-<if(input.item.type === "images")>
+<if(input.item.type === "images" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(input.item.mandatory)>
+    ${input.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>

@@ -36,8 +36,10 @@ import SocketIO from "../../lib/socketIO";
     let pino;
     let modules;
     let packageJson;
-    let mailTemplate;
-    const mailTemplateComponents = {};
+    const mailTemplatesHTML = {};
+    const mailTemplatesText = {};
+    const mailTemplateComponentsHTML = {};
+    const mailTemplateComponentsText = {};
     const modulesConfig = {};
     try {
         buildJson = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/build.json`));
@@ -52,12 +54,22 @@ import SocketIO from "../../lib/socketIO";
         modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
         const defaultConfigs = [];
         pino.info(`Built-in template(s): ${templates.available.join(", ")}`);
-        const mailTemplateFile = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${config.email.template}.template`), "utf8");
-        mailTemplate = template(mailTemplateFile);
+        await Promise.allSettled(Object.keys(config.languages).map(async language => {
+            try {
+                const mailTemplateFileHTML = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${language}_${config.email.template}.html`), "utf8");
+                mailTemplatesHTML[language] = template(mailTemplateFileHTML);
+                const mailTemplateFileText = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${language}_${config.email.template}.txt`), "utf8");
+                mailTemplatesText[language] = template(mailTemplateFileText);
+            } catch {
+                // Ignore
+            }
+        }));
         const availableMailComponents = fs.readdirSync(path.resolve(`${__dirname}/../../build/mail/components/${config.email.template}`));
         availableMailComponents.map(c => {
-            const mailTemplateComponentFile = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/components/${config.email.template}/${c}`), "utf8");
-            mailTemplateComponents[c.replace(/\.template$/, "")] = template(mailTemplateComponentFile);
+            const mailTemplateComponentFileHTML = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/components/${config.email.template}/${c}/index.html`), "utf8");
+            mailTemplateComponentsHTML[c] = template(mailTemplateComponentFileHTML);
+            const mailTemplateComponentFileText = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/components/${config.email.template}/${c}/index.txt`), "utf8");
+            mailTemplateComponentsText[c] = template(mailTemplateComponentFileText);
         });
         modules.map(m => {
             try {
@@ -156,10 +168,14 @@ import SocketIO from "../../lib/socketIO";
         fastify.decorateRequest("zoiaPackageJson", packageJson);
         fastify.decorate("zoiaBuildJson", buildJson);
         fastify.decorateRequest("zoiaBuildJson", buildJson);
-        fastify.decorate("mailTemplate", mailTemplate);
-        fastify.decorateRequest("mailTemplate", mailTemplate);
-        fastify.decorate("mailTemplateComponents", mailTemplateComponents);
-        fastify.decorateRequest("mailTemplateComponents", mailTemplateComponents);
+        fastify.decorate("mailTemplatesHTML", mailTemplatesHTML);
+        fastify.decorateRequest("mailTemplatesHTML", mailTemplatesHTML);
+        fastify.decorate("mailTemplatesText", mailTemplatesText);
+        fastify.decorateRequest("mailTemplatesText", mailTemplatesText);
+        fastify.decorate("mailTemplateComponentsHTML", mailTemplateComponentsHTML);
+        fastify.decorateRequest("mailTemplateComponentsHTML", mailTemplateComponentsHTML);
+        fastify.decorate("mailTemplateComponentsText", mailTemplateComponentsText);
+        fastify.decorateRequest("mailTemplateComponentsText", mailTemplateComponentsText);
         Object.keys(loggerHelpers).map(i => fastify.decorateReply(i, loggerHelpers[i]));
         Object.keys(loggerHelpers).map(i => fastify.decorate(i, loggerHelpers[i]));
         Object.keys(response).map(i => fastify.decorateReply(i, response[i]));

@@ -58,6 +58,9 @@ module.exports = class {
             submitForm: this.submitForm.bind(this),
             setError: this.setError.bind(this),
             resetData: this.resetData.bind(this),
+            setFieldVisible: this.setFieldVisible.bind(this),
+            setFieldEnabled: this.setFieldEnabled.bind(this),
+            setFieldMandatory: this.setFieldMandatory.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -234,6 +237,12 @@ module.exports = class {
         let {
             value,
         } = obj;
+        const item = this.fieldsFlat.find(i => i.id === obj.id);
+        switch (item.type) {
+        case "select":
+            obj.label = item.options.find(i => String(i.value) === String(obj.value)).label;
+            break;
+        }
         switch (obj.type) {
         case "boolean":
             value = Boolean(value);
@@ -261,6 +270,7 @@ module.exports = class {
         if (this.fieldsFlat.find(f => f.id === obj.id).shared) {
             this.state.tabs.map(tab => data[tab.id][obj.id] = value);
         }
+        this.emit("value-change", obj);
         this.setState("data", data);
     }
 
@@ -763,5 +773,17 @@ module.exports = class {
             });
             break;
         }
+    }
+
+    setFieldVisible(id, flag) {
+        this.getComponent(`mf_cmp_${id}`).func.setVisible(flag);
+    }
+
+    setFieldEnabled(id, flag) {
+        this.getComponent(`mf_cmp_${id}`).func.setEnabled(flag);
+    }
+
+    setFieldMandatory(id, flag) {
+        this.getComponent(`mf_cmp_${id}`).func.setMandatory(flag);
     }
 };

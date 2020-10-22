@@ -24,6 +24,7 @@ const cleanUpWeb = (argv) => {
 const copyMailTemplates = (argv) => {
     fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/templates`), path.resolve(`${__dirname}/../build/mail/templates`));
     fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/components`), path.resolve(`${__dirname}/../build/mail/components`));
+    fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/images`), path.resolve(`${__dirname}/../build/mail/images`));
 };
 
 const generateTemplatesJSON = (argv) => {
