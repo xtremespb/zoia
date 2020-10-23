@@ -2,6 +2,7 @@ style.scss {
   @import "./template.scss";
 }
 
+<!-- Collect navigation HTML code -->
 $ let navHTML = "";
 $ out.global.navData.map(i => {
   if (i.c) {
@@ -14,9 +15,11 @@ $ out.global.navData.map(i => {
     navHTML += `<a class="navbar-item" href=${i.data[out.global.language].url}>${i.data[out.global.language].title}</a>`;
   }
 });
+<!-- Collect language menu HTML code -->
 $ let langHTML = `<div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link">Language</a><div class="navbar-dropdown">`;
 $ Object.keys(out.global.languages).map(lang => (langHTML += `<a class="navbar-item" href=${out.global.i18n.getLocalizedURL(out.global.path, lang)}>${out.global.languages[lang]}</a>`));
 $ langHTML += "</div></div>";
+<!-- The HTML code itself starts here -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -29,23 +32,24 @@ $ langHTML += "</div></div>";
     </if>
   </head>
   <body class="z3-dt-body">
-    <section class="section pt-5 pb-4 z3-dt-nav">
+    <section class="pt-4 pb-4 z3-dt-nav">
       <div class="container">
         <nav class="navbar z3-dt-navbar" role="navigation" aria-label="main navigation">
           <div class="navbar-brand">
-            <a class="navbar-item" href=out.global.i18n.getLocalizedURL("/")>
+            <a class="navbar-item mr-5" href=out.global.i18n.getLocalizedURL("/")>
               <div class="z3-dt-logo"/>
             </a>
-            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="z3NavbarDefault">
+            <a role="button" class=`navbar-burger burger mr-4` aria-label="menu" aria-expanded="false" data-target="z3NavbarDefaultMenu" id="z3NavbarDefaultBurger" onclick="document.getElementById('z3NavbarDefaultBurger').classList.toggle('is-active');document.getElementById('z3NavbarDefaultMenu').classList.toggle('is-active');">
               <span aria-hidden="true"/>
               <span aria-hidden="true"/>
               <span aria-hidden="true"/>
             </a>
           </div>
-          <div id="z3NavbarDefault" class="navbar-menu">
+          <div id="z3NavbarDefaultMenu" class=`navbar-menu z3-dt-navbarMenu`>
             <div class="navbar-start">$!{navHTML}</div>
             <div class="navbar-end">
-              $!{langHTML}<if(out.global.authData && out.global.authData.username)>
+              <if(Object.keys(out.global.languages).length)>$!{langHTML}</if>
+              <if(out.global.authData && out.global.authData.username)>
                 <div class="navbar-item has-dropdown is-hoverable">
                   <a class="navbar-link">${out.global.authData.username}</a>
                   <div class="navbar-dropdown is-right">
@@ -65,12 +69,14 @@ $ langHTML += "</div></div>";
       </div>
     </section>
     <section class="section pt-5 pb-0 z3-dt-content">
-      <div class="container">
+      <div class="container pt-3">
         <${input.renderBody}/>
       </div>
     </section>
-    <section class="section pt-5 mt-5 pb-5 mb-0 z3-dt-footer is-size-7">
-      <div class="container">${out.global.i18n.t("sitePoweredByZoia")}. &copy; 2019-${new Date().getFullYear()} Michael A. Matveev.</div>
+    <section class="section pt-5 mt-5 pb-5 mb-0 z3-dt-footer-wrap is-size-7">
+      <div class="container mt-1 z3-dt-footer">
+        ${out.global.i18n.t("sitePoweredByZoia")}. &copy; 2019-${new Date().getFullYear()} Michael Matveev.
+      </div>
     </section>
     <if(out.global.extraJS)>
       <script type="text/javascript">$!{out.global.extraJS}</script>

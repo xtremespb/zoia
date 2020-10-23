@@ -24,8 +24,8 @@ $mdi-font-path: "~@mdi/font/fonts";
     flex: 1;
 }
 
-.z3-dt-footer {
-    background: $grey-lightest;
+.z3-dt-footer-wrap {
+    border-top: 1px solid $grey-lightest;
 }
 
 .z3-dt-nav {
@@ -34,4 +34,21 @@ $mdi-font-path: "~@mdi/font/fonts";
 
 .z3-dt-navbar {
     background: transparent !important;
+}
+
+@media (max-width: 768px) {
+
+    .z3-dt-navbarMenu {
+        margin-top: 16px;
+    }
+
+    .z3-dt-logo {
+        margin-left: 10px;
+    }
+
+    .z3-dt-footer {
+        text-align: center;
+        ;
+    }
+
 }
