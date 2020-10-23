@@ -1,0 +1,15 @@
+{
+    "collectionRegistry": "registry",
+    "database": {
+        "collections": {
+            "users": {
+                "indexesAsc": [],
+                "indexesDesc": []
+            }
+        }
+    },
+    "routes": {
+        "admin": "/admin/registry"
+    },
+    "setup": false
+}
