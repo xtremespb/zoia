@@ -61,7 +61,7 @@ $ langHTML += "</div></div>";
                 </div>
               </if>
               <else>
-                <a class="navbar-item" href=`${out.global.login}?redirect=${out.global.path}`>${out.global.i18n.t("signIn")}</a>
+                <a class="navbar-item" href=`${out.global.i18n.getLocalizedURL(out.global.login)}?redirect=${out.global.path}`>${out.global.i18n.t("signIn")}</a>
               </else>
             </div>
           </div>
@@ -74,9 +74,7 @@ $ langHTML += "</div></div>";
       </div>
     </section>
     <section class="section pt-5 mt-5 pb-5 mb-0 z3-dt-footer-wrap is-size-7">
-      <div class="container mt-1 z3-dt-footer">
-        ${out.global.i18n.t("sitePoweredByZoia")}. &copy; 2019-${new Date().getFullYear()} Michael Matveev.
-      </div>
+      <div class="container mt-1 z3-dt-footer">${out.global.i18n.t("sitePoweredByZoia")}. &copy; 2019-${new Date().getFullYear()} Michael Matveev.</div>
     </section>
     <if(out.global.extraJS)>
       <script type="text/javascript">$!{out.global.extraJS}</script>
