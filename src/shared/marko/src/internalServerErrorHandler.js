@@ -31,7 +31,7 @@ export default async (err, req, rep, fastify) => {
         errorTitle = site.i18n.t("internalError");
         errorMessage = site.i18n.t("internalErrorMsg");
     }
-    const render = await errorInternal.stream({
+    const render = await errorInternal.render({
         $global: {
             serializedGlobals: {
                 pageTitle: true,
@@ -46,5 +46,5 @@ export default async (err, req, rep, fastify) => {
     rep.logError(req, errorText, err);
     req.urlData().path.match(/^\/api\//) ? rep.code(errorCode).type("application/json").send({
         errorMessage: errorText
-    }) : rep.code(errorCode).type("text/html").send(render);
+    }) : rep.code(errorCode).type("text/html").send(render.out.stream._content);
 };
