@@ -36,12 +36,12 @@ export default () => ({
                     return sr;
                 });
             }
-            const count = await this.mongo.db.collection(req.zoiaModulesConfig["registry"].collectionRegistry).find(query, options).count();
+            const count = await this.mongo.db.collection(req.zoiaConfig.collections.registry).find(query, options).count();
             const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const data = await this.mongo.db.collection(req.zoiaModulesConfig["registry"].collectionRegistry).find(query, options).toArray();
+            const data = await this.mongo.db.collection(req.zoiaConfig.collections.registry).find(query, options).toArray();
             // Send response
             rep.successJSON(rep, {
                 data,

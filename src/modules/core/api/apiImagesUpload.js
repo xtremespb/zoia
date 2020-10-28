@@ -92,7 +92,6 @@ export default () => ({
             rep.successJSON(rep, {});
             return;
         } catch (e) {
-            console.log(e);
             rep.logError(req, null, e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);

@@ -3,6 +3,20 @@ import Auth from "../../../shared/lib/auth";
 import dataEdit from "./data/dataEdit.json";
 import C from "../../../shared/lib/constants";
 
+const traverse = obj => {
+    Object.keys(obj).map(k => {
+        if (k && typeof k === "object") {
+            traverse(obj);
+        }
+        if (k.match(/At$/)) {
+            const valDate = new Date(obj[k]);
+            if (valDate instanceof Date && !Number.isNaN(valDate)) {
+                obj[k] = valDate;
+            }
+        }
+    });
+};
+
 export default () => ({
     async handler(req, rep) {
         // Check permissions
@@ -26,22 +40,26 @@ export default () => ({
         // Get data from form body
         const data = extendedValidation.getData();
         try {
-            // Check for record duplicates
-            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["registry"].collectionRegistry, {
-                    _id: {
-                        $ne: req.body.id || null
-                    }
-                }, "dataAlreadyExists", "id")) {
+            // Validate value
+            try {
+                data.value = JSON.parse(data.value);
+                traverse(data.value);
+            } catch {
+                rep.requestError(rep, {
+                    failed: true,
+                    error: "Could not parse JSON object",
+                    errorKeyword: "invalidJSON",
+                    errorData: []
+                });
                 return;
             }
-            // Set createdAt timestamp if that's a new record
             // Update database
-            const update = await this.mongo.db.collection(req.zoiaModulesConfig["registry"].collectionRegistry).updateOne(data.id ? {
-                _id: data.id
+            const update = await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne(data._id ? {
+                _id: data._id
             } : {}, {
                 $set: {
-                    _id: data.id,
-                    value: data.value
+                    _id: data._id,
+                    ...data.value
                 }
             }, {
                 upsert: true

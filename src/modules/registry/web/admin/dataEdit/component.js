@@ -7,15 +7,15 @@ module.exports = class {
 
     onMount() {
         if (this.input.id !== "new") {
-            this.getComponent("userEditForm").loadData();
+            this.getComponent("dataEditForm").loadData();
         }
     }
 
     async onFormPostSuccess() {
-        if (window.__z3_mtable_func && window.__z3_mtable_func["users"]) {
-            await window.__z3_mtable_func["users"].loadData();
+        if (window.__z3_mtable_func && window.__z3_mtable_func["data"]) {
+            await window.__z3_mtable_func["data"].loadData();
         }
-        window.router.navigate("users", {
+        window.router.navigate("data", {
             successNotification: true
         });
     }
@@ -23,7 +23,7 @@ module.exports = class {
     onButtonClick(obj) {
         switch (obj.id) {
         case "btnCancel":
-            window.router.navigate("users");
+            window.router.navigate("data");
         }
     }
 

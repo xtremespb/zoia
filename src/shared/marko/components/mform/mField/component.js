@@ -34,10 +34,11 @@ module.exports = class {
             modeAce: "ace",
             visible: true,
             enabled: true,
-            mandatory: input.item.mandatory
+            mandatory: input.item.mandatory,
+            item: input.item
         };
         this.state = state;
-        this.item = input.item;
+        this.state.item = input.item;
         this.func = {
             setFocus: this.setFocus.bind(this),
             reloadCaptcha: this.reloadCaptcha.bind(this),
@@ -47,6 +48,8 @@ module.exports = class {
             setVisible: this.setVisible.bind(this),
             setEnabled: this.setEnabled.bind(this),
             setMandatory: this.setMandatory.bind(this),
+            setData: this.setData.bind(this),
+            getData: this.getData.bind(this),
         };
         this.beautifyOptions = {
             indent_size: "2",
@@ -70,7 +73,7 @@ module.exports = class {
     }
 
     performUpdate() {
-        switch (this.item.type) {
+        switch (this.state.item.type) {
         case "ace":
             throttle(this.updateAce.bind(this), 300)();
             break;
@@ -78,7 +81,7 @@ module.exports = class {
     }
 
     insertImage(url) {
-        switch (this.item.type) {
+        switch (this.state.item.type) {
         case "ace":
             if (this.state.modeAce === "ace") {
                 const imgTag = `<img src="${url}" alt=""/>`;
@@ -95,15 +98,15 @@ module.exports = class {
     }
 
     updateAce() {
-        const value = (this.state.modeAce === "ace" && this.item.aceOptions && this.item.aceOptions.mode === "ace/mode/html" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value) || "";
+        const value = (this.state.modeAce === "ace" && this.state.item.aceOptions && this.state.item.aceOptions.mode === "ace/mode/html" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value) || "";
         this.aceEditor.getSession().setValue(value);
-        if (this.item.wysiwyg) {
+        if (this.state.item.wysiwyg) {
             this.ckEditor.setData(value);
         }
     }
 
     async reloadCaptcha() {
-        if (this.item.type === "captcha") {
+        if (this.state.item.type === "captcha") {
             try {
                 const res = await axios.post("/api/core/captcha");
                 this.state.captchaData = res.data.imageData;
@@ -117,9 +120,9 @@ module.exports = class {
 
     async onMount() {
         await this.reloadCaptcha();
-        switch (this.item.type) {
+        switch (this.state.item.type) {
         case "ace":
-            [this.aceEditorElement] = document.getElementById(`${this.item.id}_ace`).getElementsByTagName("div");
+            [this.aceEditorElement] = document.getElementById(`${this.state.item.id}_ace`).getElementsByTagName("div");
             this.aceEditor = ace.edit(this.aceEditorElement);
             const aceDefaults = {
                 mode: "ace/mode/html",
@@ -129,15 +132,15 @@ module.exports = class {
                 useSoftTabs: true,
                 tabSize: 2
             };
-            this.aceEditor.setOptions(this.item.aceOptions ? {
+            this.aceEditor.setOptions(this.state.item.aceOptions ? {
                 ...aceDefaults,
-                ...this.item.aceOptions
+                ...this.state.item.aceOptions
             } : aceDefaults);
             this.aceEditor.getSession().on("change", () => {
                 const value = this.aceEditor.getSession().getValue();
                 this.emit("value-change", {
                     type: "input",
-                    id: this.item.id,
+                    id: this.state.item.id,
                     value
                 });
             });
@@ -150,7 +153,7 @@ module.exports = class {
                     this.aceEditor.getSession().setAnnotations(annotationsFiltered);
                 }
             });
-            if (this.item.wysiwyg) {
+            if (this.state.item.wysiwyg) {
                 this.ckEditorElement = this.getEl(`mf_ctl_ckeditor_${this.input.item.id}`);
                 this.ckEditor = await ClassicEditor.create(this.ckEditorElement);
                 this.ckEditor.plugins.get("FileRepository").createUploadAdapter = loader => {
@@ -164,27 +167,36 @@ module.exports = class {
                     const value = this.ckEditor.getData();
                     this.emit("value-change", {
                         type: "input",
-                        id: this.item.id,
+                        id: this.state.item.id,
                         value
                     });
                 });
             }
             break;
         }
+        this.emit("settled");
     }
 
     setFocus() {
         let field;
-        switch (this.item.type) {
+        switch (this.state.item.type) {
         case "radio":
-            field = this.getEl(`mf_ctl_${this.item.id}_0`);
+            field = this.getEl(`mf_ctl_${this.state.item.id}_0`);
             break;
         default:
-            field = this.getEl(`mf_ctl_${this.item.id}`);
+            field = this.getEl(`mf_ctl_${this.state.item.id}`);
         }
         if (field) {
             field.focus();
         }
+    }
+
+    onRangeFieldValueChange(e) {
+        const field = this.getEl(`mf_ctl_${this.state.item.id}`);
+        if (field) {
+            field.focus();
+        }
+        this.onFieldValueChange(e);
     }
 
     onFieldValueChange(e) {
@@ -262,7 +274,7 @@ module.exports = class {
         toggle[dataset.id] = !toggle[dataset.id];
         if (toggle[dataset.id]) {
             setTimeout(() => this.aceEditor.getSession().setValue(this.input.value || ""), 100);
-            if (this.item.wysiwyg) {
+            if (this.state.item.wysiwyg) {
                 setTimeout(() => this.ckEditor.setData(this.input.value || ""), 100);
             }
         }
@@ -326,5 +338,13 @@ module.exports = class {
 
     setMandatory(flag) {
         this.state.mandatory = flag;
+    }
+
+    setData(data) {
+        this.setState("item", data);
+    }
+
+    getData() {
+        return this.state.item;
     }
 };

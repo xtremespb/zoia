@@ -5,7 +5,7 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images", "range"];
 
 module.exports = class {
     onCreate(input) {
@@ -31,16 +31,16 @@ module.exports = class {
             errors: {},
             disabled: false,
             progress: false,
-            loading: false
+            loading: false,
+            validation: input.validation,
+            visible: {}
         };
         tabs.map(tab => {
             state.data[tab.id] = {};
             state.errors[tab.id] = {};
         });
-        // this.fieldsFlat = input.fields.flat();
-        // This is an ugly workaround to make this work in IE/EDGE
-        // You know it's a pain
         this.fieldsFlat = input.fields.reduce((acc, val) => acc.concat(val), []);
+        this.fieldsFlat.map(f => state.visible[f.id] = true);
         if (input.fields) {
             tabs.map(tab => this.fieldsFlat.map(i => state.data[tab.id][i.id] = this.getDefaultValue(i)));
         }
@@ -61,10 +61,13 @@ module.exports = class {
             setFieldVisible: this.setFieldVisible.bind(this),
             setFieldEnabled: this.setFieldEnabled.bind(this),
             setFieldMandatory: this.setFieldMandatory.bind(this),
+            getItemData: this.getItemData.bind(this),
+            setItemData: this.setItemData.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
         this.captchaSecret = undefined;
+        this.fieldsSettled = 0;
     }
 
     getDefaultValue(item) {
@@ -218,7 +221,7 @@ module.exports = class {
                 activeTabId = null;
             }
         }
-        if (this.input.validation) {
+        if (this.state.validation) {
             this.extendedValidation.setParts(tabs.map(t => t.id));
         }
         this.setState("data", data);
@@ -284,7 +287,7 @@ module.exports = class {
     }
 
     getValue(id) {
-        return this.state.data[this.state.activeTabId][id];
+        return this.masked[id] ? this.masked[id].unmaskedValue : this.state.data[this.state.activeTabId][id];
     }
 
     onRemoveArrItem(obj) {
@@ -359,6 +362,8 @@ module.exports = class {
                         formData[this.state.activeTabId][error.field] = "";
                         if (this.masked[error.field]) {
                             this.masked[error.field].value = "";
+                            this.masked[error.field].maskedValue = "";
+                            this.masked[error.field].updateValue();
                         }
                     }
                     if (error.reloadCaptcha) {
@@ -415,12 +420,12 @@ module.exports = class {
             this.setState("error", focus ? this.i18n.t(`mFormErr.general`) : null);
         }
         this.setState("errors", errors);
-        this.state.data = formData;
+        this.setState("data", formData);
     }
 
     async validate(serialized) {
         const data = cloneDeep(serialized);
-        if (!this.input.validation) {
+        if (!this.state.validation) {
             return {
                 failed: false,
                 errorData: []
@@ -448,10 +453,12 @@ module.exports = class {
         let valueProcess = value;
         if (field.convert) {
             if (!value || value === "") {
-                valueProcess = 0;
+                valueProcess = null;
             } else {
-                valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value) : String(value);
+                valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value, "") : String(value);
             }
+        } else if (value === "") {
+            valueProcess = null;
         }
         if ((field.type === "file" || field.type === "images") && !Array.isArray(value)) {
             valueProcess = [];
@@ -473,11 +480,8 @@ module.exports = class {
                     const valueArr = value ? value.replace(/\s/gm, "").split(",") : [];
                     serialized[field.id] = [...new Set(valueArr)];
                 } else {
-                    serialized[field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
+                    serialized[field.id] = this.processSerializedValue(field, this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value));
                 }
-                // if (field.type === "file" && !Array.isArray(serialized[field.id])) {
-                //     serialized[field.id] = [];
-                // }
             } else {
                 this.state.tabs.map(tab => {
                     serialized[tab.id] = serialized[tab.id] || {};
@@ -486,11 +490,8 @@ module.exports = class {
                         const valueArr = value ? value.replace(/\s/gm, "").split(",") : [];
                         serialized[tab.id][field.id] = [...new Set(valueArr)];
                     } else {
-                        serialized[tab.id][field.id] = this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value);
+                        serialized[tab.id][field.id] = this.processSerializedValue(field, this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value));
                     }
-                    // if (field.type === "file" && !Array.isArray(serialized[tab.id][field.id])) {
-                    //     serialized[tab.id][field.id] = [];
-                    // }
                 });
             }
         });
@@ -777,6 +778,9 @@ module.exports = class {
 
     setFieldVisible(id, flag) {
         this.getComponent(`mf_cmp_${id}`).func.setVisible(flag);
+        const visible = cloneDeep(this.state.visible);
+        visible[id] = flag;
+        this.setState("visible", visible);
     }
 
     setFieldEnabled(id, flag) {
@@ -785,5 +789,42 @@ module.exports = class {
 
     setFieldMandatory(id, flag) {
         this.getComponent(`mf_cmp_${id}`).func.setMandatory(flag);
+        this.fieldsFlat.find(i => i.id === id).mandatory = flag;
+        if (this.state.validation) {
+            if (this.state.validation.root && this.state.validation.root.properties && this.state.validation.root.properties[id]) {
+                const rootIndex = this.state.validation.root.required.indexOf(id);
+                if (!flag) {
+                    this.state.validation.root.required = this.state.validation.root.required.filter(i => i !== id);
+                } else if (rootIndex === -1) {
+                    this.state.validation.root.required.push(id);
+                }
+                this.extendedValidation.setSchemaRoot(this.state.validation.root);
+            }
+            if (this.state.validation.part && this.state.validation.part.properties && this.state.validation.part.properties[id]) {
+                const partIndex = this.state.validation.part.required.indexOf(id);
+                if (!flag) {
+                    this.state.validation.part.required = this.state.validation.part.required.filter(i => i !== id);
+                } else if (partIndex === -1) {
+                    this.state.validation.part.required.push(id);
+                }
+                this.extendedValidation.setSchemaPart(this.state.validation.part);
+            }
+        }
+    }
+
+    setItemData(id, data) {
+        this.getComponent(`mf_cmp_${id}`).func.setData(data);
+        this.fieldsFlat[this.fieldsFlat.findIndex(i => i.id === id)] = data;
+    }
+
+    getItemData(id) {
+        return this.getComponent(`mf_cmp_${id}`).func.getData();
+    }
+
+    onFieldSettled() {
+        this.fieldsSettled += 1;
+        if (this.fieldsSettled === this.fieldsFlat.length) {
+            this.emit("all-settled");
+        }
     }
 };

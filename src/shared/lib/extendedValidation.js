@@ -171,6 +171,15 @@ export default class {
         this.parts = parts;
     }
 
+    setSchemaRoot(root) {
+        this.schemas.root = this.parts.length === 1 && this.parts[0] === "__default" ? null : root;
+        this.schemas.part = this.parts.length === 1 && this.parts[0] === "__default" ? root : this.schemas.part;
+    }
+
+    setSchemaPart(part) {
+        this.schemas.part = part;
+    }
+
     async validate(data) {
         try {
             const formData = this.data && this.data.fields && this.data.fields.__form ? JSON.parse(this.data.fields.__form) : this.data || data;

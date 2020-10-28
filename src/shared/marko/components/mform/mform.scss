@@ -151,6 +151,10 @@
     position: unset !important;
 }
 
+.z3-mf-range-wrap {
+    display: flex;
+}
+
 @media (max-width: 1024px) {
 
     .z3-mf-captcha-input,

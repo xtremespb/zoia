@@ -1,0 +1,6 @@
+{
+    "routes": {
+        "admin": "/admin/registry"
+    },
+    "setup": false
+}

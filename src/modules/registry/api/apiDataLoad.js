@@ -1,6 +1,3 @@
-import {
-    ObjectId
-} from "mongodb";
 import cloneDeep from "lodash/cloneDeep";
 import dataEdit from "./data/dataEdit.json";
 import Auth from "../../../shared/lib/auth";
@@ -24,8 +21,8 @@ export default () => ({
             return;
         }
         try {
-            const data = await this.mongo.db.collection(req.zoiaModulesConfig["registry"].collectionRegistry).findOne({
-                _id: new ObjectId(req.body.id)
+            const data = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
+                _id: req.body.id
             });
             if (!data) {
                 rep.requestError(rep, {
@@ -36,8 +33,13 @@ export default () => ({
                 });
                 return;
             }
+            const valueData = cloneDeep(data);
+            delete valueData._id;
             rep.successJSON(rep, {
-                data
+                data: {
+                    _id: data._id,
+                    value: JSON.stringify(valueData, null, "\t")
+                }
             });
             return;
         } catch (e) {

@@ -1,39 +1,41 @@
 <!--
 Text Input
 -->
-<if(input.item.type === "text" && state.visible)>
-  <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
+<if(state.item.type === "text")>
+  <div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+    <label class="label">
+      ${state.item.label}:<if(state.mandatory)>
+        &nbsp;<span class="has-text-danger">*</span>
+      </if>
+    </label>
+    <div class="control">
+      <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions)/>
+    </div>
+    <if(state.item.helpText)>
+      <p class="help">${state.item.helpText}</p>
     </if>
-  </label>
-  <div class="control">
-    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` type=(input.item.textType || "text") placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id disabled=!state.enabled/>
+    <if(input.errors[state.item.id])>
+      <p class="help is-danger">${input.errors[state.item.id]}</p>
+    </if>
   </div>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
-  </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
-  </if>
 </if>
 <!--
 File Input
 -->
-<if(input.item.type === "file" && state.visible)>
+<if(state.item.type === "file" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
+    ${state.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
-  <div class=`file${input.errors[input.item.id] ? " is-danger" : ""}`>
+  <div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
     <label class="file-label">
-      <input class="file-input" type="file" multiple=input.item.multiple on-change("onFileInputChange") data-id=input.item.id/>
-      <a class="file-cta" key=`mf_ctl_${input.item.id}` tabindex="0">
+      <input class="file-input" type="file" multiple=state.item.multiple on-change("onFileInputChange") data-id=state.item.id/>
+      <a class="file-cta" key=`mf_ctl_${state.item.id}` tabindex="0">
         <span class="file-icon">
           <i class="mdi mdi-upload"/>
         </span>
-        <span class="file-label">${input.item.buttonLabel}</span>
+        <span class="file-label">${state.item.buttonLabel}</span>
       </a>
     </label>
   </div>
@@ -41,35 +43,35 @@ File Input
     <div class="z3-mf-margin-small-top">
       <for|file, index| of=input.value>
         <div>
-          <if(file.data || input.item.noDownload)>${file.name}</if>
+          <if(file.data || state.item.noDownload)>${file.name}</if>
           <else>
             <a href=`/zoia/core/download?id=${file.id}` target="_blank">${file.name}</a>
           </else>
           &nbsp;
-          <a class="mdi mdi-close" data-id=input.item.id data-itemid=file.id on-click("onFileRemove")/>
+          <a class="mdi mdi-close" data-id=state.item.id data-itemid=file.id on-click("onFileRemove")/>
         </div>
       </for>
     </div>
   </if>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>
 <!--
 Button
 -->
-<if(input.item.type === "button" && state.visible)>
-  <button class=`button ${input.item.css || ""} ${input.progress && input.progressButtonId === input.item.id ? "is-loading" : ""}` type=input.item.buttonType data-id=input.item.id key=`mf_ctl_${input.item.id}` on-click("onButtonClick")>${input.item.label}</button>
+<if(state.item.type === "button" && state.visible)>
+  <button class=`button ${state.item.css || ""} ${input.progress && input.progressButtonId === state.item.id ? "is-loading" : ""}` type=state.item.buttonType data-id=state.item.id key=`mf_ctl_${state.item.id}` on-click("onButtonClick")>${state.item.label}</button>
 </if>
 <!--
 Button group
 -->
-<if(input.item.type === "buttons" && state.visible)>
+<if(state.item.type === "buttons" && state.visible)>
   <div class="buttons">
-    <for|btn| of=input.item.data>
+    <for|btn| of=state.item.data>
       <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick") disabled=!state.enabled>${btn.label}</button>
     </for>
   </div>
@@ -77,172 +79,172 @@ Button group
 <!--
 Divider
 -->
-<if(input.item.type === "divider" && state.visible)>
+<if(state.item.type === "divider" && state.visible)>
   <div class="z3-mf-divider"/>
 </if>
 <!--
 Message
 -->
-<if(input.item.type === "message" && state.visible)>
-  <div class=(input.item.css || "")>${input.item.text || ""}</div>
+<if(state.item.type === "message" && state.visible)>
+  <div class=(state.item.css || "")>${state.item.text || ""}</div>
 </if>
 <!--
 Select
 -->
-<if(input.item.type === "select" && state.visible)>
+<if(state.item.type === "select" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
+    ${state.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
-  <div class=`select ${input.item.css || ""}${input.errors[input.item.id] ? " is-danger" : ""}`>
-    <select data-id=input.item.id key=`mf_ctl_${input.item.id}` value=input.value on-change("onFieldValueChange") disabled=!state.enabled>
-      <for|option| of=input.item.options>
+  <div class=`select ${state.item.css || ""}${input.errors[state.item.id] ? " is-danger" : ""}`>
+    <select data-id=state.item.id key=`mf_ctl_${state.item.id}` value=input.value on-change("onFieldValueChange") disabled=!state.enabled>
+      <for|option| of=state.item.options>
         <option value=option.value selected=(input.value === String(option.value))>${option.label}</option>
       </for>
     </select>
   </div>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>
 <!--
 Radio
 -->
-<if(input.item.type === "radio" && state.visible)>
+<if(state.item.type === "radio" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
+    ${state.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
   <div>
-    <for|option, index| of=input.item.options>
-      <label class=`radio ${input.item.css || ""}`>
-        <input type="radio" key=`mf_ctl_${input.item.id}_${index}` data-id=input.item.id name=input.item.id value=option.value checked=(input.value === String(option.value)) on-change("onFieldValueChange")/>&nbsp;${option.label}
+    <for|option, index| of=state.item.options>
+      <label class=`radio ${state.item.css || ""}`>
+        <input type="radio" key=`mf_ctl_${state.item.id}_${index}` data-id=state.item.id name=state.item.id value=option.value checked=(input.value === String(option.value)) on-change("onFieldValueChange")/>&nbsp;${option.label}
       </label>
     </for>
   </div>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>
 <!--
 Checkboxes
 -->
-<if(input.item.type === "checkboxes" && state.visible)>
+<if(state.item.type === "checkboxes" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
+    ${state.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
-  <for|option, index| of=input.item.options>
+  <for|option, index| of=state.item.options>
     <div class="z3-pretty p-icon">
-      <input type="checkbox" key=`mf_ctl_${input.item.id}_${index}` on-change("onArrInputChange") data-id=input.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
+      <input type="checkbox" key=`mf_ctl_${state.item.id}_${index}` on-change("onArrInputChange") data-id=state.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
       <div class="state">
         <i class="icon mdi mdi-check"/>
         <label>${option.label}</label>
       </div>
     </div>
   </for>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>
 <!--
 Checkbox
 -->
-<if(input.item.type === "checkbox" && state.visible)>
-  <if(input.item.label)>
+<if(state.item.type === "checkbox" && state.visible)>
+  <if(state.item.label)>
     <label class="label">
-      ${input.item.label}:<if(state.mandatory)>
+      ${state.item.label}:<if(state.mandatory)>
         &nbsp;<span class="has-text-danger">*</span>
       </if>
     </label>
   </if>
   <div class="z3-pretty p-default">
-    <input type="checkbox" key=`mf_ctl_${input.item.id}` on-change("onBooleanInputChange") data-id=input.item.id checked=input.value/>
+    <input type="checkbox" key=`mf_ctl_${state.item.id}` on-change("onBooleanInputChange") data-id=state.item.id checked=input.value/>
     <div class="state p-primary">
-      <label>${input.item.labelCheckbox}</label>
+      <label>${state.item.labelCheckbox}</label>
     </div>
   </div>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>
 <!--
 Captcha
 -->
-<if(input.item.type === "captcha" && state.visible)>
+<if(state.item.type === "captcha" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
+    ${state.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
   <div class="control">
     <div class="z3-mf-captcha-wrap">
       <div>
-        <input class=`z3-mf-captcha-input input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` type="text" placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+        <input class=`z3-mf-captcha-input input${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type="text" placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id/>
       </div>
       <div>
         <img src=state.captchaData class="z3-mf-captcha-img" on-click("reloadCaptcha")/>
       </div>
     </div>
   </div>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>
 <!--
 Textarea
 -->
-<if(input.item.type === "textarea" && state.visible)>
+<if(state.item.type === "textarea" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
+    ${state.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
   <div class="control">
-    <textarea class=`textarea${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` placeholder=input.item.placeholder value=input.value on-change("onFieldValueChange") data-id=input.item.id/>
+    <textarea class=`textarea${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id/>
   </div>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>
 <!--
 ACE
 -->
-<if(input.item.type === "ace" && state.visible)>
+<if(state.item.type === "ace" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
+    ${state.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
-    <if(input.item.toggle)>
-      <button type="button" class="button is-small is-rounded z3-mf-toggle-wrap" data-id=input.item.id on-click("onAceToggleClick")>
+    <if(state.item.toggle)>
+      <button type="button" class="button is-small is-rounded z3-mf-toggle-wrap" data-id=state.item.id on-click("onAceToggleClick")>
         <span class="icon is-small">
-          <i class=`mdi mdi-18px ${state.toggleAce[input.item.id] ? "mdi-chevron-up" : "mdi-chevron-down"}` data-id=input.item.id/>
+          <i class=`mdi mdi-18px ${state.toggleAce[state.item.id] ? "mdi-chevron-up" : "mdi-chevron-down"}` data-id=state.item.id/>
         </span>
       </button>
     </if>
   </label>
-  <if(input.item.wysiwyg)>
+  <if(state.item.wysiwyg)>
     <div class="tabs is-toggle is-small mb-1">
       <ul>
         <li class=(state.modeAce === "ace" ? "is-active" : "")>
@@ -257,67 +259,67 @@ ACE
       </ul>
     </div>
   </if>
-  <div class="control" id=input.item.id key=`mf_ctl_${input.item.id}` style=`display:${input.item.toggle ? (state.toggleAce[input.item.id] ? "block" : "none") : "block"}`>
-    <div id=`${input.item.id}_ace` style=(state.modeAce === "ace" ? "" : "position:absolute;left:-100000px;top:left:-100000px;")>
+  <div class="control" id=state.item.id key=`mf_ctl_${state.item.id}` style=`display:${state.item.toggle ? (state.toggleAce[state.item.id] ? "block" : "none") : "block"}`>
+    <div id=`${state.item.id}_ace` style=(state.modeAce === "ace" ? "" : "position:absolute;left:-100000px;top:left:-100000px;")>
       <div class="z3-mf-ace"/>
     </div>
-    <if(input.item.wysiwyg)>
+    <if(state.item.wysiwyg)>
       <div style=(state.modeAce === "ck" ? "" : "position:absolute;left:-100000px;top:left:-100000px;")>
         <div no-update>
-          <div class="z3-mf-ckeditor" key=`mf_ctl_ckeditor_${input.item.id}` id=`mf_ctl_ckeditor_${input.item.id}` no-update/>
+          <div class="z3-mf-ckeditor" key=`mf_ctl_ckeditor_${state.item.id}` id=`mf_ctl_ckeditor_${state.item.id}` no-update/>
         </div>
       </div>
     </if>
   </div>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>
 <!--
 Key-Value Input
 -->
-<if(input.item.type === "keyvalue" && state.visible)>
+<if(state.item.type === "keyvalue" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
+    ${state.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
   <div class="z3-mf-ctl-keyvalue-wrap">
-    <input class=`input${input.errors[input.item.id] ? " is-danger" : ""}` id=input.item.id key=`mf_ctl_${input.item.id}` type=(input.item.textType || "text") placeholder=input.item.placeholder value=(input.value.data && Array.isArray(input.value.data) && input.value.data.length === 0 && input.item.emptyArrayLabel ? input.item.emptyArrayLabel : input.value.label) on-change("onFieldValueChange") data-id=input.item.id readonly/>
+    <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=(input.value.data && Array.isArray(input.value.data) && input.value.data.length === 0 && state.item.emptyArrayLabel ? state.item.emptyArrayLabel : input.value.label) on-change("onFieldValueChange") data-id=state.item.id readonly/>
     &nbsp;
-    <button type="button" class="button is-light" data-id=input.item.id on-click("onKeyValueButtonClick")>
+    <button type="button" class="button is-light" data-id=state.item.id on-click("onKeyValueButtonClick")>
       <span class="icon is-small">
         <i class="mdi mdi-dots-horizontal"/>
       </span>
     </button>
   </div>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>
 <!--
 Images Input
 -->
-<if(input.item.type === "images" && state.visible)>
+<if(state.item.type === "images" && state.visible)>
   <label class="label">
-    ${input.item.label}:<if(state.mandatory)>
+    ${state.item.label}:<if(state.mandatory)>
       &nbsp;<span class="has-text-danger">*</span>
     </if>
   </label>
-  <div class=`file${input.errors[input.item.id] ? " is-danger" : ""}`>
+  <div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
     <label class="file-label">
-      <input class="file-input" type="file" multiple=input.item.multiple on-change("onFileInputChange") data-id=input.item.id/>
-      <a class="file-cta" key=`mf_ctl_${input.item.id}` tabindex="0">
+      <input class="file-input" type="file" multiple=state.item.multiple on-change("onFileInputChange") data-id=state.item.id/>
+      <a class="file-cta" key=`mf_ctl_${state.item.id}` tabindex="0">
         <span class="file-icon">
           <i class="mdi mdi-upload"/>
         </span>
-        <span class="file-label">${input.item.buttonLabel}</span>
+        <span class="file-label">${state.item.buttonLabel}</span>
       </a>
     </label>
   </div>
@@ -335,10 +337,30 @@ Images Input
       </for>
     </div>
   </if>
-  <if(input.item.helpText)>
-    <p class="help">${input.item.helpText}</p>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
   </if>
-  <if(input.errors[input.item.id])>
-    <p class="help is-danger">${input.errors[input.item.id]}</p>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
+  </if>
+</if>
+<!--
+Range Input
+-->
+<if(state.item.type === "range" && state.visible)>
+  <label class="label">
+    ${state.item.label}:<if(state.mandatory)>
+      &nbsp;<span class="has-text-danger">*</span>
+    </if>
+  </label>
+  <div class="control z3-mf-range-wrap">
+    <input type="range" class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` value=input.value min=input.item.min max=input.item.max on-change("onFieldValueChange") on-input("onRangeFieldValueChange") data-id=state.item.id disabled=!state.enabled/>
+    <span class="tag is-light mt-2 ml-2">${input.value}</span>
+  </div>
+  <if(state.item.helpText)>
+    <p class="help">${state.item.helpText}</p>
+  </if>
+  <if(input.errors[state.item.id])>
+    <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
 </if>

@@ -1,7 +1,7 @@
 import Cookies from "../../../../../shared/lib/cookies"
 
 style.scss {
-  @import "./userList.scss";
+  @import "./dataList.scss";
 }
 
 $ const cookies = new Cookies(out.global.cookieOptions);
@@ -9,32 +9,21 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
 <div>
   <h1 class="z3-ap-head-thin">
     <span class="icon">
-      <i class="mdi z3-ap-mdi-29px mdi-dark mdi-account-circle-outline"/>
+      <i class="mdi z3-ap-mdi-29px mdi-dark mdi-database-outline"/>
     </span>&nbsp;${out.global.i18n.t("moduleTitle")}
   </h1>
   <mtable css="table is-striped is-hoverable is-fullwidth" dataSource={
     method: "post",
-    url: "/api/users/list",
+    url: "/api/registry/list",
     data: {},
     headers: {
       Authorization: `Bearer ${token}`
     }
-  } id="users" key="usersTable" columns=[
+  } id="data" key="dataTable" columns=[
     {
-      id: "username",
-      title: out.global.i18n.t("username"),
-      css: "z3-ap-users-list-username",
+      id: "_id",
+      title: out.global.i18n.t("id"),
       sortable: true
-    },
-    {
-      id: "email",
-      sortable: true,
-      title: out.global.i18n.t("email")
-    },
-    {
-      id: "status",
-      css: "z3-ap-users-list-status",
-      title: out.global.i18n.t("status")
     }
   ] actions=[
     {
@@ -78,16 +67,16 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
       displayText: true,
       tooltip: false
     }
-  ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="username" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
-    title: "username",
+  ] actionsTitle=out.global.i18n.t("actions") processValue=state.processValue sortId="_id" sortDirection="asc" checkboxColumn=true on-action-click("onActionClick") on-top-button-click("onTopButtonClick") i18n=out.global.i18n genericDelete={
+    title: "_id",
     source: {
       method: "post",
-      url: "/api/users/edit/delete",
+      url: "/api/registry/edit/delete",
       data: {},
       headers: {
         Authorization: `Bearer ${token}`
       }
     }
   } on-unauthorized("onUnauthorized") autoItemsPerPage=true/>
-  <mnotify key=`usersList_mnotify`/>
+  <mnotify key=`dataList_mnotify`/>
 </div>

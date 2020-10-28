@@ -1,0 +1,77 @@
+import cloneDeep from "lodash/cloneDeep"
+import dataEdit from "../../../api/data/dataEdit.json"
+import Cookies from "../../../../../shared/lib/cookies"
+
+style.scss {
+}
+
+$ input.dataEditData = cloneDeep(dataEdit);
+$ const cookies = new Cookies(out.global.cookieOptions);
+$ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
+<div>
+  <h1 class="z3-ap-head-thin">
+    <span class="icon">
+      <i class="mdi z3-ap-mdi-29px mdi-dark mdi-database-edit-outline"/>
+    </span>&nbsp;${input.id === "new" ? out.global.i18n.t("dataAdd") : out.global.i18n.t("dataEdit")}
+  </h1>
+  <mform key="dataEditForm" id="dataEditForm" save={
+    url: "/api/registry/edit/save",
+    extras: {
+      id: input.id === "new" ? undefined : input.id
+    },
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  } load={
+    url: "/api/registry/edit/load",
+    extras: {
+      id: input.id
+    },
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  } fields=[
+    {
+      id: "_id",
+      type: "text",
+      label: out.global.i18n.t("id"),
+      helpText: out.global.i18n.t("idHelpText"),
+      wrapCSS: "z3-is-medium",
+      autoFocus: true,
+      mandatory: true
+    },
+    {
+      id: "value",
+      type: "ace",
+      label: out.global.i18n.t("value"),
+      helpText: out.global.i18n.t("valueHelpText"),
+      wysiwyg: false,
+      aceOptions: {
+        mode: "ace/mode/json"
+      }
+    },
+    {
+      id: "div1",
+      type: "divider"
+    },
+    {
+      id: "bg1",
+      type: "buttons",
+      data: [
+        {
+          id: "btnSave",
+          type: "button",
+          buttonType: "submit",
+          label: out.global.i18n.t("save"),
+          css: "is-primary"
+        },
+        {
+          id: "btnCancel",
+          type: "button",
+          buttonType: "button",
+          label: out.global.i18n.t("cancel")
+        }
+      ]
+    }
+  ] validation=input.dataEditData progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized")/>
+</div>

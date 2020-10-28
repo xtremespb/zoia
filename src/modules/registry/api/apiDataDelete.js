@@ -1,6 +1,3 @@
-import {
-    ObjectId
-} from "mongodb";
 import dataDelete from "./data/dataDelete.json";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
@@ -25,9 +22,9 @@ export default () => ({
         }
         try {
             // Delete requested IDs
-            const result = await this.mongo.db.collection(req.zoiaModulesConfig["registry"].collectionRegistry).deleteMany({
+            const result = await this.mongo.db.collection(req.zoiaConfig.collections.registry).deleteMany({
                 $or: req.body.ids.map(id => ({
-                    _id: new ObjectId(id)
+                    _id: id
                 }))
             });
             // Check result

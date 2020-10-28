@@ -25,14 +25,14 @@ module.exports = class {
             }
         };
         if (this.input.successNotification) {
-            this.getComponent(`usersList_mnotify`).func.show(this.i18n.t("dataSaveSuccess"), "is-success");
+            this.getComponent(`dataList_mnotify`).func.show(this.i18n.t("dataSaveSuccess"), "is-success");
         }
     }
 
     onActionClick(data) {
         switch (data.action) {
         case "btnEdit":
-            window.router.navigate("users.edit", {
+            window.router.navigate("data.edit", {
                 id: data.id
             });
             break;
@@ -42,10 +42,10 @@ module.exports = class {
     onTopButtonClick(data) {
         switch (data.button) {
         case "btnReload":
-            this.getComponent("usersTable").func.dataRequest();
+            this.getComponent("dataTable").func.dataRequest();
             break;
         case "btnAdd":
-            window.router.navigate("users.edit", {
+            window.router.navigate("data.edit", {
                 id: "new"
             });
             break;

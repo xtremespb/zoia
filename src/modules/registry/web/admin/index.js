@@ -7,10 +7,10 @@ export default routeId => ({
     async handler(req, rep) {
         try {
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
-            const site = new req.ZoiaSite(req, "users", this.mongo.db);
+            const site = new req.ZoiaSite(req, "registry", this.mongo.db);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
-                return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["users"].routes.admin);
+                return rep.redirectToLogin(req, rep, site, req.zoiaModulesConfig["registry"].routes.admin);
             }
             site.setAuth(auth);
             const render = await template.stream({
@@ -28,7 +28,7 @@ export default routeId => ({
                     routeId,
                     routeParams: req.params || {},
                     routes: {
-                        ...req.zoiaModulesConfig["users"].routes,
+                        ...req.zoiaModulesConfig["registry"].routes,
                         ...req.zoiaConfig.routes.login
                     },
                     ...await site.getGlobals()

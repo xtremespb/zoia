@@ -1,0 +1,16 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "value": {
+                "type": "string"
+            }
+        },
+        "required": ["_id", "value"]
+    }
+}
