@@ -5,7 +5,7 @@ import pageEdit from "../../../api/data/pageEdit.json"
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
 $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, label: out.global.languages[k] }));
-<div>
+<div class="mb-5">
   <h1 class="z3-ap-head-thin">
     <span class="icon">
       <i class="mdi z3-ap-mdi-29px mdi-dark mdi-square-edit-outline"/>
@@ -113,6 +113,7 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
         }
       ]
     }
-  ] formType="formData" validation=pageEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=languageTabs tabsActive=[languageTabs[0].id] on-get-key-value("onGetKeyValue")/>
+  ] formType="formData" validation=pageEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=languageTabs tabsActive=[languageTabs[0].id] on-get-key-value("onGetKeyValue") on-load-success("onLoadSuccess")/>
   <folderModal key="z3_ap_pe_folderModal" on-confirm("onFolderSelectConfirm") on-got-tree-data("onGotTreeData") on-tree-loading-error("onTreeLoadingError")/>
+  <lockedModal key="z3_ap_pe_lockedModal"/>
 </div>

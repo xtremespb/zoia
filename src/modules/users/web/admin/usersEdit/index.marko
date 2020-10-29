@@ -58,7 +58,7 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
         label: out.global.i18n.t("groups"),
         helpText: out.global.i18n.t("groupsHelpText"),
         wrapCSS: "z3-is-large",
-        tags: true,
+        tags: true
       }
     ],
     [
@@ -123,5 +123,6 @@ $ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`)
         }
       ]
     }
-  ] validation=input.userEditData progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized")/>
+  ] validation=input.userEditData progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") on-load-success("onLoadSuccess")/>
+  <lockedModal key="z3_ap_ue_lockedModal"/>
 </div>

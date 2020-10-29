@@ -91,7 +91,7 @@ export default () => ({
                         extraJS: true,
                         ...site.getSerializedGlobals()
                     },
-                    template: req.zoiaTemplates.available[0],
+                    template: req.zoiaTemplates[0],
                     pageTitle: page[site.language].title,
                     extraCSS: page[site.language].cssMin,
                     extraJS: page[site.language].jsMin,

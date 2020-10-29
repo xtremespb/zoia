@@ -713,6 +713,7 @@ module.exports = class {
                 // setTimeout(this.autoFocus.bind(this), 0);
                 // setTimeout(this.emitFieldsUpdate.bind(this), 0);
                 this.setData(result.data.data);
+                this.emit("load-success", result.data.data);
             }
         } catch (e) {
             // eslint-disable-next-line no-console
@@ -726,6 +727,7 @@ module.exports = class {
             } else {
                 this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.server`), "is-danger");
             }
+            this.emit("load-error");
         }
     }
 

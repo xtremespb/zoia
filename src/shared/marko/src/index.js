@@ -50,10 +50,11 @@ import SocketIO from "../../lib/socketIO";
         });
         pino.info(`Starting ZOIA ${buildJson.version} / ${buildJson.mode} (built at: ${buildJson.date})`);
         packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
-        templates = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/templates.json`));
-        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
+        templates = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/templates.json`)).filter(t => config.templates.indexOf(t) > -1);
+        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`)).filter(m => config.modules.indexOf(m.id) > -1);
+        pino.info(`Available module(s): ${modules.map(m => m.id).join(", ")}`);
         const defaultConfigs = [];
-        pino.info(`Built-in template(s): ${templates.available.join(", ")}`);
+        pino.info(`Available template(s): ${templates.join(", ")}`);
         await Promise.allSettled(Object.keys(config.languages).map(async language => {
             try {
                 const mailTemplateFileHTML = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${language}_${config.email.template}.html`), "utf8");

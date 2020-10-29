@@ -7,11 +7,19 @@ class {
       return;
     }
     const cookies = new Cookies(out.global.cookieOptions);
-    const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
+    this.token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
     out.global.io = io();
     out.global.io.on("connect", () => {
-      const data = out.global.io.emit("users.auth", { token });
+      out.global.io.emit("users.auth", { token: this.token });
     });
+    out.global.io.z3 = {
+      sendMessage: this.sendMessage.bind(this)
+    };
+    this.io = out.global.io;
+  }
+
+  sendMessage(cmd, data) {
+    this.io.emit(cmd, { token: this.token, ...data });
   }
 }
 

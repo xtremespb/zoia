@@ -98,6 +98,9 @@ module.exports = class {
     }
 
     updateAce() {
+        if (!this.aceEditor) {
+            return;
+        }
         const value = (this.state.modeAce === "ace" && this.state.item.aceOptions && this.state.item.aceOptions.mode === "ace/mode/html" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value) || "";
         this.aceEditor.getSession().setValue(value);
         if (this.state.item.wysiwyg) {
@@ -122,6 +125,9 @@ module.exports = class {
         await this.reloadCaptcha();
         switch (this.state.item.type) {
         case "ace":
+            if (!document.getElementById(`${this.state.item.id}_ace`)) {
+                return;
+            }
             [this.aceEditorElement] = document.getElementById(`${this.state.item.id}_ace`).getElementsByTagName("div");
             this.aceEditor = ace.edit(this.aceEditorElement);
             const aceDefaults = {

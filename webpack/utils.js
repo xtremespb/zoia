@@ -29,9 +29,7 @@ const copyMailTemplates = (argv) => {
 
 const generateTemplatesJSON = (argv) => {
     const available = fs.readdirSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/zoia/templates`));
-    const templatesJSON = {
-        available: available.filter(i => !i.match(/^\./) && !i.match(/-shared$/))
-    };
+    const templatesJSON = available.filter(i => !i.match(/^\./) && !i.match(/-shared$/));
     available.map(t => {
         if (fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/zoia/templates/${t}/minify.json`))) {
             const files = fs.readJSONSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/zoia/templates/${t}/minify.json`));
@@ -55,7 +53,7 @@ const generateTemplatesJSON = (argv) => {
 const rebuildMarkoTemplates = (argv) => {
     const templates = require(`${__dirname}/../build/etc/templates.json`);
     console.log("Re-building Marko templates macro...");
-    const root = `<!-- This file is auto-generated, do not modify -->\n${templates.available.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><socketIO/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
+    const root = `<!-- This file is auto-generated, do not modify -->\n${templates.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><socketIO/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
     fs.writeFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/zoia/index.marko`), root);
 };
 

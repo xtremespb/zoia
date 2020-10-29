@@ -15,7 +15,7 @@ export default async (req, rep, fastify) => {
                 pageTitle: true,
                 ...site.getSerializedGlobals()
             },
-            template: req.zoiaTemplates.available[0],
+            template: req.zoiaTemplates[0],
             pageTitle: site.i18n.t("notFound"),
             ...await site.getGlobals()
         }

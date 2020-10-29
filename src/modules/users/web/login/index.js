@@ -17,7 +17,7 @@ export default () => ({
                         pageTitle: true,
                         ...site.getSerializedGlobals()
                     },
-                    template: req.zoiaTemplates.available[0],
+                    template: req.zoiaTemplates[0],
                     pageTitle: site.i18n.t("login"),
                     ...await site.getGlobals()
                 }

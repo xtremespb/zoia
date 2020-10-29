@@ -19,6 +19,11 @@ export default class {
                 fastify.socketIoModules.map(f => f(fastify, packet, socket));
                 next();
             });
+            socket.on("disconnect", async () => {
+                if (fastify.zoiaConfig.redis.enabled && socket.lockData) {
+                    await fastify.redis.del(`${fastify.zoiaConfig.siteOptions.id}_${socket.lockData.module}_lock_${socket.lockData.id}`);
+                }
+            });
         });
     }
 

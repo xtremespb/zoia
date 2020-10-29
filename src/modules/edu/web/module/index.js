@@ -33,7 +33,7 @@ export default (programs) => ({
                         moduleId: true,
                         ...site.getSerializedGlobals()
                     },
-                    template: req.zoiaTemplates.available[0],
+                    template: req.zoiaTemplates[0],
                     pageTitle: site.i18n.t("programs"),
                     programId: req.params.programId,
                     program: programs[req.params.programId],

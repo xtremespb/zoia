@@ -57,10 +57,14 @@
     "btnCancelGeneric": "Cancel",
     "btnPrimaryGeneric": "Primary",
     "btnDeleteGeneric": "Delete",
+    "btnCloseGeneric": "Close",
     "moveUpGeneric": "Move Up",
     "moveDownGeneric": "Move Down",
     "moveLeftGeneric": "Move Left",
     "moveRightGeneric": "Move Right",
     "moveGeneric": "Move",
-    "sitePoweredByZoia": "Website is powered by ZOIA"
+    "sitePoweredByZoia": "Website is powered by ZOIA",
+    "lockedTitle": "Item is Locked",
+    "lockedMessage": "The requested item is currently being edited by another user. If you continue editing, saving may end with an error. Please contact the user who is currently editing the item to synchronize your collaboration.",
+    "lockedBy": "Currently locked by"
 }

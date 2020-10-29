@@ -9,7 +9,7 @@ import {
 import C from "./constants";
 
 export default class {
-    constructor(db, fastify, req, rep, useBearer = C.USE_COOKIE_FOR_TOKEN) {
+    constructor(db, fastify, req, rep, token = C.USE_COOKIE_FOR_TOKEN) {
         try {
             this.jwt = fastify.jwt;
         } catch {
@@ -17,17 +17,19 @@ export default class {
         }
         this.db = db;
         this.user = null;
-        this.req = req;
         this.rep = rep;
-        this.zoiaConfig = req.zoiaConfig;
-        this.collectionUsers = req.zoiaModulesConfig["users"].collectionUsers;
-        this.ip = crypto.createHmac("md5", this.zoiaConfig.secret).update(req.ip).digest("hex");
-        if (useBearer === C.USE_EVERYTHING_FOR_TOKEN) {
-            this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : req.cookies[`${this.zoiaConfig.siteOptions.id || "zoia3"}.authToken`];
-        } else if (useBearer && req.headers.authorization) {
+        this.fastify = fastify;
+        this.zoiaConfig = fastify.zoiaConfig;
+        this.collectionUsers = fastify.zoiaModulesConfig["users"].collectionUsers;
+        this.ip = req ? crypto.createHmac("md5", fastify.zoiaConfig.secret).update(req.ip).digest("hex") : null;
+        if (typeof token === "string") {
+            this.token = token;
+        } else if (token === C.USE_EVERYTHING_FOR_TOKEN) {
+            this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : req.cookies[`${fastify.zoiaConfig.siteOptions.id || "zoia3"}.authToken`];
+        } else if (token && req.headers.authorization) {
             this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : null;
-        } else if (!useBearer) {
-            this.token = req.cookies[`${this.zoiaConfig.siteOptions.id || "zoia3"}.authToken`];
+        } else if (!token) {
+            this.token = req.cookies[`${fastify.zoiaConfig.siteOptions.id || "zoia3"}.authToken`];
         }
     }
 
@@ -36,6 +38,9 @@ export default class {
     }
 
     clearAuthCookie() {
+        if (!this.rep) {
+            return;
+        }
         this.rep.clearCookie(`${this.zoiaConfig.siteOptions.id || "zoia3"}.authToken`, {
             path: "/"
         });
@@ -56,7 +61,7 @@ export default class {
             if (!user || user.sid !== tokenData.sid) {
                 return null;
             }
-            if (this.zoiaConfig.token.ip && tokenData.ip !== this.ip) {
+            if (this.zoiaConfig.token.ip && this.ip && tokenData.ip !== this.ip) {
                 return null;
             }
             delete user.password;
@@ -158,7 +163,7 @@ export default class {
         }
         try {
             // Generate hash of a secret string
-            const captchaSecretHash = crypto.createHmac("sha256", this.req.zoiaConfig.secret).update(captchaSecret).digest("hex");
+            const captchaSecretHash = crypto.createHmac("sha256", this.fastify.zoiaConfig.secret).update(captchaSecret).digest("hex");
             // Check if this captcha has been already used before
             const invCaptcha = await this.db.collection("captcha").findOne({
                 _id: captchaSecretHash
@@ -167,11 +172,11 @@ export default class {
                 return false;
             }
             // Decrypt catcha secret and parse it to JSON
-            const cryptr = new Cryptr(this.req.zoiaConfig.secret);
+            const cryptr = new Cryptr(this.fastify.zoiaConfig.secret);
             const decrypted = cryptr.decrypt(captchaSecret);
             const dataJSON = JSON.parse(decrypted) || {};
             // Check if captcha is valid and not outdated
-            if (!dataJSON.c || dataJSON.c !== code || (dataJSON.t && new Date().getTime() - parseInt(dataJSON.t, 10) > (this.req.zoiaConfig.captchaValidity * 1000 || 3600000))) {
+            if (!dataJSON.c || dataJSON.c !== code || (dataJSON.t && new Date().getTime() - parseInt(dataJSON.t, 10) > (this.fastify.zoiaConfig.captchaValidity * 1000 || 3600000))) {
                 return false;
             }
             // All checks are passed

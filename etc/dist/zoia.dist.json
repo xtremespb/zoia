@@ -24,11 +24,13 @@
     "secret": "",
     "token": {
         "expires": "7 days",
-        "ip": true
+        "ip": false
     },
     "logLevel": "info",
     "trustProxy": true,
     "stackTrace": true,
+    "modules": ["admin", "backup", "core", "files", "nav", "pages", "registry", "update", "users"],
+    "templates": ["default"],
     "email": {
         "template": "default",
         "mailer": {
