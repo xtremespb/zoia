@@ -25,5 +25,5 @@
     "mFormErr.emailAlreadyExists": "E-mail already exists in the database",
     "mFormErr.userNotFound": "User not found in the database",
     "groups": "Groups",
-    "groupsHelpText": "List of groups, separated with comma"
+    "groupsHelpText": "List of groups, separated by comma"
 }
