@@ -48,10 +48,10 @@ export default class {
     }
 
     getLocalizedURL(path, language = this._language) {
-        let newURL = path;
+        let newURL = path || "";
         if (newURL) {
             const url = path;
-            const urlParts = url.split(/\//);
+            const urlParts = url.split(/\//) || [];
             if (urlParts.length > 1) {
                 const firstPartOfURL = urlParts[1];
                 if (this._langs.indexOf(firstPartOfURL) > -1) {
