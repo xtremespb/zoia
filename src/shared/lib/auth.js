@@ -12,8 +12,8 @@ export default class {
     constructor(db, fastify, req, rep, token = C.USE_COOKIE_FOR_TOKEN) {
         try {
             this.jwt = fastify.jwt;
-        } catch {
-            // Ignore
+        } catch (e) {
+            fastify.log.info(`JWT token cannot be decoded: ${e.message}`);
         }
         this.db = db;
         this.user = null;
