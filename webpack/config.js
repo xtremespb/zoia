@@ -11,7 +11,7 @@ const webpackConfig = [];
 const markoPlugin = new MarkoPlugin();
 
 module.exports = (env, argv) => {
-    console.log(`Building Zoia, mode: ${argv.mode}${argv.type === "update" ? " (update)" : ""}`);
+    console.log(`Building ZOIA, mode: ${argv.mode}${argv.type === "update" ? " (update)" : ""}`);
     const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules`)).filter(d => !d.match(/^\./));
     const configWebClient = require("./client")(moduleDirs, markoPlugin, argv);
     const configWebServer = require("./server")(markoPlugin, argv);

@@ -60,7 +60,7 @@ module.exports = class {
             });
             clearInterval(this.restartInterval);
             this.state.status = null;
-            document.location.reload(true);
+            document.location.reload();
         } catch {
             // Ignore
         }

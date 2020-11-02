@@ -85,15 +85,15 @@
     },
     "siteMetadata": {
         "en": {
-            "title": "Zoia Website",
-            "titleShort": "Zoia Website",
+            "title": "ZOIA Website",
+            "titleShort": "ZOIA Website",
             "descShort": "Example Website powered by ZOIA",
             "siteLink": "https://zoiajs.org",
             "siteLinkText": "Example Website"
         },
         "ru": {
-            "title": "Сайт на Zoia",
-            "titleShort": "Сайт на Zoia",
+            "title": "Сайт на ZOIA",
+            "titleShort": "Сайт на ZOIA",
             "descShort": "Тестовый веб-сайт, запущенный на ZOIA",
             "siteLink": "https://zoiajs.org",
             "siteLinkText": "Тестовый веб-сайт"

@@ -160,7 +160,7 @@ import SocketIO from "../../lib/socketIO";
         fastify.decorate("zoiaTemplates", templates);
         fastify.decorateRequest("zoiaTemplates", templates);
         fastify.decorate("zoiaModules", modules.filter(m => config.modules.indexOf(m.id) > -1));
-        fastify.decorateRequest("zoiaModules", modules.filter(m => config.modules.indexOf(m.id) > -1));
+        fastify.decorateRequest("zoiaModules", modules);
         fastify.decorate("zoiaModulesConfig", modulesConfig);
         fastify.decorateRequest("zoiaModulesConfig", modulesConfig);
         fastify.decorate("ExtendedValidation", extendedValidation);

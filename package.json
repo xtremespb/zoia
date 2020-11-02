@@ -1,7 +1,7 @@
 {
     "name": "zoia3",
     "version": "3.0.0",
-    "description": "Zoia CMS",
+    "description": "ZOIA Content Management System",
     "scripts": {
         "config": "node ./scripts/config.js",
         "config-server": "node ./scripts/sconfig.js",
