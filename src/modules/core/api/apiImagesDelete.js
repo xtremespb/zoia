@@ -42,7 +42,7 @@ export default () => ({
                 return;
             }
             // Check files
-            const files = req.body.files.filter(f => !f.match(/\// && !f.match(/^\./) && f !== "node_modules"));
+            const files = req.body.files.filter(f => !f.match(/\// && !f.match(/^tn_/) && f !== "node_modules"));
             const errors = [];
             await Promise.all(files.map(async f => {
                 try {
@@ -56,7 +56,7 @@ export default () => ({
                     // Also delete thumbnail
                     try {
                         await fs.remove(path.format({
-                            ...path.parse(path.resolve(`${dir}/.tn_${f}`).replace(/\\/gm, "/")),
+                            ...path.parse(path.resolve(`${dir}/tn_${f}`).replace(/\\/gm, "/")),
                             base: undefined,
                             ext: ".jpg"
                         }));

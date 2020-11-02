@@ -61,12 +61,12 @@ export default () => ({
                 if (!errors.length) {
                     await fs.rename(srcFile, destFile);
                     const srcThumb = path.format({
-                        ...path.parse(path.resolve(`${srcDir}/.tn_${req.body.src}`).replace(/\\/gm, "/")),
+                        ...path.parse(path.resolve(`${srcDir}/tn_${req.body.src}`).replace(/\\/gm, "/")),
                         base: undefined,
                         ext: ".jpg"
                     });
                     const destThumb = path.format({
-                        ...path.parse(path.resolve(`${srcDir}/.tn_${req.body.dest}`).replace(/\\/gm, "/")),
+                        ...path.parse(path.resolve(`${srcDir}/tn_${req.body.dest}`).replace(/\\/gm, "/")),
                         base: undefined,
                         ext: ".jpg"
                     });

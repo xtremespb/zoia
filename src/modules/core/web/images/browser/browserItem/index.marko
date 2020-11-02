@@ -1,6 +1,6 @@
 <div class=`z3-cr-images-item${input.selected.indexOf(input.file.name) > -1 ? " z3-cr-images-item-selected" : ""}` data-file=input.file.name on-longtap("onDoubleClick") on-dblclick("onDoubleClick")>
   <if(input.file.hasThumb)>
-    $ const thumbFileName = `.tn_${input.file.name.substr(0, input.file.name.lastIndexOf("."))}.jpg`;
+    $ const thumbFileName = `tn_${input.file.name.substr(0, input.file.name.lastIndexOf("."))}.jpg`;
     <div class="z3-cr-images-item-img" style=`background-image:url("/images/${input.dir.join("/")}/${thumbFileName}");background-size:cover`/>
   </if>
   <else>
