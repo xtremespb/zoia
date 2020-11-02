@@ -108,7 +108,7 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
 };
 
 const ensureDirectories = () => {
-    const dirs = ["tmp", "logs", "build/etc", "build/bin", "build/public", "build/files", "build/mail", "build/public/files"];
+    const dirs = ["tmp", "logs", "build/etc", "build/bin", "build/public", "build/files", "build/mail", "build/public/files", "build/public/images"];
     console.log(`Ensuring directories: ${dirs.join(", ")}`);
     dirs.map(d => fs.ensureDirSync(path.resolve(`${__dirname}/../${d}`)));
 };
