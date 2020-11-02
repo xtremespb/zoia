@@ -48,7 +48,7 @@ export default () => ({
                 await utils.cleanRemovedFiles(req, this.mongo.db, extendedValidation, dbItem, data);
             }
             // Upload files
-            if (uploadFiles && uploadFiles.length && !(await utils.saveImages(req, rep, this.mongo.db, uploadFiles, formData))) {
+            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles, formData))) {
                 await req.removeMultipartTempFiles(formData.files);
                 return;
             }
@@ -107,11 +107,13 @@ export default () => ({
             const update = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).updateOne(id ? {
                 _id: new ObjectId(id)
             } : {
-                dir: data.dir,
-                filename: data.filename,
+                dir: data.dir || "",
+                filename: data.filename || "",
             }, {
                 $set: {
                     ...data,
+                    dir: data.dir || "",
+                    filename: data.filename || "",
                     modifiedAt: new Date(),
                     ...updateExtras
                 }

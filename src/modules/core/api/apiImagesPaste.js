@@ -48,7 +48,7 @@ export default () => ({
                 return;
             }
             // Check files
-            const files = req.body.files.filter(f => !f.match(/\// && !f.match(/^\./) && f !== "node_modules"));
+            const files = req.body.files.filter(f => !f.match(/\// && !f.match(/^tn_/) && f !== "node_modules"));
             const errors = [];
             await Promise.all(files.map(async f => {
                 try {
@@ -60,12 +60,12 @@ export default () => ({
                         return;
                     }
                     const srcThumb = path.format({
-                        ...path.parse(path.resolve(`${srcDir}/.tn_${f}`).replace(/\\/gm, "/")),
+                        ...path.parse(path.resolve(`${srcDir}/tn_${f}`).replace(/\\/gm, "/")),
                         base: undefined,
                         ext: ".jpg"
                     });
                     const destThumb = path.format({
-                        ...path.parse(path.resolve(`${destDir}/.tn_${f}`).replace(/\\/gm, "/")),
+                        ...path.parse(path.resolve(`${destDir}/tn_${f}`).replace(/\\/gm, "/")),
                         base: undefined,
                         ext: ".jpg"
                     });

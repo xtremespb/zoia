@@ -44,7 +44,7 @@ export default () => ({
                     throw new Error("Invalid file");
                 }
                 const destThumbFile = path.format({
-                    ...path.parse(path.resolve(`${root}/.tn_${f}`).replace(/\\/gm, "/")),
+                    ...path.parse(path.resolve(`${root}/tn_${f}`).replace(/\\/gm, "/")),
                     base: undefined,
                     ext: ".jpg"
                 });

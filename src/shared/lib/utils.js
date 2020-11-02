@@ -126,7 +126,7 @@ export default {
         }
         return true;
     },
-    async saveImages(req, rep, db, uploadFiles, formData, auth = false, admin = false) {
+    async saveImages(req, rep, db, uploadFiles, formData) { // , auth = false, admin = false
         const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
             $or: uploadFiles.map(f => ({
                 _id: f.id
