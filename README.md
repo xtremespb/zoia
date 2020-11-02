@@ -1,6 +1,6 @@
-# Zoia CMS
+# ZOIA Content Management System
 
-Zoia is the content management system based on Fastify, Marko, Bulma and MongoDB. It has the following features:
+ZOIA is the content management system based on Fastify, Marko, Bulma and MongoDB. It has the following features:
 
 * Lightweight and fast
 * Modular structure developed in love with ES6

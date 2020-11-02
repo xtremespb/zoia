@@ -51,7 +51,7 @@ import SocketIO from "../../lib/socketIO";
         pino.info(`Starting ZOIA ${buildJson.version} / ${buildJson.mode} (built at: ${buildJson.date})`);
         packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
         templates = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/templates.json`)).filter(t => config.templates.indexOf(t) > -1);
-        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`)).filter(m => config.modules.indexOf(m.id) > -1);
+        modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
         pino.info(`Available module(s): ${modules.map(m => m.id).join(", ")}`);
         const defaultConfigs = [];
         pino.info(`Available template(s): ${templates.join(", ")}`);
@@ -159,7 +159,7 @@ import SocketIO from "../../lib/socketIO";
         fastify.decorateRequest("zoiaConfig", config);
         fastify.decorate("zoiaTemplates", templates);
         fastify.decorateRequest("zoiaTemplates", templates);
-        fastify.decorate("zoiaModules", modules);
+        fastify.decorate("zoiaModules", modules.filter(m => config.modules.indexOf(m.id) > -1));
         fastify.decorateRequest("zoiaModules", modules);
         fastify.decorate("zoiaModulesConfig", modulesConfig);
         fastify.decorateRequest("zoiaModulesConfig", modulesConfig);
@@ -207,6 +207,9 @@ import SocketIO from "../../lib/socketIO";
         await Promise.all(modules.map(async m => {
             try {
                 const moduleWeb = await import(`../../../modules/${m.id}/web/index.js`);
+                if (config.modules.indexOf(m.id) === -1) {
+                    return;
+                }
                 moduleWeb.default(fastify);
                 modulesLoaded.push(m.id);
             } catch (e) {
@@ -221,6 +224,9 @@ import SocketIO from "../../lib/socketIO";
         await Promise.all(modules.map(async m => {
             try {
                 const moduleAPI = await import(`../../../modules/${m.id}/api/index.js`);
+                if (config.modules.indexOf(m.id) === -1) {
+                    return;
+                }
                 moduleAPI.default(fastify);
                 modulesLoaded.push(m.id);
             } catch (e) {
@@ -239,6 +245,9 @@ import SocketIO from "../../lib/socketIO";
             await Promise.all(modules.map(async m => {
                 try {
                     const moduleTelegram = await import(`../../../modules/${m.id}/telegram/index.js`);
+                    if (config.modules.indexOf(m.id) === -1) {
+                        return;
+                    }
                     moduleTelegram.default(fastify);
                     modulesLoaded.push(m.id);
                 } catch (e) {
@@ -253,6 +262,9 @@ import SocketIO from "../../lib/socketIO";
         await Promise.all(modules.map(async m => {
             try {
                 const moduleSocket = await import(`../../../modules/${m.id}/socket.io/index.js`);
+                if (config.modules.indexOf(m.id) === -1) {
+                    return;
+                }
                 socketIoModules.push(moduleSocket.default);
             } catch (e) {
                 // Ignore
