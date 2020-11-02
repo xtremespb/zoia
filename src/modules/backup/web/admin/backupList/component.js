@@ -20,7 +20,7 @@ module.exports = class {
         this.state.processValue = (id, value, column) => {
             switch (column) {
             case "filename":
-                return `${value}.bak`;
+                return `${value}.zip`;
             case "timestamp":
                 return `${new Date(value).toLocaleDateString()} ${new Date(value).toLocaleTimeString()}`;
             default:
