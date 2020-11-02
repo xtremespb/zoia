@@ -36,7 +36,7 @@ export default () => ({
             const backups = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).find(query).toArray();
             await Promise.allSettled(backups.map(async b => {
                 try {
-                    const file = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["backup"].directory}/${b.filename}.bak`);
+                    const file = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["backup"].directory}/${b.filename}.zip`);
                     await fs.remove(file);
                 } catch {
                     // Ignore

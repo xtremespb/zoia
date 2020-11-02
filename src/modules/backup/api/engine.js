@@ -11,11 +11,11 @@ export default class {
     constructor(db, config) {
         this.id = uuid();
         this.db = db;
-        this.config = {};
+        this.moduleConfig = config;
         this.modules = Object.keys(backupData);
+        this.config = {};
         this.modules.map(k => this.config[k] = backupData[k]);
         this.data = {};
-        this.config = config;
     }
 
     async backupCollections() {
@@ -56,9 +56,6 @@ export default class {
         const core = {
             etc: "etc",
             logs: "logs",
-            "build/public/zoia": `zoia`,
-            "build/etc": `build/etc`,
-            "build/bin": `bin`,
             "package.json": `root/package.json`,
             "package-lock.json": `root/package-lock.json`,
         };
@@ -72,7 +69,7 @@ export default class {
 
     saveBackup() {
         return new Promise((resolve, reject) => {
-            const destFile = path.resolve(`${__dirname}/../../${this.config.directory}/${this.id}.bak`);
+            const destFile = path.resolve(`${__dirname}/../../${this.moduleConfig.directory}/${this.id}.zip`);
             const archive = archiver("zip", {
                 zlib: {
                     level: 9
