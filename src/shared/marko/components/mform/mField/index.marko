@@ -260,11 +260,11 @@ ACE
     </div>
   </if>
   <div class="control" id=state.item.id key=`mf_ctl_${state.item.id}` style=`display:${state.item.toggle ? (state.toggleAce[state.item.id] ? "block" : "none") : "block"}`>
-    <div id=`${state.item.id}_ace` style=(state.modeAce === "ace" ? "" : "position:absolute;left:-100000px;top:left:-100000px;")>
+    <div id=`${state.item.id}_ace` style=(state.modeAce === "ace" ? "" : "position:absolute;top:-100000px;height:1px")>
       <div class="z3-mf-ace"/>
     </div>
     <if(state.item.wysiwyg)>
-      <div style=(state.modeAce === "ck" ? "" : "position:absolute;left:-100000px;top:left:-100000px;")>
+      <div style=(state.modeAce === "ck" ? "" : "position:absolute;top:-100000px;height:1px")>
         <div no-update>
           <div class="z3-mf-ckeditor" key=`mf_ctl_ckeditor_${state.item.id}` id=`mf_ctl_ckeditor_${state.item.id}` no-update/>
         </div>

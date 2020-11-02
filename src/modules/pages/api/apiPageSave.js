@@ -20,8 +20,6 @@ export default () => ({
             return;
         }
         // Initialize validator
-        // const multipart = new req.Multipart(req);
-        // const formData = await multipart.processRequest();
         const formData = await req.processMultipart();
         const extendedValidation = new req.ExtendedValidation(formData, pageEdit.root, pageEdit.part, pageEdit.files, Object.keys(req.zoiaConfig.languages));
         // Perform validation
@@ -33,11 +31,21 @@ export default () => ({
             return;
         }
         // Get ID from body
-        const id = formData.fields.id && typeof formData.fields.id === "string" && formData.fields.id.match(/^[a-f0-9]{24}$/) ? formData.fields.id : undefined;
         try {
+            const id = formData.fields.id && typeof formData.fields.id === "string" && formData.fields.id.match(/^[a-f0-9]{24}$/) ? formData.fields.id : undefined;
             // Get data from form body
             const dataRaw = extendedValidation.getData();
             const data = extendedValidation.filterDataFiles(dataRaw);
+            // Check for path duplicates
+            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["pages"].collectionPages, {
+                    dir: data.dir || "",
+                    filename: data.filename || "",
+                    _id: {
+                        $ne: id ? new ObjectId(id) : null
+                    }
+                }, "pathAlreadyExists", "path")) {
+                return;
+            }
             // Get files from body
             const uploadFiles = extendedValidation.getFiles();
             // Delete files which are removed
@@ -55,18 +63,7 @@ export default () => ({
             await req.removeMultipartTempFiles(formData.files);
             // Process case and trim
             data.filename = data.filename && typeof data.filename === "string" ? data.filename.trim().toLowerCase() : "";
-            // Compute paths
-            // ...
-            // Check for path duplicates
-            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["pages"].collectionPages, {
-                    dir: data.dir,
-                    filename: data.filename,
-                    _id: {
-                        $ne: id ? new ObjectId(id) : null
-                    }
-                }, "pathAlreadyExists", "path")) {
-                return;
-            }
+            // Extras
             const updateExtras = {};
             // Set createdAt timestamp if that's a new record
             if (!id) {
