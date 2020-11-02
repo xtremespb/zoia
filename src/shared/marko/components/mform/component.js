@@ -457,7 +457,7 @@ module.exports = class {
             } else {
                 valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value, "") : String(value);
             }
-        } else if (value === "") {
+        } else if (value === "" && field.emptyNull) {
             valueProcess = null;
         }
         if ((field.type === "file" || field.type === "images") && !Array.isArray(value)) {
@@ -471,26 +471,33 @@ module.exports = class {
 
     serialize(undef) {
         const serialized = {};
-        const emptyValues = undef ? undefined : "";
         const data = cloneDeep(this.state.data);
         this.fieldsFlat.map(field => {
             if (field.shared) {
-                const value = this.processSerializedValue(field, data[this.state.activeTabId][field.id]);
+                const valueRaw = this.masked[field.id] ? this.masked[field.id].unmaskedValue : data[this.state.activeTabId][field.id];
+                const value = this.processSerializedValue(field, valueRaw);
                 if (field.tags) {
                     const valueArr = value ? value.replace(/\s/gm, "").split(",") : [];
                     serialized[field.id] = [...new Set(valueArr)];
                 } else {
-                    serialized[field.id] = this.processSerializedValue(field, this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value));
+                    serialized[field.id] = value;
+                    if (undef && (serialized[field.id] === null || serialized[field.id] === "")) {
+                        serialized[field.id] = undefined;
+                    }
                 }
             } else {
                 this.state.tabs.map(tab => {
                     serialized[tab.id] = serialized[tab.id] || {};
-                    const value = this.processSerializedValue(field, data[tab.id][field.id]);
+                    const valueRaw = this.masked[field.id] ? this.masked[field.id].unmaskedValue : data[tab.id][field.id];
+                    const value = this.processSerializedValue(field, valueRaw);
                     if (field.tags) {
                         const valueArr = value ? value.replace(/\s/gm, "").split(",") : [];
                         serialized[tab.id][field.id] = [...new Set(valueArr)];
                     } else {
-                        serialized[tab.id][field.id] = this.processSerializedValue(field, this.masked[field.id] ? this.masked[field.id].unmaskedValue : (value === null ? emptyValues : value));
+                        serialized[tab.id][field.id] = value;
+                        if (undef && (serialized[tab.id][field.id] === null || serialized[tab.id][field.id] === "")) {
+                            serialized[tab.id][field.id] = undefined;
+                        }
                     }
                 });
             }
