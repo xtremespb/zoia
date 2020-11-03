@@ -1,0 +1,11 @@
+{
+    "collectionYachts": "yachts",
+    "database": {
+        "collections": {}
+    },
+    "routes": {
+        "admin": "/admin/yachts",
+        "view": "/*"
+    },
+    "setup": false
+}
