@@ -1,9 +1,0 @@
-{
-    "database": {
-        "collections": {}
-    },
-    "routes": {
-        "index": "/edu"
-    },
-    "setup": false
-}
