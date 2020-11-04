@@ -607,6 +607,8 @@ module.exports = class {
             console.error(e);
             if (e && e.response && e.response.status === 401) {
                 this.emit("unauthorized", {});
+            } else {
+                this.emit("post-fail", e);
             }
             this.setProgress(false);
             if (e.response && e.response.data && e.response.data.error) {
@@ -636,6 +638,7 @@ module.exports = class {
         const validationResult = await this.validate(serialized);
         this.visualizeErrors(validationResult.errorData);
         if (validationResult.failed) {
+            this.emit("validation-fail", validationResult);
             return false;
         }
         const data = this.serialize(false);
