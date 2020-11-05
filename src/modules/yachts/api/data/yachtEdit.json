@@ -1,0 +1,74 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "__form": {
+                "type": "string"
+            }
+        },
+        "required": ["__form"]
+    },
+    "root": {
+        "type": "object",
+        "properties": {
+            "dir": {
+                "type": "string",
+                "pattern": "^$|^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            "filename": {
+                "type": "string",
+                "pattern": "^([a-zA-Z0-9_\\-/\\.]+)?$",
+                "minLength": 1,
+                "maxLength": 64
+            },
+            "images": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "maxLength": 128
+                        },
+                        "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                            "minLength": 36,
+                            "maxLength": 36
+                        },
+                        "type": {
+                            "const": "file"
+                        },
+                        "upload": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["name", "id", "type"]
+                }
+            }
+        },
+        "required": ["filename"]
+    },
+    "part": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 128
+            },
+            "content": {
+                "type": "string"
+            }
+        },
+        "required": []
+    },
+    "files": {
+        "images": {
+            "minAmount": 0,
+            "maxAmount": 5,
+            "minSizeBytes": 0,
+            "maxSizeBytes": 5242880
+        }
+    }
+}

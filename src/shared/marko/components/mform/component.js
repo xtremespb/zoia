@@ -523,9 +523,13 @@ module.exports = class {
             Object.keys(data[tab.id]).map(i => {
                 if (data[tab.id][i] && Array.isArray(data[tab.id][i])) {
                     data[tab.id][i].map(f => {
-                        if (typeof f === "object" && (f.type === "file" || f.type === "images") && f.data) {
-                            delete f.data;
-                            f.upload = true;
+                        if (typeof f === "object" && (f.type === "file" || f.type === "images")) {
+                            if (f.data) {
+                                delete f.data;
+                                f.upload = true;
+                            } else {
+                                delete f.upload;
+                            }
                         }
                     });
                 }
@@ -538,9 +542,13 @@ module.exports = class {
         Object.keys(data).map(i => {
             if (data[i] && Array.isArray(data[i])) {
                 data[i].map(f => {
-                    if (typeof f === "object" && (f.type === "file" || f.type === "images") && f.data) {
-                        delete f.data;
-                        f.upload = true;
+                    if (typeof f === "object" && (f.type === "file" || f.type === "images")) {
+                        if (f.data) {
+                            delete f.data;
+                            f.upload = true;
+                        } else {
+                            delete f.upload;
+                        }
                     }
                 });
             }

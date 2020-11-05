@@ -1,0 +1,17 @@
+{
+    "collectionYachts": "yachts",
+    "database": {
+        "collections": {}
+    },
+    "routes": {
+        "admin": "/admin/yachts",
+        "view": "/*"
+    },
+    "images": {
+        "qualityThumb": 80,
+        "qualityFull": 60,
+        "sizeThumb": 200,
+        "sizeFull": 1200
+    },
+    "setup": false
+}
