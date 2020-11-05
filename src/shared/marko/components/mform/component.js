@@ -63,6 +63,8 @@ module.exports = class {
             setFieldMandatory: this.setFieldMandatory.bind(this),
             getItemData: this.getItemData.bind(this),
             setItemData: this.setItemData.bind(this),
+            emitFieldsUpdate: this.emitFieldsUpdate.bind(this),
+            setAceValue: this.setAceValue.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -147,6 +149,10 @@ module.exports = class {
 
     resetData() {
         this.setState("data", this.dataOnMount);
+        this.setState("error", null);
+        this.state.tabs.map(tab => {
+            this.state.errors[tab.id] = {};
+        });
     }
 
     onTabClick(e) {
@@ -284,6 +290,17 @@ module.exports = class {
             this.state.tabs.map(tab => data[tab.id][id] = value);
         }
         this.setState("data", data);
+        const component = this.getComponent(`mf_cmp_${id}`);
+        if (component && component.func.performUpdate) {
+            component.func.performUpdate();
+        }
+    }
+
+    setAceValue(id, value) {
+        const component = this.getComponent(`mf_cmp_${id}`);
+        if (component && component.func.setAceValue) {
+            component.func.setAceValue(value);
+        }
     }
 
     getValue(id) {
