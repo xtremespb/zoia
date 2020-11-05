@@ -3,6 +3,8 @@ const {
     exec
 } = require("child_process");
 const commandLineArgs = require("command-line-args");
+const fs = require("fs-extra");
+const path = require("path");
 
 const options = commandLineArgs([{
     name: "dev",
@@ -25,7 +27,7 @@ if (Object.keys(options).length !== 1) {
 
 const command = Object.keys(options)[0];
 const params = {
-    dev: "--display minimal --progress --mode development --config ./webpack/config.js",
+    dev: "--mode development --config ./webpack/config.js",
     maps: "--display minimal --progress --mode development --config ./webpack/config.js --maps true",
     update: "webpack --display minimal --progress --mode production --config ./webpack/config.js --type update",
     production: "webpack --display minimal --progress --mode production --config ./webpack/config.js",
@@ -37,27 +39,32 @@ if (!params[command]) {
 }
 
 const execCommand = cmd => new Promise((resolve, reject) => {
-    let error;
-    let stdout;
-    let stderr;
-    const workerProcess = exec(cmd, (errorData, stdoutData, stderrData) => {
-        error = errorData;
-        stdout = stdoutData;
-        stderr = stderrData;
-    });
-    workerProcess.on("exit", code => {
-        console.log(`Child process exited with exit code ${code}`);
-        console.log(error);
-        console.log(stdout);
-        console.log(stderr);
-        if (code === 0) {
-            resolve();
+    let exitCode;
+    const workerProcess = exec(cmd, (error, stdout) => {
+        if (exitCode === 0) {
+            resolve(stdout);
         } else {
-            reject();
+            reject(stdout);
         }
     });
+    workerProcess.on("exit", code => exitCode = code);
 });
 
 (async () => {
-    const result = await execCommand(`node node_modules/webpack-cli/bin/cli ${params[command]}`);
+    console.log(`Starting the build process, this may take some time...`);
+    try {
+        if (fs.existsSync(path.resolve(`${__dirname}/build`))) {
+            fs.copySync(path.resolve(`${__dirname}/build`), path.resolve(`${__dirname}/build_`));
+        }
+        await execCommand(`node node_modules/webpack-cli/bin/cli ${params[command]}`);
+        if (fs.existsSync(path.resolve(`${__dirname}/build`))) {
+            fs.removeSync(path.resolve(`${__dirname}/build`));
+        }
+        fs.renameSync(path.resolve(`${__dirname}/build_`), path.resolve(`${__dirname}/build`));
+    } catch (e) {
+        console.log(`Failed:\n`);
+        console.log(e);
+        process.exit(1);
+    }
+    console.log("All done.");
 })();

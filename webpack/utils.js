@@ -9,7 +9,7 @@ const htmlMinifier = require("@node-minify/html-minifier");
 const packageJson = require("../package.json");
 
 const cleanUpWeb = (argv) => {
-    [argv.type === "update" ? "build/public/update" : "build/public/zoia", "build/scripts"].map(d => {
+    [argv.type === "update" ? "build_/public/update" : "build_/public/zoia", "build_/scripts"].map(d => {
         console.log(`Cleaning up directory: "${d}"`);
         const pathWeb = path.resolve(`${__dirname}/../${d}`);
         try {
@@ -22,9 +22,9 @@ const cleanUpWeb = (argv) => {
 };
 
 const copyMailTemplates = (argv) => {
-    fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/templates`), path.resolve(`${__dirname}/../build/mail/templates`));
-    fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/components`), path.resolve(`${__dirname}/../build/mail/components`));
-    fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/images`), path.resolve(`${__dirname}/../build/mail/images`));
+    fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/templates`), path.resolve(`${__dirname}/../build_/mail/templates`));
+    fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/components`), path.resolve(`${__dirname}/../build_/mail/components`));
+    fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/images`), path.resolve(`${__dirname}/../build_/mail/images`));
 };
 
 const generateTemplatesJSON = (argv) => {
@@ -47,11 +47,11 @@ const generateTemplatesJSON = (argv) => {
             });
         }
     });
-    fs.writeJSONSync(path.resolve(`${__dirname}/../build/etc/templates.json`), templatesJSON);
+    fs.writeJSONSync(path.resolve(`${__dirname}/../build_/etc/templates.json`), templatesJSON);
 };
 
 const rebuildMarkoTemplates = (argv) => {
-    const templates = require(`${__dirname}/../build/etc/templates.json`);
+    const templates = require(`${__dirname}/../build_/etc/templates.json`);
     console.log("Re-building Marko templates macro...");
     const root = `<!-- This file is auto-generated, do not modify -->\n${templates.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><socketIO/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
     fs.writeFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/zoia/index.marko`), root);
@@ -62,15 +62,15 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
     const backup = {};
     fs.ensureDirSync(path.resolve(`${__dirname}/../logs`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../etc/modules`));
-    fs.ensureDirSync(path.resolve(`${__dirname}/../build/scripts`));
-    fs.ensureDirSync(path.resolve(`${__dirname}/../build/mail/modules`));
+    fs.ensureDirSync(path.resolve(`${__dirname}/../build_/scripts`));
+    fs.ensureDirSync(path.resolve(`${__dirname}/../build_/mail/modules`));
     moduleDirs.map(dir => {
         // In production / non-update mode, copy the configs of each module to etc/modules
         if (argv.mode === "production" && argv.type !== "update" && !fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) && fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/config.dist.json`))) {
             fs.copyFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/config.dist.json`), path.resolve(`${__dirname}/../etc/modules/${dir}.json`));
         }
-        if (fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/mail`)) && !fs.existsSync(path.resolve(`${__dirname}/../build/mail/modules/${dir}`))) {
-            fs.copy(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/mail`), path.resolve(`${__dirname}/../build/mail/modules/${dir}`));
+        if (fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/mail`)) && !fs.existsSync(path.resolve(`${__dirname}/../build_/mail/modules/${dir}`))) {
+            fs.copy(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/mail`), path.resolve(`${__dirname}/../build_/mail/modules/${dir}`));
         }
         const moduleData = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/module.json`));
         const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) : require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/config.dist.json`));
@@ -85,7 +85,7 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
         });
         modules.push(moduleData);
         if (moduleConfig.setup && fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/setup.js`))) {
-            fs.copyFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/setup.js`), path.resolve(`${__dirname}/../build/scripts/${dir}.js`));
+            fs.copyFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/setup.js`), path.resolve(`${__dirname}/../build_/scripts/${dir}.js`));
         }
         try {
             const backupConfig = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/backup.json`));
@@ -95,11 +95,11 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
         }
     });
     console.log("Writing modules.json...");
-    fs.writeJSONSync(`${__dirname}/../build/etc/modules.json`, modules);
+    fs.writeJSONSync(`${__dirname}/../build_/etc/modules.json`, modules);
     console.log("Writing backup.json...");
-    fs.writeJSONSync(`${__dirname}/../build/etc/backup.json`, backup);
+    fs.writeJSONSync(`${__dirname}/../build_/etc/backup.json`, backup);
     console.log("Writing build.json...");
-    fs.writeJSONSync(`${__dirname}/../build/etc/build.json`, {
+    fs.writeJSONSync(`${__dirname}/../build_/etc/build.json`, {
         date: new Date(),
         mode: argv.mode,
         version: packageJson.version,
@@ -108,7 +108,7 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
 };
 
 const ensureDirectories = () => {
-    const dirs = ["tmp", "logs", "build/etc", "build/bin", "build/public", "build/files", "build/mail", "build/public/files", "build/public/images"];
+    const dirs = ["tmp", "logs", "build_/etc", "build_/bin", "build_/public", "build_/files", "build_/mail", "build_/public/files", "build_/public/images"];
     console.log(`Ensuring directories: ${dirs.join(", ")}`);
     dirs.map(d => fs.ensureDirSync(path.resolve(`${__dirname}/../${d}`)));
 };
@@ -118,7 +118,7 @@ const copyPublic = () => {
         src: "favicon.ico",
         dest: "zoia/favicon.ico"
     }];
-    publicFiles.map(i => fs.copyFileSync(path.resolve(`${__dirname}/../src/public/${i.src}`), path.resolve(`${__dirname}/../build/public/${i.dest}`)));
+    publicFiles.map(i => fs.copyFileSync(path.resolve(`${__dirname}/../src/public/${i.src}`), path.resolve(`${__dirname}/../build_/public/${i.dest}`)));
 };
 
 module.exports = {
