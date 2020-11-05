@@ -46,6 +46,7 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
         label: out.global.i18n.t("filename"),
         helpText: out.global.i18n.t("filenameHelpText"),
         wrapCSS: "z3-is-medium",
+        mandatory: true,
         shared: true
       },
       {
@@ -64,31 +65,12 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
       wysiwyg: true
     },
     {
-      id: "css",
-      type: "ace",
-      label: out.global.i18n.t("css"),
-      helpText: out.global.i18n.t("cssHelpText"),
-      aceOptions: {
-        mode: "ace/mode/css"
-      },
-      toggle: true
-    },
-    {
-      id: "js",
-      type: "ace",
-      label: out.global.i18n.t("js"),
-      helpText: out.global.i18n.t("jsHelpText"),
-      aceOptions: {
-        mode: "ace/mode/javascript"
-      },
-      toggle: true
-    },
-    {
-      id: "attachments",
-      type: "file",
-      label: out.global.i18n.t("attachments"),
+      id: "images",
+      type: "images",
+      label: out.global.i18n.t("images"),
       multiple: true,
-      buttonLabel: out.global.i18n.t("selectFiles")
+      buttonLabel: out.global.i18n.t("selectImages"),
+      shared: true
     },
     {
       id: "div1",

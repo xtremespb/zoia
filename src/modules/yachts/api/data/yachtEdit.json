@@ -18,30 +18,10 @@
             "filename": {
                 "type": "string",
                 "pattern": "^([a-zA-Z0-9_\\-/\\.]+)?$",
-                "minLength": 0,
+                "minLength": 1,
                 "maxLength": 64
-            }
-        },
-        "required": []
-    },
-    "part": {
-        "type": "object",
-        "properties": {
-            "title": {
-                "type": "string",
-                "minLength": 0,
-                "maxLength": 128
             },
-            "content": {
-                "type": "string"
-            },
-            "css": {
-                "type": "string"
-            },
-            "js": {
-                "type": "string"
-            },
-            "attachments": {
+            "images": {
                 "type": "array",
                 "items": {
                     "type": "object",
@@ -67,10 +47,24 @@
                 }
             }
         },
+        "required": ["filename"]
+    },
+    "part": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 128
+            },
+            "content": {
+                "type": "string"
+            }
+        },
         "required": []
     },
     "files": {
-        "attachments": {
+        "images": {
             "minAmount": 0,
             "maxAmount": 5,
             "minSizeBytes": 0,

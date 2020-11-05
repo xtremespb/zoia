@@ -1,12 +1,10 @@
 import {
     ObjectId
 } from "mongodb";
-import minify from "@node-minify/core";
-import csso from "@node-minify/csso";
-import terser from "@node-minify/terser";
-import htmlMinifier from "@node-minify/html-minifier";
+import path from "path";
+import fs from "fs-extra";
+import Jimp from "jimp";
 import Auth from "../../../shared/lib/auth";
-import utils from "../../../shared/lib/utils";
 import yachtEdit from "./data/yachtEdit.json";
 import C from "../../../shared/lib/constants";
 
@@ -39,7 +37,7 @@ export default () => ({
             // Check for path duplicates
             if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["yachts"].collectionYachts, {
                     dir: data.dir || "",
-                    filename: data.filename || "",
+                    filename: data.filename,
                     _id: {
                         $ne: id ? new ObjectId(id) : null
                     }
@@ -53,64 +51,87 @@ export default () => ({
                 const dbItem = await this.mongo.db.collection(req.zoiaModulesConfig["yachts"].collectionYachts).findOne({
                     _id: new ObjectId(id)
                 });
-                await utils.cleanRemovedFiles(req, this.mongo.db, extendedValidation, dbItem, data);
+                const formFiles = extendedValidation.extractFiles(data);
+                const removedFiles = extendedValidation.extractFiles(dbItem).filter(f => formFiles.indexOf(f) === -1);
+                await Promise.allSettled(removedFiles.map(async f => {
+                    try {
+                        await fs.remove(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}/${f}.jpg`));
+                        await fs.remove(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}/tn_${f}.jpg`));
+                    } catch (e) {
+                        // Ignore
+                    }
+                }));
             }
-            // Upload files
-            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles, formData))) {
-                await req.removeMultipartTempFiles(formData.files);
-                return;
+            // Upload images
+            if (uploadFiles && uploadFiles.length) {
+                let uploadError = false;
+                await Promise.allSettled(uploadFiles.map(async f => {
+                    try {
+                        const filename = path.format({
+                            ...path.parse(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}/${f.id}`).replace(/\\/gm, "/")),
+                            base: undefined,
+                            ext: ".jpg"
+                        });
+                        const filenameThumb = path.format({
+                            ...path.parse(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}/tn_${f.id}`).replace(/\\/gm, "/")),
+                            base: undefined,
+                            ext: ".jpg"
+                        });
+                        const fileData = await fs.readFile(formData.files[f.id].filePath);
+                        const thumb = await Jimp.read(fileData);
+                        if (req.zoiaModulesConfig["core"].images.sizeThumb) {
+                            await thumb.scaleToFit(req.zoiaModulesConfig["core"].images.sizeThumb, Jimp.AUTO);
+                        }
+                        if (req.zoiaModulesConfig["core"].images.qualityThumb) {
+                            await thumb.quality(req.zoiaModulesConfig["core"].images.qualityThumb);
+                        }
+                        const thumbBuffer = await thumb.getBufferAsync(Jimp.MIME_JPEG);
+                        await fs.writeFile(filenameThumb, thumbBuffer);
+                        const img = await Jimp.read(formData.files[f.id].filePath);
+                        if (req.zoiaModulesConfig["core"].images.sizeFull) {
+                            await img.scaleToFit(req.zoiaModulesConfig["core"].images.sizeFull, Jimp.AUTO);
+                        }
+                        if (req.zoiaModulesConfig["core"].images.qualityFull) {
+                            await img.quality(req.zoiaModulesConfig["core"].images.qualityFull);
+                        }
+                        const imgBuffer = await img.getBufferAsync(Jimp.MIME_JPEG);
+                        await fs.writeFile(filename, imgBuffer);
+                        await fs.remove(formData.files[f.id].filePath);
+                    } catch (e) {
+                        uploadError = true;
+                    }
+                }));
+                if (uploadError) {
+                    await req.removeMultipartTempFiles(formData.files);
+                    rep.requestError(rep, {
+                        failed: true,
+                        error: "Some files are not saved",
+                        errorKeyword: "uploadError",
+                        errorData: []
+                    });
+                    return;
+                }
             }
             await req.removeMultipartTempFiles(formData.files);
             // Process case and trim
-            data.filename = data.filename && typeof data.filename === "string" ? data.filename.trim().toLowerCase() : "";
+            data.filename = data.filename.trim().toLowerCase();
             // Extras
             const updateExtras = {};
             // Set createdAt timestamp if that's a new record
             if (!id) {
                 updateExtras.createdAt = new Date();
             }
-            // Compile contents
-            await Promise.allSettled(Object.keys(req.zoiaConfig.languages).map(async k => {
-                if (!data[k]) {
-                    data[k] = undefined;
-                } else {
-                    data[k].contentMin = data[k].content;
-                    data[k].cssMin = data[k].css;
-                    data[k].jsMin = data[k].js;
-                    try {
-                        data[k].contentMin = await minify({
-                            compressor: htmlMinifier,
-                            options: {
-                                removeAttributeQuotes: true,
-                                collapseWhitespace: true,
-                                html5: true
-                            },
-                            content: data[k].content
-                        });
-                        data[k].cssMin = await minify({
-                            compressor: csso,
-                            content: data[k].css
-                        });
-                        data[k].jsMin = await minify({
-                            compressor: terser,
-                            content: data[k].js
-                        });
-                    } catch {
-                        // Ignore
-                    }
-                }
-            }));
             // Update database
             const update = await this.mongo.db.collection(req.zoiaModulesConfig["yachts"].collectionYachts).updateOne(id ? {
                 _id: new ObjectId(id)
             } : {
                 dir: data.dir || "",
-                filename: data.filename || "",
+                filename: data.filename,
             }, {
                 $set: {
                     ...data,
                     dir: data.dir || "",
-                    filename: data.filename || "",
+                    filename: data.filename,
                     modifiedAt: new Date(),
                     ...updateExtras
                 }
