@@ -84,7 +84,7 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
     } : {},
     output: {
         filename: "[name].[contenthash:8].js",
-        path: path.resolve(`${__dirname}/../build/public/${argv.type === "update" ? "update" : "zoia"}`),
+        path: path.resolve(`${__dirname}/../build/public/${argv.type === "update" ? "update_" : "zoia_"}`),
         publicPath: `/zoia/`,
     },
     plugins: [

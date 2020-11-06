@@ -9,7 +9,7 @@ const htmlMinifier = require("@node-minify/html-minifier");
 const packageJson = require("../package.json");
 
 const cleanUpWeb = (argv) => {
-    [argv.type === "update" ? "build/public/update" : "build/public/zoia", "build/scripts"].map(d => {
+    [argv.type === "update" ? "build/public/update_" : "build/public/zoia_", "build/scripts"].map(d => {
         console.log(`Cleaning up directory: "${d}"`);
         const pathWeb = path.resolve(`${__dirname}/../${d}`);
         try {
@@ -116,7 +116,7 @@ const ensureDirectories = () => {
 const copyPublic = () => {
     const publicFiles = [{
         src: "favicon.ico",
-        dest: "zoia/favicon.ico"
+        dest: `zoia_/favicon.ico`
     }];
     publicFiles.map(i => fs.copyFileSync(path.resolve(`${__dirname}/../src/public/${i.src}`), path.resolve(`${__dirname}/../build/public/${i.dest}`)));
 };
