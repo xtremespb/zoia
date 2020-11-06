@@ -29,8 +29,8 @@ const command = Object.keys(options)[0];
 const params = {
     dev: "--mode development --config ./webpack/config.js",
     maps: "--display minimal --progress --mode development --config ./webpack/config.js --maps true",
-    update: "webpack --display minimal --progress --mode production --config ./webpack/config.js --type update",
-    production: "webpack --display minimal --progress --mode production --config ./webpack/config.js",
+    update: "--display minimal --progress --mode production --config ./webpack/config.js --type update",
+    production: "--display minimal --progress --mode production --config ./webpack/config.js",
 };
 
 if (!params[command]) {
@@ -51,9 +51,20 @@ const execCommand = cmd => new Promise((resolve, reject) => {
     workerProcess.on("exit", code => exitCode = code);
 });
 
+const loadingAnimation = () => {
+    const h = ["|", "/", "-", "\\"];
+    let i = 0;
+    return setInterval(() => {
+        i = (i > 3) ? 0 : i;
+        const msg = `Building ZOIA, this may take some time... ${h[i]}`;
+        process.stdout.write(`\r${msg}`);
+        i += 1;
+    }, 100);
+};
+
 (async () => {
+    const loading = loadingAnimation();
     const dir = command === "update" ? "update" : "zoia";
-    console.log(`Starting the build process, this may take some time...`);
     try {
         if (fs.existsSync(path.resolve(`${__dirname}/build/bin/zoia.js`))) {
             fs.copySync(path.resolve(`${__dirname}/build/bin/zoia.js`), path.resolve(`${__dirname}/build/bin/zoia.js.bak`));
@@ -66,6 +77,7 @@ const execCommand = cmd => new Promise((resolve, reject) => {
         fs.removeSync(path.resolve(`${__dirname}/build/public/${dir}`));
         fs.removeSync(path.resolve(`${__dirname}/build/public/${dir}_bak`));
         fs.moveSync(path.resolve(`${__dirname}/build/public/${dir}_`), path.resolve(`${__dirname}/build/public/${dir}`));
+        clearTimeout(loading);
     } catch (e) {
         try {
             if (fs.existsSync(path.resolve(`${__dirname}/build/public/${dir}_`))) {
@@ -74,9 +86,10 @@ const execCommand = cmd => new Promise((resolve, reject) => {
         } catch {
             // Ignore
         }
+        clearTimeout(loading);
         console.log(`Failed:\n`);
         console.log(e);
         process.exit(1);
     }
-    console.log("All done.");
+    console.log("\nAll done.\n");
 })();
