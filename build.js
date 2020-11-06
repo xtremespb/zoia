@@ -68,12 +68,6 @@ const execCommand = cmd => new Promise((resolve, reject) => {
         fs.moveSync(path.resolve(`${__dirname}/build/public/${dir}_`), path.resolve(`${__dirname}/build/public/${dir}`));
     } catch (e) {
         try {
-            if (fs.existsSync(path.resolve(`${__dirname}/build/bin/zoia.js.bak`))) {
-                fs.removeSync(path.resolve(`${__dirname}/build/bin/zoia.js.bak`));
-            }
-            if (fs.existsSync(path.resolve(`${__dirname}/build/public/${dir}_bak`))) {
-                fs.removeSync(path.resolve(`${__dirname}/build/public/${dir}_bak`));
-            }
             if (fs.existsSync(path.resolve(`${__dirname}/build/public/${dir}_`))) {
                 fs.removeSync(path.resolve(`${__dirname}/build/public/${dir}_`));
             }
