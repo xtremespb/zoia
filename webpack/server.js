@@ -38,7 +38,7 @@ module.exports = (markoPlugin, argv) => ({
     } : {},
     output: {
         libraryTarget: "commonjs2",
-        path: path.resolve(`${__dirname}/../build_/bin`),
+        path: path.resolve(`${__dirname}/../build/bin`),
         filename: argv.type === "update" ? "update.js" : "zoia.js",
         publicPath: `/zoia/`,
     },
