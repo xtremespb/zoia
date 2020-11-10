@@ -1,0 +1,47 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "page": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 999999
+            },
+            "sortId": {
+                "type": "string",
+                "enum": ["dir", "title", "filename"]
+            },
+            "sortDirection": {
+                "type": "string",
+                "enum": ["asc", "desc"]
+            },
+            "searchText": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 128
+            },
+            "itemsPerPage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000
+            },
+            "language": {
+                "type": "string",
+                "pattern": "^[a-z]{2}$",
+                "minLength": 2,
+                "maxLength": 2
+            },
+            "dir": {
+                "type": "string",
+                "pattern": "^$|^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            }
+        },
+        "required": ["page", "sortId", "sortDirection", "language"]
+    },
+    "projection": {
+        "_id": 1,
+        "filename": 1,
+        "dir": 1
+    },
+    "search": ["filename", "title"]
+}

@@ -1,0 +1,10 @@
+{
+    "collectionTest": "test",
+    "database": {
+        "collections": {}
+    },
+    "routes": {
+        "admin": "/admin/test"
+    },
+    "setup": false
+}
