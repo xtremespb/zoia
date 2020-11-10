@@ -9,10 +9,11 @@ export default () => ({
     },
     attachValidation: true,
     async handler(req, rep) {
+        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
         // Validate form
         if (req.validationError) {
-            rep.logError(req, req.validationError ? req.validationError.message : "Request Error");
-            rep.validationError(rep, req.validationError || {});
+            log.error(null, req.validationError ? req.validationError.message : "Request Error");
+            response.validationError(req.validationError || {});
             return;
         }
         try {
@@ -38,7 +39,7 @@ export default () => ({
             rep.header("Content-disposition", `attachment; filename=${file.name}`).type(file.mime).send(stream);
             return;
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);
         }

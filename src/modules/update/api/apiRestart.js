@@ -5,18 +5,19 @@ import utils from "../../../shared/lib/utils";
 
 export default () => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
         try {
             // Check permissions
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-                rep.unauthorizedError(rep);
+                response.unauthorizedError();
                 return;
             }
             const registry = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
                 _id: "update"
             });
             if (!registry || registry.status !== 0) {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Update has been not performed",
                     errorKeyword: "updateNotPerformed",
@@ -28,12 +29,12 @@ export default () => ({
                 _id: "update"
             });
             // Let's hope we will be able to auto-restart ;-)
-            rep.successJSON(rep, {});
+            response.successJSON();
             const workingDir = path.resolve(`${__dirname}/../..`);
             await utils.execShellCommand("npm run restart", workingDir);
             process.exit(0);
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);
         }

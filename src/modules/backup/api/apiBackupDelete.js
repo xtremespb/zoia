@@ -13,16 +13,18 @@ export default () => ({
     },
     attachValidation: true,
     async handler(req, rep) {
+        const log = new this.LoggerHelpers(req, this);
+        const response = new this.Response(req, rep);
         // Check permissions
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
         if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-            rep.unauthorizedError(rep);
+            response.unauthorizedError();
             return;
         }
         // Validate form
         if (req.validationError) {
-            rep.logError(req, req.validationError.message);
-            rep.validationError(rep, req.validationError);
+            log.error(null, req.validationError.message);
+            response.validationError(req.validationError);
             return;
         }
         try {
@@ -46,7 +48,7 @@ export default () => ({
             const result = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).deleteMany(query);
             // Check result
             if (!result || !result.result || !result.result.ok) {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Could not delete one or more items",
                     errorKeyword: "deleteError",
@@ -55,11 +57,11 @@ export default () => ({
                 return;
             }
             // Send "success" result
-            rep.successJSON(rep);
+            response.successJSON();
             return;
         } catch (e) {
-            rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            log.error(e);
+            response.internalServerError(e.message);
         }
     }
 });

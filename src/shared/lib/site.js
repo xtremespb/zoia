@@ -10,7 +10,7 @@ const config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`))
 export default class {
     constructor(req, module, db) {
         this.moduleConfigUsers = req.zoiaModulesConfig["users"];
-        this.moduleConfigAdmin = req.zoiaModulesConfig["admin"];
+        this.moduleConfigAdmin = req.zoiaModulesConfig["core"];
         this.module = module;
         this.catalogs = i18nCatalogs.getModuleCatalog(module);
         this.language = this.getLocaleFromURL(req);

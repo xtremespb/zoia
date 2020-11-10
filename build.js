@@ -3,6 +3,9 @@ const {
     exec
 } = require("child_process");
 const commandLineArgs = require("command-line-args");
+const {
+    time
+} = require("console");
 const fs = require("fs-extra");
 const path = require("path");
 
@@ -63,6 +66,7 @@ const loadingAnimation = () => {
 };
 
 (async () => {
+    const timestampStart = new Date().getTime() / 1000;
     const loading = loadingAnimation();
     const dir = command === "update" ? "update" : "zoia";
     try {
@@ -91,5 +95,5 @@ const loadingAnimation = () => {
         console.log(e);
         process.exit(1);
     }
-    console.log("\nAll done.\n");
+    console.log(`\rAll done, ${command} version of ZOIA has been built successfully in ${parseInt(new Date().getTime() / 1000 - timestampStart, 10)} second(s).\n`);
 })();

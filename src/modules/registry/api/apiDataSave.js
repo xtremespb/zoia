@@ -19,10 +19,11 @@ const traverse = obj => {
 
 export default () => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
         // Check permissions
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
         if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-            rep.unauthorizedError(rep);
+            response.unauthorizedError();
             return;
         }
         // Clone root validation schema
@@ -33,8 +34,8 @@ export default () => ({
         const extendedValidationResult = extendedValidation.validate();
         // Check if there are any validation errors
         if (extendedValidationResult.failed) {
-            rep.logError(req, extendedValidationResult.message);
-            rep.validationError(rep, extendedValidationResult);
+            log.error(null, extendedValidationResult.message);
+            response.validationError(extendedValidationResult);
             return;
         }
         // Get data from form body
@@ -45,7 +46,7 @@ export default () => ({
                 data.value = JSON.parse(data.value);
                 traverse(data.value);
             } catch {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Could not parse JSON object",
                     errorKeyword: "invalidJSON",
@@ -66,7 +67,7 @@ export default () => ({
             });
             // Check result
             if (!update || !update.result || !update.result.ok) {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Database error",
                     errorKeyword: "databaseError",
@@ -75,12 +76,12 @@ export default () => ({
                 return;
             }
             // Return "success" result
-            rep.successJSON(rep);
+            response.successJSON();
             return;
         } catch (e) {
             // There is an exception, send error 500 as response
-            rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            log.error(e);
+            response.internalServerError(e.message);
         }
     }
 });

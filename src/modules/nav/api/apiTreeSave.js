@@ -34,17 +34,18 @@ export default () => ({
     },
     attachValidation: true,
     async handler(req, rep) {
+        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
         // Validate form
         if (req.validationError) {
-            rep.logError(req, req.validationError.message);
-            rep.validationError(rep, req.validationError);
+            log.error(null, req.validationError.message);
+            response.validationError(req.validationError);
             return;
         }
         try {
             // Check permissions
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-                rep.unauthorizedError(rep);
+                response.unauthorizedError();
                 return;
             }
             const treeExisting = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
@@ -73,7 +74,7 @@ export default () => ({
                 upsert: true
             });
             if (!resultTree || !resultTree.result || !resultTree.result.ok) {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Could not update one or more items",
                     errorKeyword: "couldNotProcess",
@@ -82,10 +83,10 @@ export default () => ({
                 return;
             }
             // Send result
-            rep.successJSON(rep, {});
+            response.successJSON();
             return;
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);
         }

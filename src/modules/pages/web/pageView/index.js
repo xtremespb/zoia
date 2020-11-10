@@ -33,6 +33,7 @@ export default () => ({
         try {
             const auth = new Auth(this.mongo.db, this, req, rep);
             const site = new req.ZoiaSite(req, "pages", this.mongo.db);
+            const response = new this.Response(req, rep, site);
             await auth.getUserData();
             site.setAuth(auth);
             const {
@@ -99,7 +100,7 @@ export default () => ({
                 },
                 content: page[site.language].contentMin
             });
-            return rep.sendHTML(rep, render);
+            return response.sendHTML(render);
         } catch (e) {
             return Promise.reject(e);
         }

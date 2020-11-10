@@ -3,11 +3,13 @@ import Auth from "../../../../shared/lib/auth";
 
 export default () => ({
     async handler(req, rep) {
+        const log = new this.LoggerHelpers(req, this);
         try {
             const auth = new Auth(this.mongo.db, this, req, rep);
             const site = new req.ZoiaSite(req, "users", this.mongo.db);
+            const response = new this.Response(req, rep, site);
             if (await auth.getUserData()) {
-                return rep.redirectToQuery(req, rep, site);
+                return response.redirectToQuery();
             }
             site.setAuth(auth);
             const render = await template.stream({
@@ -22,8 +24,9 @@ export default () => ({
                     ...await site.getGlobals()
                 }
             });
-            return rep.sendHTML(rep, render);
+            return response.sendHTML(render);
         } catch (e) {
+            log.error(e);
             return Promise.reject(e);
         }
     }

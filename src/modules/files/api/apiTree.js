@@ -34,23 +34,25 @@ const recursiveReadDir = async (root, tree = {
 
 export default () => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep);
+        const log = new this.LoggerHelpers(req, this);
         const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
         try {
             // Check permissions
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-                rep.unauthorizedError(rep);
+                response.unauthorizedError();
                 return;
             }
             // Read directory tree
             const tree = await recursiveReadDir(root);
             // Send result
-            rep.successJSON(rep, {
+            response.successJSON({
                 tree
             });
             return;
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);
         }

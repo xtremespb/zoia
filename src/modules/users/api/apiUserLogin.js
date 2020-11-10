@@ -13,24 +13,26 @@ export default () => ({
     },
     attachValidation: true,
     async handler(req, rep) {
+        const response = new this.Response(req, rep);
+        const log = new this.LoggerHelpers(req, this);
         if (req.validationError) {
-            rep.logError(req, req.validationError.message);
-            rep.validationError(rep, req.validationError);
+            log.error(null, req.validationError.message);
+            response.validationError(req.validationError);
             return;
         }
         try {
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
             const tokenSigned = await auth.login(req.body.username.toLowerCase(), req.body.password);
             if (!tokenSigned) {
-                rep.unauthorizedError(rep, C.SEND_USERNAME_PASSWORD_FIELDS_ERROR);
+                response.unauthorizedError(C.SEND_USERNAME_PASSWORD_FIELDS_ERROR);
                 return;
             }
-            rep.successJSON(rep, {
+            response.successJSON({
                 token: tokenSigned
             });
         } catch (e) {
-            rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            log.error(e);
+            response.internalServerError(e.message);
         }
     }
 });

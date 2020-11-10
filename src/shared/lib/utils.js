@@ -8,10 +8,11 @@ import {
 
 export default {
     checkDatabaseDuplicates: async (rep, db, collection, query, errorKeyword, field) => {
+        const response = rep.Request(null, rep);
         try {
             const item = await db.collection(collection).findOne(query);
             if (item) {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Database error",
                     errorKeyword,
@@ -24,7 +25,7 @@ export default {
             }
             return false;
         } catch (e) {
-            rep.requestError(rep, {
+            response.requestError({
                 failed: true,
                 error: e.message,
                 errorKeyword: "general",
@@ -79,13 +80,14 @@ export default {
         }
     },
     async saveFiles(req, rep, db, uploadFiles, formData, auth = false, admin = false) {
+        const response = rep.Request(req, rep);
         const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
             $or: uploadFiles.map(f => ({
                 _id: f.id
             }))
         }).count();
         if (duplicates) {
-            rep.requestError(rep, {
+            response.requestError({
                 failed: true,
                 error: "Some files are duplicated",
                 errorKeyword: "duplicateFiles",
@@ -116,7 +118,7 @@ export default {
             }
         }));
         if (uploadError) {
-            rep.requestError(rep, {
+            response.requestError({
                 failed: true,
                 error: "Some files are not saved",
                 errorKeyword: "uploadError",
@@ -127,13 +129,14 @@ export default {
         return true;
     },
     async saveImages(req, rep, db, uploadFiles, formData) { // , auth = false, admin = false
+        const response = rep.Request(req, rep);
         const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
             $or: uploadFiles.map(f => ({
                 _id: f.id
             }))
         }).count();
         if (duplicates) {
-            rep.requestError(rep, {
+            response.requestError({
                 failed: true,
                 error: "Some files are duplicated",
                 errorKeyword: "duplicateFiles",
@@ -179,7 +182,7 @@ export default {
             }
         }));
         if (uploadError) {
-            rep.requestError(rep, {
+            response.requestError({
                 failed: true,
                 error: "Some files are not saved",
                 errorKeyword: "uploadError",

@@ -17,18 +17,19 @@ const updateStatus = async (req, db, status, error = null) => db.collection(req.
 
 export default () => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
         try {
             // Check permissions
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-                rep.unauthorizedError(rep);
+                response.unauthorizedError();
                 return;
             }
             const registry = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
                 _id: "update"
             });
             if (registry && registry.status > 0) {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Update is in progress",
                     errorKeyword: "updateInProgress",
@@ -60,7 +61,7 @@ export default () => ({
                             await fs.copy(srcDir, updateDir);
                         } catch (e) {
                             // The "src" directory doesn't exists or copy error
-                            rep.logError(req, null, e);
+                            log.error(e);
                             await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_ERROR, e.message);
                             return;
                         }
@@ -88,7 +89,7 @@ export default () => ({
                         await fs.promises.access(updateServerScript);
                         await fs.promises.access(updatePublicDir);
                     } catch (e) {
-                        rep.logError(req, null, e);
+                        log.error(e);
                         await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_ERROR, e.message);
                         return;
                     }
@@ -100,14 +101,14 @@ export default () => ({
                     // Success
                     await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_SUCCESS);
                 } catch (e) {
-                    rep.logError(req, null, e);
+                    log.error(e);
                     await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_ERROR, e.message);
                 }
             }, 10);
-            rep.successJSON(rep, {});
+            response.successJSON();
             return;
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);
         }

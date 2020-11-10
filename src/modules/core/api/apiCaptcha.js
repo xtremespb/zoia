@@ -3,6 +3,8 @@ import Cryptr from "cryptr";
 
 export default () => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep);
+        const log = new this.LoggerHelpers(req, this);
         try {
             const cryptr = new Cryptr(req.zoiaConfig.secret);
             // c = code
@@ -16,12 +18,12 @@ export default () => ({
                 t
             }));
             // Send response
-            return rep.successJSON(rep, {
+            return response.successJSON({
                 imageData,
                 imageSecret
             });
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             return Promise.reject(e);
         }
     }

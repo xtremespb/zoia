@@ -7,9 +7,10 @@ export default () => ({
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
         try {
             const site = new req.ZoiaSite(req, "core", this.mongo.db);
+            const response = new this.Response(req, rep, site);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
-                return rep.redirectToLogin(req, rep, site, req.zoiaConfig.routes.imagesBrowser);
+                return response.redirectToLogin(req.zoiaConfig.routes.imagesBrowser);
             }
             site.setAuth(auth);
             const render = await template.stream({
@@ -20,11 +21,11 @@ export default () => ({
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
-                    pageTitle: site.i18n.t("moduleTitle"),
+                    pageTitle: site.i18n.t("moduleTitleImages"),
                     ...await site.getGlobals(),
                 }
             });
-            return rep.sendHTML(rep, render);
+            return response.sendHTML(render);
         } catch (e) {
             return Promise.reject(e);
         }

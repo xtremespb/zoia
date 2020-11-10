@@ -8,10 +8,12 @@ import C from "../../../shared/lib/constants";
 
 export default () => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep);
+        const log = new this.LoggerHelpers(req, this);
         // Check permissions
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
         if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-            rep.unauthorizedError(rep);
+            response.unauthorizedError();
             return;
         }
         const userEditRoot = cloneDeep(userEdit.root);
@@ -19,8 +21,8 @@ export default () => ({
         const extendedValidation = new req.ExtendedValidation(req.body, userEditRoot);
         const extendedValidationResult = extendedValidation.validate();
         if (extendedValidationResult.failed) {
-            rep.logError(req, extendedValidationResult.message);
-            rep.validationError(rep, extendedValidationResult);
+            log.error(null, extendedValidationResult.message);
+            response.validationError(extendedValidationResult);
             return;
         }
         try {
@@ -28,7 +30,7 @@ export default () => ({
                 _id: new ObjectId(req.body.id)
             });
             if (!user) {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Database error",
                     errorKeyword: "userNotFound",
@@ -38,13 +40,13 @@ export default () => ({
             }
             delete user.password;
             user.groups = user.groups ? user.groups.join(", ") : "";
-            rep.successJSON(rep, {
+            response.successJSON({
                 data: user
             });
             return;
         } catch (e) {
-            rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            log.error(e);
+            response.internalServerError(e.message);
         }
     }
 });

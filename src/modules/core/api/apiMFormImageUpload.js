@@ -9,6 +9,8 @@ import C from "../../../shared/lib/constants";
 
 export default () => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep);
+        const log = new this.LoggerHelpers(req, this);
         try {
             const formData = await req.processMultipart();
             const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}`).replace(/\\/gm, "/");
@@ -19,8 +21,8 @@ export default () => ({
                     throw new Error(`Not a Directory: ${root}`);
                 }
             } catch (e) {
-                rep.logError(req, e.message);
-                rep.requestError(rep, {
+                log.error(e);
+                response.requestError({
                     failed: true,
                     error: "Non-existent directory",
                     errorKeyword: "nonExistentDirectory",
@@ -31,7 +33,7 @@ export default () => ({
             // Check permissions
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-                rep.unauthorizedError(rep);
+                response.unauthorizedError();
                 return;
             }
             let f;
@@ -72,7 +74,7 @@ export default () => ({
                 }
             } catch (e) {
                 await req.removeMultipartTempFiles(formData.files);
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "One or more file(s) could not be processed",
                     errorKeyword: "couldNotProcess",
@@ -81,12 +83,12 @@ export default () => ({
                 return;
             }
             // Send result
-            rep.successJSON(rep, {
+            response.successJSON({
                 url: `/images/${f}`
             });
             return;
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);
         }

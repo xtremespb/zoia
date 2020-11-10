@@ -10,13 +10,14 @@ export default () => ({
     },
     attachValidation: true,
     async handler(req, rep) {
+        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
         const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
         const srcDir = req.body.srcDir ? path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}/${req.body.srcDir}`).replace(/\\/gm, "/") : root;
         const destDir = req.body.destDir ? path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}/${req.body.destDir}`).replace(/\\/gm, "/") : root;
         // Validate form
         if (req.validationError || srcDir.indexOf(root) !== 0 || destDir.indexOf(root) !== 0) {
-            rep.logError(req, req.validationError ? req.validationError.message : "Request Error");
-            rep.validationError(rep, req.validationError || {});
+            log.error(null, req.validationError ? req.validationError.message : "Request Error");
+            response.validationError(req.validationError || {});
             return;
         }
         try {
@@ -31,8 +32,8 @@ export default () => ({
                 throw new Error(`Not a Directory: ${destDir}`);
             }
         } catch (e) {
-            rep.logError(req, e.message);
-            rep.requestError(rep, {
+            log.error(e);
+            response.requestError({
                 failed: true,
                 error: "Non-existent directory",
                 errorKeyword: "nonExistentDirectory",
@@ -44,7 +45,7 @@ export default () => ({
             // Check permissions
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-                rep.unauthorizedError(rep);
+                response.unauthorizedError();
                 return;
             }
             // Check files
@@ -69,7 +70,7 @@ export default () => ({
                 }
             }));
             if (errors.length) {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "One or more file(s) could not be processed",
                     errorKeyword: "couldNotProcess",
@@ -79,10 +80,10 @@ export default () => ({
                 return;
             }
             // Send result
-            rep.successJSON(rep, {});
+            response.successJSON();
             return;
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);
         }

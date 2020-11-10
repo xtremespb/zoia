@@ -3,6 +3,7 @@ import Auth from "../../lib/auth";
 import C from "../../lib/constants";
 
 export default async (req, rep, fastify) => {
+    const log = new fastify.LoggerHelpers(req, fastify);
     const db = fastify.mongo.client.db(fastify.zoiaConfig.mongo.dbName);
     const auth = new Auth(db, fastify, req, rep, C.USE_COOKIE_FOR_TOKEN);
     const site = new req.ZoiaSite(req, null, db);
@@ -20,7 +21,7 @@ export default async (req, rep, fastify) => {
             ...await site.getGlobals()
         }
     });
-    rep.logWarn(req, "Not Found");
+    log.warn("Not Found");
     req.urlData().path.match(/^\/api\//) ? rep.code(404).type("application/json").send({
         errorMessage: "Not Found"
     }) : rep.code(404).type("text/html").send(render);

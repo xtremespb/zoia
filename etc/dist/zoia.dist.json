@@ -115,6 +115,7 @@
         "download": "/zoia/core/download",
         "imagesBrowser": "/zoia/core/images",
         "login": "/users/login",
+        "logout": "/users/logout",
         "publicFiles": "/files"
     },
     "telegram": {

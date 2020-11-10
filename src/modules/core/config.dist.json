@@ -30,7 +30,9 @@
             }
         }
     },
-    "routes": {},
+    "routes": {
+        "admin": "/admin"
+    },
     "images": {
         "qualityThumb": 80,
         "qualityFull": 60,

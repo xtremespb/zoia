@@ -3,11 +3,13 @@ import C from "../../../shared/lib/constants";
 
 export default () => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep);
+        const log = new this.LoggerHelpers(req, this);
         try {
             // Check permissions
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-                rep.unauthorizedError(rep);
+                response.unauthorizedError();
                 return;
             }
             // Get tree
@@ -19,12 +21,12 @@ export default () => ({
                 c: treeData ? treeData.tree : []
             };
             // Send result
-            rep.successJSON(rep, {
+            response.successJSON({
                 tree
             });
             return;
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             // eslint-disable-next-line consistent-return
             return Promise.reject(e);
         }

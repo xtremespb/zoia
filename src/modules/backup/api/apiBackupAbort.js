@@ -3,10 +3,12 @@ import C from "../../../shared/lib/constants";
 
 export default () => ({
     async handler(req, rep) {
+        const log = new this.LoggerHelpers(req, this);
+        const response = new this.Response(req, rep);
         // Check permissions
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
         if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-            rep.unauthorizedError(rep);
+            response.unauthorizedError();
             return;
         }
         try {
@@ -14,7 +16,7 @@ export default () => ({
                 _id: "backup"
             });
             if (!backupDb && !backupDb.running) {
-                rep.requestError(rep, {
+                response.requestError({
                     failed: true,
                     error: "Backup process is not started",
                     errorKeyword: "backupNotStarted",
@@ -32,11 +34,11 @@ export default () => ({
                 upsert: true
             });
             // Send response
-            rep.successJSON(rep, {});
+            response.successJSON();
             return;
         } catch (e) {
-            rep.logError(req, null, e);
-            rep.internalServerError(rep, e.message);
+            log.error(e);
+            response.internalServerError(e.message);
         }
     }
 });

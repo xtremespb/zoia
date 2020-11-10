@@ -1,9 +1,11 @@
 export default () => ({
     async handler(req, rep) {
+        const response = new this.Response(req, rep);
+        const log = new this.LoggerHelpers(req, this);
         try {
-            return rep.successJSON(rep, req.zoiaBuildJson);
+            return response.successJSON(req.zoiaBuildJson);
         } catch (e) {
-            rep.logError(req, null, e);
+            log.error(e);
             return Promise.reject(e);
         }
     }

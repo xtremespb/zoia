@@ -17,12 +17,12 @@ import {
 import crypto from "crypto";
 import template from "lodash/template";
 import logger from "../../lib/logger";
-import loggerHelpers from "../../lib/loggerHelpers";
+import LoggerHelpers from "../../lib/loggerHelpers";
 import telegramHelpers from "../../lib/telegramHelpers";
 import site from "../../lib/site";
 import internalServerErrorHandler from "./internalServerErrorHandler";
 import notFoundErrorHandler from "./notFoundErrorHandler";
-import response from "../../lib/response";
+import Response from "../../lib/response";
 import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
 import zoiaMultipart from "../../lib/zoiaMultipart";
@@ -177,9 +177,10 @@ import SocketIO from "../../lib/socketIO";
         fastify.decorateRequest("mailTemplateComponentsHTML", mailTemplateComponentsHTML);
         fastify.decorate("mailTemplateComponentsText", mailTemplateComponentsText);
         fastify.decorateRequest("mailTemplateComponentsText", mailTemplateComponentsText);
-        Object.keys(loggerHelpers).map(i => fastify.decorateReply(i, loggerHelpers[i]));
-        Object.keys(loggerHelpers).map(i => fastify.decorate(i, loggerHelpers[i]));
-        Object.keys(response).map(i => fastify.decorateReply(i, response[i]));
+        fastify.decorateReply("LoggerHelpers", LoggerHelpers);
+        fastify.decorate("LoggerHelpers", LoggerHelpers);
+        fastify.decorate("Response", Response);
+        fastify.decorateReply("Response", Response);
         Object.keys(utils).map(i => fastify.decorateReply(i, utils[i]));
         Object.keys(telegramHelpers).map(i => fastify.decorate(i, telegramHelpers[i]));
         // Socket.IO

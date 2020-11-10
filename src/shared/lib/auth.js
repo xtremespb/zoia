@@ -10,10 +10,11 @@ import C from "./constants";
 
 export default class {
     constructor(db, fastify, req, rep, token = C.USE_COOKIE_FOR_TOKEN) {
+        const log = new fastify.LoggerHelpers(req, fastify);
         try {
             this.jwt = fastify.jwt;
         } catch (e) {
-            fastify.log.info(`JWT token cannot be decoded: ${e.message}`);
+            log.info(`JWT token cannot be decoded: ${e.message}`);
         }
         this.db = db;
         this.user = null;

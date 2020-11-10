@@ -3,6 +3,7 @@ import Auth from "../../lib/auth";
 import C from "../../lib/constants";
 
 export default async (err, req, rep, fastify) => {
+    const log = new fastify.LoggerHelpers(req, fastify);
     let errorCode;
     let errorText;
     let errorTitle;
@@ -43,7 +44,7 @@ export default async (err, req, rep, fastify) => {
         errorTitle,
         errorMessage
     });
-    rep.logError(req, errorText, err);
+    log.error(err);
     req.urlData().path.match(/^\/api\//) ? rep.code(errorCode).type("application/json").send({
         errorMessage: errorText
     }) : rep.code(errorCode).type("text/html").send(render.out.stream._content);

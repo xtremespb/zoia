@@ -134,9 +134,10 @@ const checkBlackList = (settings, req) => {
 const buildRate = async (fastify, settings, routeOptions) => {
     routeOptions.rateLimit = routeOptions.rateLimit || settings.global;
     const preHandlerRate = async (req, rep, next) => {
+        const response = new this.Response(req, rep);
         if (checkWhiteList(settings, req)) {
             next();
-            return rep.getCode204(rep);
+            return response.getCode204();
         }
         const hashFull = xxhash.h64(`${req.ip}${req.urlData().path}`, fastify.zoiaConfig.secretInt).toString(16);
         const hashIP = xxhash.h64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
@@ -164,29 +165,30 @@ const buildRate = async (fastify, settings, routeOptions) => {
                     rep.header("retry-after", routeOptions.rateLimit.timeWindow);
                 }
             }
-            rep.sendError(rep, "Rate Limit Exceeded", 429);
-            return rep.getCode204(rep);
+            response.sendError("Rate Limit Exceeded", 429);
+            return response.getCode204(rep);
         }
         if (timestampNow - timestampUpdated > routeOptions.rateLimit.timeWindow) {
             dataLimit.max = 0;
         }
         await updateDataLimit(fastify, settings, hashFull, dataLimit.createdAt, dataLimit.max);
         next();
-        return rep.getCode204(rep);
+        return response.getCode204(rep);
     };
     const preHandlerBan = async (req, rep, next) => {
+        const response = new this.Response(req, rep);
         if (checkBlackList(settings, req)) {
-            rep.sendError(rep, "Forbidden (blacklisted)", 403);
-            return rep.getCode204(rep);
+            response.sendError("Forbidden (blacklisted)", 403);
+            return response.getCode204(rep);
         }
         const hashIP = xxhash.h64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
         const dataBan = await getBanData(fastify, settings, hashIP);
         if (dataBan) {
-            rep.sendError(rep, "Forbidden", 403);
-            return rep.getCode204(rep);
+            response.sendError("Forbidden", 403);
+            return response.getCode204(rep);
         }
         next();
-        return rep.getCode204(rep);
+        return response.getCode204(rep);
     };
     // Add pre-handler to the route
     if (!Array.isArray(routeOptions.preHandler)) {
