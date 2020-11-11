@@ -9,6 +9,7 @@ export default class {
     constructor(fastify, language) {
         this.fastify = fastify;
         this.language = language;
+        this.config = fastify.zoiaConfig;
         this.transporter = nodemailer.createTransport(fastify.zoiaConfig.email.mailer);
         this.message = {
             from: fastify.zoiaConfig.email.from,
@@ -19,6 +20,13 @@ export default class {
             attachments: []
         };
         this.preheader = "";
+    }
+
+    async initMetadata() {
+        const siteMetadata = (await this.fastify.db.collection(this.config.collections.registry).findOne({
+            _id: "site_metadata"
+        })) || this.config.siteMetadata;
+        this.siteMetadata = siteMetadata[this.language];
     }
 
     addLogo(cid = "logo@zoiajs.org") {
@@ -41,7 +49,7 @@ export default class {
         this.message.text = this.fastify.mailTemplatesText[this.language]({
             subject: this.message.subject,
             preheader: this.preheader,
-            meta: this.fastify.zoiaConfig.siteMetadata[this.language],
+            meta: this.siteMetadata,
             content: fromHTML ? htmlToText.fromString(value) : value
         });
     }
@@ -54,7 +62,7 @@ export default class {
         this.message.html = this.fastify.mailTemplatesHTML[this.language]({
             subject: this.message.subject,
             preheader: this.preheader,
-            meta: this.fastify.zoiaConfig.siteMetadata[this.language],
+            meta: this.siteMetadata,
             content: value
         });
     }
