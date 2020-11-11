@@ -26,4 +26,8 @@
         width: unset;
     }
 
+    .z3-ap-nav-preview-box>.navbar {
+        z-index: 0 !important;
+    }
+
 }
