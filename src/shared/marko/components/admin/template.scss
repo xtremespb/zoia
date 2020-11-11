@@ -110,6 +110,16 @@
     height: 100vh;
 }
 
+@media (max-width: 768px) {
+    .z3-ap-logo {
+        margin-left: 10px;
+    }
+
+    .z3-ap-nav-menu {
+        z-index: 999 !important;
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Checkbox & Radio

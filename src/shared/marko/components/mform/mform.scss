@@ -108,10 +108,6 @@
     border-radius: 4px
 }
 
-.z3-mf-ckeditor {
-    height: 300px;
-}
-
 .z3-mf-toggle-wrap {
     margin-left: 5px;
     margin-top: -3px;
@@ -182,5 +178,10 @@
 
     .z3-mf-field-columns-group>div:not(:last-child) {
         margin-right: 0 !important;
+    }
+
+    .z3-mf-ckeditor {
+        width: 90vw;
+        width: 90%; //fallback
     }
 }
