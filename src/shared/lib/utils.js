@@ -8,7 +8,7 @@ import {
 
 export default {
     checkDatabaseDuplicates: async (rep, db, collection, query, errorKeyword, field) => {
-        const response = rep.Request(null, rep);
+        const response = new rep.Response(null, rep);
         try {
             const item = await db.collection(collection).findOne(query);
             if (item) {
@@ -80,7 +80,7 @@ export default {
         }
     },
     async saveFiles(req, rep, db, uploadFiles, formData, auth = false, admin = false) {
-        const response = rep.Request(req, rep);
+        const response = new rep.Response(req, rep);
         const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
             $or: uploadFiles.map(f => ({
                 _id: f.id
@@ -129,7 +129,7 @@ export default {
         return true;
     },
     async saveImages(req, rep, db, uploadFiles, formData) { // , auth = false, admin = false
-        const response = rep.Request(req, rep);
+        const response = new rep.Response(req, rep);
         const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
             $or: uploadFiles.map(f => ({
                 _id: f.id

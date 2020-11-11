@@ -129,7 +129,7 @@ import SocketIO from "../../lib/socketIO";
         fastify.register(fastifyMongo, {
             client: mongoClient,
             database: config.mongo.dbName
-        }).register((ff, opts, next) => {
+        }).register(async (ff, opts, next) => {
             ff.mongo.client.db(config.mongo.dbName).on("close", () => {
                 pino.error("Fatal: connection to MongoDB is broken");
                 process.exit(1);
@@ -159,8 +159,9 @@ import SocketIO from "../../lib/socketIO";
         fastify.decorateRequest("zoiaConfig", config);
         fastify.decorate("zoiaTemplates", templates);
         fastify.decorateRequest("zoiaTemplates", templates);
-        fastify.decorate("zoiaModules", modules.filter(m => config.modules.indexOf(m.id) > -1));
-        fastify.decorateRequest("zoiaModules", modules);
+        const modulesFiltered = modules.filter(m => config.modules.indexOf(m.id) > -1);
+        fastify.decorate("zoiaModules", modulesFiltered);
+        fastify.decorateRequest("zoiaModules", modulesFiltered);
         fastify.decorate("zoiaModulesConfig", modulesConfig);
         fastify.decorateRequest("zoiaModulesConfig", modulesConfig);
         fastify.decorate("ExtendedValidation", extendedValidation);

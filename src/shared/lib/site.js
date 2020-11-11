@@ -15,6 +15,7 @@ export default class {
         this.catalogs = i18nCatalogs.getModuleCatalog(module);
         this.language = this.getLocaleFromURL(req);
         this.config = req.zoiaConfig;
+        this.siteMetadata = req.siteMetadata || config.siteMetadata;
         this.languagesList = this.catalogs.languages;
         this.languages = config.languages;
         this.path = req.urlData().path;
@@ -70,12 +71,15 @@ export default class {
         const navData = await this.db.collection(this.config.collections.registry).findOne({
             _id: "nav_data"
         });
+        const siteMetadata = (await this.db.collection(this.config.collections.registry).findOne({
+            _id: "site_metadata"
+        })) || config.siteMetadata;
         return {
             language: this.language,
             languages: this.languages,
             languageData: this.i18n.getLanguageData(this.language),
             i18n: this.i18n,
-            siteMetadata: config.siteMetadata[this.language],
+            siteMetadata: siteMetadata[this.language],
             siteOptions: config.siteOptions,
             path: this.path,
             query: this.query,
