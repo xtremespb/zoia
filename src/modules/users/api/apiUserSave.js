@@ -9,13 +9,18 @@ import C from "../../../shared/lib/constants";
 
 export default () => ({
     async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+        const response = new this.Response(req, rep);
+        const log = new this.LoggerHelpers(req, this);
         // Check permissions
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
         if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
             response.unauthorizedError();
             return;
         }
+        // Init ACL
+        const acl = new this.Acl(this);
+        await acl.initGroups(auth.getUser().groups);
+        //
         // Clone root validation schema
         const userEditRoot = cloneDeep(userEdit.root);
         if (!req.body.id) {
@@ -38,6 +43,16 @@ export default () => ({
             // Process case for username and e-mail
             data.username = data.username.trim().toLowerCase();
             data.email = data.email.trim().toLowerCase();
+            // Check permission
+            if ((!req.body.id && !acl.checkPermission("users", "create")) || !acl.checkPermission("users", "update", data.username)) {
+                response.requestError({
+                    failed: true,
+                    error: "Access Denied",
+                    errorKeyword: "accessDenied",
+                    errorData: []
+                });
+                return;
+            }
             // Check for username duplicates
             if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["users"].collectionUsers, {
                     username: data.username,

@@ -494,7 +494,7 @@ module.exports = class {
                 const valueRaw = this.masked[field.id] ? this.masked[field.id].unmaskedValue : data[this.state.activeTabId][field.id];
                 const value = this.processSerializedValue(field, valueRaw);
                 if (field.tags) {
-                    const valueArr = value ? value.replace(/\s/gm, "").split(",") : [];
+                    const valueArr = value && Array.isArray(value) ? value : value && typeof value === "string" ? value.replace(/\s/gm, "").split(",") : [];
                     serialized[field.id] = [...new Set(valueArr)];
                 } else {
                     serialized[field.id] = value;

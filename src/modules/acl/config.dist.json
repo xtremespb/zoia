@@ -1,0 +1,10 @@
+{
+    "collectionAcl": "acl",
+    "database": {
+        "collections": {}
+    },
+    "routes": {
+        "admin": "/admin/acl"
+    },
+    "setup": false
+}

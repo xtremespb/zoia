@@ -1,28 +1,23 @@
 import {
     ObjectId
 } from "mongodb";
-import userDelete from "./data/userDelete.json";
+import aclDelete from "./data/aclDelete.json";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
 
 export default () => ({
     schema: {
-        body: userDelete.root
+        body: aclDelete.root
     },
     attachValidation: true,
     async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
         // Check permissions
         const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
         if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
             response.unauthorizedError();
             return;
         }
-        // Init ACL
-        const acl = new this.Acl(this);
-        await acl.initGroups(auth.getUser().groups);
-        //
         // Validate form
         if (req.validationError) {
             log.error(null, req.validationError.message);
@@ -30,36 +25,12 @@ export default () => ({
             return;
         }
         try {
-            // Build query
-            const queryDb = {
+            // Delete requested IDs
+            const result = await this.mongo.db.collection(req.zoiaModulesConfig["acl"].collectionAcl).deleteMany({
                 $or: req.body.ids.map(id => ({
                     _id: new ObjectId(id)
                 }))
-            };
-            // Get requested data
-            const dataDb = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(queryDb, {
-                projection: {
-                    username: 1
-                }
-            }).toArray();
-            // Check permission
-            let allowed = true;
-            (dataDb || []).map(i => {
-                if (allowed && !acl.checkPermission("users", "delete", i.username)) {
-                    allowed = false;
-                }
             });
-            if (!allowed) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
-                return;
-            }
-            // Delete requested IDs
-            const result = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).deleteMany(queryDb);
             // Check result
             if (!result || !result.result || !result.result.ok) {
                 response.requestError({

@@ -17,6 +17,7 @@ import {
 import crypto from "crypto";
 import template from "lodash/template";
 import logger from "../../lib/logger";
+import acl from "../../lib/acl";
 import LoggerHelpers from "../../lib/loggerHelpers";
 import telegramHelpers from "../../lib/telegramHelpers";
 import site from "../../lib/site";
@@ -182,6 +183,8 @@ import SocketIO from "../../lib/socketIO";
         fastify.decorate("LoggerHelpers", LoggerHelpers);
         fastify.decorate("Response", Response);
         fastify.decorateReply("Response", Response);
+        fastify.decorate("Acl", acl);
+        fastify.decorateReply("Acl", acl);
         Object.keys(utils).map(i => fastify.decorateReply(i, utils[i]));
         Object.keys(telegramHelpers).map(i => fastify.decorate(i, telegramHelpers[i]));
         // Socket.IO

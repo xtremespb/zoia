@@ -1,0 +1,127 @@
+import cloneDeep from "lodash/cloneDeep"
+import Cookies from "../../../../../shared/lib/cookies"
+import aclEdit from "../../../api/data/aclEdit.json"
+
+$ const cookies = new Cookies(out.global.cookieOptions);
+$ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
+$ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, label: out.global.languages[k] }));
+$ const moduleFormData = [];
+$ out.global.modules.map(m => {
+  moduleFormData.push([
+    {
+      id: `${m.id}_access`,
+      type: "checkboxes",
+      label: m.title[out.global.language],
+      options: [
+        {
+          id: "create",
+          value: "create",
+          label: out.global.i18n.t("create")
+        },
+        {
+          id: "read",
+          value: "read",
+          label: out.global.i18n.t("read")
+        },
+        {
+          id: "update",
+          value: "update",
+          label: out.global.i18n.t("update")
+        },
+        {
+          id: "delete",
+          value: "delete",
+          label: out.global.i18n.t("delete")
+        }
+      ],
+      defaultValue: ["create", "read", "update", "delete"],
+      wrapCSS: "z3-is-large",
+      shared: true
+    },
+    {
+      id: `${m.id}_whitelist`,
+      type: "text",
+      label: out.global.i18n.t("whitelist"),
+      wrapCSS: "z3-is-large",
+      shared: true,
+      tags: true
+    },
+    {
+      id: `${m.id}_blacklist`,
+      type: "text",
+      label: out.global.i18n.t("blacklist"),
+      wrapCSS: "z3-is-large",
+      shared: true,
+      tags: true
+    }
+  ]);
+});
+<div class="mb-5">
+  <h1 class="z3-ap-head-thin">
+    <span class="icon">
+      <i class="mdi z3-ap-mdi-29px mdi-dark mdi-select-group"/>
+    </span>&nbsp;${input.id === "new" ? out.global.i18n.t("aclAdd") : out.global.i18n.t("aclEdit")}
+  </h1>
+  <mform key="aclEditForm" id="aclEditForm" save={
+    url: "/api/acl/edit/save",
+    extras: {
+      id: input.id === "new" ? undefined : input.id
+    },
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  } load={
+    url: "/api/acl/edit/load",
+    extras: {
+      id: input.id
+    },
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  } fields=[
+    [
+      {
+        id: "group",
+        type: "text",
+        label: out.global.i18n.t("group"),
+        helpText: out.global.i18n.t("groupHelpText"),
+        wrapCSS: "z3-is-medium",
+        shared: true,
+        autoFocus: true,
+        mandatory: true
+      },
+      {
+        id: "comment",
+        type: "text",
+        label: out.global.i18n.t("comment"),
+        helpText: out.global.i18n.t("commentHelpText"),
+        wrapCSS: "z3-is-large"
+      }
+    ],
+    ...moduleFormData,
+    {
+      id: "div1",
+      type: "divider"
+    },
+    {
+      id: "bg1",
+      type: "buttons",
+      data: [
+        {
+          id: "btnSave",
+          type: "button",
+          buttonType: "submit",
+          label: out.global.i18n.t("save"),
+          css: "is-primary"
+        },
+        {
+          id: "btnCancel",
+          type: "button",
+          buttonType: "button",
+          label: out.global.i18n.t("cancel")
+        }
+      ]
+    }
+  ] formType="formData" validation=aclEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=languageTabs tabsActive=[languageTabs[0].id] on-get-key-value("onGetKeyValue") on-load-success("onLoadSuccess")/>
+  <lockedModal key="z3_ap_pe_lockedModal"/>
+</div>

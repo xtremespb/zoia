@@ -1,8 +1,7 @@
 import {
     ObjectId
 } from "mongodb";
-import cloneDeep from "lodash/cloneDeep";
-import userEdit from "./data/userEdit.json";
+import aclLoad from "./data/aclLoad.json";
 import Auth from "../../../shared/lib/auth";
 import C from "../../../shared/lib/constants";
 
@@ -16,13 +15,7 @@ export default () => ({
             response.unauthorizedError();
             return;
         }
-        // Init ACL
-        const acl = new this.Acl(this);
-        await acl.initGroups(auth.getUser().groups);
-        // End: init ACL
-        const userEditRoot = cloneDeep(userEdit.root);
-        userEditRoot.required = ["id"];
-        const extendedValidation = new req.ExtendedValidation(req.body, userEditRoot);
+        const extendedValidation = new req.ExtendedValidation(req.body, aclLoad);
         const extendedValidationResult = extendedValidation.validate();
         if (extendedValidationResult.failed) {
             log.error(null, extendedValidationResult.message);
@@ -30,32 +23,32 @@ export default () => ({
             return;
         }
         try {
-            const user = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).findOne({
+            const data = await this.mongo.db.collection(req.zoiaModulesConfig["acl"].collectionAcl).findOne({
                 _id: new ObjectId(req.body.id)
             });
-            if (!user) {
+            if (!data) {
                 response.requestError({
                     failed: true,
                     error: "Database error",
-                    errorKeyword: "userNotFound",
+                    errorKeyword: "aclNotFound",
                     errorData: []
                 });
                 return;
             }
-            // Check permission
-            if (!acl.checkPermission("users", "read", user.username)) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
-                return;
-            }
-            delete user.password;
-            user.groups = user.groups ? user.groups.join(", ") : "";
+            const dataProcessed = {
+                _id: data._id,
+                group: data.group,
+            };
+            Object.keys(this.zoiaConfig.languages).map(lang => {
+                dataProcessed[lang] = data[lang];
+            });
+            this.zoiaConfig.modules.map(m => {
+                dataProcessed[`${m}_access`] = data[`${m}_access`] || [];
+                dataProcessed[`${m}_whitelist`] = data[`${m}_whitelist`] ? data[`${m}_whitelist`].join(", ") : "";
+                dataProcessed[`${m}_blacklist`] = data[`${m}_blacklist`] ? data[`${m}_blacklist`].join(", ") : "";
+            });
             response.successJSON({
-                data: user
+                data: dataProcessed
             });
             return;
         } catch (e) {

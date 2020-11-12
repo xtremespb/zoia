@@ -1,0 +1,35 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "__form": {
+                "type": "string"
+            }
+        },
+        "required": ["__form"]
+    },
+    "root": {
+        "type": "object",
+        "properties": {
+            "group": {
+                "type": "string",
+                "pattern": "^([a-zA-Z0-9_\\-/\\.]+)?$",
+                "minLength": 0,
+                "maxLength": 64
+            }
+        },
+        "required": ["group"]
+    },
+    "part": {
+        "type": "object",
+        "properties": {
+            "comment": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 128
+            }
+        },
+        "required": []
+    },
+    "files": {}
+}
