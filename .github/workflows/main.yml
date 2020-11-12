@@ -18,4 +18,6 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Trigger gitlab
-        run: curl --request POST "https://gitlab.com/api/v4/projects/19934840/trigger/pipeline?token=60d87bb0e99ba3808d79204be2bdef&ref=master"
+        run: curl --request POST "https://gitlab.com/api/v4/projects/19934840/trigger/pipeline?token=${GITLAB_TOKEN}&ref=master"
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
