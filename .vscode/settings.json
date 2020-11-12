@@ -1,6 +1,8 @@
 {
     "cSpell.words": [
+        "fastify",
         "marko",
-        "splt"
+        "splt",
+        "upsert"
     ]
 }
