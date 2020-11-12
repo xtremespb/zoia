@@ -1,7 +1,12 @@
 {
     "collectionPages": "pages",
     "database": {
-        "collections": {}
+        "collections": {
+            "pages": {
+                "indexesAsc": ["dir", "filename", "[language].title"],
+                "indexesDesc": ["dir", "filename", "[language].title"]
+            }
+        }
     },
     "routes": {
         "admin": "/admin/pages",
