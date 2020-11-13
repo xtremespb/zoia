@@ -22,6 +22,10 @@ export default class {
             return;
         }
         try {
+            if (!groups.length) {
+                this.allowEverything();
+                return;
+            }
             const groupsDb = await this.fastify.mongo.db.collection(this.fastify.zoiaModulesConfig["acl"].collectionAcl).find({
                 $or: groups.map(g => ({
                     group: g
@@ -45,21 +49,25 @@ export default class {
                     });
                 });
             } else {
-                this.fastify.zoiaModules.map(m => {
-                    // Everything is allowed by default
-                    this.permissions[m.id] = {
-                        create: true,
-                        read: true,
-                        update: true,
-                        delete: true,
-                    };
-                    this.whitelist[m.id] = [];
-                    this.blacklist[m.id] = [];
-                });
+                this.allowEverything();
             }
         } catch {
             // Ignore
         }
+    }
+
+    allowEverything() {
+        this.fastify.zoiaModules.map(m => {
+            // Everything is allowed by default
+            this.permissions[m.id] = {
+                create: true,
+                read: true,
+                update: true,
+                delete: true,
+            };
+            this.whitelist[m.id] = [];
+            this.blacklist[m.id] = [];
+        });
     }
 
     checkPermission(module, mode, id) {
