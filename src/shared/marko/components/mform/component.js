@@ -160,6 +160,15 @@ module.exports = class {
         this.setState("activeTabId", dataset.id);
         setTimeout(this.emitFieldsUpdate.bind(this), 0);
         setTimeout(this.autoFocus.bind(this), 0);
+        this.fieldsFlat.map(field => {
+            if (this.masked[field.id]) {
+                this.masked[field.id].destroy();
+                setTimeout(() => {
+                    const element = document.getElementById(field.id);
+                    this.masked[field.id] = new InputMask(element, field.maskOptions);
+                }, 10);
+            }
+        });
     }
 
     onTabSettingsClick() {
@@ -687,13 +696,29 @@ module.exports = class {
             // Deserialize all tabs
             this.input.tabsAvail.map(tab => {
                 data[tab.id] = {};
-                this.fieldsFlat.map(field => data[tab.id][field.id] = raw[tab.id] && raw[tab.id][field.id] ? raw[tab.id][field.id] : this.getDefaultValue(field));
+                this.fieldsFlat.map(field => {
+                    data[tab.id][field.id] = raw[tab.id] && raw[tab.id][field.id] ? raw[tab.id][field.id] : this.getDefaultValue(field);
+                    if (this.masked[field.id]) {
+                        this.masked[field.id].destroy();
+                        setTimeout(() => {
+                            const element = document.getElementById(field.id);
+                            this.masked[field.id] = new InputMask(element, field.maskOptions);
+                        }, 1);
+                    }
+                });
             });
             // Deserialize shared fields
             this.input.tabsAvail.map(tab => {
                 this.fieldsFlat.map(field => {
                     if (raw[field.id]) {
                         data[tab.id][field.id] = raw[field.id];
+                        if (this.masked[field.id]) {
+                            this.masked[field.id].destroy();
+                            setTimeout(() => {
+                                const element = document.getElementById(field.id);
+                                this.masked[field.id] = new InputMask(element, field.maskOptions);
+                            }, 1);
+                        }
                     }
                 });
             });
@@ -702,6 +727,13 @@ module.exports = class {
             data.__default = {};
             this.fieldsFlat.map(field => {
                 data.__default[field.id] = raw[field.id] || this.getDefaultValue(field);
+                if (this.masked[field.id]) {
+                    this.masked[field.id].destroy();
+                    setTimeout(() => {
+                        const element = document.getElementById(field.id);
+                        this.masked[field.id] = new InputMask(element, field.maskOptions);
+                    }, 1);
+                }
             });
         }
         return data;

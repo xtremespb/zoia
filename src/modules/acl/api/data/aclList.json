@@ -9,7 +9,7 @@
             },
             "sortId": {
                 "type": "string",
-                "enum": ["group", "comment"]
+                "enum": ["group"]
             },
             "sortDirection": {
                 "type": "string",

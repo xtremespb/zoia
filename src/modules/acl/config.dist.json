@@ -1,7 +1,12 @@
 {
     "collectionAcl": "acl",
     "database": {
-        "collections": {}
+        "collections": {
+            "acl": {
+                "indexesAsc": ["group"],
+                "indexesDesc": ["group"]
+            }
+        }
     },
     "routes": {
         "admin": "/admin/acl"
