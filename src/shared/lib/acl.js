@@ -27,22 +27,36 @@ export default class {
                     group: g
                 }))
             }).toArray();
-            this.fastify.zoiaModules.map(m => {
-                groupsDb.map(group => {
-                    if (group[`${m.id}_access`]) {
-                        this.permissions[m.id].create = group[`${m.id}_access`].indexOf("create") > -1 || this.permissions[m.id].create;
-                        this.permissions[m.id].read = group[`${m.id}_access`].indexOf("read") > -1 || this.permissions[m.id].read;
-                        this.permissions[m.id].update = group[`${m.id}_access`].indexOf("update") > -1 || this.permissions[m.id].update;
-                        this.permissions[m.id].delete = group[`${m.id}_access`].indexOf("delete") > -1 || this.permissions[m.id].delete;
-                    }
-                    if (group[`${m.id}_whitelist`]) {
-                        this.whitelist[m.id] = Array.from(new Set([...this.whitelist[m.id], ...group[`${m.id}_whitelist`]]));
-                    }
-                    if (group[`${m.id}_blacklist`]) {
-                        this.blacklist[m.id] = Array.from(new Set([...this.blacklist[m.id], ...group[`${m.id}_blacklist`]]));
-                    }
+            if (groupsDb.length) {
+                this.fastify.zoiaModules.map(m => {
+                    groupsDb.map(group => {
+                        if (group[`${m.id}_access`]) {
+                            this.permissions[m.id].create = group[`${m.id}_access`].indexOf("create") > -1 || this.permissions[m.id].create;
+                            this.permissions[m.id].read = group[`${m.id}_access`].indexOf("read") > -1 || this.permissions[m.id].read;
+                            this.permissions[m.id].update = group[`${m.id}_access`].indexOf("update") > -1 || this.permissions[m.id].update;
+                            this.permissions[m.id].delete = group[`${m.id}_access`].indexOf("delete") > -1 || this.permissions[m.id].delete;
+                        }
+                        if (group[`${m.id}_whitelist`]) {
+                            this.whitelist[m.id] = Array.from(new Set([...this.whitelist[m.id], ...group[`${m.id}_whitelist`]]));
+                        }
+                        if (group[`${m.id}_blacklist`]) {
+                            this.blacklist[m.id] = Array.from(new Set([...this.blacklist[m.id], ...group[`${m.id}_blacklist`]]));
+                        }
+                    });
                 });
-            });
+            } else {
+                this.fastify.zoiaModules.map(m => {
+                    // Everything is allowed by default
+                    this.permissions[m.id] = {
+                        create: true,
+                        read: true,
+                        update: true,
+                        delete: true,
+                    };
+                    this.whitelist[m.id] = [];
+                    this.blacklist[m.id] = [];
+                });
+            }
         } catch {
             // Ignore
         }
