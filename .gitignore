@@ -27,3 +27,4 @@ typings/
 /logs
 /tmp
 /backup
+/src/shared/marko/zoia/index.marko
