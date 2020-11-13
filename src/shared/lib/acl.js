@@ -22,7 +22,7 @@ export default class {
             return;
         }
         try {
-            if (!groups.length) {
+            if (!groups || !groups.length) {
                 this.allowEverything();
                 return;
             }
