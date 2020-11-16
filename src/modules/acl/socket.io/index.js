@@ -1,13 +1,13 @@
 import ioAclLock from "./ioAclLock";
 import ioAclRelease from "./ioAclRelease";
 
-export default (fastify, packet, socket) => {
-    switch (packet[0]) {
+export default (fastify, event, data, socket) => {
+    switch (event) {
     case "acl.lock":
-        ioAclLock(fastify, packet[1], socket);
+        ioAclLock(fastify, data, socket);
         break;
     case "acl.release":
-        ioAclRelease(fastify, packet[1], socket);
+        ioAclRelease(fastify, data, socket);
         break;
     }
 };

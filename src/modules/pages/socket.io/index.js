@@ -1,13 +1,13 @@
 import ioPagesLock from "./ioPagesLock";
 import ioPagesRelease from "./ioPagesRelease";
 
-export default (fastify, packet, socket) => {
-    switch (packet[0]) {
+export default (fastify, event, data, socket) => {
+    switch (event) {
     case "pages.lock":
-        ioPagesLock(fastify, packet[1], socket);
+        ioPagesLock(fastify, data, socket);
         break;
     case "pages.release":
-        ioPagesRelease(fastify, packet[1], socket);
+        ioPagesRelease(fastify, data, socket);
         break;
     }
 };

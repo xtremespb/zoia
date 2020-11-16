@@ -2,16 +2,16 @@ import ioUsersAuth from "./ioUsersAuth";
 import ioUsersLock from "./ioUsersLock";
 import ioUsersRelease from "./ioUsersRelease";
 
-export default (fastify, packet, socket) => {
-    switch (packet[0]) {
+export default (fastify, event, data, socket) => {
+    switch (event) {
     case "users.lock":
-        ioUsersLock(fastify, packet[1], socket);
+        ioUsersLock(fastify, data, socket);
         break;
     case "users.release":
-        ioUsersRelease(fastify, packet[1], socket);
+        ioUsersRelease(fastify, data, socket);
         break;
     case "users.auth":
-        ioUsersAuth(fastify, packet[1], socket);
+        ioUsersAuth(fastify, data, socket);
         break;
     }
 };
