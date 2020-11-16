@@ -15,6 +15,7 @@ module.exports = (env, argv) => {
     const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules`)).filter(d => !d.match(/^\./));
     const configWebClient = require("./client")(moduleDirs, markoPlugin, argv);
     const configWebServer = require("./server")(markoPlugin, argv);
+    const configTest = require("./test")(argv);
     utils.cleanUpWeb(argv);
     utils.ensureDirectories();
     utils.generateModulesConfig(moduleDirs, languages, argv);
@@ -23,6 +24,6 @@ module.exports = (env, argv) => {
     utils.copyPublic(argv);
     utils.copyMailTemplates(argv);
     console.log("Starting Webpack...");
-    webpackConfig.push(configWebClient, configWebServer);
+    webpackConfig.push(configWebClient, configWebServer, configTest);
     return webpackConfig;
 };
