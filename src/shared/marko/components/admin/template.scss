@@ -71,23 +71,32 @@
 }
 
 .z3-ap-head-thin {
-    font-size: 220%;
+    font-size: 180%;
     font-weight: 200;
-    border-bottom: 1px solid $white-bis;
     margin: -10px -20px 20px;
     padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     z-index: 9;
+    // background: $z3-head-background-color;
+    // color: $z3-head-text-color;
     // background: repeating-linear-gradient(-55deg,
     //         $white-bis,
     //         $white-bis 5px,
     //         $white-ter 5px,
     //         $white-ter 10px);
-    background: $grey-lightest;
+    border-bottom: 1px solid $grey-lightest;
 }
 
 .z3-ap-mdi-29px.mdi-set,
 .z3-ap-mdi-29px:before {
     font-size: 29px;
+    color: #262624;
+}
+
+.z3-ap-mdi-head.mdi-set,
+.z3-ap-mdi-head:before {
+    font-size: 24px;
 }
 
 .z3-ap-navbar-gap {
@@ -108,6 +117,10 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
+}
+
+.z3-ap-side-menu-area {
+    min-width: 270px;
 }
 
 @media (max-width: 768px) {

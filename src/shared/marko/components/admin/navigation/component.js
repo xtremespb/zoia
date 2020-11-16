@@ -35,7 +35,10 @@ module.exports = class {
     }
 
     onSideMenuToggle() {
-        document.getElementById("z3_ap_side_menu_area").style.display = this.sideMenuBottom > window.pageYOffset ? "block" : "none";
+        const sideMenuHeight = parseInt(document.getElementById("z3_ap_side_menu").clientHeight, 10);
+        const viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+        document.getElementById("z3_ap_side_menu").style.position = viewportHeight > sideMenuHeight && window.pageYOffset > 36 ? "fixed" : "unset";
+        document.getElementById("z3_ap_side_menu").style.top = viewportHeight > sideMenuHeight && window.pageYOffset > 36 ? "10px" : "unset";
     }
 
     onBurgerClick() {
