@@ -64,7 +64,7 @@ File Input
 Button
 -->
 <if(state.item.type === "button" && state.visible)>
-  <button class=`button ${state.item.css || ""} ${input.progress && input.progressButtonId === state.item.id ? "is-loading" : ""}` type=state.item.buttonType data-id=state.item.id key=`mf_ctl_${state.item.id}` on-click("onButtonClick")>${state.item.label}</button>
+  <button class=`button ${state.item.css || ""} ${input.progress && input.progressButtonId === state.item.id ? "is-loading" : ""}` id=state.item.id type=state.item.buttonType data-id=state.item.id key=`mf_ctl_${state.item.id}` on-click("onButtonClick")>${state.item.label}</button>
 </if>
 <!--
 Button group
@@ -72,7 +72,7 @@ Button group
 <if(state.item.type === "buttons" && state.visible)>
   <div class="buttons">
     <for|btn| of=state.item.data>
-      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick") disabled=!state.enabled>${btn.label}</button>
+      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` id=btn.id type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick") disabled=!state.enabled>${btn.label}</button>
     </for>
   </div>
 </if>
