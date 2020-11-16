@@ -1,13 +1,13 @@
 import ioTestLock from "./ioTestLock";
 import ioTestRelease from "./ioTestRelease";
 
-export default (fastify, packet, socket) => {
-    switch (packet[0]) {
+export default (fastify, event, data, socket) => {
+    switch (event) {
     case "test.lock":
-        ioTestLock(fastify, packet[1], socket);
+        ioTestLock(fastify, data, socket);
         break;
     case "test.release":
-        ioTestRelease(fastify, packet[1], socket);
+        ioTestRelease(fastify, data, socket);
         break;
     }
 };

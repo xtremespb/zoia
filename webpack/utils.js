@@ -8,7 +8,7 @@ const minify = require("@node-minify/core");
 const htmlMinifier = require("@node-minify/html-minifier");
 const packageJson = require("../package.json");
 
-const cleanUpWeb = (argv) => {
+const cleanUpWeb = argv => {
     [argv.type === "update" ? "build/public/update_" : "build/public/zoia_", "build/scripts"].map(d => {
         console.log(`Cleaning up directory: "${d}"`);
         const pathWeb = path.resolve(`${__dirname}/../${d}`);
@@ -21,13 +21,13 @@ const cleanUpWeb = (argv) => {
     });
 };
 
-const copyMailTemplates = (argv) => {
+const copyMailTemplates = argv => {
     fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/templates`), path.resolve(`${__dirname}/../build/mail/templates`));
     fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/components`), path.resolve(`${__dirname}/../build/mail/components`));
     fs.copySync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/mail/images`), path.resolve(`${__dirname}/../build/mail/images`));
 };
 
-const generateTemplatesJSON = (argv) => {
+const generateTemplatesJSON = argv => {
     const available = fs.readdirSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/zoia/templates`));
     const templatesJSON = available.filter(i => !i.match(/^\./) && !i.match(/-shared$/));
     available.map(t => {
@@ -50,7 +50,7 @@ const generateTemplatesJSON = (argv) => {
     fs.writeJSONSync(path.resolve(`${__dirname}/../build/etc/templates.json`), templatesJSON);
 };
 
-const rebuildMarkoTemplates = (argv) => {
+const rebuildMarkoTemplates = argv => {
     const templates = require(`${__dirname}/../build/etc/templates.json`);
     console.log("Re-building Marko templates macro...");
     const root = `<!-- This file is auto-generated, do not modify -->\n${templates.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><socketIO/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
@@ -113,12 +113,12 @@ const ensureDirectories = () => {
     dirs.map(d => fs.ensureDirSync(path.resolve(`${__dirname}/../${d}`)));
 };
 
-const copyPublic = () => {
+const copyPublic = argv => {
     const publicFiles = [{
         src: "favicon.ico",
-        dest: `zoia_/favicon.ico`
+        dest: `${argv.type === "update" ? "update_" : "zoia_"}/favicon.ico`
     }];
-    publicFiles.map(i => fs.copyFileSync(path.resolve(`${__dirname}/../src/public/${i.src}`), path.resolve(`${__dirname}/../build/public/${i.dest}`)));
+    publicFiles.map(i => fs.copyFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/public/${i.src}`), path.resolve(`${__dirname}/../build/public/${i.dest}`)));
 };
 
 module.exports = {

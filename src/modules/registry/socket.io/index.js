@@ -1,13 +1,13 @@
 import ioDataLock from "./ioDataLock";
 import ioDataRelease from "./ioDataRelease";
 
-export default (fastify, packet, socket) => {
-    switch (packet[0]) {
+export default (fastify, event, data, socket) => {
+    switch (event) {
     case "registry.lock":
-        ioDataLock(fastify, packet[1], socket);
+        ioDataLock(fastify, data, socket);
         break;
     case "registry.release":
-        ioDataRelease(fastify, packet[1], socket);
+        ioDataRelease(fastify, data, socket);
         break;
     }
 };
