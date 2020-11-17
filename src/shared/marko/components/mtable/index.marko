@@ -9,7 +9,7 @@ style.scss {
         <div class="field has-addons">
           <for|btn| of=input.buttons>
             <p class="control">
-              <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id type="button" on-click("onTopButtonClick") data-tooltip=btn.text>
+              <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id id=btn.id type="button" on-click("onTopButtonClick") data-tooltip=btn.text>
                 <if(btn.icon)>
                   <div class="z3-mt-icon-wrap">
                     <span class="icon">
@@ -26,7 +26,7 @@ style.scss {
     </div>
     <div class="column">
       <div class="control has-icons-right">
-        <input class="input" type="text" on-input("onSearchFieldInput") value=state.searchText/>
+        <input class="input" type="text" on-input("onSearchFieldInput") value=state.searchText id=`${input.id}_searchInput`/>
         <span class="icon is-small is-right">
           <i class="mdi mdi-magnify"/>
         </span>
@@ -82,7 +82,7 @@ style.scss {
                 <if(input.actions && input.actions.length)>
                   <td class="z3-mt-actions-wrap">
                     <for|action| of=input.actions>
-                      <button class=`${action.css} z3-mt-action-button${action.tooltip ? " tooltip" : ""}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tooltip=action.text>
+                      <button class=`${action.css} z3-mt-action-button${action.tooltip ? " tooltip" : ""}` id=`${action.id}_${row.id || row._id}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tooltip=action.text>
                         <if(action.icon)>
                           <span class="icon">
                             <i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
@@ -151,7 +151,7 @@ style.scss {
         </section>
         <footer class="modal-card-foot">
           <fieldset disabled=state.deleteDialogProgress>
-            <button class=`button is-primary${state.deleteDialogProgress ? " is-loading" : ""}` on-click("onDeleteDialogSubmit")>${input.i18n.t("mTable.delete")}</button>
+            <button class=`button is-primary${state.deleteDialogProgress ? " is-loading" : ""}` id=`${input.id}_deleteConfirmButton` on-click("onDeleteDialogSubmit")>${input.i18n.t("mTable.delete")}</button>
             <button class="button" on-click("onDeleteDialogClose")>${input.i18n.t("mTable.cancel")}</button>
           </fieldset>
         </footer>

@@ -3,9 +3,6 @@ const {
     exec
 } = require("child_process");
 const commandLineArgs = require("command-line-args");
-const {
-    time
-} = require("console");
 const fs = require("fs-extra");
 const path = require("path");
 
