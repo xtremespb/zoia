@@ -145,7 +145,7 @@ Checkboxes
   </label>
   <for|option, index| of=state.item.options>
     <div class="z3-pretty p-icon">
-      <input type="checkbox" key=`mf_ctl_${state.item.id}_${index}` on-change("onArrInputChange") data-id=state.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
+      <input type="checkbox" key=`mf_ctl_${state.item.id}_${index}` on-change("onArrInputChange") id=`${state.item.id}_${option.id}` data-id=state.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
       <div class="state">
         <i class="icon mdi mdi-check"/>
         <label>${option.label}</label>

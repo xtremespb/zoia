@@ -13,7 +13,8 @@
         "build-update": "node build --update",
         "build-production": "node build --production",
         "start": "node ./build/bin/zoia.js",
-        "restart": "node ./scripts/restart.js"
+        "restart": "node ./scripts/restart.js",
+        "test": "node ./build/bin/test.js"
     },
     "author": "Michael Matveev <xtreme@rh1.ru> (re-hash.ru)",
     "license": "MIT",
@@ -99,7 +100,6 @@
         "extract-css-chunks-webpack-plugin": "^4.8.0",
         "file-loader": "^6.2.0",
         "imask": "^6.0.5",
-        "mocha": "^8.2.1",
         "node-sass": "^5.0.0",
         "optimize-css-assets-webpack-plugin": "^5.0.4",
         "postcss": "^8.1.7",

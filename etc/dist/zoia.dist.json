@@ -8,7 +8,8 @@
     "serveStatic": true,
     "siteOptions": {
         "server": "localhost",
-        "id": "z3"
+        "id": "z3",
+        "url": "http://127.0.0.1:3001"
     },
     "pm2": {
         "script": "./build/bin/zoia.js",
@@ -121,5 +122,10 @@
     "telegram": {
         "enabled": false,
         "token": ""
+    },
+    "test": {
+        "headless": true,
+        "args": ["--window-size=1920,1080"],
+        "defaultViewport": null
     }
 }

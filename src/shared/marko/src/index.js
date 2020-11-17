@@ -29,6 +29,7 @@ import extendedValidation from "../../lib/extendedValidation";
 import zoiaMultipart from "../../lib/zoiaMultipart";
 import fastifyRateLimit from "../../lib/rateLimit";
 import SocketIO from "../../lib/socketIO";
+import Env from "../../lib/env";
 
 (async () => {
     let buildJson;
@@ -37,6 +38,7 @@ import SocketIO from "../../lib/socketIO";
     let pino;
     let modules;
     let packageJson;
+    let env;
     const mailTemplatesHTML = {};
     const mailTemplatesText = {};
     const mailTemplateComponentsHTML = {};
@@ -45,6 +47,8 @@ import SocketIO from "../../lib/socketIO";
     try {
         buildJson = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/build.json`));
         config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
+        env = new Env(config);
+        config = env.process();
         config.secretInt = parseInt(crypto.createHash("md5").update(config.secret).digest("hex"), 16);
         pino = Pino({
             level: config.logLevel
@@ -53,9 +57,9 @@ import SocketIO from "../../lib/socketIO";
         packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
         templates = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/templates.json`)).filter(t => config.templates.indexOf(t) > -1);
         modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
-        pino.info(`Available module(s): ${modules.map(m => m.id).join(", ")}`);
+        pino.info(`Compiled module(s): ${modules.map(m => m.id).join(", ")}`);
         const defaultConfigs = [];
-        pino.info(`Available template(s): ${templates.join(", ")}`);
+        pino.info(`Compiled template(s): ${templates.join(", ")}`);
         await Promise.allSettled(Object.keys(config.languages).map(async language => {
             try {
                 const mailTemplateFileHTML = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${language}_${config.email.template}.html`), "utf8");
