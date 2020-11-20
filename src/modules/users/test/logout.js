@@ -9,7 +9,7 @@ export default async (zoia, test, page) => {
         await page.goto(`${zoia.config.siteOptions.url}${zoia.config.routes.logout}`);
         await page.waitForSelector(".z3-dt-logo", {
             visible: true,
-            timeout: 5000
+            timeout: 15000
         });
         zoia.log.success(`Logout test success, running time: ${(test.getRunTimeMs() / 1000).toFixed(2)} second(s)`);
         result.page = page;
