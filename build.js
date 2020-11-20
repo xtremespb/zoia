@@ -73,12 +73,16 @@ const loadingAnimation = () => {
         if (fs.existsSync(path.resolve(`${__dirname}/build/bin/test.js`))) {
             fs.copySync(path.resolve(`${__dirname}/build/bin/test.js`), path.resolve(`${__dirname}/build/bin/test.js.bak`));
         }
+        if (fs.existsSync(path.resolve(`${__dirname}/build/bin/cli.js`))) {
+            fs.copySync(path.resolve(`${__dirname}/build/bin/cli.js`), path.resolve(`${__dirname}/build/bin/cli.js.bak`));
+        }
         if (fs.existsSync(path.resolve(`${__dirname}/build/public/${dir}`))) {
             fs.copySync(path.resolve(`${__dirname}/build/public/${dir}`), path.resolve(`${__dirname}/build/public/${dir}_bak`));
         }
         await execCommand(`node node_modules/webpack-cli/bin/cli ${params[command]}`);
         fs.removeSync(path.resolve(`${__dirname}/build/bin/zoia.js.bak`));
         fs.removeSync(path.resolve(`${__dirname}/build/bin/test.js.bak`));
+        fs.removeSync(path.resolve(`${__dirname}/build/bin/cli.js.bak`));
         fs.removeSync(path.resolve(`${__dirname}/build/public/${dir}`));
         fs.removeSync(path.resolve(`${__dirname}/build/public/${dir}_bak`));
         fs.moveSync(path.resolve(`${__dirname}/build/public/${dir}_`), path.resolve(`${__dirname}/build/public/${dir}`));

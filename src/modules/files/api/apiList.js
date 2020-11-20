@@ -4,8 +4,6 @@ import mime from "mime-types";
 import {
     isBinary
 } from "istextorbinary";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 import utils from "../../../shared/lib/utils";
 import filesListData from "./data/filesList.json";
 
@@ -14,9 +12,12 @@ export default () => ({
         body: filesListData.schema
     },
     attachValidation: true,
-    async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
         const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
         const dir = req.body.dir ? path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}/${req.body.dir}`).replace(/\\/gm, "/") : root;
         // Validate form
@@ -43,8 +44,7 @@ export default () => ({
         }
         try {
             // Check permissions
-            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
                 return;
             }

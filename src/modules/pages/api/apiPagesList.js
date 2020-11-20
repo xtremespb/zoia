@@ -1,6 +1,4 @@
-import Auth from "../../../shared/lib/auth";
 import pagesListData from "./data/pagesList.json";
-import C from "../../../shared/lib/constants";
 
 const findNodeByUUID = (uuid, data) => {
     let node;
@@ -28,12 +26,15 @@ export default () => ({
         body: pagesListData.schema
     },
     attachValidation: true,
-    async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+            acl
+        } = req.zoia;
         // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+        if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
             return;
         }
@@ -85,9 +86,9 @@ export default () => ({
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
             const data = (await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).toArray()).map(i => ({
                 _id: i._id,
-                dir: treeData ? getLabel(i.dir, req.body.language, treeData.tree) || "/" : "/",
-                filename: i.filename,
-                title: i[req.body.language] ? i[req.body.language].title : ""
+                dir: !acl.checkPermission("pages", "read", i.filename) ? "***" : treeData ? getLabel(i.dir, req.body.language, treeData.tree) || "/" : "/",
+                filename: !acl.checkPermission("pages", "read", i.filename) ? "***" : i.filename,
+                title: !acl.checkPermission("pages", "read", i.filename) ? "***" : i[req.body.language] ? i[req.body.language].title : ""
             }));
             // Send response
             response.successJSON({

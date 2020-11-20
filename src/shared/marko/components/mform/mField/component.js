@@ -338,7 +338,7 @@ module.exports = class {
         const height = window.screen.width > 768 ? window.screen.height / 2 : window.screen.height;
         const left = (window.screen.width - width) / 2;
         const top = (window.screen.height - height) / 4;
-        window.open(this.i18n.getLocalizedURL("/zoia/core/images"), "", `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`);
+        window.open(this.i18n.getLocalizedURL("/z3/core/images"), "", `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`);
     }
 
     setHeaders(headers) {

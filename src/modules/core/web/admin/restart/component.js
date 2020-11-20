@@ -44,7 +44,7 @@ module.exports = class {
         try {
             await axios({
                 method: "post",
-                url: "/api/admin/restart",
+                url: "/api/core/restart",
                 headers: {
                     Authorization: `Bearer ${this.token}`
                 }

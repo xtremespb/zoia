@@ -38,5 +38,8 @@
     "restartTitle": "Warning",
     "restartMessage": "You are going to restart your ZOIA process(es). In case your server is not configured properly, your system may become stopped and you will need access to the console of your server to start ZOIA in a manual mode.",
     "couldNotRestart": "Could not restart ZOIA, please check logs",
-    "restartSuccess": "System restarted successfully"
+    "restartSuccess": "System restarted successfully",
+    "maintenanceMode": "Maintenance mode",
+    "maintenanceChanged": "Maintenance mode toggled",
+    "couldNotSwitchMaintenance": "Could not toggle maintenance mode"
 }

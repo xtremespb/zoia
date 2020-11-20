@@ -1,11 +1,13 @@
 import path from "path";
 import fs from "fs-extra";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 
 export default () => ({
-    async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
         try {
             const formData = await req.processMultipart();
             const currentDirValue = formData.fields.currentDir;
@@ -28,8 +30,7 @@ export default () => ({
                 return;
             }
             // Check permissions
-            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
                 return;
             }

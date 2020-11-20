@@ -1,7 +1,5 @@
 import path from "path";
 import fs from "fs-extra";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 import filesDeleteData from "./data/imagesDelete.json";
 
 export default () => ({
@@ -9,8 +7,17 @@ export default () => ({
         body: filesDeleteData.schema
     },
     attachValidation: true,
-    async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
+        // Check permissions
+        if (!auth.checkStatus("admin")) {
+            response.unauthorizedError();
+            return;
+        }
         const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}`).replace(/\\/gm, "/");
         const dir = req.body.dir ? path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}/${req.body.dir}`).replace(/\\/gm, "/") : root;
         // Validate form
@@ -37,8 +44,7 @@ export default () => ({
         }
         try {
             // Check permissions
-            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
                 return;
             }

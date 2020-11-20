@@ -67,5 +67,10 @@
     "lockedTitle": "Item is Locked",
     "lockedMessage": "The requested item is currently being edited by another user. If you continue editing, saving may end with an error. Please contact the user who is currently editing the item to synchronize your collaboration.",
     "lockedBy": "Currently locked by",
-    "mFormErr.accessDenied": "Access Denied"
+    "mFormErr.accessDenied": "Access Denied",
+    "accessDenied": "Access Denied",
+    "accessDeniedDesc": "You don't have permission to access the requested module. Please ask your web site administrator to set the appropriate permissions for your user account.",
+    "mFormErr.dataNotFound": "Data not found",
+    "maintenanceTitle": "Maintenance",
+    "maintenanceMessage": "Site is currently in the maintenance mode, please come back later."
 }

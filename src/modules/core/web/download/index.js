@@ -1,7 +1,5 @@
 import fs from "fs-extra";
 import path from "path";
-import Auth from "../../../../shared/lib/auth";
-import C from "../../../../shared/lib/constants";
 
 export default () => ({
     // eslint-disable-next-line consistent-return
@@ -11,6 +9,9 @@ export default () => ({
             return rep.code(204);
         }
         try {
+            const {
+                auth,
+            } = req.zoia;
             const file = await this.mongo.db.collection(req.zoiaConfig.collections.files).findOne({
                 _id: req.query.id
             });
@@ -19,8 +20,7 @@ export default () => ({
                 return rep.code(204);
             }
             if (file.auth || file.admin) {
-                const auth = new Auth(this.mongo.db, this, req, rep, C.USE_EVERYTHING_FOR_TOKEN);
-                if ((file.auth && !(await auth.getUserData())) || (file.admin && !auth.checkStatus("admin"))) {
+                if ((file.auth && (!auth.getUser() || !auth.getUser()._id)) || (file.admin && !auth.checkStatus("admin"))) {
                     rep.callNotFound();
                     return rep.code(204);
                 }

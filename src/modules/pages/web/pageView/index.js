@@ -1,6 +1,5 @@
 import cloneDeep from "lodash/cloneDeep";
 import template from "./index.marko";
-import Auth from "../../../../shared/lib/auth";
 
 const findNodeById = (id, data) => {
     let node;
@@ -31,9 +30,12 @@ const getUUIDByPath = (path, tree) => {
 export default () => ({
     async handler(req, rep) {
         try {
-            const auth = new Auth(this.mongo.db, this, req, rep);
+            const {
+                response,
+                auth,
+            } = req.zoia;
             const site = new req.ZoiaSite(req, "pages", this.mongo.db);
-            const response = new this.Response(req, rep, site);
+            response.setSite(site);
             await auth.getUserData();
             site.setAuth(auth);
             const {

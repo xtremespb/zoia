@@ -1,17 +1,16 @@
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
-
 export default () => ({
-    async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
+        // Check permissions
+        if (!auth.checkStatus("admin")) {
+            response.unauthorizedError();
+            return;
+        }
         try {
-            // Check permissions
-            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
-                response.unauthorizedError();
-                return;
-            }
             // Get tree
             const treeData = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
                 _id: "pages_data"

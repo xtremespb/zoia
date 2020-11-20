@@ -1,7 +1,15 @@
 export default () => ({
-    async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
+        // Check permissions
+        if (!auth.checkStatus("admin")) {
+            response.unauthorizedError();
+            return;
+        }
         try {
             return response.successJSON(req.zoiaBuildJson);
         } catch (e) {

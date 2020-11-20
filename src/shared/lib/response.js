@@ -5,6 +5,10 @@ export default class {
         this.site = site;
     }
 
+    setSite(site) {
+        this.site = site;
+    }
+
     successJSON(data = {}) {
         this.rep.code(200).type("application/json").send({
             ...data

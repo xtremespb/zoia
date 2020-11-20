@@ -2,19 +2,21 @@ import {
     ObjectId
 } from "mongodb";
 import pageLoad from "./data/pageLoad.json";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 
 export default () => ({
-    async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+            acl
+        } = req.zoia;
         // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+        if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
             return;
         }
+        // Extended validation
         const extendedValidation = new req.ExtendedValidation(req.body, pageLoad);
         const extendedValidationResult = extendedValidation.validate();
         if (extendedValidationResult.failed) {
@@ -31,6 +33,16 @@ export default () => ({
                     failed: true,
                     error: "Database error",
                     errorKeyword: "pageNotFound",
+                    errorData: []
+                });
+                return;
+            }
+            // Check permission
+            if (!acl.checkPermission("pages", "read", data.filename)) {
+                response.requestError({
+                    failed: true,
+                    error: "Access Denied",
+                    errorKeyword: "accessDenied",
                     errorData: []
                 });
                 return;

@@ -1,12 +1,12 @@
-import Auth from "../../../../shared/lib/auth";
-import C from "../../../../shared/lib/constants";
-
 export default () => ({
-    async handler(req, rep) {
-        const log = new this.LoggerHelpers(req);
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
         const site = new req.ZoiaSite(req, "users", this.mongo.db);
-        const response = new this.Response(req, rep, site);
+        response.setSite(site);
         await auth.getUserData();
         site.setAuth(auth);
         try {

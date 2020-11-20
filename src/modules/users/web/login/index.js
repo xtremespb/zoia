@@ -1,14 +1,16 @@
 import template from "./index.marko";
-import Auth from "../../../../shared/lib/auth";
 
 export default () => ({
-    async handler(req, rep) {
+    async handler(req) {
         const log = new this.LoggerHelpers(req, this);
         try {
-            const auth = new Auth(this.mongo.db, this, req, rep);
+            const {
+                response,
+                auth,
+            } = req.zoia;
             const site = new req.ZoiaSite(req, "users", this.mongo.db);
-            const response = new this.Response(req, rep, site);
-            if (await auth.getUserData()) {
+            response.setSite(site);
+            if (auth.getUser() && auth.getUser()._id) {
                 return response.redirectToQuery();
             }
             site.setAuth(auth);

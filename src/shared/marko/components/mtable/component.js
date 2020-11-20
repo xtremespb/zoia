@@ -31,9 +31,14 @@ module.exports = class {
         this.func = {
             loadData: this.loadData.bind(this),
             setLoading: this.setLoading.bind(this),
-            dataRequest: this.dataRequest.bind(this)
+            dataRequest: this.dataRequest.bind(this),
+            setError: this.setError.bind(this),
         };
         this.i18n = input.i18n;
+    }
+
+    setError(err) {
+        this.setState("error", err);
     }
 
     onMount() {

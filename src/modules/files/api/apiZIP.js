@@ -1,8 +1,6 @@
 import path from "path";
 import fs from "fs-extra";
 import archiver from "archiver";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 import filesZIPData from "./data/filesZIP.json";
 
 export default () => ({
@@ -10,8 +8,12 @@ export default () => ({
         body: filesZIPData.schema
     },
     attachValidation: true,
-    async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
         const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
         const srcDir = req.body.dir ? path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}/${req.body.dir}`).replace(/\\/gm, "/") : root;
         // Validate form
@@ -38,8 +40,7 @@ export default () => ({
         }
         try {
             // Check permissions
-            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
                 return;
             }

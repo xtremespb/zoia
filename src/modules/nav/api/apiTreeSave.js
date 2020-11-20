@@ -1,7 +1,5 @@
 import cloneDeep from "lodash/cloneDeep";
 import treeSave from "./data/treeSave.json";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 
 const filterTree = data => data.map(i => {
     const item = {
@@ -33,8 +31,12 @@ export default () => ({
         body: treeSave.root
     },
     attachValidation: true,
-    async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
         // Validate form
         if (req.validationError) {
             log.error(null, req.validationError.message);
@@ -43,8 +45,7 @@ export default () => ({
         }
         try {
             // Check permissions
-            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
                 return;
             }

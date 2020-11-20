@@ -6,7 +6,6 @@ module.exports = class {
     onCreate(input, out) {
         this.state = {
             processValue: null,
-            error: null,
             dir: "",
             loading: false
         };
@@ -62,7 +61,8 @@ module.exports = class {
             this.setLoadingTree(false);
         } catch (e) {
             this.setLoadingTree(false);
-            this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
+            const error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
+            this.table.func.setError(error);
         }
     }
 
@@ -153,7 +153,8 @@ module.exports = class {
             this.setLoadingTree(false);
         } catch (e) {
             this.setLoadingTree(false);
-            this.state.error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
+            const error = e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotLoadDataFromServer");
+            this.table.func.setError(error);
         }
     }
 };

@@ -1,7 +1,5 @@
 import path from "path";
 import fs from "fs-extra";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 import utils from "../../../shared/lib/utils";
 
 const recursiveReadDir = async (root, tree = {
@@ -33,14 +31,16 @@ const recursiveReadDir = async (root, tree = {
 };
 
 export default () => ({
-    async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
         const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
         try {
             // Check permissions
-            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
                 return;
             }
