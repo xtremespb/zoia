@@ -113,8 +113,8 @@
         "publicFiles": "build/public/files"
     },
     "routes": {
-        "download": "/zoia/core/download",
-        "imagesBrowser": "/zoia/core/images",
+        "download": "/z3/core/download",
+        "imagesBrowser": "/z3/core/images",
         "login": "/users/login",
         "logout": "/users/logout",
         "publicFiles": "/files"

@@ -1,15 +1,17 @@
-import Auth from "../../../../shared/lib/auth";
 import template from "./template.marko";
-import C from "../../../../shared/lib/constants";
 import moduleData from "../../module.json";
 
 export default routeId => ({
-    async handler(req, rep) {
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
+    async handler(req) {
         try {
+            const {
+                acl,
+                response,
+                auth,
+            } = req.zoia;
             const site = new req.ZoiaSite(req, "backup", this.mongo.db);
-            const response = new this.Response(req, rep, site);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            response.setSite(site);
+            if (!auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
                 return response.redirectToLogin(req.zoiaModulesConfig["backup"].routes.admin);
             }
@@ -27,6 +29,7 @@ export default routeId => ({
                         routes: true,
                         backupDb: true,
                         routeDownload: true,
+                        accessAllowed: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
@@ -38,6 +41,7 @@ export default routeId => ({
                     },
                     backupDb,
                     routeDownload: req.zoiaModulesConfig["backup"].routes.download,
+                    accessAllowed: acl.checkPermission("backup", "read"),
                     ...await site.getGlobals()
                 },
                 modules: req.zoiaModules,

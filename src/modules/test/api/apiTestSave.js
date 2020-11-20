@@ -5,18 +5,19 @@ import minify from "@node-minify/core";
 import csso from "@node-minify/csso";
 import terser from "@node-minify/terser";
 import htmlMinifier from "@node-minify/html-minifier";
-import Auth from "../../../shared/lib/auth";
 import utils from "../../../shared/lib/utils";
 import testEdit from "./data/testEdit.json";
-import C from "../../../shared/lib/constants";
 
 export default () => ({
     attachValidation: false,
     async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
         // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+        if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
             return;
         }

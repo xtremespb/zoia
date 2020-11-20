@@ -23,7 +23,7 @@ export default class {
     }
 
     async initMetadata() {
-        const siteMetadata = (await this.fastify.db.collection(this.config.collections.registry).findOne({
+        const siteMetadata = (await this.fastify.mongo.db.collection(this.config.collections.registry).findOne({
             _id: "site_metadata"
         })) || this.config.siteMetadata;
         this.siteMetadata = siteMetadata[this.language];
@@ -37,7 +37,7 @@ export default class {
         });
     }
 
-    setRecepient(value) {
+    setRecipient(value) {
         this.message.to = value;
     }
 

@@ -2,9 +2,17 @@ import captcha from "zoia-captcha";
 import Cryptr from "cryptr";
 
 export default () => ({
-    async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
+        // Check permissions
+        if (!auth.checkStatus("admin")) {
+            response.unauthorizedError();
+            return;
+        }
         try {
             const cryptr = new Cryptr(req.zoiaConfig.secret);
             // c = code

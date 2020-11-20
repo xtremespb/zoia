@@ -2,7 +2,8 @@
 @import "~@mdi/font/scss/materialdesignicons.scss";
 @import "../../../fonts/source-sans-pro/source-sans-pro.css";
 @import "~bulma/bulma";
-@import '~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass';
+@import "~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass";
+@import "~bulma-extensions/bulma-switch/src/sass/index.sass";
 
 .z3-ap-html,
 .z3-ap-body {
@@ -121,6 +122,13 @@
 
 .z3-ap-side-menu-area {
     min-width: 270px;
+}
+
+.switch[type="checkbox"]:focus+label::after,
+.switch[type="checkbox"]:active+label::after,
+.switch[type="checkbox"]:focus+label::before,
+.switch[type="checkbox"]:active+label::before {
+    outline: none;
 }
 
 @media (max-width: 768px) {

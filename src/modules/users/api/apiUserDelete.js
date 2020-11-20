@@ -2,27 +2,24 @@ import {
     ObjectId
 } from "mongodb";
 import userDelete from "./data/userDelete.json";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 
 export default () => ({
     schema: {
         body: userDelete.root
     },
     attachValidation: true,
-    async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+            acl
+        } = req.zoia;
         // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+        if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
             return;
         }
-        // Init ACL
-        const acl = new this.Acl(this);
-        await acl.initGroups(auth.getUser().groups);
-        //
         // Validate form
         if (req.validationError) {
             log.error(null, req.validationError.message);

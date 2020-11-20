@@ -16,6 +16,7 @@ module.exports = (env, argv) => {
     const configWebClient = require("./client")(moduleDirs, markoPlugin, argv);
     const configWebServer = require("./server")(markoPlugin, argv);
     const configTest = require("./test")(argv);
+    const configCli = require("./cli")(argv);
     utils.cleanUpWeb(argv);
     utils.ensureDirectories();
     utils.generateModulesConfig(moduleDirs, languages, argv);
@@ -24,6 +25,6 @@ module.exports = (env, argv) => {
     utils.copyPublic(argv);
     utils.copyMailTemplates(argv);
     console.log("Starting Webpack...");
-    webpackConfig.push(configWebClient, configWebServer, configTest);
+    webpackConfig.push(configWebClient, configWebServer, configTest, configCli);
     return webpackConfig;
 };

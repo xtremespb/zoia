@@ -1,14 +1,15 @@
-import Auth from "../../../../shared/lib/auth";
 import template from "./template.marko";
-import C from "../../../../shared/lib/constants";
 
 export default () => ({
-    async handler(req, rep) {
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
+    async handler(req) {
         try {
+            const {
+                response,
+                auth,
+            } = req.zoia;
             const site = new req.ZoiaSite(req, "core", this.mongo.db);
-            const response = new this.Response(req, rep, site);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            response.setSite(site);
+            if (!auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
                 return response.redirectToLogin(req.zoiaConfig.routes.imagesBrowser);
             }

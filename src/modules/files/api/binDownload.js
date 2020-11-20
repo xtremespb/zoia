@@ -1,8 +1,6 @@
 import path from "path";
 import fs from "fs-extra";
 import mime from "mime-types";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 import fileLoadData from "./data/fileLoad.json";
 
 export default () => ({
@@ -11,7 +9,11 @@ export default () => ({
     },
     attachValidation: true,
     async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
         const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
         const srcDir = req.query.dir ? path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}/${req.query.dir}`).replace(/\\/gm, "/") : root;
         // Validate form
@@ -38,8 +40,7 @@ export default () => ({
         }
         try {
             // Check permissions
-            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
                 return;
             }

@@ -17,5 +17,5 @@
         "username": "admin",
         "password": "password"
     },
-    "setup": true
+    "setup": false
 }

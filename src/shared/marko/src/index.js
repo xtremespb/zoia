@@ -23,6 +23,8 @@ import telegramHelpers from "../../lib/telegramHelpers";
 import site from "../../lib/site";
 import internalServerErrorHandler from "./internalServerErrorHandler";
 import notFoundErrorHandler from "./notFoundErrorHandler";
+import maintenanceHandler from "./maintenanceHandler";
+import globalPrehandler from "./globalPrehandler";
 import Response from "../../lib/response";
 import utils from "../../lib/utils";
 import extendedValidation from "../../lib/extendedValidation";
@@ -283,10 +285,18 @@ import Env from "../../lib/env";
         if (!moduleErrors) {
             pino.info(`Module(s) loaded: ${[...new Set(modulesLoaded)].join(", ")}`);
         }
+        // Add global prehandler
+        fastify.addHook("preHandler", async (req, rep) => {
+            await globalPrehandler(req, rep, fastify);
+        });
         // Set handler for error 404
         fastify.setNotFoundHandler((req, rep) => notFoundErrorHandler(req, rep, fastify));
         // Set handler for error 500
         fastify.setErrorHandler((err, req, rep) => internalServerErrorHandler(err, req, rep, fastify));
+        // Add an maintenance handler
+        fastify.addHook("preHandler", async (req, rep) => {
+            await maintenanceHandler(req, rep, fastify);
+        });
         // Start Web Server
         await fastify.listen(config.webServer.port, config.webServer.ip);
     } catch (e) {

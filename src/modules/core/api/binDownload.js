@@ -9,7 +9,10 @@ export default () => ({
     },
     attachValidation: true,
     async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+        const {
+            log,
+            response,
+        } = req.zoia;
         // Validate form
         if (req.validationError) {
             log.error(null, req.validationError ? req.validationError.message : "Request Error");

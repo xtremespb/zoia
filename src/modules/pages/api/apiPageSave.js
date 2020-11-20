@@ -5,18 +5,20 @@ import minify from "@node-minify/core";
 import csso from "@node-minify/csso";
 import terser from "@node-minify/terser";
 import htmlMinifier from "@node-minify/html-minifier";
-import Auth from "../../../shared/lib/auth";
 import utils from "../../../shared/lib/utils";
 import pageEdit from "./data/pageEdit.json";
-import C from "../../../shared/lib/constants";
 
 export default () => ({
     attachValidation: false,
     async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+        const {
+            log,
+            response,
+            auth,
+            acl
+        } = req.zoia;
         // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+        if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
             return;
         }
@@ -37,6 +39,16 @@ export default () => ({
             // Get data from form body
             const dataRaw = extendedValidation.getData();
             const data = extendedValidation.filterDataFiles(dataRaw);
+            // Check permission
+            if ((!id && !acl.checkPermission("pages", "create")) || !acl.checkPermission("pages", "update", data.filename)) {
+                response.requestError({
+                    failed: true,
+                    error: "Access Denied",
+                    errorKeyword: "accessDenied",
+                    errorData: []
+                });
+                return;
+            }
             // Check for path duplicates
             if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["pages"].collectionPages, {
                     dir: data.dir || "",

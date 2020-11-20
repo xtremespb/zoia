@@ -1,16 +1,21 @@
 import path from "path";
-import Auth from "../../../shared/lib/auth";
-import C from "../../../shared/lib/constants";
 import utils from "../../../shared/lib/utils";
 
 export default () => ({
-    async handler(req, rep) {
-        const log = new this.LoggerHelpers(req, this);
-        const response = new this.Response(req, rep);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+        } = req.zoia;
+        // Check permissions
+        if (!auth.checkStatus("admin")) {
+            response.unauthorizedError();
+            return;
+        }
         try {
             // Check permissions
-            const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
                 return;
             }

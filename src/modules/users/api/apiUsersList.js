@@ -1,18 +1,19 @@
-import Auth from "../../../shared/lib/auth";
 import usersListData from "./data/usersList.json";
-import C from "../../../shared/lib/constants";
 
 export default () => ({
     schema: {
         body: usersListData.schema
     },
     attachValidation: true,
-    async handler(req, rep) {
-        const response = new this.Response(req, rep);
-        const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+            acl
+        } = req.zoia;
         // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+        if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
             return;
         }
@@ -43,7 +44,11 @@ export default () => ({
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const data = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).toArray();
+            const data = (await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).toArray()).map(i => ({
+                ...i,
+                username: !acl.checkPermission("users", "read", i.username) ? "***" : i.username,
+                email: !acl.checkPermission("users", "read", i.username) ? "***" : i.email,
+            }));
             // Send response
             response.successJSON({
                 data,

@@ -1,7 +1,5 @@
 import cloneDeep from "lodash/cloneDeep";
-import Auth from "../../../shared/lib/auth";
 import dataEdit from "./data/dataEdit.json";
-import C from "../../../shared/lib/constants";
 
 const traverse = obj => {
     Object.keys(obj).map(k => {
@@ -18,11 +16,15 @@ const traverse = obj => {
 };
 
 export default () => ({
-    async handler(req, rep) {
-        const response = new this.Response(req, rep); const log = new this.LoggerHelpers(req, this);
+    async handler(req) {
+        const {
+            log,
+            response,
+            auth,
+            acl
+        } = req.zoia;
         // Check permissions
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_BEARER_FOR_TOKEN);
-        if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+        if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
             return;
         }
@@ -50,6 +52,16 @@ export default () => ({
                     failed: true,
                     error: "Could not parse JSON object",
                     errorKeyword: "invalidJSON",
+                    errorData: []
+                });
+                return;
+            }
+            // Check permission
+            if (!acl.checkPermission("registry", "create") || !acl.checkPermission("registry", "update", data._id)) {
+                response.requestError({
+                    failed: true,
+                    error: "Access Denied",
+                    errorKeyword: "accessDenied",
                     errorData: []
                 });
                 return;

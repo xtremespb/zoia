@@ -1,30 +1,37 @@
-import Auth from "../../../../shared/lib/auth";
 import template from "./template.marko";
-import C from "../../../../shared/lib/constants";
 import moduleData from "../../module.json";
 
 export default () => ({
-    async handler(req, rep) {
-        const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
+    async handler(req) {
         try {
+            const {
+                response,
+                auth,
+            } = req.zoia;
             const site = new req.ZoiaSite(req, "core", this.mongo.db);
-            const response = new this.Response(req, rep, site);
-            if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
+            response.setSite(site);
+            if (!auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
                 return response.redirectToLogin(req.zoiaModulesConfig["core"].routes.admin);
             }
             site.setAuth(auth);
+            const maintenanceDb = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
+                _id: "core_maintenance"
+            });
+            const maintenanceStatus = maintenanceDb ? maintenanceDb.status : false;
             const render = await template.stream({
                 $global: {
                     serializedGlobals: {
                         template: true,
                         pageTitle: true,
                         usersOnline: true,
+                        maintenanceStatus: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
                     pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
                     usersOnline: Object.keys(req.io.sockets.sockets).length,
+                    maintenanceStatus,
                     ...await site.getGlobals(),
                 },
                 modules: req.zoiaModules,
