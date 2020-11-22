@@ -1,5 +1,6 @@
 {
     "id": "users",
     "icon": "account-circle-outline",
-    "admin": "/admin/users"
+    "admin": "/admin/users",
+    "test": true
 }

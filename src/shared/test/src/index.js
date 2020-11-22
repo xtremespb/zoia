@@ -62,24 +62,26 @@ import Log from "./log";
     try {
         // Load all tests
         await Promise.all(zoia.modules.map(async m => {
+            if (!m.test) {
+                return;
+            }
             try {
-                let moduleWeb;
+                let moduleTest;
                 try {
-                    moduleWeb = await import(`../../../modules/${m.id}/test/index.js`);
+                    moduleTest = await import(`../../../modules/${m.id}/z3test/index.js`);
                 } catch {
                     // Ignore
                 }
-                if (!moduleWeb || zoia.config.modules.indexOf(m.id) === -1) {
+                if (!moduleTest || zoia.config.modules.indexOf(m.id) === -1) {
                     return;
                 }
-                const moduleTestResult = await moduleWeb.default(zoia);
+                const moduleTestResult = await moduleTest.default(zoia);
                 testResults[m.id] = moduleTestResult;
                 if (moduleTestResult.success < moduleTestResult.total) {
                     failed = true;
                 }
             } catch (e) {
                 zoia.log.error(e);
-                console.log(e);
                 // Ignore
             }
         }));
