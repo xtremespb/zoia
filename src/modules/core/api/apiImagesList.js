@@ -14,10 +14,20 @@ export default () => ({
             log,
             response,
             auth,
+            acl
         } = req.zoia;
         // Check permissions
         if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
+            return;
+        }
+        if (!acl.checkPermission("core", "read")) {
+            response.requestError({
+                failed: true,
+                error: "Access Denied",
+                errorKeyword: "accessDenied",
+                errorData: []
+            });
             return;
         }
         const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}`).replace(/\\/gm, "/");

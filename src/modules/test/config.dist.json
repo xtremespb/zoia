@@ -4,7 +4,7 @@
         "collections": {}
     },
     "routes": {
-        "admin": "/admin/test"
+        "test": "/admin/test"
     },
     "setup": false
 }

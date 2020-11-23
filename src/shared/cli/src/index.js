@@ -2,11 +2,16 @@
 import commandLineArgs from "command-line-args";
 import colors from "colors/safe";
 import fs from "fs-extra";
-import crypto from "crypto";
 import path from "path";
 import {
     MongoClient
 } from "mongodb";
+import maintenance from "./maintenance";
+import user from "./user";
+import demo from "./demo";
+import acl from "./acl";
+import patch from "./patch";
+import packageJson from "../../../../package.json";
 
 const options = commandLineArgs([{
     name: "maintenance",
@@ -20,11 +25,35 @@ const options = commandLineArgs([{
     name: "email",
     alias: "e",
     type: String
+}, {
+    name: "demo",
+    alias: "d",
+    type: String
+}, {
+    name: "acl",
+    alias: "a",
+    type: String
+}, {
+    name: "permissions",
+    alias: "p",
+    type: String
+}, {
+    name: "patch",
+    alias: "c",
+    type: String
 }]);
 
 (async () => {
-    if (Object.keys(options).length < 1 || (options.maintenance && !options.maintenance.match(/on|off/)) || (options.user && !options.email)) {
-        console.error(`\n${colors.brightWhite(" ZOIA CLI Usage:")}\n\n ${colors.brightCyan("z3-cli")} ${colors.yellow("--maintenance")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn maintenance mode on or off")}\n        ${colors.yellow("--user")} ${colors.green("username")} ${colors.yellow("--email")} ${colors.green("user@domain.com")} - ${colors.grey("create an user or reset password")}`);
+    console.log(`
+  ______     ______     __     ______    
+ /\\___  \\   /\\  __ \\   /\\ \\   /\\  __ \\   
+ \\/_/  /__  \\ \\ \\/\\ \\  \\ \\ \\  \\ \\  __ \\  
+   /\\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\_\\ \\_\\ 
+   \\/_____/   \\/_____/   \\/_/   \\/_/\\/_/
+`);
+    console.log(colors.brightWhite(` ZOIA version ${packageJson.version} - console client`));
+    if (Object.keys(options).length < 1 || (options.maintenance && !options.maintenance.match(/on|off/)) || (options.user && !options.email) || (options.demo && !options.demo.match(/on|off/)) || options.acl === null) {
+        console.error(`\n ${colors.brightCyan("z3-cli")} ${colors.yellow("--maintenance")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn maintenance mode on or off")}\n        ${colors.yellow("--user")} ${colors.green("username")} ${colors.yellow("--email")} ${colors.green("user@domain.com")} - ${colors.grey("create an user or reset password")}\n        ${colors.yellow("--demo")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn demo mode on or off")}\n        ${colors.yellow("--acl")} ${colors.green("group")} ${colors.yellow("--mode")} ${colors.green("crud")} - ${colors.grey("set ACL for group (create, read, update, delete)")}`);
     }
     try {
         const config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
@@ -50,43 +79,25 @@ const options = commandLineArgs([{
         });
         await mongoClient.connect();
         const db = mongoClient.db(config.mongo.dbName);
-        // ------------------------------------------------------------- //
-        // Turn maintenance on or off                                    //
-        // ------------------------------------------------------------- //
+        // Maintenance
         if (options.maintenance) {
-            const resultSave = await db.collection(config.collections.registry).updateOne({
-                _id: "core_maintenance"
-            }, {
-                $set: {
-                    status: options.maintenance === "on"
-                }
-            }, {
-                upsert: true
-            });
-            if (!resultSave || !resultSave.result || !resultSave.result.ok) {
-                console.error(`\n${colors.red("ERROR:")} ${colors.white("Could not save maintenance status")}`);
-            }
-            console.log(`\n${colors.green("SUCCESS:")} ${colors.white(`Maintenance mode is now "${options.maintenance}"`)}`);
+            await maintenance(config, options, modulesConfig, db);
         }
-        // ------------------------------------------------------------- //
-        // Create/reset password for an user                             //
-        // ------------------------------------------------------------- //
+        // Create/reset password for an user
         if (options.user) {
-            const password = crypto.createHmac("sha256", config.secret).update("password").digest("hex");
-            await db.collection(modulesConfig["users"].collectionUsers).updateOne({
-                username: options.user
-            }, {
-                $set: {
-                    username: options.user,
-                    password,
-                    email: options.email,
-                    status: ["active", "admin"],
-                    createdAt: new Date()
-                }
-            }, {
-                upsert: true
-            });
-            console.log(`\n${colors.green("SUCCESS:")} ${colors.white(`User "${options.user}" with password "password" has been created/updated`)}`);
+            await user(config, options, modulesConfig, db);
+        }
+        // Demo
+        if (options.demo) {
+            await demo(config, options, modulesConfig, db);
+        }
+        // ACL
+        if (options.acl) {
+            await acl(config, options, modulesConfig, db);
+        }
+        // ACL
+        if (options.patch) {
+            await patch(config, options, modulesConfig, db);
         }
         // Shut down Mongo connection
         await mongoClient.close();

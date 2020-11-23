@@ -4,11 +4,21 @@ export default () => ({
             log,
             response,
             auth,
+            acl
         } = req.zoia;
         try {
             // Check permissions
             if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
+                return;
+            }
+            if (!acl.checkPermission("nav", "read")) {
+                response.requestError({
+                    failed: true,
+                    error: "Access Denied",
+                    errorKeyword: "accessDenied",
+                    errorData: []
+                });
                 return;
             }
             // Get tree

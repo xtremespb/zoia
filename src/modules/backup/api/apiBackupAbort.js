@@ -4,6 +4,7 @@ export default () => ({
             log,
             response,
             auth,
+            acl
         } = req.zoia;
         // Check permissions
         if (!auth.checkStatus("admin")) {
@@ -11,6 +12,15 @@ export default () => ({
             return;
         }
         try {
+            if (!acl.checkPermission("backup", "update")) {
+                response.requestError({
+                    failed: true,
+                    error: "Access Denied",
+                    errorKeyword: "accessDenied",
+                    errorData: []
+                });
+                return;
+            }
             const backupDb = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
                 _id: "backup"
             });

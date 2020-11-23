@@ -13,7 +13,7 @@ export default () => ({
             response.setSite(site);
             if (!auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
-                return response.redirectToLogin(req.zoiaModulesConfig["nav"].routes.admin);
+                return response.redirectToLogin(req.zoiaModulesConfig["nav"].routes.nav);
             }
             site.setAuth(auth);
             const render = await template.stream({
@@ -34,7 +34,7 @@ export default () => ({
                     accessAllowed: acl.checkPermission("nav", "read"),
                     ...await site.getGlobals()
                 },
-                modules: req.zoiaModules,
+                modules: req.zoiaAdmin,
                 moduleId: moduleData.id,
             });
             return response.sendHTML(render);

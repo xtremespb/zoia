@@ -1,5 +1,4 @@
 {
     "id": "files",
-    "icon": "folder-outline",
-    "admin": "/admin/files"
+    "admin": true
 }

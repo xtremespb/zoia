@@ -1,0 +1,9 @@
+[{
+    "priority": 100,
+    "id": "users",
+    "icon": "account-circle-outline"
+}, {
+    "priority": 200,
+    "id": "acl",
+    "icon": "badge-account-outline"
+}]

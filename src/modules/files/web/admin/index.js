@@ -13,7 +13,7 @@ export default () => ({
             response.setSite(site);
             if (!auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
-                return response.redirectToLogin(req.zoiaModulesConfig["files"].routes.admin);
+                return response.redirectToLogin(req.zoiaModulesConfig["files"].routes.files);
             }
             site.setAuth(auth);
             const render = await template.stream({
@@ -33,7 +33,7 @@ export default () => ({
                     accessAllowed: acl.checkPermission("files", "read"),
                     ...await site.getGlobals(),
                 },
-                modules: req.zoiaModules,
+                modules: req.zoiaAdmin,
                 moduleId: moduleData.id,
             });
             return response.sendHTML(render);

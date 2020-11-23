@@ -18,7 +18,7 @@ export default () => ({
             const response = new this.Response(req, rep, site);
             if (!(await auth.getUserData()) || !auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
-                return response.redirectToLogin(req.zoiaModulesConfig["backup"].routes.admin);
+                return response.redirectToLogin(req.zoiaModulesConfig["backup"].routes.backup);
             }
             site.setAuth(auth);
             const file = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).findOne({

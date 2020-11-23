@@ -7,7 +7,7 @@ export default async (zoia, test, page, userData) => {
     try {
         zoia.log.warn(`User edit test starting`);
         zoia.log.step("Opening users admin page");
-        await page.goto(`${zoia.config.siteOptions.url}${zoia.modulesConfig["users"].routes.admin}`);
+        await page.goto(`${zoia.config.siteOptions.url}${zoia.modulesConfig["users"].routes.users}`);
         await page.waitForSelector("#users_searchInput", {
             visible: true,
             timeout: 15000

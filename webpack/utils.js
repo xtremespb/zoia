@@ -59,6 +59,7 @@ const rebuildMarkoTemplates = argv => {
 
 const generateModulesConfig = (moduleDirs, languages, argv) => {
     const modules = [];
+    const admin = [];
     const backup = {};
     fs.ensureDirSync(path.resolve(`${__dirname}/../logs`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../etc/modules`));
@@ -74,16 +75,30 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
         }
         const moduleData = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/module.json`));
         const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) : require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/config.dist.json`));
-        moduleData.title = {};
-        languages.map(language => {
+        modules.push(moduleData);
+        if (moduleData.admin) {
             try {
-                const catalog = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/locales/${language}.json`));
-                moduleData.title[language] = catalog.moduleTitle;
-            } catch (e) {
+                const adminConfig = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/admin.json`));
+                const trans = {};
+                languages.map(language => {
+                    const catalog = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/locales/${language}.json`));
+                    trans[language] = catalog;
+                });
+                adminConfig.map(ac => {
+                    const data = {
+                        priority: ac.priority || 10000,
+                        id: ac.id,
+                        icon: ac.icon,
+                        link: moduleConfig.routes[ac.id],
+                        title: {}
+                    };
+                    languages.map(language => data.title[language] = trans[language].moduleTitle || trans[language][`moduleTitle.${ac.id}`] || ac.id);
+                    admin.push(data);
+                });
+            } catch {
                 // Ignore
             }
-        });
-        modules.push(moduleData);
+        }
         if (moduleConfig.setup && fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/setup.js`))) {
             fs.copyFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/setup.js`), path.resolve(`${__dirname}/../build/scripts/${dir}.js`));
         }
@@ -96,6 +111,8 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
     });
     console.log("Writing modules.json...");
     fs.writeJSONSync(`${__dirname}/../build/etc/modules.json`, modules);
+    console.log("Writing admin.json...");
+    fs.writeJSONSync(`${__dirname}/../build/etc/admin.json`, admin.sort((a, b) => (a.priority > b.priority) ? 1 : (b.priority > a.priority) ? -1 : 0));
     console.log("Writing backup.json...");
     fs.writeJSONSync(`${__dirname}/../build/etc/backup.json`, backup);
     console.log("Writing build.json...");

@@ -13,7 +13,7 @@ export default routeId => ({
             response.setSite(site);
             if (!auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
-                return response.redirectToLogin(req.zoiaModulesConfig["backup"].routes.admin);
+                return response.redirectToLogin(req.zoiaModulesConfig["backup"].routes.backup);
             }
             site.setAuth(auth);
             const backupDb = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
@@ -44,7 +44,7 @@ export default routeId => ({
                     accessAllowed: acl.checkPermission("backup", "read"),
                     ...await site.getGlobals()
                 },
-                modules: req.zoiaModules,
+                modules: req.zoiaAdmin,
                 moduleId: moduleData.id,
             });
             return response.sendHTML(render);

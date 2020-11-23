@@ -8,10 +8,20 @@ export default () => ({
             log,
             response,
             auth,
+            acl,
         } = req.zoia;
         // Check permissions
         if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
+            return;
+        }
+        if (!acl.checkPermission("core", "create")) {
+            response.requestError({
+                failed: true,
+                error: "Access Denied",
+                errorKeyword: "accessDenied",
+                errorData: []
+            });
             return;
         }
         try {

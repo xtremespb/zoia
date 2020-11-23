@@ -36,11 +36,21 @@ export default () => ({
             log,
             response,
             auth,
+            acl,
         } = req.zoia;
         // Validate form
         if (req.validationError) {
             log.error(null, req.validationError.message);
             response.validationError(req.validationError);
+            return;
+        }
+        if (!acl.checkPermission("nav", "update")) {
+            response.requestError({
+                failed: true,
+                error: "Access Denied",
+                errorKeyword: "accessDenied",
+                errorData: []
+            });
             return;
         }
         try {

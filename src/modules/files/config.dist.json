@@ -1,6 +1,6 @@
 {
     "routes": {
-        "admin": "/admin/files"
+        "files": "/admin/files"
     },
     "root": "./",
     "maxFileEditSizeBytes": 1048576

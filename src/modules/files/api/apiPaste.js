@@ -12,6 +12,7 @@ export default () => ({
             log,
             response,
             auth,
+            acl,
         } = req.zoia;
         const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
         const srcDir = req.body.srcDir ? path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}/${req.body.srcDir}`).replace(/\\/gm, "/") : root;
@@ -20,6 +21,15 @@ export default () => ({
         if (req.validationError || srcDir.indexOf(root) !== 0 || destDir.indexOf(root) !== 0) {
             log.error(null, req.validationError ? req.validationError.message : "Request Error");
             response.validationError(req.validationError || {});
+            return;
+        }
+        if (!acl.checkPermission("files", "update")) {
+            response.requestError({
+                failed: true,
+                error: "Access Denied",
+                errorKeyword: "accessDenied",
+                errorData: []
+            });
             return;
         }
         try {

@@ -25,7 +25,7 @@ export default async (req, rep, fastify) => {
             maintenanceTitle: site.i18n.t("maintenanceTitle"),
             maintenanceMessage: site.i18n.t("maintenanceMessage")
         });
-        if (!req.urlData().path.match(/^\/api\//) && !req.urlData().path.match(/\/users/) && !req.urlData().path.match(/\/admin/) && !req.urlData().path.match(/^\/zoia\//)) {
+        if (!req.urlData().path.match(/^\/api\//) && !req.urlData().path.match(/\/admin/) && !req.urlData().path.match(/^\/zoia\//)) {
             rep.code(200).type("text/html").send(render.out.stream._content);
         }
     }

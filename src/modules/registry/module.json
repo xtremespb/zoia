@@ -1,5 +1,4 @@
 {
     "id": "registry",
-    "icon": "database-cog-outline",
-    "admin": "/admin/registry"
+    "admin": true
 }

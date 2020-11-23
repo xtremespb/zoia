@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "Pino",
+        "Prehandler",
         "Regitser",
         "clonedeep",
         "fastify",
@@ -12,6 +13,7 @@
         "keyvalue",
         "marko",
         "mnotify",
+        "ratelimit",
         "splt",
         "upsert",
         "zoia",

@@ -8,7 +8,7 @@
     "serveStatic": true,
     "siteOptions": {
         "server": "localhost",
-        "id": "z3",
+        "id": "zoia3",
         "url": "http://127.0.0.1:3001"
     },
     "pm2": {
@@ -30,7 +30,7 @@
     "logLevel": "info",
     "trustProxy": true,
     "stackTrace": true,
-    "modules": ["core", "backup", "files", "nav", "pages", "registry", "update", "users", "acl"],
+    "modules": ["backup", "files", "nav", "pages", "registry", "update"],
     "templates": ["default"],
     "email": {
         "template": "default",
