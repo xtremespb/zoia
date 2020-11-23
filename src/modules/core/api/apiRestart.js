@@ -7,6 +7,7 @@ export default () => ({
             log,
             response,
             auth,
+            acl
         } = req.zoia;
         // Check permissions
         if (!auth.checkStatus("admin")) {
@@ -15,8 +16,13 @@ export default () => ({
         }
         try {
             // Check permissions
-            if (!auth.checkStatus("admin")) {
-                response.unauthorizedError();
+            if (!acl.checkPermission("core", "update")) {
+                response.requestError({
+                    failed: true,
+                    error: "Access Denied",
+                    errorKeyword: "accessDenied",
+                    errorData: []
+                });
                 return;
             }
             // Let's hope we will be able to auto-restart ;-)

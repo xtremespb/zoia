@@ -18,7 +18,8 @@ export default class {
     }
 
     async initGroups(groups) {
-        if (!this.fastify.zoiaModulesConfig["acl"]) {
+        if (!this.fastify.zoiaModulesConfig["users"]) {
+            this.allowEverything();
             return;
         }
         try {
@@ -26,7 +27,7 @@ export default class {
                 this.allowEverything();
                 return;
             }
-            const groupsDb = await this.fastify.mongo.db.collection(this.fastify.zoiaModulesConfig["acl"].collectionAcl).find({
+            const groupsDb = await this.fastify.mongo.db.collection(this.fastify.zoiaModulesConfig["users"].collectionAcl).find({
                 $or: groups.map(g => ({
                     group: g
                 }))

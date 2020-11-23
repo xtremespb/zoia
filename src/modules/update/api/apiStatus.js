@@ -4,11 +4,21 @@ export default () => ({
             log,
             response,
             auth,
+            acl,
         } = req.zoia;
         try {
             // Check permissions
             if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
+                return;
+            }
+            if (!acl.checkPermission("update", "read")) {
+                response.requestError({
+                    failed: true,
+                    error: "Access Denied",
+                    errorKeyword: "accessDenied",
+                    errorData: []
+                });
                 return;
             }
             const registry = (await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({

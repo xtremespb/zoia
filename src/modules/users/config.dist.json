@@ -1,15 +1,21 @@
 {
     "collectionUsers": "users",
+    "collectionAcl": "acl",
     "database": {
         "collections": {
             "users": {
                 "indexesAsc": ["username", "email"],
                 "indexesDesc": ["username", "email"]
+            },
+            "acl": {
+                "indexesAsc": ["group"],
+                "indexesDesc": ["group"]
             }
         }
     },
     "routes": {
-        "admin": "/admin/users",
+        "users": "/admin/users",
+        "acl": "/admin/acl",
         "login": "/users/login",
         "logout": "/users/logout"
     },

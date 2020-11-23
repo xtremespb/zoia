@@ -47,7 +47,7 @@ import Log from "./log";
             }
             try {
                 zoia.modulesConfig[m.id] = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/modules/${m.id}.json`));
-                m.admin = zoia.modulesConfig[m.id] && zoia.modulesConfig[m.id].routes && zoia.modulesConfig[m.id].routes.admin ? zoia.modulesConfig[m.id].routes.admin : undefined;
+                m.admin = zoia.modulesConfig[m.id] && zoia.modulesConfig[m.id].routes && zoia.modulesConfig[m.id].routes[m.id] ? zoia.modulesConfig[m.id].routes[m.id] : undefined;
             } catch (e) {
                 // Ignore
             }

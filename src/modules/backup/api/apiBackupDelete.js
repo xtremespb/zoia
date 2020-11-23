@@ -7,7 +7,7 @@ import backupDelete from "./data/backupDelete.json";
 
 export default () => ({
     schema: {
-        body: backupDelete.root
+        body: backupDelete.root,
     },
     attachValidation: true,
     async handler(req) {
@@ -15,10 +15,20 @@ export default () => ({
             log,
             response,
             auth,
+            acl
         } = req.zoia;
         // Check permissions
         if (!auth.checkStatus("admin")) {
             response.unauthorizedError();
+            return;
+        }
+        if (!acl.checkPermission("backup", "delete")) {
+            response.requestError({
+                failed: true,
+                error: "Access Denied",
+                errorKeyword: "accessDenied",
+                errorData: []
+            });
             return;
         }
         // Validate form

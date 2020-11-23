@@ -12,7 +12,7 @@ export default () => ({
             response.setSite(site);
             if (!auth.checkStatus("admin")) {
                 auth.clearAuthCookie();
-                return response.redirectToLogin(req.zoiaModulesConfig["core"].routes.admin);
+                return response.redirectToLogin(req.zoiaModulesConfig["core"].routes.core);
             }
             site.setAuth(auth);
             const maintenanceDb = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
@@ -34,7 +34,7 @@ export default () => ({
                     maintenanceStatus,
                     ...await site.getGlobals(),
                 },
-                modules: req.zoiaModules,
+                modules: req.zoiaAdmin,
                 version: req.zoiaPackageJson.version,
                 moduleId: moduleData.id,
             });

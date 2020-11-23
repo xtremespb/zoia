@@ -1,5 +1,4 @@
 {
     "id": "pages",
-    "icon": "text-box-outline",
-    "admin": "/admin/pages"
+    "admin": true
 }

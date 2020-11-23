@@ -7,6 +7,6 @@ export default fastify => {
     fastify.get(`/:language${fastify.zoiaConfig.routes.download}`, download());
     fastify.get(fastify.zoiaConfig.routes.imagesBrowser, images());
     fastify.get(`/:language${fastify.zoiaConfig.routes.imagesBrowser}`, images());
-    fastify.get(fastify.zoiaModulesConfig["core"].routes.admin, admin());
-    fastify.get(`/:language${fastify.zoiaModulesConfig["core"].routes.admin}`, admin());
+    fastify.get(fastify.zoiaModulesConfig["core"].routes.core, admin());
+    fastify.get(`/:language${fastify.zoiaModulesConfig["core"].routes.core}`, admin());
 };

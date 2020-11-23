@@ -7,6 +7,7 @@ export default () => ({
             log,
             response,
             auth,
+            acl
         } = req.zoia;
         try {
             const formData = await req.processMultipart();
@@ -32,6 +33,15 @@ export default () => ({
             // Check permissions
             if (!auth.checkStatus("admin")) {
                 response.unauthorizedError();
+                return;
+            }
+            if (!acl.checkPermission("files", "create")) {
+                response.requestError({
+                    failed: true,
+                    error: "Access Denied",
+                    errorKeyword: "accessDenied",
+                    errorData: []
+                });
                 return;
             }
             // Check files

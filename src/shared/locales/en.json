@@ -72,5 +72,6 @@
     "accessDeniedDesc": "You don't have permission to access the requested module. Please ask your web site administrator to set the appropriate permissions for your user account.",
     "mFormErr.dataNotFound": "Data not found",
     "maintenanceTitle": "Maintenance",
-    "maintenanceMessage": "Site is currently in the maintenance mode, please come back later."
+    "maintenanceMessage": "Site is currently in the maintenance mode, please come back later.",
+    "demoMessage": "ZOIA is started in Demo Mode, which means that you won't be able to perform any changes to database or file system"
 }

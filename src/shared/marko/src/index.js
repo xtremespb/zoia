@@ -39,6 +39,7 @@ import Env from "../../lib/env";
     let templates;
     let pino;
     let modules;
+    let admin;
     let packageJson;
     let env;
     const mailTemplatesHTML = {};
@@ -52,13 +53,15 @@ import Env from "../../lib/env";
         env = new Env(config);
         config = env.process();
         config.secretInt = parseInt(crypto.createHash("md5").update(config.secret).digest("hex"), 16);
+        config.modules = Array.from(new Set(["core", "users", "acl", ...config.modules]));
         pino = Pino({
             level: config.logLevel
         });
-        pino.info(`Starting ZOIA ${buildJson.version} / ${buildJson.mode} (built at: ${buildJson.date})`);
+        pino.info(`Starting ZOIA (${config.siteOptions.id}) ${buildJson.version} / ${buildJson.mode} (built at: ${buildJson.date})`);
         packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
         templates = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/templates.json`)).filter(t => config.templates.indexOf(t) > -1);
         modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
+        admin = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/admin.json`));
         pino.info(`Compiled module(s): ${modules.map(m => m.id).join(", ")}`);
         const defaultConfigs = [];
         pino.info(`Compiled template(s): ${templates.join(", ")}`);
@@ -88,7 +91,6 @@ import Env from "../../lib/env";
             }
             try {
                 modulesConfig[m.id] = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/modules/${m.id}.json`));
-                m.admin = modulesConfig[m.id] && modulesConfig[m.id].routes && modulesConfig[m.id].routes.admin ? modulesConfig[m.id].routes.admin : undefined;
             } catch (e) {
                 // Ignore
                 defaultConfigs.push(m.id);
@@ -169,6 +171,9 @@ import Env from "../../lib/env";
         const modulesFiltered = modules.filter(m => config.modules.indexOf(m.id) > -1);
         fastify.decorate("zoiaModules", modulesFiltered);
         fastify.decorateRequest("zoiaModules", modulesFiltered);
+        const adminFiltered = admin.filter(m => config.modules.indexOf(m.id) > -1);
+        fastify.decorate("zoiaAdmin", adminFiltered);
+        fastify.decorateRequest("zoiaAdmin", adminFiltered);
         fastify.decorate("zoiaModulesConfig", modulesConfig);
         fastify.decorateRequest("zoiaModulesConfig", modulesConfig);
         fastify.decorate("ExtendedValidation", extendedValidation);

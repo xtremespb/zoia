@@ -3,7 +3,7 @@
         "collections": {}
     },
     "routes": {
-        "admin": "/admin/nav"
+        "nav": "/admin/nav"
     },
     "setup": false
 }

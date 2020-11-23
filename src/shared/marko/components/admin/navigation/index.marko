@@ -15,15 +15,13 @@
         <a class="navbar-link">${out.global.i18n.t("modules")}</a>
         <div class="navbar-dropdown">
           <for|module| of=input.modules>
-            <if(module.admin)>
-              <a href=out.global.i18n.getLocalizedURL(module.admin, out.global.language) class="navbar-item">
-                <div class="z3-ap-menu-icon-wrap">
-                  <span class="icon">
-                    <i class=`mdi mdi-18px mdi-${module.icon}`/>
-                  </span>
-                </div>${module.title[out.global.language]}
-              </a>
-            </if>
+            <a href=out.global.i18n.getLocalizedURL(module.link, out.global.language) class="navbar-item">
+              <div class="z3-ap-menu-icon-wrap">
+                <span class="icon">
+                  <i class=`mdi mdi-18px mdi-${module.icon}`/>
+                </span>
+              </div>${module.title[out.global.language]}
+            </a>
           </for>
         </div>
       </div>

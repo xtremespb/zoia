@@ -9,7 +9,7 @@
         }
     },
     "routes": {
-        "admin": "/admin/pages",
+        "pages": "/admin/pages",
         "view": "/*"
     },
     "setup": false

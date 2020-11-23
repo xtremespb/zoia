@@ -38,6 +38,7 @@ export default class {
             admin: true,
             navData: true,
             publicFiles: true,
+            demoMode: true,
         };
         this.i18n.setLanguage(this.language);
     }
@@ -74,6 +75,9 @@ export default class {
         const siteMetadata = (await this.db.collection(this.config.collections.registry).findOne({
             _id: "site_metadata"
         })) || config.siteMetadata;
+        const demoData = await this.db.collection(this.config.collections.registry).findOne({
+            _id: "core_demo"
+        });
         return {
             language: this.language,
             languages: this.languages,
@@ -87,9 +91,10 @@ export default class {
             authData: this.authData,
             login: this.moduleConfigUsers.routes.login,
             logout: this.moduleConfigUsers.routes.logout,
-            admin: this.moduleConfigAdmin.routes.admin,
+            admin: this.moduleConfigAdmin.routes.core,
             navData: navData ? navData.tree : [],
-            publicFiles: config.routes.publicFiles
+            publicFiles: config.routes.publicFiles,
+            demoMode: demoData && demoData.status
         };
     }
 }
