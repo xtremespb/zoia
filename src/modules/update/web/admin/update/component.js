@@ -12,13 +12,13 @@ module.exports = class {
         };
         this.state = state;
         this.cookieOptions = out.global.cookieOptions;
-        this.siteOptions = out.global.siteOptions;
+        this.siteId = out.global.siteId;
         this.i18n = out.global.i18n;
     }
 
     onMount() {
         const cookies = new Cookies(this.cookieOptions);
-        this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
+        this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
     }
 
     onRebuildClick() {

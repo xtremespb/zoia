@@ -6,15 +6,23 @@ const {
 } = require("uuid");
 const crypto = require("crypto");
 
-const source = path.resolve(`${__dirname}/../etc/dist/zoia.dist.json`);
-const dest = path.resolve(`${__dirname}/../etc/zoia.json`);
-const configData = fs.readJSONSync(source);
-configData.secret = crypto.createHmac("sha256", uuidv4()).update(uuidv4()).digest("hex");
-fs.writeJSONSync(dest, configData, {
+const sourceZoia = path.resolve(`${__dirname}/../etc/dist/zoia.dist.json`);
+const sourceSystem = path.resolve(`${__dirname}/../etc/dist/system.dist.json`);
+const destZoia = path.resolve(`${__dirname}/../etc/zoia.json`);
+const destSystem = path.resolve(`${__dirname}/../etc/system.json`);
+const zoiaData = fs.readJSONSync(sourceZoia);
+const systemData = fs.readJSONSync(sourceSystem);
+systemData.secret = crypto.createHmac("sha256", uuidv4()).update(uuidv4()).digest("hex");
+fs.writeJSONSync(destZoia, zoiaData, {
     spaces: 4
 });
-console.log(`Configuration file has been written to: ${dest}
-Server configuration: ${configData.webServer.ip}:${configData.webServer.port}
-Mongo configuration: ${configData.mongo.url}/${configData.mongo.dbName}
-A new secret has been auto-generated.
-Please change the zoia.json configuration file according to your needs.`);
+fs.writeJSONSync(destSystem, systemData, {
+    spaces: 4
+});
+console.log(`Configuration files are written to:\n ${destZoia},\n ${destSystem}\n
+Site ID: ${systemData.id}
+Server configuration: ${systemData.webServer.ip}:${systemData.webServer.port}
+Mongo configuration: ${systemData.mongo.url}/${systemData.mongo.dbName}
+Redis configuration: ${systemData.redis.enabled ? "enabled" : "disabled"}, ${systemData.redis.host}:${systemData.redis.port}
+A new secret has been auto-generated.\n
+Please change the system.json and zoia.json configuration files according to your needs.\n`);

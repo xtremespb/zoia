@@ -7,7 +7,7 @@ export default async (zoia, test, page, utils) => {
     try {
         zoia.log.warn(`User add/delete test starting`);
         zoia.log.step("Opening users admin page");
-        await page.goto(`${zoia.config.siteOptions.url}${zoia.modulesConfig["users"].routes.users}`);
+        await page.goto(`${zoia.config.url}${zoia.modulesConfig["users"].routes.users}`);
         await page.waitForSelector("#btnAdd", {
             visible: true,
             timeout: 15000

@@ -7,7 +7,7 @@ class {
       return;
     }
     const cookies = new Cookies(out.global.cookieOptions);
-    this.token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
+    this.token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
     out.global.io = io();
     out.global.io.on("connect", () => {
       out.global.io.emit("users.auth", { token: this.token });

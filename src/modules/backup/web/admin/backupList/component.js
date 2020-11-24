@@ -12,7 +12,7 @@ module.exports = class {
         this.language = out.global.language;
         this.routes = out.global.routes;
         this.cookieOptions = out.global.cookieOptions;
-        this.siteOptions = out.global.siteOptions;
+        this.siteId = out.global.siteId;
         this.routeDownload = out.global.routeDownload;
     }
 
@@ -29,7 +29,7 @@ module.exports = class {
         };
         this.backupModal = this.getComponent("z3_ap_backupModal");
         const cookies = new Cookies(this.cookieOptions);
-        this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
+        this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
         this.notify = this.getComponent("backupList_mnotify");
         if (this.state.backupDb.running) {
             setTimeout(this.checkStatus.bind(this), 1000);

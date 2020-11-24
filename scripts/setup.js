@@ -41,9 +41,12 @@ if (!Object.keys(options).length || (!options.module && !options.all)) {
 let config;
 let modules;
 try {
-    config = fs.readJSONSync(path.resolve(`${__dirname}/../etc/zoia.json`));
+    config = {
+        ...fs.readJSONSync(path.resolve(`${__dirname}/../etc/system.json`)),
+        ...fs.readJSONSync(path.resolve(`${__dirname}/../etc/zoia.json`))
+    };
 } catch {
-    console.log(colors.brightRed("Fatal: could not load ../etc/zoia.json"));
+    console.log(colors.brightRed("Fatal: could not load ../etc/system.json or ./etc/zoia.json"));
     console.log(colors.grey(`Please run the following command to generate the configuration file: npm run config\n`));
     process.exit(1);
 }

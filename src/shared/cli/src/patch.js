@@ -6,7 +6,6 @@
 //
 //
 
-import cloneDeep from "lodash/cloneDeep";
 import colors from "colors/safe";
 import fs from "fs-extra";
 import path from "path";
@@ -52,18 +51,23 @@ const traverse = (node, key, value, currentPath = []) => {
 
 export default async (config, options) => {
     console.log(`\n${colors.cyan(" Operation:")} patch configuration file`);
+    const configSystem = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/system.json`));
+    const configZoia = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
     if (!options.patch || options.patch.split(/=/).length !== 2) {
         console.error(`${colors.red(" Error:")} missing or invalid parameters`);
         return;
     }
-    const configClone = cloneDeep(config);
     const [key, value] = options.patch.split(/=/);
-    traverse(configClone, key, value);
+    traverse(configSystem, key, value);
+    traverse(configZoia, key, value);
     if (!isPatched) {
         console.error(`${colors.red(" Error:")} ${colors.white("could not patch configuration file")}`);
         return;
     }
-    fs.writeJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`), configClone, {
+    fs.writeJSONSync(path.resolve(`${__dirname}/../../etc/system.json`), configSystem, {
+        spaces: 4
+    });
+    fs.writeJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`), configZoia, {
         spaces: 4
     });
     console.log(`${colors.green(" Success:")} ${colors.white(`configuration file was patched`)}`);

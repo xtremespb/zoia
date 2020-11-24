@@ -56,7 +56,10 @@ const options = commandLineArgs([{
         console.error(`\n ${colors.brightCyan("z3-cli")} ${colors.yellow("--maintenance")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn maintenance mode on or off")}\n        ${colors.yellow("--user")} ${colors.green("username")} ${colors.yellow("--email")} ${colors.green("user@domain.com")} - ${colors.grey("create an user or reset password")}\n        ${colors.yellow("--demo")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn demo mode on or off")}\n        ${colors.yellow("--acl")} ${colors.green("group")} ${colors.yellow("--mode")} ${colors.green("crud")} - ${colors.grey("set ACL for group (create, read, update, delete)")}`);
     }
     try {
-        const config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
+        const config = {
+            ...fs.readJSONSync(path.resolve(`${__dirname}/../../etc/system.json`)),
+            ...fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`))
+        };
         const modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
         const modulesConfig = {};
         modules.map(m => {

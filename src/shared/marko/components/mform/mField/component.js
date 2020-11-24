@@ -25,19 +25,20 @@ if (process.browser) {
     ace.config.setModuleUrl("ace/mode/json_worker", require("file-loader?name=npm.ace-builds.worker-json.[contenthash:8].js&esModule=false!../../../../../../node_modules/ace-builds/src-noconflict/worker-json.js"));
 }
 
+// eslint-disable-next-line no-unused-vars
 function AddClassToAllHeading1(editor) {
     // Both the data and the editing pipelines are affected by this conversion.
-    editor.conversion.for("downcast").add(dispatcher => {
-        // Headings are represented in the model as a "heading1" element.
-        // Use the "low" listener priority to apply the changes after the headings feature.
-        dispatcher.on("insert:heading1", (evt, data, conversionApi) => {
-            const viewWriter = conversionApi.writer;
-            viewWriter.addClass("title", conversionApi.mapper.toViewElement(data.item));
-            viewWriter.addClass("is-1", conversionApi.mapper.toViewElement(data.item));
-        }, {
-            priority: "low"
-        });
-    });
+    // editor.conversion.for("downcast").add(dispatcher => {
+    //     // Headings are represented in the model as a "heading1" element.
+    //     // Use the "low" listener priority to apply the changes after the headings feature.
+    //     dispatcher.on("insert:heading1", (evt, data, conversionApi) => {
+    //         const viewWriter = conversionApi.writer;
+    //         viewWriter.addClass("title", conversionApi.mapper.toViewElement(data.item));
+    //         viewWriter.addClass("is-1", conversionApi.mapper.toViewElement(data.item));
+    //     }, {
+    //         priority: "low"
+    //     });
+    // });
 }
 
 module.exports = class {

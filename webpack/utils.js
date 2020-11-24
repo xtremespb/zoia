@@ -73,7 +73,15 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
         if (fs.existsSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/mail`)) && !fs.existsSync(path.resolve(`${__dirname}/../build/mail/modules/${dir}`))) {
             fs.copy(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/mail`), path.resolve(`${__dirname}/../build/mail/modules/${dir}`));
         }
-        const moduleData = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/module.json`));
+        let moduleData;
+        try {
+            moduleData = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/module.json`));
+        } catch {
+            // Ignore
+        }
+        if (!moduleData) {
+            return;
+        }
         const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) : require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/config.dist.json`));
         modules.push(moduleData);
         if (moduleData.admin) {

@@ -17,7 +17,7 @@ module.exports = class {
             setDir: this.setDir.bind(this),
         };
         this.i18n = out.global.i18n;
-        this.siteOptions = out.global.siteOptions;
+        this.siteId = out.global.siteId;
     }
 
     onMount() {
@@ -33,7 +33,7 @@ module.exports = class {
             this.state.dropAreaHighlight = false;
         }, false));
         const cookies = new Cookies(this.cookieOptions);
-        this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
+        this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
     }
 
     handleDragDrop(e) {

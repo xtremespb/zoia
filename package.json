@@ -1,10 +1,10 @@
 {
     "name": "zoia3",
-    "version": "3.1.1",
+    "version": "3.1.2",
     "description": "ZOIA Content Management System",
     "scripts": {
         "config": "node ./scripts/config.js",
-        "config-server": "node ./scripts/sconfig.js",
+        "config-server": "node ./scripts/server.js",
         "setup": "node ./scripts/setup.js",
         "setup-all": "node ./scripts/setup.js --all --defaults",
         "build-dev-maps": "node build --maps",
@@ -68,6 +68,7 @@
         "nodemailer": "^6.4.16",
         "pino": "^6.7.0",
         "pizzip": "^3.0.6",
+        "pm2": "^4.5.0",
         "socket.io": "^3.0.3",
         "socket.io-client": "^3.0.3",
         "socket.io-redis": "^6.0.1",
@@ -78,7 +79,7 @@
     },
     "devDependencies": {
         "@babel/code-frame": "^7.10.4",
-        "@babel/core": "^7.12.7",
+        "@babel/core": "^7.12.8",
         "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
         "@babel/plugin-transform-async-to-generator": "^7.12.1",
@@ -101,7 +102,7 @@
         "imask": "^6.0.5",
         "node-sass": "^5.0.0",
         "optimize-css-assets-webpack-plugin": "^5.0.4",
-        "postcss": "^8.1.9",
+        "postcss": "^8.1.10",
         "pretty-checkbox": "^3.0.3",
         "puppeteer": "^5.5.0",
         "router5": "^8.0.1",

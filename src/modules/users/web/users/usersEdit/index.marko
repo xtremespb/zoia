@@ -10,7 +10,7 @@ $ if (input.id === "new") {
   input.userEditData.root.required = [...input.userEditData.root.required, "password", "passwordRepeat"];
 }
 $ const cookies = new Cookies(out.global.cookieOptions);
-$ const token = cookies.get(`${out.global.siteOptions.id || "zoia3"}.authToken`);
+$ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 <div>
   <h1 class="z3-ap-head-thin">
     <span class="icon">
