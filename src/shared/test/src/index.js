@@ -13,7 +13,10 @@ import Log from "./log";
     };
     try {
         zoia.buildJson = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/build.json`));
-        zoia.config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
+        zoia.config = {
+            ...fs.readJSONSync(path.resolve(`${__dirname}/../../etc/system.json`)),
+            ...fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`))
+        };
         zoia.config.secretInt = parseInt(crypto.createHash("md5").update(zoia.config.secret).digest("hex"), 16);
         zoia.log = new Log();
         zoia.modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));

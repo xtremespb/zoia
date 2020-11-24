@@ -1,0 +1,25 @@
+{
+    "collectionCmFiles": "cmFiles",
+    "collectionCmCodes": "cmCodes",
+    "database": {
+        "collections": {
+            "cmFiles": {
+                "indexesAsc": ["name", "name"],
+                "indexesDesc": ["date", "date"]
+            },
+            "cmCodes": {
+                "indexesAsc": ["code", "codeType"],
+                "indexesDesc": ["code", "codeType"]
+            }
+        }
+    }, 
+    "routes": {
+        "cm": "/admin/cm",
+        "download": "/cm/download",
+        "frontend": "/cm"
+    },
+    "directoryTemplates": "cm/templates",
+    "directoryFiles": "cm/files",
+    "setup": true,
+    "initialLegacyValue": 1000
+}

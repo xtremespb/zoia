@@ -3,8 +3,12 @@
 const fs = require("fs-extra");
 const path = require("path");
 const MarkoPlugin = require("@marko/webpack/plugin").default;
-const config = require("../etc/zoia.json");
 const utils = require("./utils");
+
+const config = {
+    ...require("../etc/system.json"),
+    ...require("../etc/zoia.json")
+};
 
 const languages = Object.keys(config.languages);
 const webpackConfig = [];

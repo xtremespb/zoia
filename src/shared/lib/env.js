@@ -29,7 +29,7 @@ export default class {
                 this._traverse(node[k], path);
                 path.pop();
             } else {
-                const id = `${this.config.siteOptions.id}_${currentPath.join("_")}${currentPath.length ? "_" : ""}${k}`.replace(/-/gm, "_").toUpperCase();
+                const id = `${this.config.id}_${currentPath.join("_")}${currentPath.length ? "_" : ""}${k}`.replace(/-/gm, "_").toUpperCase();
                 if (process.env[id]) {
                     node[k] = this.convert(node, k, process.env[id]);
                 }

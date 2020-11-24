@@ -8,7 +8,7 @@ module.exports = class {
         };
         this.state = state;
         this.cookieOptions = out.global.cookieOptions;
-        this.siteOptions = out.global.siteOptions;
+        this.siteId = out.global.siteId;
         this.i18n = out.global.i18n;
     }
 
@@ -21,7 +21,7 @@ module.exports = class {
         const {
             token
         } = response.data;
-        this.cookies.set(`${this.siteOptions.id || "zoia3"}.authToken`, token);
+        this.cookies.set(`${this.siteId || "zoia3"}.authToken`, token);
         this.getComponent("userLoginForm").func.setProgress(true);
         this.setState("unauthorized", false);
         window.location.href = `${this.query.get("redirect") || this.i18n.getLocalizedURL("/")}?_=${new Date().getTime()}`;

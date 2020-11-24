@@ -6,7 +6,7 @@ export default async (zoia, test, page) => {
     };
     try {
         zoia.log.warn(`Logout test starting`);
-        await page.goto(`${zoia.config.siteOptions.url}${zoia.config.routes.logout}`);
+        await page.goto(`${zoia.config.url}${zoia.config.routes.logout}`);
         await page.waitForSelector(".z3-dt-logo", {
             visible: true,
             timeout: 15000

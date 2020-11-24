@@ -37,14 +37,14 @@ module.exports = class {
         };
         this.state = state;
         this.cookieOptions = out.global.cookieOptions;
-        this.siteOptions = out.global.siteOptions;
+        this.siteId = out.global.siteId;
         this.i18n = out.global.i18n;
     }
 
     async onMount() {
         const cookies = new Cookies(this.cookieOptions);
         this.query = new Query();
-        this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
+        this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
         this.tree = this.getComponent("z3_ap_f_tree");
         this.deleteModal = this.getComponent("z3_ap_f_deleteModal");
         this.uploadModal = this.getComponent("z3_ap_f_uploadModal");

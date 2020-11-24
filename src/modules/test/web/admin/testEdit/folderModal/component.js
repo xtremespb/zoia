@@ -22,13 +22,13 @@ module.exports = class {
             selectUUID: this.selectUUID.bind(this),
         };
         this.cookieOptions = out.global.cookieOptions;
-        this.siteOptions = out.global.siteOptions;
+        this.siteId = out.global.siteId;
         this.i18n = out.global.i18n;
     }
 
     onMount() {
         const cookies = new Cookies(this.cookieOptions);
-        this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
+        this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
         this.tree = this.getComponent("z3_ap_ps_tree");
         this.editModal = this.getComponent("z3_ap_ps_editModal");
     }

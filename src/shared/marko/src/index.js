@@ -49,7 +49,10 @@ import Env from "../../lib/env";
     const modulesConfig = {};
     try {
         buildJson = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/build.json`));
-        config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
+        config = {
+            ...fs.readJSONSync(path.resolve(`${__dirname}/../../etc/system.json`)),
+            ...fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`))
+        };
         env = new Env(config);
         config = env.process();
         config.secretInt = parseInt(crypto.createHash("md5").update(config.secret).digest("hex"), 16);
@@ -57,7 +60,7 @@ import Env from "../../lib/env";
         pino = Pino({
             level: config.logLevel
         });
-        pino.info(`Starting ZOIA (${config.siteOptions.id}) ${buildJson.version} / ${buildJson.mode} (built at: ${buildJson.date})`);
+        pino.info(`Starting ZOIA (${config.id}) ${buildJson.version} / ${buildJson.mode} (built at: ${buildJson.date})`);
         packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
         templates = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/templates.json`)).filter(t => config.templates.indexOf(t) > -1);
         modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));

@@ -1,85 +1,4 @@
 {
-    "webServer": {
-        "ip": "127.0.0.1",
-        "port": 3001,
-        "user": "",
-        "group": ""
-    },
-    "serveStatic": true,
-    "siteOptions": {
-        "server": "localhost",
-        "id": "zoia3",
-        "url": "http://127.0.0.1:3001"
-    },
-    "pm2": {
-        "script": "./build/bin/zoia.js",
-        "watch": false,
-        "exec_mode": "cluster",
-        "instances": 0,
-        "error_file": true,
-        "out_file": true,
-        "log_file": false,
-        "merge_logs": true,
-        "time": false
-    },
-    "secret": "",
-    "token": {
-        "expires": "7 days",
-        "ip": false
-    },
-    "logLevel": "info",
-    "trustProxy": true,
-    "stackTrace": true,
-    "modules": ["backup", "files", "nav", "pages", "registry", "update"],
-    "templates": ["default"],
-    "email": {
-        "template": "default",
-        "mailer": {
-            "service": "Yandex",
-            "auth": {
-                "user": "",
-                "pass": ""
-            }
-        },
-        "logoFile": "z3_mail_logo.png",
-        "from": "ZOIA <info@zoiajs.org>"
-    },
-    "mongo": {
-        "url": "mongodb://127.0.0.1:27017",
-        "dbName": "zoia3"
-    },
-    "redis": {
-        "enabled": false,
-        "host": "127.0.0.1",
-        "port": 6379
-    },
-    "socketIO": {
-        "path": "/socket.io",
-        "serveClient": true
-    },
-    "rateLimit": {
-        "enabled": false,
-        "redis": false,
-        "ban": false,
-        "global": false,
-        "whiteList": [],
-        "blackList": [],
-        "addHeaders": {
-            "x-ratelimit-limit": true,
-            "x-ratelimit-remaining": true,
-            "x-ratelimit-reset": true,
-            "retry-after": true
-        }
-    },
-    "cookieOptions": {
-        "expires": 604800,
-        "path": "/",
-        "domain": "",
-        "secure": null,
-        "sameSite": null
-    },
-    "captchaValidity": 3600,
-    "originCORS": "*",
     "languages": {
         "en": "English",
         "ru": "Русский"
@@ -100,7 +19,13 @@
             "siteLinkText": "Тестовый веб-сайт"
         }
     },
-    "commonTableItemsLimit": 20,
+    "routes": {
+        "download": "/z3/core/download",
+        "imagesBrowser": "/z3/core/images",
+        "login": "/users/login",
+        "logout": "/users/logout",
+        "publicFiles": "/files"
+    },
     "collections": {
         "files": "files",
         "registry": "registry",
@@ -112,20 +37,5 @@
         "images": "build/public/images",
         "publicFiles": "build/public/files"
     },
-    "routes": {
-        "download": "/z3/core/download",
-        "imagesBrowser": "/z3/core/images",
-        "login": "/users/login",
-        "logout": "/users/logout",
-        "publicFiles": "/files"
-    },
-    "telegram": {
-        "enabled": false,
-        "token": ""
-    },
-    "test": {
-        "headless": true,
-        "args": ["--window-size=1920,1080"],
-        "defaultViewport": null
-    }
+    "commonTableItemsLimit": 20
 }

@@ -14,12 +14,12 @@ module.exports = class {
         this.language = out.global.language;
         this.routes = out.global.routes;
         this.cookieOptions = out.global.cookieOptions;
-        this.siteOptions = out.global.siteOptions;
+        this.siteId = out.global.siteId;
     }
 
     async onMount() {
         const cookies = new Cookies(this.cookieOptions);
-        this.token = cookies.get(`${this.siteOptions.id || "zoia3"}.authToken`);
+        this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
         this.tree = this.getComponent("z3_ap_ps_tree");
         this.table = this.getComponent("z3_ap_ps_table");
         this.editModal = this.getComponent("z3_ap_ps_editModal");

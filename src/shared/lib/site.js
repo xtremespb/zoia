@@ -1,11 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import fs from "fs-extra";
-import path from "path";
 import I18n from "./i18n";
 import i18nCatalogs from "./i18nCatalogsNode";
 // eslint-disable-next-line import/no-unresolved
-
-const config = fs.readJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`));
 
 export default class {
     constructor(req, module, db) {
@@ -15,9 +11,9 @@ export default class {
         this.catalogs = i18nCatalogs.getModuleCatalog(module);
         this.language = this.getLocaleFromURL(req);
         this.config = req.zoiaConfig;
-        this.siteMetadata = req.siteMetadata || config.siteMetadata;
+        this.siteMetadata = req.siteMetadata || this.config.siteMetadata;
         this.languagesList = this.catalogs.languages;
-        this.languages = config.languages;
+        this.languages = this.config.languages;
         this.path = req.urlData().path;
         this.query = req.urlData().query;
         this.i18n = new I18n(this.languagesList);
@@ -28,7 +24,7 @@ export default class {
             languages: true,
             languageData: true,
             siteMetadata: true,
-            siteOptions: true,
+            siteId: true,
             path: true,
             query: true,
             cookieOptions: true,
@@ -74,7 +70,7 @@ export default class {
         });
         const siteMetadata = (await this.db.collection(this.config.collections.registry).findOne({
             _id: "site_metadata"
-        })) || config.siteMetadata;
+        })) || this.config.siteMetadata;
         const demoData = await this.db.collection(this.config.collections.registry).findOne({
             _id: "core_demo"
         });
@@ -84,16 +80,16 @@ export default class {
             languageData: this.i18n.getLanguageData(this.language),
             i18n: this.i18n,
             siteMetadata: siteMetadata[this.language],
-            siteOptions: config.siteOptions,
+            siteId: this.config.id,
             path: this.path,
             query: this.query,
-            cookieOptions: config.cookieOptions,
+            cookieOptions: this.config.cookieOptions,
             authData: this.authData,
             login: this.moduleConfigUsers.routes.login,
             logout: this.moduleConfigUsers.routes.logout,
             admin: this.moduleConfigAdmin.routes.core,
             navData: navData ? navData.tree : [],
-            publicFiles: config.routes.publicFiles,
+            publicFiles: this.config.routes.publicFiles,
             demoMode: demoData && demoData.status
         };
     }

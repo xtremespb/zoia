@@ -26,7 +26,7 @@ const getLimitData = async (fastify, settings, hashFull) => {
         max: 0
     };
     if (settings.redis && fastify.redis) {
-        const dataLimit = await fastify.redis.get(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`);
+        const dataLimit = await fastify.redis.get(`${fastify.zoiaConfig.siteId}_rateLimit_${hashFull}`);
         const data = dataLimit ? dataLimit.split(",") : [defaults.updatedAt, defaults.max];
         data[0] = typeof data[0] === "string" ? new Date(data[0] * 1000) : data[0];
         return {
@@ -43,7 +43,7 @@ const getLimitData = async (fastify, settings, hashFull) => {
 
 const getBanData = async (fastify, settings, hashIP) => {
     if (settings.redis && fastify.redis) {
-        const dataBan = await fastify.redis.get(`${fastify.zoiaConfig.siteOptions.id}_rateBan_${hashIP}`);
+        const dataBan = await fastify.redis.get(`${fastify.zoiaConfig.siteId}_rateBan_${hashIP}`);
         return !!dataBan;
     }
     const dataBan = await fastify.mongo.db.collection("rateBan").findOne({
@@ -59,7 +59,7 @@ const updateOnLimitExceeded = async (fastify, settings, hashFull, max) => {
         max
     };
     if (settings.redis && fastify.redis) {
-        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`, `${parseInt(data.updatedAt.getTime() / 1000, 10)},${data.max}`, "ex", 3600);
+        await fastify.redis.set(`${fastify.zoiaConfig.siteId}_rateLimit_${hashFull}`, `${parseInt(data.updatedAt.getTime() / 1000, 10)},${data.max}`, "ex", 3600);
     } else {
         await fastify.mongo.db.collection("rateLimit").updateOne({
             _id: hashFull
@@ -76,7 +76,7 @@ const updateOnBan = async (fastify, settings, hashIP) => {
         createdAt: new Date(),
     };
     if (settings.redis && fastify.redis) {
-        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateBan_${hashIP}`, 1, "ex", 86400);
+        await fastify.redis.set(`${fastify.zoiaConfig.siteId}_rateBan_${hashIP}`, 1, "ex", 86400);
     } else {
         await fastify.mongo.db.collection("rateBan").updateOne({
             _id: hashIP
@@ -95,7 +95,7 @@ const updateDataLimit = async (fastify, settings, hashFull, createdAt, max) => {
         max
     };
     if (settings.redis && fastify.redis) {
-        await fastify.redis.set(`${fastify.zoiaConfig.siteOptions.id}_rateLimit_${hashFull}`, `${parseInt(data.updatedAt.getTime() / 1000, 10)},${data.max}`, "ex", 3600);
+        await fastify.redis.set(`${fastify.zoiaConfig.siteId}_rateLimit_${hashFull}`, `${parseInt(data.updatedAt.getTime() / 1000, 10)},${data.max}`, "ex", 3600);
     } else {
         await fastify.mongo.db.collection("rateLimit").updateOne({
             _id: hashFull

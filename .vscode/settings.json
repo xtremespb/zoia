@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "Cryptr",
         "Pino",
         "Prehandler",
         "Regitser",
@@ -13,10 +14,16 @@
         "keyvalue",
         "marko",
         "mnotify",
+        "mtable",
         "ratelimit",
+        "rerr",
+        "rspace",
+        "serializers",
         "splt",
         "upsert",
+        "uuidv",
         "zoia",
+        "zoiajs",
         "zuid",
         "Моточасы"
     ]

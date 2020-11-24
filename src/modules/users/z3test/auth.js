@@ -13,13 +13,13 @@ export default async (zoia, userData) => {
             await test.init();
             const authPage = await test.browser.newPage();
             zoia.log.step("Opening authentication page");
-            await authPage.goto(`${zoia.config.siteOptions.url}${zoia.config.routes.login}?redirect=${zoia.modulesConfig["core"].routes.users}`);
+            await authPage.goto(`${zoia.config.url}${zoia.config.routes.login}?redirect=${zoia.modulesConfig["core"].routes.users}`);
             zoia.log.step("Setting username and password");
             await authPage.type("#username", userData.username);
             await authPage.type("#password", userData.password);
             zoia.log.step("Clicking on a login button");
             await authPage.click("#btnLogin");
-            zoia.log.step("Wating for admin panel");
+            zoia.log.step("Waiting for admin panel");
             await authPage.waitForSelector(".z3-ap-head-thin", {
                 visible: true,
                 timeout: 15000
