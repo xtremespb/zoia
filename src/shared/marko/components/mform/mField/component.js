@@ -103,7 +103,7 @@ module.exports = class {
             if (this.state.modeAce === "ace") {
                 const imgTag = `<img src="${url}" alt=""/>`;
                 this.aceEditor.getSession().insert(this.aceEditor.getCursorPosition(), imgTag);
-            } else {
+            } else if (this.ckEditor) {
                 const viewFragment = this.ckEditor.data.processor.toView(`<img src="${url}" alt=""/>`);
                 const modelFragment = this.ckEditor.data.toModel(viewFragment);
                 this.ckEditor.model.change(writer => {
@@ -127,7 +127,7 @@ module.exports = class {
         }
         const value = (this.state.modeAce === "ace" && this.state.item.aceOptions && this.state.item.aceOptions.mode === "ace/mode/html" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value) || "";
         this.aceEditor.getSession().setValue(value);
-        if (this.state.item.wysiwyg) {
+        if (this.state.item.wysiwyg && this.ckEditor) {
             this.ckEditor.setData(value);
         }
     }
@@ -143,6 +143,28 @@ module.exports = class {
                 // Ignore
             }
         }
+    }
+
+    async initCkEditor() {
+        this.ckEditorElement = this.getEl(`mf_ctl_ckeditor_${this.input.item.id}`);
+        this.ckEditor = await ClassicEditor.create(this.ckEditorElement, {
+            extraPlugins: [AddClassToAllHeading1],
+        });
+        this.ckEditor.plugins.get("FileRepository").createUploadAdapter = loader => {
+            this.ckEditorImageUploadAdapter = new CKEditorImageUploadAdapter(loader, {
+                url: "/api/core/mform/image/upload",
+                headers: this.headers
+            });
+            return this.ckEditorImageUploadAdapter;
+        };
+        this.ckEditor.model.document.on("change:data", () => {
+            const value = this.ckEditor.getData();
+            this.emit("value-change", {
+                type: "input",
+                id: this.state.item.id,
+                value
+            });
+        });
     }
 
     async onMount() {
@@ -183,27 +205,9 @@ module.exports = class {
                     this.aceEditor.getSession().setAnnotations(annotationsFiltered);
                 }
             });
-            if (this.state.item.wysiwyg) {
-                this.ckEditorElement = this.getEl(`mf_ctl_ckeditor_${this.input.item.id}`);
-                this.ckEditor = await ClassicEditor.create(this.ckEditorElement, {
-                    extraPlugins: [AddClassToAllHeading1],
-                });
-                this.ckEditor.plugins.get("FileRepository").createUploadAdapter = loader => {
-                    this.ckEditorImageUploadAdapter = new CKEditorImageUploadAdapter(loader, {
-                        url: "/api/core/mform/image/upload",
-                        headers: this.headers
-                    });
-                    return this.ckEditorImageUploadAdapter;
-                };
-                this.ckEditor.model.document.on("change:data", () => {
-                    const value = this.ckEditor.getData();
-                    this.emit("value-change", {
-                        type: "input",
-                        id: this.state.item.id,
-                        value
-                    });
-                });
-            }
+            // if (this.state.item.wysiwyg) {
+            //     await this.initCkEditor();
+            // }
             break;
         }
         this.emit("settled");
@@ -306,7 +310,7 @@ module.exports = class {
         toggle[dataset.id] = !toggle[dataset.id];
         if (toggle[dataset.id]) {
             setTimeout(() => this.aceEditor.getSession().setValue(this.input.value || ""), 100);
-            if (this.state.item.wysiwyg) {
+            if (this.state.item.wysiwyg && this.ckEditor) {
                 setTimeout(() => this.ckEditor.setData(this.input.value || ""), 100);
             }
         }
@@ -322,14 +326,21 @@ module.exports = class {
         });
     }
 
-    onAceModeChange(e) {
+    async onAceModeChange(e) {
         e.preventDefault();
         const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
         if (dataset.id !== this.state.modeAce) {
             this.setState("modeAce", dataset.id);
             const value = dataset.id === "ace" ? beautify.html(this.input.value, this.beautifyOptions) : this.input.value;
-            setTimeout(() => this.aceEditor.getSession().setValue(value || ""), 10);
-            setTimeout(() => this.ckEditor.setData(this.input.value || ""), 10);
+            if (dataset.id === "ace") {
+                if (this.ckEditor) {
+                    this.ckEditor.destroy();
+                }
+                setTimeout(() => this.aceEditor.getSession().setValue(value || ""), 10);
+            } else {
+                await this.initCkEditor();
+                setTimeout(() => this.ckEditor.setData(this.input.value || ""), 10);
+            }
         }
     }
 
