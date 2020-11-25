@@ -9,7 +9,12 @@ Text Input
       </if>
     </label>
     <div class="control">
-      <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions)/>
+      <if(state.item.noUpdate)>
+        <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions) readonly=(state.item.readOnly ? true : false) no-update/>
+      </if>
+      <else>
+        <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions) readonly=(state.item.readOnly ? true : false)/>
+      </else>
     </div>
     <if(state.item.helpText)>
       <p class="help">${state.item.helpText}</p>

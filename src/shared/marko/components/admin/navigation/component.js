@@ -31,7 +31,9 @@ module.exports = class {
 
     onNavbarToggle() {
         this.getEl("z3_ap_navbar").style.top = this.scrollPosition < window.pageYOffset && window.pageYOffset > 36 ? "-52px" : "0";
-        document.getElementById("z3_ap_demoMessage").style.display = this.scrollPosition < window.pageYOffset && window.pageYOffset > 36 ? "none" : "block";
+        if (document.getElementById("z3_ap_demoMessage")) {
+            document.getElementById("z3_ap_demoMessage").style.display = this.scrollPosition < window.pageYOffset && window.pageYOffset > 36 ? "none" : "block";
+        }
         this.scrollPosition = window.pageYOffset;
     }
 
