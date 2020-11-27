@@ -384,7 +384,10 @@ module.exports = class {
     }
 
     setData(data) {
-        this.setState("item", data);
+        this.setState("item", {
+            ...this.state.item,
+            ...data
+        });
     }
 
     getData() {

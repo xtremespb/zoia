@@ -740,6 +740,7 @@ module.exports = class {
     }
 
     setData(data) {
+        console.log(data);
         this.setState("data", this.deserialize(data));
         setTimeout(this.autoFocus.bind(this), 0);
         setTimeout(this.emitFieldsUpdate.bind(this), 0);
@@ -883,7 +884,11 @@ module.exports = class {
 
     setItemData(id, data) {
         this.getComponent(`mf_cmp_${id}`).func.setData(data);
-        this.fieldsFlat[this.fieldsFlat.findIndex(i => i.id === id)] = data;
+        const currentData = this.fieldsFlat[this.fieldsFlat.findIndex(i => i.id === id)];
+        this.fieldsFlat[this.fieldsFlat.findIndex(i => i.id === id)] = {
+            ...currentData,
+            ...data
+        };
     }
 
     getItemData(id) {
