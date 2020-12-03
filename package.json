@@ -79,7 +79,7 @@
     },
     "devDependencies": {
         "@babel/code-frame": "^7.10.4",
-        "@babel/core": "^7.12.8",
+        "@babel/core": "^7.12.9",
         "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
         "@babel/plugin-transform-async-to-generator": "^7.12.1",
@@ -88,7 +88,7 @@
         "@marko/webpack": "^6.2.10",
         "@mdi/font": "^5.8.55",
         "babel-eslint": "^10.1.0",
-        "babel-loader": "^8.2.1",
+        "babel-loader": "^8.2.2",
         "bulma": "^0.9.1",
         "bulma-extensions": "^6.2.7",
         "chai": "^4.2.0",

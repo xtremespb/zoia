@@ -13,7 +13,7 @@ export default async (zoia, userData) => {
             await test.init();
             const authPage = await test.browser.newPage();
             zoia.log.step("Opening authentication page");
-            await authPage.goto(`${zoia.config.url}${zoia.config.routes.login}?redirect=${zoia.modulesConfig["core"].routes.users}`);
+            await authPage.goto(`${zoia.config.url}${zoia.config.routes.login}?redirect=${zoia.modulesConfig["core"].routes.core}`);
             zoia.log.step("Setting username and password");
             await authPage.type("#username", userData.username);
             await authPage.type("#password", userData.password);
