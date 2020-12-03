@@ -26,11 +26,11 @@ export default class {
         if (typeof token === "string") {
             this.token = token;
         } else if (token === C.USE_EVERYTHING_FOR_TOKEN) {
-            this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : req.cookies[`${fastify.zoiaConfig.siteId || "zoia3"}.authToken`];
+            this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : req.cookies[`${fastify.zoiaConfig.id || "zoia3"}.authToken`];
         } else if (token && req.headers.authorization) {
             this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : null;
         } else if (!token) {
-            this.token = req.cookies[`${fastify.zoiaConfig.siteId || "zoia3"}.authToken`];
+            this.token = req.cookies[`${fastify.zoiaConfig.id || "zoia3"}.authToken`];
         }
     }
 
@@ -42,7 +42,7 @@ export default class {
         if (!this.rep) {
             return;
         }
-        this.rep.clearCookie(`${this.zoiaConfig.siteId || "zoia3"}.authToken`, {
+        this.rep.clearCookie(`${this.zoiaConfig.id || "zoia3"}.authToken`, {
             path: "/"
         });
     }
