@@ -11,9 +11,9 @@ export default async (fastify, data, socket) => {
             if (!user || !auth.checkStatus("admin")) {
                 return;
             }
-            const lockData = await fastify.redis.get(`${fastify.zoiaConfig.siteId}_users_lock_${data.id}`);
+            const lockData = await fastify.redis.get(`${fastify.zoiaConfig.id}_users_lock_${data.id}`);
             if (!lockData) {
-                await fastify.redis.set(`${fastify.zoiaConfig.siteId}_users_lock_${data.id}`, user._id);
+                await fastify.redis.set(`${fastify.zoiaConfig.id}_users_lock_${data.id}`, user._id);
                 socket.lockData = {
                     module: "users",
                     id: data.id
