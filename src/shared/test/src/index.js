@@ -72,10 +72,10 @@ import Log from "./log";
                 let moduleTest;
                 try {
                     moduleTest = await import(`../../../modules/${m.id}/z3test/index.js`);
-                } catch {
+                } catch (e) {
                     // Ignore
                 }
-                if (!moduleTest || zoia.config.modules.indexOf(m.id) === -1) {
+                if (!moduleTest || [...zoia.config.modules, "core", "users", "acl"].indexOf(m.id) === -1) {
                     return;
                 }
                 const moduleTestResult = await moduleTest.default(zoia);

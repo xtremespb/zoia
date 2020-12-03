@@ -54,7 +54,7 @@ try {
     modules = fs.readJSONSync(path.resolve(`${__dirname}/../build/etc/modules.json`)).filter(m => options.module ? m.id === options.module : true);
 } catch {
     console.log(colors.brightRed("Fatal: could not load ../build/etc/modules.json"));
-    console.log(colors.grey(`Please run the following command to generate the configuration file: npm run build\n`));
+    console.log(colors.grey(`Please run the following command to generate the configuration file: npm run build-production\n`));
     process.exit(1);
 }
 const languages = Object.keys(config.languages);
