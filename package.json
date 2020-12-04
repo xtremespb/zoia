@@ -1,6 +1,6 @@
 {
     "name": "zoia3",
-    "version": "3.1.2",
+    "version": "3.1.4",
     "description": "ZOIA Content Management System",
     "scripts": {
         "config": "node ./scripts/config.js",
@@ -39,8 +39,8 @@
         "cryptr": "^6.0.2",
         "docxtemplater": "^3.19.7",
         "extract-zip": "^2.0.1",
-        "fastify": "^3.8.0",
-        "fastify-cookie": "^4.1.0",
+        "fastify": "^3.9.1",
+        "fastify-cookie": "^4.1.1",
         "fastify-cors": "^5.0.0",
         "fastify-formbody": "^5.0.0",
         "fastify-jwt": "^2.1.3",
@@ -102,7 +102,7 @@
         "imask": "^6.0.5",
         "node-sass": "^5.0.0",
         "optimize-css-assets-webpack-plugin": "^5.0.4",
-        "postcss": "^8.1.10",
+        "postcss": "^8.1.14",
         "pretty-checkbox": "^3.0.3",
         "puppeteer": "^5.5.0",
         "router5": "^8.0.1",
