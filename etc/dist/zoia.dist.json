@@ -31,11 +31,5 @@
         "registry": "registry",
         "counters": "counters"
     },
-    "directories": {
-        "tmp": "tmp",
-        "files": "build/files",
-        "images": "build/public/images",
-        "publicFiles": "build/public/files"
-    },
     "commonTableItemsLimit": 20
 }

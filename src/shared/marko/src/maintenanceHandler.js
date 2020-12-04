@@ -4,7 +4,7 @@ import C from "../../lib/constants";
 
 export default async (req, rep, fastify) => {
     const db = fastify.mongo.client.db(fastify.zoiaConfig.mongo.dbName);
-    const maintenanceDb = await db.collection(req.zoiaConfig.collections.registry).findOne({
+    const maintenanceDb = await db.collection(fastify.zoiaConfig.collections.registry).findOne({
         _id: "core_maintenance"
     });
     const maintenanceStatus = maintenanceDb ? maintenanceDb.status : false;

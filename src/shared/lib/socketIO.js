@@ -15,7 +15,6 @@ export default class {
             }));
         }
         fastify.decorate("io", this.io);
-        fastify.decorateRequest("io", this.io);
         this.io.on("connection", socket => {
             // Deprecated: migration to Socket.IO v3
             // this.io.use((packet, next) => {

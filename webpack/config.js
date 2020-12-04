@@ -22,7 +22,7 @@ module.exports = (env, argv) => {
     const configTest = require("./test")(argv);
     const configCli = require("./cli")(argv);
     utils.cleanUpWeb(argv);
-    utils.ensureDirectories();
+    utils.ensureDirectories(config);
     utils.generateModulesConfig(moduleDirs, languages, argv);
     utils.generateTemplatesJSON(argv);
     utils.rebuildMarkoTemplates(argv);

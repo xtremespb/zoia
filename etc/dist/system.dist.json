@@ -88,5 +88,11 @@
         "headless": true,
         "args": ["--window-size=1920,1080"],
         "defaultViewport": null
+    },
+    "directories": {
+        "tmp": "tmp",
+        "files": "data",
+        "images": "build/public/images",
+        "publicFiles": "build/public/files"
     }
 }
