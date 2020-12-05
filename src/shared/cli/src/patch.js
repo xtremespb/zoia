@@ -70,5 +70,5 @@ export default async (config, options) => {
     fs.writeJSONSync(path.resolve(`${__dirname}/../../etc/zoia.json`), configZoia, {
         spaces: 4
     });
-    console.log(`${colors.green(" Success:")} ${colors.white(`configuration file was patched`)}`);
+    console.log(`${colors.green(" Success:")} ${colors.white(`configuration file was patched\n`)}`);
 };

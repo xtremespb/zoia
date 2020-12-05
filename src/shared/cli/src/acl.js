@@ -29,5 +29,5 @@ export default async (config, options, modulesConfig, db) => {
     }, {
         upsert: true
     });
-    console.log(`${colors.green(" Success:")} ${colors.white(`group "${options.acl}" has been created/updated`)}`);
+    console.log(`${colors.green(" Success:")} ${colors.white(`group "${options.acl}" has been created/updated`)}\n`);
 };
