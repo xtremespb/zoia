@@ -214,7 +214,7 @@ module.exports = class {
         } else {
             Object.assign(document.createElement("a"), {
                 target: "_blank",
-                href: `/zoia/files/download?dir=${this.state.dir}&name=${data.name}`
+                href: `/bin/files/download?dir=${this.state.dir}&name=${data.name}`
             }).click();
         }
     }

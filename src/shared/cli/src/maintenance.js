@@ -23,5 +23,5 @@ export default async (config, options, modulesConfig, db) => {
         console.error(`${colors.red(" Error:")} ${colors.white("could not save maintenance status")}`);
         return;
     }
-    console.log(`${colors.green(" Success:")} ${colors.white(`maintenance mode is now "${options.maintenance}"`)}`);
+    console.log(`${colors.green(" Success:")} ${colors.white(`maintenance mode is now "${options.maintenance}"\n`)}`);
 };

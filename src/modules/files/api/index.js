@@ -21,7 +21,7 @@ export default fastify => {
     fastify.post("/api/files/new", apiNew());
     fastify.post("/api/files/load", apiFileLoad());
     fastify.post("/api/files/save", apiFileSave());
-    fastify.get("/zoia/files/download", binDownload());
+    fastify.get("/bin/files/download", binDownload());
     fastify.post("/api/files/zip", apiZIP());
     fastify.post("/api/files/unzip", apiUnZIP());
 };

@@ -26,5 +26,6 @@ typings/
 /etc/*.json
 /logs
 /tmp
+/data
 /backup
 /src/shared/marko/zoia/index.marko

@@ -26,5 +26,5 @@ export default async (config, options, modulesConfig, db) => {
     }, {
         upsert: true
     });
-    console.log(`${colors.green(" Success:")} ${colors.white(`User "${options.user}" with password "password" has been created/updated`)}`);
+    console.log(`${colors.green(" Success:")} ${colors.white(`User "${options.user}" with password "password" has been created/updated`)}\n`);
 };

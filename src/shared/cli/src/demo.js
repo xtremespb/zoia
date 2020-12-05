@@ -23,5 +23,5 @@ export default async (config, options, modulesConfig, db) => {
         console.error(`${colors.red(" Error:")} ${colors.white("could not set demo mode status")}`);
         return;
     }
-    console.log(`${colors.green(" Success:")} ${colors.white(`demo mode is now "${options.demo}"`)}`);
+    console.log(`${colors.green(" Success:")} ${colors.white(`demo mode is now "${options.demo}"`)}\n`);
 };
