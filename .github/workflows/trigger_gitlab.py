@@ -21,6 +21,7 @@ headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'PRIVA
 while(status == "running" or status == "pending"):
   time.sleep(30)
   response = requests.get(url=PIPELINE_STATUS_URL, headers=headers)
+  print(response)
   status = json.loads(response.text)["status"]
   print(status)
 
