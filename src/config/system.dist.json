@@ -90,7 +90,7 @@
         "defaultViewport": null
     },
     "directories": {
-        "tmp": "tmp",
+        "tmp": "build/tmp",
         "files": "data",
         "images": "build/public/images",
         "publicFiles": "build/public/files"

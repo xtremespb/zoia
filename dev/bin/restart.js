@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const pm2 = require("pm2");
 
-const config = require(`${__dirname}/../etc/system.json`);
+const config = require(`${__dirname}/../../etc/system.json`);
 
 if (config.pm2.enabled) {
     console.log("Connecting to PM2...");
