@@ -20,10 +20,8 @@ typings/
 .node_repl_history
 .yarn-integrity
 .env
-/build/
-/etc/modules
 /build/scripts
-/etc/*.json
+/etc
 /logs
 /tmp
 /data

@@ -6,8 +6,8 @@ const {
 } = require("uuid");
 const crypto = require("crypto");
 
-const sourceZoia = path.resolve(`${__dirname}/../etc/dist/zoia.dist.json`);
-const sourceSystem = path.resolve(`${__dirname}/../etc/dist/system.dist.json`);
+const sourceZoia = path.resolve(`${__dirname}/../src/config/zoia.dist.json`);
+const sourceSystem = path.resolve(`${__dirname}/../src/config/system.dist.json`);
 const destZoia = path.resolve(`${__dirname}/../etc/zoia.json`);
 const destSystem = path.resolve(`${__dirname}/../etc/system.json`);
 const zoiaData = fs.readJSONSync(sourceZoia);
