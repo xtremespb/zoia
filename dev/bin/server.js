@@ -8,7 +8,7 @@ fs.ensureDirSync(path.resolve(`${__dirname}/../../build/configs`));
 const nginxSource = path.resolve(`${__dirname}/../../src/config/nginx.dist.conf`);
 const nginxDest = path.resolve(`${__dirname}/../../build/configs/nginx_${config.id}.conf`);
 const nginxConfigData = fs.readFileSync(nginxSource, "utf8")
-    .replace(/{server_name}/gm, config.server)
+    .replace(/{server_name}/gm, config.hostname)
     .replace(/{site_id}/gm, config.id)
     .replace(/{root}/gm, path.resolve(`${__dirname}/..`).replace(/\\/gm, "/"))
     .replace(/{ip}/gm, config.webServer.ip)
