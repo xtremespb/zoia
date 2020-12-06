@@ -17,7 +17,7 @@ status = "running";
 
 PIPELINE_STATUS_URL = 'https://gitlab.com/api/v4/projects/19934840/pipelines/' + str(pipeline_id)
 GITLAB_READ_TOKEN = os.environ.get('GITLAB_READ_TOKEN')
-headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'PRIVATE-TOKEN': GITLAB_READ_TOKEN}
+headers = json.dumps({'content-type': 'application/json', 'Accept-Charset': 'UTF-8', 'PRIVATE-TOKEN':  GITLAB_READ_TOKEN})
 while(status == "running" or status == "pending"):
   time.sleep(30)
   response = requests.get(url=PIPELINE_STATUS_URL, headers=headers)
