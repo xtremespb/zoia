@@ -27,10 +27,10 @@ if (Object.keys(options).length !== 1) {
 
 const command = Object.keys(options)[0];
 const params = {
-    dev: "--mode development --config ./webpack/config.js",
-    maps: "--display minimal --progress --mode development --config ./webpack/config.js --maps true",
-    update: "--display minimal --progress --mode production --config ./webpack/config.js --type update",
-    production: "--display minimal --progress --mode production --config ./webpack/config.js",
+    dev: "--mode development --config ./dev/config.js",
+    maps: "--display minimal --progress --mode development --config ./dev/config.js --maps true",
+    update: "--display minimal --progress --mode production --config ./dev/config.js --type update",
+    production: "--display minimal --progress --mode production --config ./dev/config.js",
 };
 
 if (!params[command]) {
@@ -67,30 +67,30 @@ const loadingAnimation = () => {
     const loading = loadingAnimation();
     const dir = command === "update" ? "update" : "zoia";
     try {
-        if (fs.existsSync(path.resolve(`${__dirname}/build/bin/zoia.js`))) {
-            fs.copySync(path.resolve(`${__dirname}/build/bin/zoia.js`), path.resolve(`${__dirname}/build/bin/zoia.js.bak`));
+        if (fs.existsSync(path.resolve(`${__dirname}/../build/bin/zoia.js`))) {
+            fs.copySync(path.resolve(`${__dirname}/../build/bin/zoia.js`), path.resolve(`${__dirname}/../build/bin/zoia.js.bak`));
         }
-        if (fs.existsSync(path.resolve(`${__dirname}/build/bin/test.js`))) {
-            fs.copySync(path.resolve(`${__dirname}/build/bin/test.js`), path.resolve(`${__dirname}/build/bin/test.js.bak`));
+        if (fs.existsSync(path.resolve(`${__dirname}/../build/bin/test.js`))) {
+            fs.copySync(path.resolve(`${__dirname}/../build/bin/test.js`), path.resolve(`${__dirname}/../build/bin/test.js.bak`));
         }
-        if (fs.existsSync(path.resolve(`${__dirname}/build/bin/cli.js`))) {
-            fs.copySync(path.resolve(`${__dirname}/build/bin/cli.js`), path.resolve(`${__dirname}/build/bin/cli.js.bak`));
+        if (fs.existsSync(path.resolve(`${__dirname}/../build/bin/cli.js`))) {
+            fs.copySync(path.resolve(`${__dirname}/../build/bin/cli.js`), path.resolve(`${__dirname}/../build/bin/cli.js.bak`));
         }
-        if (fs.existsSync(path.resolve(`${__dirname}/build/public/${dir}`))) {
-            fs.copySync(path.resolve(`${__dirname}/build/public/${dir}`), path.resolve(`${__dirname}/build/public/${dir}_bak`));
+        if (fs.existsSync(path.resolve(`${__dirname}/../build/public/${dir}`))) {
+            fs.copySync(path.resolve(`${__dirname}/../build/public/${dir}`), path.resolve(`${__dirname}/../build/public/${dir}_bak`));
         }
         await execCommand(`node node_modules/webpack-cli/bin/cli ${params[command]}`);
-        fs.removeSync(path.resolve(`${__dirname}/build/bin/zoia.js.bak`));
-        fs.removeSync(path.resolve(`${__dirname}/build/bin/test.js.bak`));
-        fs.removeSync(path.resolve(`${__dirname}/build/bin/cli.js.bak`));
-        fs.removeSync(path.resolve(`${__dirname}/build/public/${dir}`));
-        fs.removeSync(path.resolve(`${__dirname}/build/public/${dir}_bak`));
-        fs.moveSync(path.resolve(`${__dirname}/build/public/${dir}_`), path.resolve(`${__dirname}/build/public/${dir}`));
+        fs.removeSync(path.resolve(`${__dirname}/../build/bin/zoia.js.bak`));
+        fs.removeSync(path.resolve(`${__dirname}/../build/bin/test.js.bak`));
+        fs.removeSync(path.resolve(`${__dirname}/../build/bin/cli.js.bak`));
+        fs.removeSync(path.resolve(`${__dirname}/../build/public/${dir}`));
+        fs.removeSync(path.resolve(`${__dirname}/../build/public/${dir}_bak`));
+        fs.moveSync(path.resolve(`${__dirname}/../build/public/${dir}_`), path.resolve(`${__dirname}/../build/public/${dir}`));
         clearTimeout(loading);
     } catch (e) {
         try {
-            if (fs.existsSync(path.resolve(`${__dirname}/build/public/${dir}_`))) {
-                fs.removeSync(path.resolve(`${__dirname}/build/public/${dir}_`));
+            if (fs.existsSync(path.resolve(`${__dirname}/../build/public/${dir}_`))) {
+                fs.removeSync(path.resolve(`${__dirname}/../build/public/${dir}_`));
             }
         } catch {
             // Ignore

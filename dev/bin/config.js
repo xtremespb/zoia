@@ -6,13 +6,14 @@ const {
 } = require("uuid");
 const crypto = require("crypto");
 
-const sourceZoia = path.resolve(`${__dirname}/../etc/dist/zoia.dist.json`);
-const sourceSystem = path.resolve(`${__dirname}/../etc/dist/system.dist.json`);
-const destZoia = path.resolve(`${__dirname}/../etc/zoia.json`);
-const destSystem = path.resolve(`${__dirname}/../etc/system.json`);
+const sourceZoia = path.resolve(`${__dirname}/../../src/config/zoia.dist.json`);
+const sourceSystem = path.resolve(`${__dirname}/../../src/config/system.dist.json`);
+const destZoia = path.resolve(`${__dirname}/../../etc/zoia.json`);
+const destSystem = path.resolve(`${__dirname}/../../etc/system.json`);
 const zoiaData = fs.readJSONSync(sourceZoia);
 const systemData = fs.readJSONSync(sourceSystem);
 systemData.secret = crypto.createHmac("sha256", uuidv4()).update(uuidv4()).digest("hex");
+fs.ensureDirSync(path.resolve(`${__dirname}/../../etc/modules`));
 fs.writeJSONSync(destZoia, zoiaData, {
     spaces: 4
 });

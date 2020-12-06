@@ -20,12 +20,9 @@ typings/
 .node_repl_history
 .yarn-integrity
 .env
-/build/
-/etc/modules
-/build/scripts
-/etc/*.json
+/build
+/etc
 /logs
-/tmp
 /data
 /backup
 /src/shared/marko/zoia/index.marko
