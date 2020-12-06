@@ -6,7 +6,7 @@ const config = require(path.resolve(`${__dirname}/../../etc/system.json`));
 fs.ensureDirSync(path.resolve(`${__dirname}/../../logs`));
 fs.ensureDirSync(path.resolve(`${__dirname}/../../build/configs`));
 const nginxSource = path.resolve(`${__dirname}/../../src/config/nginx.dist.conf`);
-const nginxDest = path.resolve(`${__dirname}/../../build/configs/nginx_${config.id}.conf`);
+const nginxDest = path.resolve(`${__dirname}/../../build/configs/${config.hostname}.conf`);
 const nginxConfigData = fs.readFileSync(nginxSource, "utf8")
     .replace(/{server_name}/gm, config.hostname)
     .replace(/{site_id}/gm, config.id)
