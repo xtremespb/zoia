@@ -5,7 +5,6 @@ const {
 const commandLineArgs = require("command-line-args");
 const fs = require("fs-extra");
 const path = require("path");
-const chalkAnimation = require("chalk-animation");
 
 const options = commandLineArgs([{
     name: "dev",
@@ -53,7 +52,14 @@ const execCommand = cmd => new Promise((resolve, reject) => {
 });
 
 const loadingAnimation = () => {
-    chalkAnimation.karaoke("Building ZOIA, this may take some time...");
+    const h = ["|", "/", "-", "\\"];
+    let i = 0;
+    return setInterval(() => {
+        i = (i > 3) ? 0 : i;
+        const msg = `Building ZOIA, this may take some time... ${h[i]}`;
+        process.stdout.write(`\r${msg}`);
+        i += 1;
+    }, 100);
 };
 
 (async () => {
