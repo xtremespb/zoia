@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-console */
 const fs = require("fs-extra");
 const path = require("path");
@@ -71,7 +73,7 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
         await mongoClient.connect();
         const db = mongoClient.db(config.mongo.dbName);
         console.log("* Connected.");
-        await Promise.allSettled(modules.map(async m => {
+        for (const m of modules) {
             try {
                 console.log(colors.cyan(`\nInstalling module: ${colors.brightWhite(m.id)}\n`));
                 console.log(`* Loading configuration file: ${fs.existsSync(path.resolve(`${__dirname}/../../etc/modules/${m.id}.json`)) ? `../../etc/modules/${m.id}.json` : `../../src/modules/${m.id}/config.dist.json`}`);
@@ -81,7 +83,7 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
                 if (moduleConfig.database) {
                     console.log(`* Processing database collections`);
                     const collections = Object.keys(moduleConfig.database.collections);
-                    await Promise.all(collections.map(async c => {
+                    for (const c of collections) {
                         try {
                             console.log(`* Creating collection: "${c}"`);
                             try {
@@ -141,7 +143,7 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
                         } catch (e) {
                             console.error(e);
                         }
-                    }));
+                    }
                 }
                 if (options.defaults && moduleConfig.setup) {
                     console.log(`* Running setup script (../../build/scripts/${m.id}.js)`);
@@ -156,7 +158,7 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
             } catch (e) {
                 console.error(e);
             }
-        }));
+        }
         console.log("* Closing database connection");
         mongoClient.close();
         console.log(colors.green("\nDone."));

@@ -4,9 +4,13 @@ const path = require("path");
 const {
     v4: uuidv4
 } = require("uuid");
+const {
+    execSync
+} = require("child_process");
 const minify = require("@node-minify/core");
 const htmlMinifier = require("@node-minify/html-minifier");
 const packageJson = require("../package.json");
+const packageLock = require("../package-lock.json");
 
 const cleanUpWeb = argv => {
     [argv.type === "update" ? "build/public/update_" : "build/public/zoia_", "build/scripts"].map(d => {
@@ -132,6 +136,37 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
     });
 };
 
+const installRequiredPackages = async (moduleDirs, argv) => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const dir of moduleDirs) {
+        let npmData;
+        try {
+            npmData = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/npm.json`));
+        } catch {
+            // Ignore
+        }
+        if (!npmData) {
+            // eslint-disable-next-line no-continue
+            continue;
+        }
+        const cmd = Object.keys(npmData).map(m => {
+            if (!packageLock.dependencies[m] || packageLock.dependencies[m].version !== npmData[m].replace(/\^/gm, "")) {
+                return `${m}@${npmData[m]}`;
+            }
+        }).filter(i => i).join(" ");
+        if (cmd && cmd.length) {
+            try {
+                console.log(`Installing NPM packages for module "${dir}"...`);
+                // eslint-disable-next-line no-await-in-loop
+                execSync(`npm i ${cmd} --loglevel=error`);
+            } catch (e) {
+                console.error(e);
+                process.exit(1);
+            }
+        }
+    }
+};
+
 const ensureDirectories = (config) => {
     const dirs = ["etc", config.directories.tmp, "logs", "build/etc", "build/bin", "build/public", config.directories.files, "build/mail", config.directories.publicFiles, config.directories.images];
     console.log(`Ensuring directories: ${dirs.join(", ")}`);
@@ -153,5 +188,6 @@ module.exports = {
     generateModulesConfig,
     ensureDirectories,
     copyPublic,
-    copyMailTemplates
+    copyMailTemplates,
+    installRequiredPackages
 };

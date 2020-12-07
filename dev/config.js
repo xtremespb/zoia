@@ -24,6 +24,7 @@ module.exports = (env, argv) => {
     utils.cleanUpWeb(argv);
     utils.ensureDirectories(config);
     utils.generateModulesConfig(moduleDirs, languages, argv);
+    utils.installRequiredPackages(moduleDirs, argv);
     utils.generateTemplatesJSON(argv);
     utils.rebuildMarkoTemplates(argv);
     utils.copyPublic(argv);

@@ -42,7 +42,8 @@ export default () => ({
                     }, {
                         $set: {
                             running: true,
-                            complete: false
+                            complete: false,
+                            errorKeyword: null
                         }
                     }, {
                         upsert: true
@@ -88,6 +89,21 @@ export default () => ({
             response.successJSON();
             return;
         } catch (e) {
+            try {
+                await this.mongo.db.collection(req.zoiaConfig.collections.registry).updateOne({
+                    _id: "backup"
+                }, {
+                    $set: {
+                        running: false,
+                        complete: false,
+                        errorKeyword: e.message
+                    }
+                }, {
+                    upsert: true
+                });
+            } catch {
+                // Ignore
+            }
             log.error(e);
             response.internalServerError(e.message);
         }

@@ -70,26 +70,33 @@ export default class {
 
     saveBackup() {
         return new Promise((resolve, reject) => {
-            const destFile = path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.files}/${this.moduleConfig.directory}/${this.id}.zip`);
-            const archive = archiver("zip", {
-                zlib: {
-                    level: 9
-                }
-            });
-            const output = fs.createWriteStream(destFile);
-            archive.pipe(output);
-            const dirs = ["core", "db", "dirs"];
-            dirs.map(d => archive.directory(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/${d}`), d));
-            archive.file(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/backup.json`), {
-                name: "backup.json"
-            });
-            archive.finalize();
-            output.on("close", () => {
-                resolve(this.id);
-            });
-            archive.on("error", e => {
+            try {
+                const destFile = path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.files}/${this.moduleConfig.directory}/${this.id}.zip`);
+                const archive = archiver("zip", {
+                    zlib: {
+                        level: 9
+                    }
+                });
+                const output = fs.createWriteStream(destFile);
+                output.on("error", e => {
+                    reject(e);
+                });
+                archive.pipe(output);
+                const dirs = ["core", "db", "dirs"];
+                dirs.map(d => archive.directory(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/${d}`), d));
+                archive.file(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/backup.json`), {
+                    name: "backup.json"
+                });
+                output.on("close", () => {
+                    resolve(this.id);
+                });
+                archive.on("error", e => {
+                    reject(e);
+                });
+                archive.finalize();
+            } catch (e) {
                 reject(e);
-            });
+            }
         });
     }
 
