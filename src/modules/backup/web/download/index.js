@@ -28,7 +28,7 @@ export default () => ({
                 rep.callNotFound();
                 return rep.code(204);
             }
-            const stream = fs.createReadStream(path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["backup"].directory}/${file.filename}.zip`));
+            const stream = fs.createReadStream(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.files}/${req.zoiaModulesConfig["backup"].directory}/${file.filename}.zip`));
             rep.code(200).headers({
                 "Content-Disposition": `attachment; filename="${file.filename}.zip"`,
                 "Content-Type": "application/zip"
