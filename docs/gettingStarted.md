@@ -1,4 +1,4 @@
-# Installation
+# Getting Started
 
 ZOIA requires a dedicated server or VDS for an installation which means that you cannot set it up on a shared hosting. ZOIA works on every system where Node.js and MongoDB run, but the best and most well-tested system for production is Linux (it's well-tested it on Debian/Ubuntu).
 

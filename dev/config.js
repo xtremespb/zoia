@@ -29,6 +29,7 @@ module.exports = (env, argv) => {
     utils.rebuildMarkoTemplates(argv);
     utils.copyPublic(argv);
     utils.copyMailTemplates(argv);
+    utils.runBuildScripts(moduleDirs, argv);
     console.log("Starting Webpack...");
     webpackConfig.push(configWebClient, configWebServer, configTest, configCli);
     return webpackConfig;

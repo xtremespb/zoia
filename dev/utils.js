@@ -181,6 +181,19 @@ const copyPublic = argv => {
     publicFiles.map(i => fs.copyFileSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/public/${i.src}`), path.resolve(`${__dirname}/../build/public/${i.dest}`)));
 };
 
+const runBuildScripts = (moduleDirs, argv) => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const dir of moduleDirs) {
+        let script;
+        try {
+            script = require(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules/${dir}/build.js`));
+            script();
+        } catch {
+            // Ignore
+        }
+    }
+};
+
 module.exports = {
     cleanUpWeb,
     generateTemplatesJSON,
@@ -189,5 +202,6 @@ module.exports = {
     ensureDirectories,
     copyPublic,
     copyMailTemplates,
-    installRequiredPackages
+    installRequiredPackages,
+    runBuildScripts
 };

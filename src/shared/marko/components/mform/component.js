@@ -740,7 +740,6 @@ module.exports = class {
     }
 
     setData(data) {
-        console.log(data);
         this.setState("data", this.deserialize(data));
         setTimeout(this.autoFocus.bind(this), 0);
         setTimeout(this.emitFieldsUpdate.bind(this), 0);

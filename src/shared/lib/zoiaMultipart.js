@@ -62,7 +62,7 @@ const fastifyMultipart = (fastify, options, done) => {
                 filesCount += 1;
                 const tempName = uuid();
                 try {
-                    const filePath = fastify.zoiaConfig.directories.tmp ? path.join("..", "..", fastify.zoiaConfig.directories.tmp, tempName) : path.join(os.tmpdir(), tempName);
+                    const filePath = fastify.zoiaConfig.directories.tmp ? path.resolve(`${__dirname}/../../${fastify.zoiaConfig.directories.tmp}/${tempName}`) : path.join(os.tmpdir(), tempName);
                     await saveFile(file, filePath);
                     const fileStat = await fs.stat(filePath);
                     multipartFiles[fieldname] = {
