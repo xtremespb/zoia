@@ -52,16 +52,43 @@ export default class {
         }));
     }
 
+    async backupDataDir() {
+        try {
+            const dataSubDirs = (await fs.readdir(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.files}`))).filter(d => d !== this.moduleConfig.directory);
+            await fs.ensureDir(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/data`));
+            await Promise.allSettled(dataSubDirs.map(async d => {
+                try {
+                    await fs.copy(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.files}/${d}`), path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/data/${d}`));
+                } catch {
+                    // Ignore
+                }
+            }));
+        } catch {
+            // Ignore
+        }
+    }
+
     async backupCore() {
-        const dirs = [`core`, `core/build`, `core/root`];
+        const dirs = [`core`, `core/root`];
         const core = {
             etc: "etc",
             logs: "logs",
             "package.json": `root/package.json`,
             "package-lock.json": `root/package-lock.json`,
+            "build/bin": `build/bin`,
+            "build/etc": `build/etc`,
+            "build/mail": `build/mail`,
+            "build/public": `build/public`,
+            "build/scripts": `build/scripts`,
         };
-        await Promise.allSettled(dirs.map(async d => fs.ensureDir(path.resolve(`${__dirname}/../../${d}`))));
-        await Promise.allSettled(Object.keys(core).map(async f => fs.copy(path.resolve(`${__dirname}/../../${f}`), path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/core/${core[f]}`))));
+        await Promise.allSettled(dirs.map(async d => fs.ensureDir(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/${d}`))));
+        await Promise.allSettled(Object.keys(core).map(async f => {
+            try {
+                await fs.copy(path.resolve(`${__dirname}/../../${f}`), path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/core/${core[f]}`));
+            } catch {
+                // Ignore
+            }
+        }));
     }
 
     async saveData() {
@@ -82,7 +109,7 @@ export default class {
                     reject(e);
                 });
                 archive.pipe(output);
-                const dirs = ["core", "db", "dirs"];
+                const dirs = ["core", "db", "dirs", "data"];
                 dirs.map(d => archive.directory(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/${d}`), d));
                 archive.file(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/backup.json`), {
                     name: "backup.json"
@@ -102,7 +129,7 @@ export default class {
 
     async cleanUp() {
         try {
-            await fs.remove(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}`));
+            // await fs.remove(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}`));
         } catch {
             // Ignore
         }
