@@ -5,12 +5,26 @@
     </span>&nbsp;${out.global.i18n.t("zoia3")}
   </h1>
   <p>${out.global.i18n.t("controlPanelMessage")}</p>
-  <p>
-    ${out.global.i18n.t("version")}:
-    <span class="has-text-weight-bold">${input.version}</span>
-  </p>
   <p>&copy; 2019-${new Date().getFullYear()} Michael A. Matveev. ${out.global.i18n.t("license")}.</p>
+  <p class="mt-3">
+    ${out.global.i18n.t("version")}:
+    <span class="has-text-weight-bold">${input.version}</span>, ${out.global.i18n.t(out.global.buildJson.mode)} (${out.global.buildJson.id})<br/>
+    ${out.global.i18n.t("pid")}:
+    <span class="has-text-weight-bold">${out.global.pid}</span>
+    <br/>
+    ${out.global.i18n.t("buildDate")}:
+    <span class="has-text-weight-bold">${new Date(out.global.buildJson.date).toLocaleString()}</span>
+  </p>
   <p class="menu-label">${out.global.i18n.t("usersOnline")}: ${out.global.usersOnline || 1}</p>
-  <maintenance/>
-  <restart/>
+  <div class="columns is-variable is-1">
+    <div class="column is-narrow">
+      <restart/>
+    </div>
+    <div class="column">
+      <rebuild/>
+    </div>
+  </div>
+  <div class="mt-3">
+    <maintenance/>
+  </div>
 </admin>

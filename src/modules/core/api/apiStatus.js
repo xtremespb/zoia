@@ -12,7 +12,7 @@ export default () => ({
                 response.unauthorizedError();
                 return;
             }
-            if (!acl.checkPermission("update", "read")) {
+            if (!acl.checkPermission("core", "read")) {
                 response.requestError({
                     failed: true,
                     error: "Access Denied",
