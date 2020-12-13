@@ -29,7 +29,7 @@
     "logLevel": "info",
     "trustProxy": true,
     "stackTrace": true,
-    "modules": ["backup", "files", "nav", "pages", "registry", "update"],
+    "modules": ["backup", "files", "nav", "pages", "registry"],
     "templates": ["default"],
     "email": {
         "template": "default",

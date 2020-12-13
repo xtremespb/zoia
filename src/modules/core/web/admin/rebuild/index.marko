@@ -1,0 +1,15 @@
+<if(state.error)>
+  <div class="notification is-danger">${state.error}</div>
+</if>
+<div>
+  <if(state.loading)>
+    <progress class="progress is-danger" max="100"/>
+  </if>
+  <else>
+    <button class="button" on-click("onRebuildClick")>${out.global.i18n.t("rebuild")}</button>
+  </else>
+</div>
+<mconfirm key="z3_ap_ad_rebuildConfirm" on-confirm("onRebuildConfirm")/>
+<mnotify key=`z3_ap_ad_mnotify`/>
+<status key="z3_ap_ad_status"/>
+<spinner key="z3_ap_ad_spinner"/>

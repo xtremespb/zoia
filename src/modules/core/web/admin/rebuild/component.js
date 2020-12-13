@@ -4,33 +4,24 @@ const C = require("../../../../../shared/lib/constants").default;
 
 module.exports = class {
     onCreate(input, out) {
-        const state = {
-            progress: false,
-            warnRebuild: false,
-            error: null,
-            status: null
-        };
+        const state = {};
         this.state = state;
+        this.i18n = out.global.i18n;
         this.cookieOptions = out.global.cookieOptions;
         this.siteId = out.global.siteId;
-        this.i18n = out.global.i18n;
     }
 
     onMount() {
+        this.spinner = this.getComponent("z3_ap_ad_spinner");
+        this.statusDialog = this.getComponent("z3_ap_ad_status");
+        this.notify = this.getComponent("z3_ap_ad_mnotify");
+        this.rebuildConfirm = this.getComponent("z3_ap_ad_rebuildConfirm");
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
     }
 
     onRebuildClick() {
-        this.state.warnRebuild = true;
-    }
-
-    onWarnRebuildDelete() {
-        this.state.warnRebuild = false;
-    }
-
-    onErrorDelete() {
-        this.state.error = null;
+        this.rebuildConfirm.func.setActive(true, this.i18n.t("rebuild"), this.i18n.t("warnRebuildText"));
     }
 
     getStatus(code) {
@@ -59,7 +50,8 @@ module.exports = class {
                 url: "/api/core/alive"
             });
             clearInterval(this.restartInterval);
-            this.state.status = null;
+            this.statusDialog.func.setActive(false);
+            this.spinner.func.setActive(true);
             document.location.reload();
         } catch {
             // Ignore
@@ -70,17 +62,17 @@ module.exports = class {
         try {
             await axios({
                 method: "post",
-                url: "/api/update/restart",
+                url: "/api/core/rebuild/restart",
                 headers: {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            this.state.status = this.i18n.t("processRestarting");
+            this.statusDialog.func.setActive(true, this.i18n.t("processRestarting"));
             this.restartInterval = setInterval(this.restartStatusCheck.bind(this), 3000);
         } catch (e) {
-            this.state.progress = false;
-            this.state.status = null;
-            this.state.error = e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("updateRestartGeneralError");
+            this.spinner.func.setActive(false);
+            const error = e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("updateRestartGeneralError");
+            this.notify.func.show(error, "is-danger");
         }
     }
 
@@ -88,49 +80,53 @@ module.exports = class {
         try {
             const res = await axios({
                 method: "post",
-                url: "/api/update/status",
+                url: "/api/core/rebuild/status",
                 headers: {
                     Authorization: `Bearer ${this.token}`
                 }
             });
             if (res && res.data) {
                 const status = res.data.status === null ? null : parseInt(res.data.status, 10);
-                this.state.status = this.getStatus(status);
+                this.statusDialog.func.setActive(true, this.getStatus(status));
                 if (status === C.REBUILD_STATUS_SUCCESS) {
                     clearInterval(this.statusInterval);
                     this.sendRestartRequest();
                 }
+                if (status === C.REBUILD_STATUS_ERROR) {
+                    clearInterval(this.statusInterval);
+                    this.statusDialog.func.setActive(false);
+                    this.notify.func.show(this.i18n.t("processError"), "is-danger");
+                }
             } else {
                 clearInterval(this.statusInterval);
-                this.state.progress = false;
-                this.state.status = null;
-                this.state.error = this.i18n.t("updateStatusGeneralError");
+                this.statusDialog.func.setActive(false);
+                this.notify.func.show(this.i18n.t("updateStatusGeneralError"), "is-danger");
             }
         } catch (e) {
             clearInterval(this.statusInterval);
-            this.state.progress = false;
-            this.state.status = null;
-            this.state.error = e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("updateStatusGeneralError");
+            this.statusDialog.func.setActive(false);
+            const error = e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("updateStatusGeneralError");
+            this.notify.func.show(error, "is-danger");
         }
     }
 
-    async onRebuildConfirmClick() {
-        this.state.warnRebuild = false;
-        this.state.progress = true;
+    async onRebuildConfirm() {
+        this.spinner.func.setActive(true);
         try {
             await axios({
                 method: "post",
-                url: "/api/update/rebuild",
+                url: "/api/core/rebuild/start",
                 headers: {
                     Authorization: `Bearer ${this.token}`
                 }
             });
+            this.spinner.func.setActive(false);
+            this.statusInterval = setInterval(this.updateStatusCheck.bind(this), 1000);
+            this.statusDialog.setActive(true, this.i18n.t("processStarted"));
         } catch (e) {
-            this.state.progress = false;
-            this.state.error = e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("updateGeneralError");
-            return;
+            this.spinner.func.setActive(false);
+            const error = e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("processError");
+            this.notify.func.show(error, "is-danger");
         }
-        this.state.status = this.getStatus();
-        this.statusInterval = setInterval(this.updateStatusCheck.bind(this), 1000);
     }
 };

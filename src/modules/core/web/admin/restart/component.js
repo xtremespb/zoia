@@ -3,10 +3,7 @@ const Cookies = require("../../../../../shared/lib/cookies").default;
 
 module.exports = class {
     onCreate(input, out) {
-        const state = {
-            loading: false,
-            error: null
-        };
+        const state = {};
         this.state = state;
         this.i18n = out.global.i18n;
         this.cookieOptions = out.global.cookieOptions;
@@ -14,6 +11,8 @@ module.exports = class {
     }
 
     onMount() {
+        this.spinner = this.getComponent("z3_ap_ad_spinner");
+        this.statusDialog = this.getComponent("z3_ap_ad_status");
         this.notify = this.getComponent("z3_ap_ad_mnotify");
         this.restartConfirm = this.getComponent("z3_ap_ad_restartConfirm");
         const cookies = new Cookies(this.cookieOptions);
@@ -31,7 +30,7 @@ module.exports = class {
                 url: "/api/core/alive"
             });
             clearInterval(this.restartInterval);
-            this.state.loading = false;
+            this.statusDialog.setActive(false);
             this.notify.func.show(this.i18n.t("restartSuccess"), "is-success");
         } catch {
             // Ignore
@@ -39,8 +38,7 @@ module.exports = class {
     }
 
     async onRestartConfirm() {
-        this.state.loading = true;
-        this.state.error = null;
+        this.spinner.func.setActive(true);
         try {
             await axios({
                 method: "post",
@@ -49,10 +47,13 @@ module.exports = class {
                     Authorization: `Bearer ${this.token}`
                 }
             });
+            this.spinner.func.setActive(false);
             this.restartInterval = setInterval(this.restartStatusCheck.bind(this), 3000);
+            this.statusDialog.setActive(true, this.i18n.t("processRestarting"));
         } catch (e) {
-            this.state.loading = false;
-            this.state.error = e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotRestart");
+            this.spinner.func.setActive(false);
+            const error = e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("couldNotRestart");
+            this.notify.func.show(error, "is-danger");
         }
     }
 };
