@@ -61,5 +61,6 @@
     "buildDate": "Дата сборки",
     "production": "production",
     "development": "development",
-    "pid": "ID процесса"
+    "pid": "ID процесса",
+    "setupAll": "Запуск установочных скриптов..."
 }

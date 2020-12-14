@@ -54,11 +54,13 @@ export default () => ({
                 const srcDir = path.resolve(`${__dirname}/../../src`);
                 const updateDir = path.resolve(`${__dirname}/../../update`);
                 const currentServerScript = path.resolve(`${__dirname}/../../build/bin/zoia.js`);
+                const currentTestScript = path.resolve(`${__dirname}/../../build/bin/test.js`);
+                const currentCliScript = path.resolve(`${__dirname}/../../build/bin/cli.js`);
                 const currentPublicDir = path.resolve(`${__dirname}/../../build/public/zoia`);
-                const updateServerScript = path.resolve(`${__dirname}/../../build/bin/update.js`);
+                const updateServerScript = path.resolve(`${__dirname}/../../build/bin/zoia_update.js`);
+                const updateTestScript = path.resolve(`${__dirname}/../../build/bin/test_update.js`);
+                const updateCliScript = path.resolve(`${__dirname}/../../build/bin/cli_update.js`);
                 const updatePublicDir = path.resolve(`${__dirname}/../../build/public/update`);
-                const currentServerScriptBackup = path.resolve(`${__dirname}/../../build/bin/zoia.js.backup`);
-                const currentPublicDirBackup = path.resolve(`${__dirname}/../../build/public/zoia.backup`);
                 try {
                     await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_COPY_SRC_DIR);
                     // Check if update directory exists
@@ -84,9 +86,6 @@ export default () => ({
                     await Promise.all(currentModules.filter(m => updateModules.indexOf(m) === -1).map(async m => {
                         await fs.copy(path.resolve(`${__dirname}/../../src/modules/${m}`), path.resolve(`${__dirname}/../../update/modules/${m}`));
                     }));
-                    // Remove backup directories
-                    await fs.remove(currentServerScriptBackup);
-                    await fs.remove(currentPublicDirBackup);
                     // Execute "npm install" to install the latest versions of NPM modules
                     await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_NPM_INSTALL);
                     await utils.execShellCommand("npm install", workingDir);
@@ -96,8 +95,6 @@ export default () => ({
                     // Check if update files are generated
                     await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_NPM_UPDATE_COPY);
                     try {
-                        await fs.promises.access(currentServerScript);
-                        await fs.promises.access(currentPublicDir);
                         await fs.promises.access(updateServerScript);
                         await fs.promises.access(updatePublicDir);
                     } catch (e) {
@@ -105,11 +102,16 @@ export default () => ({
                         await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_ERROR, e.message);
                         return;
                     }
-                    await fs.rename(currentServerScript, currentServerScriptBackup);
-                    await fs.rename(currentPublicDir, currentPublicDirBackup);
-                    await fs.rename(updateServerScript, currentServerScript);
-                    await fs.rename(updatePublicDir, currentPublicDir);
+                    // Remove old files and directories
                     await fs.remove(updateDir);
+                    await fs.rename(updateServerScript, currentServerScript);
+                    await fs.rename(updateTestScript, currentTestScript);
+                    await fs.rename(updateCliScript, currentCliScript);
+                    await fs.remove(currentPublicDir);
+                    await fs.rename(updatePublicDir, currentPublicDir);
+                    // Running "setup all" script
+                    await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_SETUP_ALL);
+                    await utils.execShellCommand("npm run setup-all", workingDir);
                     // Success
                     await updateStatus(req, this.mongo.db, C.REBUILD_STATUS_SUCCESS);
                 } catch (e) {

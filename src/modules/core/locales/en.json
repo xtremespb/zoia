@@ -61,5 +61,6 @@
     "buildDate": "Build Date",
     "production": "production build",
     "development": "development build",
-    "pid": "PID"
+    "pid": "PID",
+    "setupAll": "Running ZOIA installation scripts..."
 }

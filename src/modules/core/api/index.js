@@ -11,7 +11,7 @@ import apiRestart from "./apiRestart";
 import apiMaintenance from "./apiMaintenance";
 import apiRebuild from "./apiRebuild";
 import apiRebuildRestart from "./apiRebuildRestart";
-import apiStatus from "./apiStatus";
+import apiRebuildStatus from "./apiRebuildStatus";
 
 export default fastify => {
     fastify.post("/api/core/captcha", apiCaptcha());
@@ -27,5 +27,5 @@ export default fastify => {
     fastify.post("/api/core/maintenance", apiMaintenance());
     fastify.post("/api/core/rebuild/start", apiRebuild());
     fastify.post("/api/core/rebuild/restart", apiRebuildRestart());
-    fastify.post("/api/core/rebuild/status", apiStatus());
+    fastify.post("/api/core/rebuild/status", apiRebuildStatus());
 };
