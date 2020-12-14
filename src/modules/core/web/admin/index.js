@@ -18,7 +18,13 @@ export default () => ({
             const maintenanceDb = await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
                 _id: "core_maintenance"
             });
+            const updateDb = (await this.mongo.db.collection(req.zoiaConfig.collections.registry).findOne({
+                _id: "update"
+            })) || {
+                status: null
+            };
             const maintenanceStatus = maintenanceDb ? maintenanceDb.status : false;
+            const updateStatus = updateDb ? updateDb.status : null;
             const render = await template.stream({
                 $global: {
                     serializedGlobals: {
@@ -26,6 +32,7 @@ export default () => ({
                         pageTitle: true,
                         usersOnline: true,
                         maintenanceStatus: true,
+                        updateStatus: true,
                         buildJson: true,
                         pid: true,
                         ...site.getSerializedGlobals()
@@ -34,6 +41,7 @@ export default () => ({
                     pageTitle: `${site.i18n.t("moduleTitle")} | ${site.i18n.t("adminPanel")}`,
                     usersOnline: Object.keys(req.io.sockets.sockets).length,
                     maintenanceStatus,
+                    updateStatus,
                     buildJson: req.zoiaBuildJson,
                     pid: process.pid,
                     ...await site.getGlobals(),

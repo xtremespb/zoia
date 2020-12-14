@@ -9,6 +9,7 @@ module.exports = class {
         this.i18n = out.global.i18n;
         this.cookieOptions = out.global.cookieOptions;
         this.siteId = out.global.siteId;
+        this.updateStatus = out.global.updateStatus;
     }
 
     onMount() {
@@ -18,6 +19,10 @@ module.exports = class {
         this.rebuildConfirm = this.getComponent("z3_ap_ad_rebuildConfirm");
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
+        if (this.updateStatus) {
+            this.statusDialog.func.setActive(true, this.getStatus(this.updateStatus));
+            this.statusInterval = setInterval(this.updateStatusCheck.bind(this), 1000);
+        }
     }
 
     onRebuildClick() {
@@ -38,6 +43,8 @@ module.exports = class {
             return this.i18n.t("processSuccess");
         case C.REBUILD_STATUS_ERROR:
             return this.i18n.t("processError");
+        case C.REBUILD_STATUS_SETUP_ALL:
+            return this.i18n.t("setupAll");
         default:
             return this.i18n.t("processStarted");
         }
