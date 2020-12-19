@@ -47,7 +47,14 @@ jobs:
 
      - name: Release
        run: |
-         npm install @semantic-release/git @semantic-release/changelog -D
-         npx semantic-release --debug --dry-run 
+         npm install @semantic-release/git @semantic-release/changelog -D 
+         npx semantic-release --debug -p [
+          "@semantic-release/commit-analyzer",
+          "@semantic-release/release-notes-generator",
+          "@semantic-release/changelog",
+          ["@semantic-release/npm", {
+            "npmPublish": false
+          }],
+          "@semantic-release/git"]
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
