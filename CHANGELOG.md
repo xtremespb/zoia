@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/xtremespb/zoia3/compare/v1.0.0...v1.0.1) (2020-12-19)
+
+
+### Bug Fixes
+
+* testing semantic versioning ([9bbb7a5](https://github.com/xtremespb/zoia3/commit/9bbb7a507e93a776598abd0b1ad013f963c1afdf))
+
 # 1.0.0 (2020-12-10)
 
 
