@@ -1,4 +1,4 @@
-# Triggers pipeline in GitLab, creates release if pipeline was successful
+# Triggers pipeline in GitLab, creates release if pipeline was successful 
 
 name: CI master trigger GitLab
 
