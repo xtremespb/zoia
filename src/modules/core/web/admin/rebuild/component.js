@@ -19,7 +19,7 @@ module.exports = class {
         this.rebuildConfirm = this.getComponent("z3_ap_ad_rebuildConfirm");
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
-        if (this.updateStatus) {
+        if (this.updateStatus && this.updateStatus > -1) {
             this.statusDialog.func.setActive(true, this.getStatus(this.updateStatus));
             this.statusInterval = setInterval(this.updateStatusCheck.bind(this), 1000);
         }
