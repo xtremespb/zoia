@@ -171,10 +171,10 @@ module.exports = class {
         await this.reloadCaptcha();
         switch (this.state.item.type) {
         case "ace":
-            if (!document.getElementById(`${this.state.item.id}_ace`)) {
+            if (!document.getElementById(`${this.input.id}_${this.state.item.id}_ace`)) {
                 return;
             }
-            [this.aceEditorElement] = document.getElementById(`${this.state.item.id}_ace`).getElementsByTagName("div");
+            [this.aceEditorElement] = document.getElementById(`${this.input.id}_${this.state.item.id}_ace`).getElementsByTagName("div");
             this.aceEditor = ace.edit(this.aceEditorElement);
             const aceDefaults = {
                 mode: "ace/mode/html",

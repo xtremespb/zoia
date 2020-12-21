@@ -23,10 +23,20 @@ export default class {
     }
 
     async close() {
-        try {
-            await this.browser.close();
-        } catch {
-            // Ignore
+        if (this.browser) {
+            try {
+                const pages = await this.browser.pages();
+                await Promise.all(pages.map(page => page.close()));
+            } catch {
+                // Ignore
+            }
+            try {
+                if (this.browser && this.browser.process() != null) {
+                    this.browser.process().kill("SIGINT");
+                }
+            } catch {
+                // Ignore
+            }
         }
     }
 }

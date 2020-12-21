@@ -38,7 +38,7 @@ module.exports = class {
             this.spinner.func.setActive(false);
         } catch {
             this.notify.func.show(this.i18n.t("couldNotSwitchMaintenance"), "is-danger");
-            document.getElementById("switchMaintenance").checked = this.prevStatus;
+            document.getElementById("z3_ap_switchMaintenance").checked = this.prevStatus;
             this.spinner.func.setActive(false);
         }
     }

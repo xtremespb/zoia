@@ -15,10 +15,10 @@ export default async (zoia, userData) => {
             zoia.log.step("Opening authentication page");
             await authPage.goto(`${zoia.config.url}${zoia.config.routes.login}?redirect=${zoia.modulesConfig["core"].routes.core}`);
             zoia.log.step("Setting username and password");
-            await authPage.type("#username", userData.username);
-            await authPage.type("#password", userData.password);
+            await authPage.type("#userLoginForm_username", userData.username);
+            await authPage.type("#userLoginForm_password", userData.password);
             zoia.log.step("Clicking on a login button");
-            await authPage.click("#btnLogin");
+            await authPage.click("#userLoginForm_btnLogin");
             zoia.log.step("Waiting for admin panel");
             await authPage.waitForSelector(".z3-ap-head-thin", {
                 visible: true,

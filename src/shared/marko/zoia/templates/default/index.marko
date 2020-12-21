@@ -39,13 +39,13 @@ $ langHTML += "</div></div>";
             <a class="navbar-item mr-5" href=out.global.i18n.getLocalizedURL("/")>
               <div class="z3-dt-logo"/>
             </a>
-            <a role="button" class=`navbar-burger burger mr-4` aria-label="menu" aria-expanded="false" data-target="z3NavbarDefaultMenu" id="z3NavbarDefaultBurger" onclick="document.getElementById('z3NavbarDefaultBurger').classList.toggle('is-active');document.getElementById('z3NavbarDefaultMenu').classList.toggle('is-active');">
+            <a role="button" class=`navbar-burger burger mr-4` aria-label="menu" aria-expanded="false" data-target="z3_dt_navbar_menu" id="z3_dt_navbar_burger" onclick="document.getElementById('z3_dt_navbar_burger').classList.toggle('is-active');document.getElementById('z3_dt_navbar_menu').classList.toggle('is-active');">
               <span aria-hidden="true"/>
               <span aria-hidden="true"/>
               <span aria-hidden="true"/>
             </a>
           </div>
-          <div id="z3NavbarDefaultMenu" class=`navbar-menu z3-dt-navbarMenu`>
+          <div id="z3_dt_navbar_menu" class=`navbar-menu z3-dt-navbarMenu`>
             <div class="navbar-start">$!{navHTML}</div>
             <div class="navbar-end">
               <if(Object.keys(out.global.languages).length)>$!{langHTML}</if>

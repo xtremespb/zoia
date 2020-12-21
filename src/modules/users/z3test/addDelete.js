@@ -8,28 +8,28 @@ export default async (zoia, test, page, utils) => {
         zoia.log.warn(`User add/delete test starting`);
         zoia.log.step("Opening users admin page");
         await page.goto(`${zoia.config.url}${zoia.modulesConfig["users"].routes.users}`);
-        await page.waitForSelector("#btnAdd", {
+        await page.waitForSelector("#users_btnAdd", {
             visible: true,
             timeout: 15000
         });
         zoia.log.step("Clicking on Add button");
-        await page.click("#btnAdd");
-        await page.waitForSelector("#username", {
+        await page.click("#users_btnAdd");
+        await page.waitForSelector("#userEditForm_username", {
             visible: true,
             timeout: 15000
         });
         const username = utils.getRandomString();
         const password = utils.getRandomString();
         zoia.log.step(`Adding user with username=${username} and password=${password}`);
-        await page.type("#username", username);
-        await page.type("#password", password);
-        await page.type("#passwordRepeat", password);
-        await page.type("#email", `${username}@zoiajs.org`);
-        await page.evaluate(() => document.getElementById("status_active").click());
-        await page.evaluate(() => document.getElementById("status_active").click());
+        await page.type("#userEditForm_username", username);
+        await page.type("#userEditForm_password", password);
+        await page.type("#userEditForm_passwordRepeat", password);
+        await page.type("#userEditForm_email", `${username}@zoiajs.org`);
+        await page.evaluate(() => document.getElementById("userEditForm_status_active").click());
+        await page.evaluate(() => document.getElementById("userEditForm_status_admin").click());
         zoia.log.step("Saving");
-        await page.click("#btnSave");
-        await page.waitForSelector("#btnAdd", {
+        await page.click("#userEditForm_btnSave");
+        await page.waitForSelector("#users_btnAdd", {
             visible: true,
             timeout: 15000
         });
@@ -47,14 +47,14 @@ export default async (zoia, test, page, utils) => {
         zoia.log.step("Clicking on Edit button");
         await page.evaluate(() => document.querySelectorAll(`[data-action="btnEdit"]`)[0].click());
         zoia.log.step("Waiting for a form to load");
-        await page.waitForFunction(`document.getElementById("username").value !== ""`);
-        const currentUsername = await page.$eval("#username", el => el.value);
-        const currentEmail = await page.$eval("#email", el => el.value);
-        const currentGroups = await page.$eval("#groups", el => el.value);
-        const currentPassword = await page.$eval("#password", el => el.value);
-        const currentPasswordRepeat = await page.$eval("#passwordRepeat", el => el.value);
-        const currentActive = await page.$eval("#status_active", check => check.checked);
-        const currentAdmin = await page.$eval("#status_admin", check => check.checked);
+        await page.waitForFunction(`document.getElementById("userEditForm_username").value !== ""`);
+        const currentUsername = await page.$eval("#userEditForm_username", el => el.value);
+        const currentEmail = await page.$eval("#userEditForm_email", el => el.value);
+        const currentGroups = await page.$eval("#userEditForm_groups", el => el.value);
+        const currentPassword = await page.$eval("#userEditForm_password", el => el.value);
+        const currentPasswordRepeat = await page.$eval("#userEditForm_passwordRepeat", el => el.value);
+        const currentActive = await page.$eval("#userEditForm_status_active", check => check.checked);
+        const currentAdmin = await page.$eval("#userEditForm_status_admin", check => check.checked);
         zoia.log.step("Asserting username");
         test.assert.equal(currentUsername, username);
         zoia.log.step("Asserting e-mail");
@@ -65,11 +65,11 @@ export default async (zoia, test, page, utils) => {
         test.assert.equal(currentPassword, "");
         test.assert.equal(currentPasswordRepeat, "");
         zoia.log.step("Asserting status");
-        test.assert.equal(currentActive, true);
-        test.assert.equal(currentAdmin, false);
+        test.assert.equal(currentActive, false);
+        test.assert.equal(currentAdmin, true);
         zoia.log.step("Saving");
-        await page.click("#btnSave");
-        await page.waitForSelector("#btnAdd", {
+        await page.click("#userEditForm_btnSave");
+        await page.waitForSelector("#users_btnAdd", {
             visible: true,
             timeout: 15000
         });

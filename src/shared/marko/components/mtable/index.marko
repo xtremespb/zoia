@@ -9,7 +9,7 @@ style.scss {
         <div class="field has-addons">
           <for|btn| of=input.buttons>
             <p class="control">
-              <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id id=btn.id type="button" on-click("onTopButtonClick") data-tooltip=btn.text>
+              <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id id=`${input.id}_${btn.id}` type="button" on-click("onTopButtonClick") data-tooltip=btn.text>
                 <if(btn.icon)>
                   <div class="z3-mt-icon-wrap">
                     <span class="icon">
@@ -82,7 +82,7 @@ style.scss {
                 <if(input.actions && input.actions.length)>
                   <td class="z3-mt-actions-wrap">
                     <for|action| of=input.actions>
-                      <button class=`${action.css} z3-mt-action-button${action.tooltip ? " tooltip" : ""}` id=`${action.id}_${row.id || row._id}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tooltip=action.text>
+                      <button class=`${action.css} z3-mt-action-button${action.tooltip ? " tooltip" : ""}` id=`${input.id}_${action.id}_${row.id || row._id}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tooltip=action.text>
                         <if(action.icon)>
                           <span class="icon">
                             <i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
