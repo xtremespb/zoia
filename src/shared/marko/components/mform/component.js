@@ -132,7 +132,7 @@ module.exports = class {
         this.autoFocus();
         this.fieldsFlat.map(field => {
             if (field.maskOptions) {
-                const element = document.getElementById(field.id);
+                const element = document.getElementById(`${this.input.id}_${field.id}`);
                 if (element) {
                     this.masked[field.id] = new InputMask(element, field.maskOptions);
                 }
@@ -164,7 +164,7 @@ module.exports = class {
             if (this.masked[field.id]) {
                 this.masked[field.id].destroy();
                 setTimeout(() => {
-                    const element = document.getElementById(field.id);
+                    const element = document.getElementById(`${this.input.id}_${field.id}`);
                     this.masked[field.id] = new InputMask(element, field.maskOptions);
                 }, 10);
             }
@@ -701,7 +701,7 @@ module.exports = class {
                     if (this.masked[field.id]) {
                         this.masked[field.id].destroy();
                         setTimeout(() => {
-                            const element = document.getElementById(field.id);
+                            const element = document.getElementById(`${this.input.id}_${field.id}`);
                             this.masked[field.id] = new InputMask(element, field.maskOptions);
                         }, 1);
                     }
@@ -715,7 +715,7 @@ module.exports = class {
                         if (this.masked[field.id]) {
                             this.masked[field.id].destroy();
                             setTimeout(() => {
-                                const element = document.getElementById(field.id);
+                                const element = document.getElementById(`${this.input.id}_${field.id}`);
                                 this.masked[field.id] = new InputMask(element, field.maskOptions);
                             }, 1);
                         }
@@ -730,7 +730,7 @@ module.exports = class {
                 if (this.masked[field.id]) {
                     this.masked[field.id].destroy();
                     setTimeout(() => {
-                        const element = document.getElementById(field.id);
+                        const element = document.getElementById(`${this.input.id}_${field.id}`);
                         this.masked[field.id] = new InputMask(element, field.maskOptions);
                     }, 1);
                 }

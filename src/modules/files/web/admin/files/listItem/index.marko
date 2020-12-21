@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <div class="column is-auto z3-ap-f-item-name">
+    <div class="column is-auto z3-ap-f-item-name" on-click("onFileClick") data-name=input.file.name data-dir=(input.file.dir ? "true" : null)>
       <a href="" on-click("onFileClick") data-name=input.file.name data-dir=(input.file.dir ? "true" : null)>
         <span class="icon z3-ap-f-item-icon">
           <i class=`mdi mdi-${input.icon}`/>

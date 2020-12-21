@@ -3,17 +3,17 @@ Text Input
 -->
 <if(state.item.type === "text")>
   <div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-    <label class="label">
+    <label class="label" style="white-space:nowrap">
       ${state.item.label}:<if(state.mandatory)>
         &nbsp;<span class="has-text-danger">*</span>
       </if>
     </label>
     <div class="control">
       <if(state.item.noUpdate)>
-        <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions) readonly=(state.item.readOnly ? true : false) no-update/>
+        <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions) readonly=(state.item.readOnly ? true : false) no-update/>
       </if>
       <else>
-        <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions) readonly=(state.item.readOnly ? true : false)/>
+        <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions) readonly=(state.item.readOnly ? true : false)/>
       </else>
     </div>
     <if(state.item.helpText)>
@@ -35,7 +35,7 @@ File Input
   </label>
   <div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
     <label class="file-label">
-      <input class="file-input" type="file" multiple=state.item.multiple on-change("onFileInputChange") data-id=state.item.id/>
+      <input class="file-input" type="file" multiple=state.item.multiple on-change("onFileInputChange") data-id=state.item.id id=`${input.id}_${state.item.id}`/>
       <a class="file-cta" key=`mf_ctl_${state.item.id}` tabindex="0">
         <span class="file-icon">
           <i class="mdi mdi-upload"/>
@@ -69,7 +69,7 @@ File Input
 Button
 -->
 <if(state.item.type === "button" && state.visible)>
-  <button class=`button ${state.item.css || ""} ${input.progress && input.progressButtonId === state.item.id ? "is-loading" : ""}` id=state.item.id type=state.item.buttonType data-id=state.item.id key=`mf_ctl_${state.item.id}` on-click("onButtonClick")>${state.item.label}</button>
+  <button class=`button ${state.item.css || ""} ${input.progress && input.progressButtonId === state.item.id ? "is-loading" : ""}` id=`${input.id}_${state.item.id}` type=state.item.buttonType data-id=state.item.id key=`mf_ctl_${state.item.id}` on-click("onButtonClick")>${state.item.label}</button>
 </if>
 <!--
 Button group
@@ -77,7 +77,7 @@ Button group
 <if(state.item.type === "buttons" && state.visible)>
   <div class="buttons">
     <for|btn| of=state.item.data>
-      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` id=btn.id type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick") disabled=!state.enabled>${btn.label}</button>
+      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` id=`${input.id}_${btn.id}` type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick") disabled=!state.enabled>${btn.label}</button>
     </for>
   </div>
 </if>
@@ -103,7 +103,7 @@ Select
     </if>
   </label>
   <div class=`select ${state.item.css || ""}${input.errors[state.item.id] ? " is-danger" : ""}`>
-    <select data-id=state.item.id key=`mf_ctl_${state.item.id}` value=input.value on-change("onFieldValueChange") disabled=!state.enabled>
+    <select data-id=state.item.id key=`mf_ctl_${state.item.id}` id=`${input.id}_${state.item.id}` value=input.value on-change("onFieldValueChange") disabled=!state.enabled>
       <for|option| of=state.item.options>
         <option value=option.value selected=(input.value === String(option.value))>${option.label}</option>
       </for>
@@ -128,7 +128,7 @@ Radio
   <div>
     <for|option, index| of=state.item.options>
       <label class=`radio ${state.item.css || ""}`>
-        <input type="radio" key=`mf_ctl_${state.item.id}_${index}` data-id=state.item.id name=state.item.id value=option.value checked=(input.value === String(option.value)) on-change("onFieldValueChange")/>&nbsp;${option.label}
+        <input type="radio" key=`mf_ctl_${state.item.id}_${index}` id=`${input.id}_${state.item.id}_${index}` data-id=state.item.id name=state.item.id value=option.value checked=(input.value === String(option.value)) on-change("onFieldValueChange")/>&nbsp;${option.label}
       </label>
     </for>
   </div>
@@ -150,7 +150,7 @@ Checkboxes
   </label>
   <for|option, index| of=state.item.options>
     <div class="z3-pretty p-icon">
-      <input type="checkbox" key=`mf_ctl_${state.item.id}_${index}` on-change("onArrInputChange") id=`${state.item.id}_${option.id}` data-id=state.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
+      <input type="checkbox" key=`mf_ctl_${state.item.id}_${index}` on-change("onArrInputChange") id=`${input.id}_${state.item.id}_${option.id}` data-id=state.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
       <div class="state">
         <i class="icon mdi mdi-check"/>
         <label>${option.label}</label>
@@ -176,7 +176,7 @@ Checkbox
     </label>
   </if>
   <div class="z3-pretty p-default" style=(state.item.style || "")>
-    <input type="checkbox" key=`mf_ctl_${state.item.id}` on-change("onBooleanInputChange") data-id=state.item.id checked=input.value class=(state.item.css || "")/>
+    <input type="checkbox" key=`mf_ctl_${state.item.id}` id=`${input.id}_${state.item.id}` on-change("onBooleanInputChange") data-id=state.item.id checked=input.value class=(state.item.css || "")/>
     <div class="state p-primary">
       <label>${state.item.labelCheckbox}</label>
     </div>
@@ -200,7 +200,7 @@ Captcha
   <div class="control">
     <div class="z3-mf-captcha-wrap">
       <div>
-        <input class=`z3-mf-captcha-input input${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type="text" placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id/>
+        <input class=`z3-mf-captcha-input input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` type="text" placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id/>
       </div>
       <div>
         <img src=state.captchaData class="z3-mf-captcha-img" on-click("reloadCaptcha")/>
@@ -224,7 +224,7 @@ Textarea
     </if>
   </label>
   <div class="control">
-    <textarea class=`textarea${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id/>
+    <textarea class=`textarea${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id/>
   </div>
   <if(state.item.helpText)>
     <p class="help">${state.item.helpText}</p>
@@ -264,14 +264,14 @@ ACE
       </ul>
     </div>
   </if>
-  <div class="control" id=state.item.id key=`mf_ctl_${state.item.id}` style=`display:${state.item.toggle ? (state.toggleAce[state.item.id] ? "block" : "none") : "block"}`>
-    <div id=`${state.item.id}_ace` style=(state.modeAce === "ace" ? "" : "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden")>
+  <div class="control" id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` style=`display:${state.item.toggle ? (state.toggleAce[state.item.id] ? "block" : "none") : "block"}`>
+    <div id=`${input.id}_${state.item.id}_ace` style=(state.modeAce === "ace" ? "" : "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden")>
       <div class="z3-mf-ace"/>
     </div>
     <if(state.item.wysiwyg)>
       <div class="z3-mf-ckeditor" style=(state.modeAce === "ck" ? "" : "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden")>
         <div no-update>
-          <div key=`mf_ctl_ckeditor_${state.item.id}` id=`mf_ctl_ckeditor_${state.item.id}` no-update/>
+          <div key=`mf_ctl_ckeditor_${state.item.id}` id=`mf_ctl_ckeditor_${input.id}_${state.item.id}` no-update/>
         </div>
       </div>
     </if>
@@ -293,7 +293,7 @@ Key-Value Input
     </if>
   </label>
   <div class="z3-mf-ctl-keyvalue-wrap">
-    <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=(input.value.data && Array.isArray(input.value.data) && input.value.data.length === 0 && state.item.emptyArrayLabel ? state.item.emptyArrayLabel : input.value.label) on-change("onFieldValueChange") data-id=state.item.id readonly/>
+    <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=(input.value.data && Array.isArray(input.value.data) && input.value.data.length === 0 && state.item.emptyArrayLabel ? state.item.emptyArrayLabel : input.value.label) on-change("onFieldValueChange") data-id=state.item.id readonly/>
     &nbsp;
     <button type="button" class="button is-light" data-id=state.item.id on-click("onKeyValueButtonClick")>
       <span class="icon is-small">
@@ -319,7 +319,7 @@ Images Input
   </label>
   <div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
     <label class="file-label">
-      <input class="file-input" type="file" multiple=state.item.multiple on-change("onFileInputChange") data-id=state.item.id/>
+      <input class="file-input" type="file" multiple=state.item.multiple on-change("onFileInputChange") data-id=state.item.id id=`${input.id}_${state.item.id}`/>
       <a class="file-cta" key=`mf_ctl_${state.item.id}` tabindex="0">
         <span class="file-icon">
           <i class="mdi mdi-upload"/>
@@ -359,7 +359,7 @@ Range Input
     </if>
   </label>
   <div class="control z3-mf-range-wrap">
-    <input type="range" class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=state.item.id key=`mf_ctl_${state.item.id}` value=input.value min=input.item.min max=input.item.max on-change("onFieldValueChange") on-input("onRangeFieldValueChange") data-id=state.item.id disabled=!state.enabled/>
+    <input type="range" class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` value=input.value min=input.item.min max=input.item.max on-change("onFieldValueChange") on-input("onRangeFieldValueChange") data-id=state.item.id disabled=!state.enabled/>
     <span class="tag is-light mt-2 ml-2">${input.value}</span>
   </div>
   <if(state.item.helpText)>
