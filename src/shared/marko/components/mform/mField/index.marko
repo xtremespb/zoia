@@ -175,8 +175,8 @@ Checkbox
       </if>
     </label>
   </if>
-  <div class="z3-pretty p-default">
-    <input type="checkbox" key=`mf_ctl_${state.item.id}` on-change("onBooleanInputChange") data-id=state.item.id checked=input.value/>
+  <div class="z3-pretty p-default" style=(state.item.style || "")>
+    <input type="checkbox" key=`mf_ctl_${state.item.id}` on-change("onBooleanInputChange") data-id=state.item.id checked=input.value class=(state.item.css || "")/>
     <div class="state p-primary">
       <label>${state.item.labelCheckbox}</label>
     </div>
