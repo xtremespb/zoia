@@ -33,7 +33,7 @@
         "@node-minify/terser": "^6.1.0",
         "ace-builds": "^1.4.12",
         "archiver": "^5.1.0",
-        "axios": "^0.21.0",
+        "axios": "^0.21.1",
         "bcrypt": "^5.0.0",
         "busboy": "^0.3.1",
         "colors": "^1.4.0",
