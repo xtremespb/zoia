@@ -71,6 +71,7 @@ export default class {
     async backupCore() {
         const dirs = [`core`, `core/root`];
         const core = {
+            src: "src",
             etc: "etc",
             logs: "logs",
             "package.json": `root/package.json`,
