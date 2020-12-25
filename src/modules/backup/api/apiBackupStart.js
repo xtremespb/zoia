@@ -52,7 +52,7 @@ export default () => ({
                     await engine.backupCollections();
                     await engine.backupDirs();
                     await engine.backupCore();
-                    await engine.backupDataDir();
+                    // await engine.backupDataDir();
                     await engine.saveData();
                     const filename = await engine.saveBackup();
                     await engine.cleanUp();

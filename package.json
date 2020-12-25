@@ -16,6 +16,7 @@
         "restart": "node ./dev/bin/restart.js",
         "test": "node ./build/bin/test.js",
         "cli": "node ./build/bin/cli.js",
+        "restore": "node ./dev/bin/restore.js",
         "publish-please": "publish-please",
         "prepublishOnly": "publish-please guard"
     },
@@ -54,6 +55,7 @@
         "fs": "0.0.1-security",
         "fs-extra": "^9.0.1",
         "html-to-text": "^6.0.0",
+        "inquirer": "^7.3.3",
         "ioredis": "^4.19.4",
         "ipaddr.js": "^2.0.0",
         "istextorbinary": "^5.12.0",
