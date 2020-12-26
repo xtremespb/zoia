@@ -9,12 +9,29 @@ const inquirer = require("inquirer");
 const commandLineArgs = require("command-line-args");
 const extract = require("extract-zip");
 const {
-    MongoClient
+    MongoClient,
+    ObjectID
 } = require("mongodb");
+const {
+    exec
+} = require("child_process");
 const {
     v4: uuid
 } = require("uuid");
 const colors = require("colors/safe");
+
+const execCommand = cmd => new Promise((resolve, reject) => {
+    let exitCode;
+    const workerProcess = exec(cmd, (error, stdout, stderr) => {
+        if (exitCode === 0) {
+            resolve(stdout);
+        } else {
+            // eslint-disable-next-line prefer-promise-reject-errors
+            reject(new Error(`${stdout || ""}${stderr || ""}`));
+        }
+    });
+    workerProcess.on("exit", code => exitCode = code);
+});
 
 const rootPath = path.resolve(`${__dirname}/../..`);
 let packageJson;
@@ -199,18 +216,33 @@ console.log(colors.brightRed(`Warning: this script will perform a full backup re
                     }
                 }
                 for (const c of moduleData.db) {
-                    const dbBackupData = await fs.readJSON(path.resolve(`${tempDir}/db/${m}/${c}.json`));
-                    for (const rec of dbBackupData) {
-                        await db.collection(c).insertOne(rec);
+                    const dbBackup = await fs.readJSON(path.resolve(`${tempDir}/db/${m}/${c}.json`));
+                    const {
+                        types,
+                        data
+                    } = dbBackup;
+                    for (const rec of data) {
+                        const item = rec;
+                        Object.keys(item).map(i => {
+                            if (types[i] === "objectid") {
+                                item[i] = new ObjectID(item[i]);
+                            } else if (types[i] === "date") {
+                                item[i] = new Date(item[i]);
+                            }
+                        });
+                        await db.collection(c).insertOne(item);
                     }
                 }
             }
         }
         process.stdout.write(`\r                                                     `);
-        process.stdout.write(`\rCleaning up...                              `);
+        process.stdout.write(`\rInstalling NPM modules...`);
+        await execCommand(`npm install`);
+        process.stdout.write(`\r                                                     `);
+        process.stdout.write(`\rCleaning up...`);
         await fs.remove(tempDir);
         process.stdout.write(`\r                                                     `);
-        console.log(colors.green(`\rAll done, backup has been restored.                           \n`));
+        console.log(colors.green(`\rAll done, backup has been restored.\n`));
         mongoClient.close();
     } catch (e) {
         console.log(e.message);

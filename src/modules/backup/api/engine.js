@@ -4,6 +4,10 @@ import {
 import path from "path";
 import fs from "fs-extra";
 import archiver from "archiver";
+import {
+    ObjectId,
+    ObjectID
+} from "mongodb";
 
 const backupData = fs.readJSONSync(path.resolve(`${__dirname}/../etc/backup.json`));
 
@@ -29,7 +33,23 @@ export default class {
             } = this.config[m];
             await Promise.allSettled(collections.map(async c => {
                 const data = await this.db.collection(c).find({}).toArray();
-                await fs.writeJSON(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/db/${m}/${c}.json`, data);
+                const types = {};
+                if (data && data.length) {
+                    Object.keys(data[0]).map(i => {
+                        const val = data[0][i];
+                        if (val instanceof ObjectID) {
+                            types[i] = "objectid";
+                        } else if (val instanceof Date) {
+                            types[i] = "date";
+                        } else {
+                            types[i] = typeof val;
+                        }
+                    });
+                }
+                await fs.writeJSON(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/db/${m}/${c}.json`, {
+                    types,
+                    data
+                });
                 this.data[m].db.push(c);
             }));
         }));
