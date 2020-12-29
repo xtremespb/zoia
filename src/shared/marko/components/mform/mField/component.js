@@ -51,10 +51,9 @@ module.exports = class {
             visible: true,
             enabled: true,
             mandatory: input.item.mandatory,
-            item: input.item
+            item: input.item || {}
         };
         this.state = state;
-        this.state.item = input.item;
         this.func = {
             setFocus: this.setFocus.bind(this),
             reloadCaptcha: this.reloadCaptcha.bind(this),

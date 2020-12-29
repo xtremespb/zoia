@@ -48,7 +48,7 @@ export default () => ({
                     }, {
                         upsert: true
                     });
-                    const engine = new Engine(this.mongo.db, req.zoiaModulesConfig["backup"], req.zoiaConfig);
+                    const engine = new Engine(this.mongo.db, req.zoiaModulesConfig["backup"], req.zoiaConfig, this);
                     await engine.backupCollections();
                     await engine.backupDirs();
                     await engine.backupCore();

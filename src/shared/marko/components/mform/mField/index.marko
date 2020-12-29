@@ -77,7 +77,9 @@ Button group
 <if(state.item.type === "buttons" && state.visible)>
   <div class="buttons">
     <for|btn| of=state.item.data>
-      <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` id=`${input.id}_${btn.id}` type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick") disabled=!state.enabled>${btn.label}</button>
+      <if(btn)>
+        <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` id=`${input.id}_${btn.id}` type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick") disabled=!state.enabled>${btn.label}</button>
+      </if>
     </for>
   </div>
 </if>

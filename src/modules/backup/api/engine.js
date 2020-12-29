@@ -5,14 +5,13 @@ import path from "path";
 import fs from "fs-extra";
 import archiver from "archiver";
 import {
-    ObjectId,
     ObjectID
 } from "mongodb";
 
 const backupData = fs.readJSONSync(path.resolve(`${__dirname}/../etc/backup.json`));
 
 export default class {
-    constructor(db, config, zoiaConfig) {
+    constructor(db, config, zoiaConfig, fastify) {
         this.id = uuid();
         this.db = db;
         this.moduleConfig = config;
@@ -21,6 +20,7 @@ export default class {
         this.modules.map(k => this.config[k] = backupData[k]);
         this.data = {};
         this.zoiaConfig = zoiaConfig;
+        this.fastify = fastify;
     }
 
     async backupCollections() {
@@ -113,7 +113,14 @@ export default class {
     }
 
     async saveData() {
+        const meta = {
+            build: this.fastify.zoiaBuildJson,
+            date: new Date(),
+            modules: this.modules,
+            api: 1,
+        };
         await fs.writeJSON(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/backup.json`), this.data);
+        await fs.writeJSON(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/meta.json`), meta);
     }
 
     saveBackup() {
@@ -134,6 +141,9 @@ export default class {
                 dirs.map(d => archive.directory(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/${d}`), d));
                 archive.file(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/backup.json`), {
                     name: "backup.json"
+                });
+                archive.file(path.resolve(`${__dirname}/../../${this.zoiaConfig.directories.tmp}/${this.id}/meta.json`), {
+                    name: "meta.json"
                 });
                 output.on("close", () => {
                     resolve(this.id);
