@@ -329,16 +329,24 @@ Images Input
     </label>
   </div>
   <if(input.value && input.value.length)>
-    <div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2">
+    <div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
       <for|file, index| of=input.value>
+        <if(state.imageDragging)>
+          <div class="z3-mf-drop-area" on-dragover("onImageDragOver") on-dragleave("onImageDragLeave") on-dragenter("onImageDragEnter") on-drop("onImageDrop") data-index=index/>
+        </if>
         <div class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow` style=(state.item.css || "")>
-          <if(file.data)>
-            <img src=window.URL.createObjectURL(file.data) class="z3-mf-image" on-contextmenu("onContextMenu") data-mfimageid=file.id/>
-          </if>
-          <else>
-            <img src=`${out.global.publicFiles}/tn_${file.id}.jpg` class="z3-mf-image" on-contextmenu("onContextMenu") data-mfimageid=file.id/>
-          </else>
+          <div on-dragstart("onImageDragStart") on-dragend("onImageDragEnd") draggable="true" data-mfimageid=file.id>
+            <if(file.data)>
+              <img src=window.URL.createObjectURL(file.data) class="z3-mf-image" on-contextmenu("onContextMenu") data-mfimageid=file.id draggable=false/>
+            </if>
+            <else>
+              <img src=`${out.global.publicFiles}/tn_${file.id}.jpg` class="z3-mf-image" on-contextmenu("onContextMenu") data-mfimageid=file.id draggable=false/>
+            </else>
+          </div>
         </div>
+        <if(index === input.value.length - 1 && state.imageDragging)>
+          <div class="z3-mf-drop-area" on-dragover("onImageDragOver") on-dragleave("onImageDragLeave") on-dragenter("onImageDragEnter") on-drop("onImageDrop") data-index=-1/>
+        </if>
       </for>
     </div>
   </if>
