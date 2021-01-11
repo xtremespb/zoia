@@ -305,6 +305,10 @@ module.exports = class {
         }
     }
 
+    onValueSet(data) {
+        this.setValue(data.id, data.value);
+    }
+
     setAceValue(id, value) {
         const component = this.getComponent(`mf_cmp_${id}`);
         if (component && component.func.setAceValue) {

@@ -151,6 +151,16 @@
     display: flex;
 }
 
+.z3-mf-drop-area {
+    border: 1px dashed #aaa;
+    width: 10px;
+    margin-top: 12px;
+}
+
+.z3-mf-drop-area-over {
+    background: hsl(48, 100%, 67%);
+}
+
 @media (max-width: 1024px) {
 
     .z3-mf-captcha-input,
