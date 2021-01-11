@@ -25,12 +25,18 @@ if (Object.keys(options).length !== 1) {
     return;
 }
 
-const buildConfig = fs.readJSONSync(path.resolve(`${__dirname}/../build/etc/build.json`));
+let buildMode = "production";
+try {
+    const buildConfig = fs.readJSONSync(path.resolve(`${__dirname}/../build/etc/build.json`));
+    buildMode = buildConfig.mode;
+} catch {
+    // Ignore
+}
 const command = Object.keys(options)[0];
 const params = {
     dev: "--mode development --config ./dev/config.js",
     maps: "--display minimal --progress --mode development --config ./dev/config.js --maps true",
-    update: `--display minimal --progress --mode ${buildConfig.mode} --config ./dev/config.js --type update`,
+    update: `--display minimal --progress --mode ${buildMode} --config ./dev/config.js --type update`,
     production: "--display minimal --progress --mode production --config ./dev/config.js",
 };
 

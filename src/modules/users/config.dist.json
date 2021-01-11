@@ -19,9 +19,5 @@
         "login": "/users/login",
         "logout": "/users/logout"
     },
-    "defaults": {
-        "username": "admin",
-        "password": "password"
-    },
     "setup": false
 }

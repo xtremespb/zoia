@@ -1,0 +1,15 @@
+{
+    "moduleTitle": "Шаблон модуля",
+    "title": "Title",
+    "actions": "Actions",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reload": "Reload",
+    "userAdd": "Add",
+    "userEdit": "Edit",
+    "titleHelpText": "Sample helptext",
+    "save": "Save",
+    "cancel": "Cancel",
+    "couldNotLoadDataFromServer": "Could not load data from server"
+}
