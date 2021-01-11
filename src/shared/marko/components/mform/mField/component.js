@@ -55,7 +55,6 @@ module.exports = class {
             imageDragging: false
         };
         this.state = state;
-        this.state.item = input.item;
         this.func = {
             setFocus: this.setFocus.bind(this),
             reloadCaptcha: this.reloadCaptcha.bind(this),
