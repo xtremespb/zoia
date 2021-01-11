@@ -157,7 +157,7 @@ import Env from "../../lib/env";
                 process.exit(1);
             });
             fastify.decorate("redis", redis);
-            fastify.decorateRequest("redis", redis);
+            // fastify.decorateRequest("redis", redis);
             pino.info(`Connected to Redis Server (${config.redis.host}:${config.redis.port})`);
         }
         // Rate Limiting

@@ -1,0 +1,15 @@
+{
+    "collectionName": "boilerplate",
+    "database": {
+        "collections": {
+            "boilerplate": {
+                "indexesAsc": ["id", "title"],
+                "indexesDesc": ["id", "title"]
+            }
+        }
+    },
+    "routes": {
+        "boilerplate": "/admin/boilerplate"
+    },
+    "setup": false
+}

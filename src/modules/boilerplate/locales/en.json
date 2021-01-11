@@ -1,0 +1,23 @@
+{
+    "moduleTitle": "Boilerplate",
+    "uid": "Unique ID",
+    "uidHelpText": "Sample help text for ID",
+    "title": "Title",
+    "titleHelpText": "Sample help text for Title",
+    "actions": "Actions",
+    "password": "Password",
+    "passwordRepeat": "Repeat password",
+    "passwordHelpText": "At least 8 chars",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reload": "Reload",
+    "userAdd": "Add",
+    "userEdit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "couldNotLoadDataFromServer": "Could not load data from server",
+    "mFormErr.dataNotFound": "Data not found on server",
+    "mFormErr.anyOf": "Invalid length",
+    "mFormErr.alreadyExists": "Already exists"
+}

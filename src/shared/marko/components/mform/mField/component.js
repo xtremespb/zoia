@@ -51,7 +51,8 @@ module.exports = class {
             visible: true,
             enabled: true,
             mandatory: input.item.mandatory,
-            item: input.item || {}
+            item: input.item,
+            imageDragging: false
         };
         this.state = state;
         this.func = {
@@ -391,5 +392,54 @@ module.exports = class {
 
     getData() {
         return this.state.item;
+    }
+
+    onImageDragStart(e) {
+        const dataset = e.target ? (Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {}) : e;
+        e.dataTransfer.setData("text/plain", `__z3_mform_${this.input.item.id}_${dataset.mfimageid}`);
+        this.state.imageDragging = true;
+    }
+
+    onImageDragEnd() {
+        this.state.imageDragging = false;
+    }
+
+    onImageDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "copy";
+        e.target.classList.add("z3-mf-drop-area-over");
+    }
+
+    onImageDrop(e) {
+        e.preventDefault();
+        const value = cloneDeep(this.input.value);
+        const data = e.dataTransfer.getData("text/plain");
+        const rx = new RegExp(`^__z3_mform_${this.input.item.id}_`);
+        if (!data || typeof data !== "string" || !rx.test(data)) {
+            return false;
+        }
+        const id = data.replace(rx, "");
+        let idxDest = parseInt(e.target.dataset.index, 10);
+        if (idxDest === value.length - 1) {
+            idxDest -= 1;
+        }
+        const idx = value.findIndex(i => i.id === id);
+        if (idxDest === -1) {
+            value.splice(value.length - 1, 0, value.splice(idx, 1)[0]);
+        } else if (idx !== idxDest) {
+            value.splice(idxDest, 0, value.splice(idx, 1)[0]);
+        }
+        this.emit("value-set", {
+            id: this.input.item.id,
+            value
+        });
+    }
+
+    onImageDragLeave(e) {
+        e.target.classList.remove("z3-mf-drop-area-over");
+    }
+
+    onImageDragEnter(e) {
+        e.preventDefault();
     }
 };
