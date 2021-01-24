@@ -23,12 +23,7 @@ export default () => ({
             return;
         }
         if (!acl.checkPermission("files", "delete")) {
-            response.requestError({
-                failed: true,
-                error: "Access Denied",
-                errorKeyword: "accessDenied",
-                errorData: []
-            });
+            response.requestAccessDeniedError();
             return;
         }
         try {
@@ -49,7 +44,7 @@ export default () => ({
         }
         try {
             // Check permissions
-            if (!auth.checkStatus("admin")) {
+            if (!auth.statusAdmin()) {
                 response.unauthorizedError();
                 return;
             }

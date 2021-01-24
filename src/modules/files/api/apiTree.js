@@ -41,17 +41,12 @@ export default () => ({
         const root = path.resolve(`${__dirname}/../../${req.zoiaModulesConfig["files"].root}`).replace(/\\/gm, "/");
         try {
             // Check permissions
-            if (!auth.checkStatus("admin")) {
+            if (!auth.statusAdmin()) {
                 response.unauthorizedError();
                 return;
             }
             if (!acl.checkPermission("files", "read")) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
+                response.requestAccessDeniedError();
                 return;
             }
             // Read directory tree

@@ -16,7 +16,7 @@ export default () => ({
             acl,
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
@@ -47,24 +47,14 @@ export default () => ({
                 }
             });
             if (!allowed) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
+                response.requestAccessDeniedError();
                 return;
             }
             // Delete requested IDs
             const result = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).deleteMany(queryDb);
             // Check result
             if (!result || !result.result || !result.result.ok) {
-                response.requestError({
-                    failed: true,
-                    error: "Could not delete one or more items",
-                    errorKeyword: "deleteError",
-                    errorData: []
-                });
+                response.deleteError();
                 return;
             }
             // Send "success" result

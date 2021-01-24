@@ -5,7 +5,7 @@ export default async (fastify, data, socket) => {
         if (data && data.token) {
             const auth = new Auth(fastify.mongo.db, fastify, null, null, data.token);
             const user = await auth.getUserData();
-            if (!user || !auth.checkStatus("active")) {
+            if (!user || !auth.statusActive()) {
                 return;
             }
             socket.userId = String(user._id);

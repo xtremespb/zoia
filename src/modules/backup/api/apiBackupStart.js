@@ -9,17 +9,12 @@ export default () => ({
             acl,
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
         if (!acl.checkPermission("backup", "create")) {
-            response.requestError({
-                failed: true,
-                error: "Access Denied",
-                errorKeyword: "accessDenied",
-                errorData: []
-            });
+            response.requestAccessDeniedError();
             return;
         }
         try {

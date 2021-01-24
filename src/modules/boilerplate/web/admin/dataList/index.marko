@@ -16,7 +16,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
   <mtable css="table is-striped is-hoverable is-fullwidth" dataSource={
     method: "post",
     url: `/api/${moduleConfig.id}/list`,
-    data: {},
+    data: {
+      language: out.global.language,
+    },
     headers: {
       Authorization: `Bearer ${token}`
     }

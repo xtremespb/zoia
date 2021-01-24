@@ -5,6 +5,7 @@ import cloneDeep from "lodash/cloneDeep";
 import crypto from "crypto";
 import editData from "./data/edit.json";
 import moduleConfig from "../module.json";
+import utils from "../../../shared/lib/utils";
 
 export default () => ({
     async handler(req, rep) {
@@ -14,21 +15,28 @@ export default () => ({
             auth,
             acl
         } = req.zoia;
+        const {
+            collectionName
+        } = req.zoiaModulesConfig[moduleConfig.id];
+        const languages = Object.keys(req.zoiaConfig.languages);
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
+        // Get Form Data
+        const formData = await req.processMultipart();
+        const id = utils.getFormDataId(formData);
         // Clone root validation schema
         const editRoot = cloneDeep(editData.root);
-        if (!req.body.id) {
+        if (!id) {
             // If it's a new record, password is mandatory
             editRoot.required = [...editRoot.required, "password"];
         }
         // Initialize validator
-        const extendedValidation = new req.ExtendedValidation(req.body, editRoot, editData.part, editData.files, Object.keys(req.zoiaConfig.languages));
+        const extendedValidation = new req.ExtendedValidation(formData, editRoot, editData.part, editData.files, languages);
         // Perform validation
-        const extendedValidationResult = extendedValidation.validate();
+        const extendedValidationResult = await extendedValidation.validate();
         // Check if there are any validation errors
         if (extendedValidationResult.failed) {
             log.error(null, extendedValidationResult.message);
@@ -41,36 +49,41 @@ export default () => ({
             // Process case for UID
             data.uid = data.uid.trim().toLowerCase();
             // Check permission
-            if ((!req.body.id && !acl.checkPermission(moduleConfig.id, "create")) || !acl.checkPermission(moduleConfig.id, "update", data.id)) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
+            if ((!id && !acl.checkPermission(moduleConfig.id, "create")) || !acl.checkPermission(moduleConfig.id, "update", data.id)) {
+                response.requestAccessDeniedError();
                 return;
             }
-            const {
-                collectionName
-            } = req.zoiaModulesConfig[moduleConfig.id];
             // Check for ID duplicates
             if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, collectionName, {
                     uid: data.uid,
                     _id: {
-                        $ne: req.body.id ? new ObjectId(req.body.id) : null
+                        $ne: id ? new ObjectId(id) : null
                     }
                 }, "alreadyExists", "uid")) {
                 return;
             }
-            // Check for email duplicates
-            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, collectionName, {
-                    email: data.email,
-                    _id: {
-                        $ne: req.body.id ? new ObjectId(req.body.id) : null
-                    }
-                }, "emailAlreadyExists", "email")) {
+            // Get files from body
+            const uploadFiles = extendedValidation.getFiles("file");
+            const uploadImages = extendedValidation.getFiles("image");
+            // Delete files/images which are removed
+            if (id) {
+                const dbItem = await this.mongo.db.collection(collectionName).findOne({
+                    _id: new ObjectId(id)
+                });
+                await utils.cleanRemovedFiles(req, this.mongo.db, extendedValidation, dbItem, data);
+                await utils.cleanRemovedImages(req, this.mongo.db, extendedValidation, dbItem, data);
+            }
+            // Upload files
+            if (uploadFiles && uploadFiles.length && !(await utils.saveFiles(req, rep, this.mongo.db, uploadFiles, formData))) {
+                await req.removeMultipartTempFiles(formData.files);
                 return;
             }
+            // Upload images
+            if (uploadImages && uploadImages.length && !(await utils.saveImages(req, rep, this.mongo.db, uploadImages, formData))) {
+                await req.removeMultipartTempFiles(formData.files);
+                return;
+            }
+            await req.removeMultipartTempFiles(formData.files);
             // Set password when necessary
             const updateExtras = {};
             if (data.password && data.passwordRepeat) {
@@ -86,7 +99,7 @@ export default () => ({
             const update = await this.mongo.db.collection(collectionName).updateOne(data.id ? {
                 _id: new ObjectId(data.id)
             } : {
-                id: data.id
+                uid: data.uid,
             }, {
                 $set: {
                     ...data,
@@ -98,12 +111,7 @@ export default () => ({
             });
             // Check result
             if (!update || !update.result || !update.result.ok) {
-                response.requestError({
-                    failed: true,
-                    error: "Database error",
-                    errorKeyword: "databaseError",
-                    errorData: []
-                });
+                response.databaseError();
                 return;
             }
             // Return "success" result

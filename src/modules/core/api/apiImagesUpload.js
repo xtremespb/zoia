@@ -11,24 +11,19 @@ export default () => ({
             acl,
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
         if (!acl.checkPermission("core", "create")) {
-            response.requestError({
-                failed: true,
-                error: "Access Denied",
-                errorKeyword: "accessDenied",
-                errorData: []
-            });
+            response.requestAccessDeniedError();
             return;
         }
         try {
             const formData = await req.processMultipart();
             const currentDirValue = formData.fields.currentDir;
-            const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}`).replace(/\\/gm, "/");
-            const currentDir = currentDirValue ? path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}/${currentDirValue}`).replace(/\\/gm, "/") : root;
+            const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicImages}`).replace(/\\/gm, "/");
+            const currentDir = currentDirValue ? path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicImages}/${currentDirValue}`).replace(/\\/gm, "/") : root;
             try {
                 await fs.promises.access(currentDir);
                 const statsSrc = await fs.lstat(currentDir);
@@ -46,7 +41,7 @@ export default () => ({
                 return;
             }
             // Check permissions
-            if (!auth.checkStatus("admin")) {
+            if (!auth.statusAdmin()) {
                 response.unauthorizedError();
                 return;
             }

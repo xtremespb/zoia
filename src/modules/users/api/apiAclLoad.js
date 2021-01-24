@@ -12,12 +12,12 @@ export default () => ({
             acl,
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
         const extendedValidation = new req.ExtendedValidation(req.body, aclLoad);
-        const extendedValidationResult = extendedValidation.validate();
+        const extendedValidationResult = await extendedValidation.validate();
         if (extendedValidationResult.failed) {
             log.error(null, extendedValidationResult.message);
             response.validationError(extendedValidationResult);
@@ -38,12 +38,7 @@ export default () => ({
             }
             // Check permission
             if (!acl.checkPermission("users", "read", data.group)) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
+                response.requestAccessDeniedError();
                 return;
             }
             const dataProcessed = {

@@ -11,6 +11,17 @@
     "root": {
         "type": "object",
         "properties": {
+            "id": {
+                "type": "string",
+                "anyOf": [{
+                    "minLength": 24,
+                    "maxLength": 24
+                }, {
+                    "minLength": 0,
+                    "maxLength": 0
+                }],
+                "pattern": "^[a-f0-9]+$"
+            },
             "uid": {
                 "type": "string",
                 "minLength": 1,
@@ -35,6 +46,31 @@
                     "minLength": 0,
                     "maxLength": 0
                 }]
+            },
+            "images": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "maxLength": 128
+                        },
+                        "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                            "minLength": 36,
+                            "maxLength": 36
+                        },
+                        "type": {
+                            "const": "image"
+                        },
+                        "upload": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["name", "id", "type"]
+                }
             }
         },
         "required": ["uid"]
@@ -46,8 +82,47 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 64
+            },
+            "attachments": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "maxLength": 128
+                        },
+                        "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                            "minLength": 36,
+                            "maxLength": 36
+                        },
+                        "type": {
+                            "const": "file"
+                        },
+                        "upload": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["name", "id", "type"]
+                }
             }
         },
         "required": ["title"]
+    },
+    "files": {
+        "attachments": {
+            "minAmount": 0,
+            "maxAmount": 5,
+            "minSizeBytes": 0,
+            "maxSizeBytes": 5242880
+        },
+        "images": {
+            "minAmount": 0,
+            "maxAmount": 5,
+            "minSizeBytes": 0,
+            "maxSizeBytes": 5242880
+        }
     }
 }

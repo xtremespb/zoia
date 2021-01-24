@@ -63,8 +63,8 @@ export default {
     },
     async cleanRemovedFiles(req, db, extendedValidation, dbItem, data) {
         if (dbItem) {
-            const dbFiles = extendedValidation.extractFiles(dbItem);
-            const formFiles = extendedValidation.extractFiles(data);
+            const dbFiles = extendedValidation.extractFiles(dbItem, "file");
+            const formFiles = extendedValidation.extractFiles(data, "file");
             const removedFiles = dbFiles.filter(f => formFiles.indexOf(f) === -1);
             await Promise.allSettled(removedFiles.map(async f => {
                 try {
@@ -73,6 +73,21 @@ export default {
                     await db.collection(req.zoiaConfig.collections.files).deleteOne({
                         _id: f
                     });
+                } catch (e) {
+                    // Ignore
+                }
+            }));
+        }
+    },
+    async cleanRemovedImages(req, db, extendedValidation, dbItem, data) {
+        if (dbItem) {
+            const dbFiles = extendedValidation.extractFiles(dbItem, "image");
+            const formFiles = extendedValidation.extractFiles(data, "image");
+            const removedFiles = dbFiles.filter(f => formFiles.indexOf(f) === -1);
+            await Promise.allSettled(removedFiles.map(async f => {
+                try {
+                    await fs.remove(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}/tn_${f}.jpg`));
+                    await fs.remove(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}/${f}.jpg`));
                 } catch (e) {
                     // Ignore
                 }
@@ -128,10 +143,10 @@ export default {
         }
         return true;
     },
-    async saveImages(req, rep, db, uploadFiles, formData) { // , auth = false, admin = false
+    async saveImages(req, rep, db, uploadImages, formData) { // , auth = false, admin = false
         const response = new rep.Response(req, rep);
         const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
-            $or: uploadFiles.map(f => ({
+            $or: uploadImages.map(f => ({
                 _id: f.id
             }))
         }).count();
@@ -145,7 +160,7 @@ export default {
             return false;
         }
         let uploadError;
-        await Promise.allSettled(uploadFiles.map(async f => {
+        await Promise.allSettled(uploadImages.map(async f => {
             try {
                 const filename = path.format({
                     ...path.parse(path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}/${f.id}`).replace(/\\/gm, "/")),
@@ -191,6 +206,73 @@ export default {
             return false;
         }
         return true;
+    },
+    getFilesAndImagesArr(dataDb, languages) {
+        const filesList = [];
+        const imagesList = [];
+        dataDb.map(item => {
+            Object.keys(languages).map(lang => {
+                if (item[lang]) {
+                    Object.keys(item[lang]).map(k => {
+                        const langItem = item[lang][k];
+                        if (typeof langItem === "object" && Array.isArray(langItem)) {
+                            langItem.map(li => {
+                                if (typeof li === "object" && li.type === "file" && li.id) {
+                                    filesList.push(li.id);
+                                }
+                                if (typeof li === "object" && li.type === "image" && li.id) {
+                                    imagesList.push(li.id);
+                                }
+                            });
+                        }
+                    });
+                    delete item[lang];
+                }
+            });
+            Object.keys(item).map(i => {
+                const rootItem = item[i];
+                if (typeof rootItem === "object" && Array.isArray(rootItem)) {
+                    rootItem.map(li => {
+                        if (typeof li === "object" && li.type === "file" && li.id) {
+                            filesList.push(li.id);
+                        }
+                        if (typeof li === "object" && li.type === "image" && li.id) {
+                            imagesList.push(li.id);
+                        }
+                    });
+                }
+            });
+        });
+        return {
+            filesList,
+            imagesList
+        };
+    },
+    async removeFiles(filesList, zoiaConfig) {
+        await Promise.allSettled(filesList.map(async f => {
+            try {
+                const filename = path.resolve(`${__dirname}/../../${zoiaConfig.directories.files}/${f}`);
+                await fs.remove(filename);
+                await this.mongo.db.collection(zoiaConfig.collections.files).deleteOne({
+                    _id: f
+                });
+            } catch (e) {
+                // Ignore
+            }
+        }));
+    },
+    async removeImages(imagesList, zoiaConfig) {
+        await Promise.allSettled(imagesList.map(async f => {
+            try {
+                await fs.remove(path.resolve(`${__dirname}/../../${zoiaConfig.directories.publicFiles}/${f}.jpg`));
+                await fs.remove(path.resolve(`${__dirname}/../../${zoiaConfig.directories.publicFiles}/tn_${f}.jpg`));
+            } catch (e) {
+                // Ignore
+            }
+        }));
+    },
+    getFormDataId(formData) {
+        return formData.fields.id && typeof formData.fields.id === "string" && formData.fields.id.match(/^[a-f0-9]{24}$/) ? formData.fields.id : undefined;
     },
     formatBytes(bytes, decimals = 2) {
         const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];

@@ -39,7 +39,7 @@ export default () => ({
             acl
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
@@ -67,12 +67,7 @@ export default () => ({
                 });
             }
             if ((!treeExisting && !acl.checkPermission("pages", "create")) || !acl.checkPermission("pages", "update")) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
+                response.requestAccessDeniedError();
                 return;
             }
             // Save tree to the database

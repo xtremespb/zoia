@@ -14,7 +14,7 @@ export default () => ({
             acl,
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
@@ -28,19 +28,44 @@ export default () => ({
             collectionName
         } = req.zoiaModulesConfig[moduleConfig.id];
         try {
+            const langProjection = {};
+            Object.keys(req.zoiaConfig.languages).map(i => {
+                langProjection[`${i}.title`] = 1;
+            });
             const options = {
                 sort: {},
-                projection: listData.projection
+                projection: {
+                    ...listData.projection,
+                    ...langProjection
+                }
             };
+            switch (req.body.sortId) {
+            case "title":
+                req.body.sortId = `${req.body.language}.${req.body.sortId}`;
+                break;
+            }
             const query = {};
             if (req.body.searchText && req.body.searchText.length > 1) {
-                query.$or = listData.search.map(c => {
-                    const sr = {};
-                    sr[c] = {
-                        $regex: req.body.searchText,
-                        $options: "i"
-                    };
-                    return sr;
+                query.$or = [];
+                listData.search.map(c => {
+                    if (c.match(/\[language\]/i)) {
+                        Object.keys(req.zoiaConfig.languages).map(lang => {
+                            const sr = {};
+                            const key = c.replace(/\[language\]/i, lang);
+                            sr[key] = {
+                                $regex: req.body.searchText,
+                                $options: "i"
+                            };
+                            query.$or.push(sr);
+                        });
+                    } else {
+                        const sr = {};
+                        sr[c] = {
+                            $regex: req.body.searchText,
+                            $options: "i"
+                        };
+                        query.$or.push(sr);
+                    }
                 });
             }
             const count = await this.mongo.db.collection(collectionName).find(query, options).count();
@@ -51,7 +76,7 @@ export default () => ({
             const data = (await this.mongo.db.collection(collectionName).find(query, options).toArray()).map(i => ({
                 ...i,
                 uid: !acl.checkPermission(moduleConfig.id, "read", i.uid) ? "***" : i.uid,
-                title: !acl.checkPermission(moduleConfig.id, "read", i.uid) ? "***" : i.title,
+                title: !acl.checkPermission(moduleConfig.id, "read", i.uid) ? "***" : i[req.body.language] ? i[req.body.language].title : "",
             }));
             // Send response
             response.successJSON({

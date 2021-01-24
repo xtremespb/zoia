@@ -80,6 +80,14 @@ export default class {
         return this.user.status.indexOf(status) > -1;
     }
 
+    statusAdmin() {
+        return this.checkStatus("admin") && this.checkStatus("active");
+    }
+
+    statusActive() {
+        return this.checkStatus("active");
+    }
+
     checkGroup(group) {
         if (!this.user || !this.user.groups) {
             return false;

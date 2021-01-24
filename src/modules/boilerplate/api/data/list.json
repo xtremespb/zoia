@@ -33,5 +33,5 @@
         "uid": 1,
         "title": 1
     },
-    "search": ["uid", "title"]
+    "search": ["uid", "[language].title"]
 }

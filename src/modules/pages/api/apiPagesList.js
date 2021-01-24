@@ -34,7 +34,7 @@ export default () => ({
             acl
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
@@ -70,13 +70,26 @@ export default () => ({
                 dir: req.body.dir
             };
             if (req.body.searchText && req.body.searchText.length > 1) {
-                query.$or = pagesListData.search.map(c => {
-                    const sr = {};
-                    sr[c] = {
-                        $regex: req.body.searchText,
-                        $options: "i"
-                    };
-                    return sr;
+                query.$or = [];
+                pagesListData.search.map(c => {
+                    if (c.match(/\[language\]/i)) {
+                        Object.keys(req.zoiaConfig.languages).map(lang => {
+                            const sr = {};
+                            const key = c.replace(/\[language\]/i, lang);
+                            sr[key] = {
+                                $regex: req.body.searchText,
+                                $options: "i"
+                            };
+                            query.$or.push(sr);
+                        });
+                    } else {
+                        const sr = {};
+                        sr[c] = {
+                            $regex: req.body.searchText,
+                            $options: "i"
+                        };
+                        query.$or.push(sr);
+                    }
                 });
             }
             const count = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).count();

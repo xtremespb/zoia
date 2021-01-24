@@ -34,6 +34,7 @@ export default class {
             admin: true,
             navData: true,
             publicFiles: true,
+            publicImages: true,
             demoMode: true,
         };
         this.i18n.setLanguage(this.language);
@@ -90,6 +91,7 @@ export default class {
             admin: this.moduleConfigAdmin.routes.core,
             navData: navData ? navData.tree : [],
             publicFiles: this.config.routes.publicFiles,
+            publicImages: this.config.routes.publicImages,
             demoMode: demoData && demoData.status
         };
     }

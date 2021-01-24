@@ -12,13 +12,13 @@ export default () => ({
             acl
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
         // Extended validation
         const extendedValidation = new req.ExtendedValidation(req.body, pageLoad);
-        const extendedValidationResult = extendedValidation.validate();
+        const extendedValidationResult = await extendedValidation.validate();
         if (extendedValidationResult.failed) {
             log.error(null, extendedValidationResult.message);
             response.validationError(extendedValidationResult);
@@ -39,12 +39,7 @@ export default () => ({
             }
             // Check permission
             if (!acl.checkPermission("pages", "read", data.filename)) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
+                response.requestAccessDeniedError();
                 return;
             }
             data.dir = {

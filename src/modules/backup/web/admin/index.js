@@ -11,7 +11,7 @@ export default routeId => ({
             } = req.zoia;
             const site = new req.ZoiaSite(req, "backup", this.mongo.db);
             response.setSite(site);
-            if (!auth.checkStatus("admin")) {
+            if (!auth.statusAdmin()) {
                 auth.clearAuthCookie();
                 return response.redirectToLogin(req.zoiaModulesConfig["backup"].routes.backup);
             }
