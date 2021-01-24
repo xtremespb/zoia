@@ -14,22 +14,17 @@ export default () => ({
             acl,
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
         if (!acl.checkPermission("core", "create")) {
-            response.requestError({
-                failed: true,
-                error: "Access Denied",
-                errorKeyword: "accessDenied",
-                errorData: []
-            });
+            response.requestAccessDeniedError();
             return;
         }
         try {
             const formData = await req.processMultipart();
-            const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.images}`).replace(/\\/gm, "/");
+            const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}`).replace(/\\/gm, "/");
             try {
                 await fs.promises.access(root);
                 const statsSrc = await fs.lstat(root);
@@ -47,7 +42,7 @@ export default () => ({
                 return;
             }
             // Check permissions
-            if (!auth.checkStatus("admin")) {
+            if (!auth.statusAdmin()) {
                 response.unauthorizedError();
                 return;
             }

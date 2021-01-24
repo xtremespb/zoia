@@ -20,7 +20,7 @@ export default () => ({
                 return rep.code(204);
             }
             if (file.auth || file.admin) {
-                if ((file.auth && (!auth.getUser() || !auth.getUser()._id)) || (file.admin && !auth.checkStatus("admin"))) {
+                if ((file.auth && (!auth.getUser() || !auth.getUser()._id)) || (file.admin && !auth.statusAdmin())) {
                     rep.callNotFound();
                     return rep.code(204);
                 }

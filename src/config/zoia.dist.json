@@ -24,7 +24,8 @@
         "imagesBrowser": "/z3/core/images",
         "login": "/users/login",
         "logout": "/users/logout",
-        "publicFiles": "/files"
+        "publicFiles": "/files",
+        "publicImages": "/files/images"
     },
     "collections": {
         "files": "files",

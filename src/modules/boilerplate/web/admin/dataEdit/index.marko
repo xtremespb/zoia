@@ -19,7 +19,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
       <i class="mdi z3-ap-mdi-head mdi-dark mdi-test-tube"/>
     </span>&nbsp;${input.id === "new" ? out.global.i18n.t("add") : out.global.i18n.t("edit")}
   </h1>
-  <mform key=`${moduleConfig.id}EditForm` id=`${moduleConfig.id}EditForm` save={
+  <mform key=`${moduleConfig.id}EditForm` id=`${moduleConfig.id}EditForm` formType="formData" save={
     url: `/api/${moduleConfig.id}/edit/save`,
     extras: {
       id: input.id === "new" ? undefined : input.id
@@ -80,6 +80,21 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
         shared: true
       }
     ],
+    {
+      id: "attachments",
+      type: "file",
+      label: out.global.i18n.t("attachments"),
+      multiple: true,
+      buttonLabel: out.global.i18n.t("selectFiles")
+    },
+    {
+      id: "images",
+      type: "images",
+      label: out.global.i18n.t("images"),
+      multiple: true,
+      buttonLabel: out.global.i18n.t("selectImages"),
+      shared: true
+    },
     {
       id: "div1",
       type: "divider"

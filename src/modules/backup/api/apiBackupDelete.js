@@ -18,17 +18,12 @@ export default () => ({
             acl
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
         if (!acl.checkPermission("backup", "delete")) {
-            response.requestError({
-                failed: true,
-                error: "Access Denied",
-                errorKeyword: "accessDenied",
-                errorData: []
-            });
+            response.requestAccessDeniedError();
             return;
         }
         // Validate form
@@ -58,12 +53,7 @@ export default () => ({
             const result = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).deleteMany(query);
             // Check result
             if (!result || !result.result || !result.result.ok) {
-                response.requestError({
-                    failed: true,
-                    error: "Could not delete one or more items",
-                    errorKeyword: "deleteError",
-                    errorData: []
-                });
+                response.deleteError();
                 return;
             }
             // Send "success" result

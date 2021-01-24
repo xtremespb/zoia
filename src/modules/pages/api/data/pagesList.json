@@ -43,5 +43,5 @@
         "filename": 1,
         "dir": 1
     },
-    "search": ["filename", "title"]
+    "search": ["filename", "[language].title"]
 }

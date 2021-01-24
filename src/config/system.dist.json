@@ -92,7 +92,7 @@
     "directories": {
         "tmp": "build/tmp",
         "files": "data",
-        "images": "build/public/images",
+        "publicImages": "build/public/files/images",
         "publicFiles": "build/public/files"
     }
 }

@@ -3,8 +3,8 @@
     "database": {
         "collections": {
             "boilerplate": {
-                "indexesAsc": ["id", "title"],
-                "indexesDesc": ["id", "title"]
+                "indexesAsc": ["id", "[language].title"],
+                "indexesDesc": ["id", "[language].title"]
             }
         }
     },

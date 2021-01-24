@@ -319,7 +319,7 @@ Images Input
   </label>
   <div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
     <label class="file-label">
-      <input class="file-input" type="file" multiple=state.item.multiple on-change("onFileInputChange") data-id=state.item.id id=`${input.id}_${state.item.id}`/>
+      <input class="file-input" type="file" multiple=state.item.multiple on-change("onImageInputChange") data-id=state.item.id id=`${input.id}_${state.item.id}`/>
       <a class="file-cta" key=`mf_ctl_${state.item.id}` tabindex="0">
         <span class="file-icon">
           <i class="mdi mdi-upload"/>

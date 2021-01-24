@@ -246,7 +246,7 @@ export default class {
         return data;
     }
 
-    getFiles() {
+    getFiles(type = "file") {
         const formData = this.data && this.data.fields && this.data.fields.__form ? JSON.parse(this.data.fields.__form) : null;
         if (!formData) {
             return [];
@@ -259,7 +259,7 @@ export default class {
                         const item = formData[part][i];
                         if (item && typeof item === "object" && Array.isArray(item)) {
                             (item || []).map(ai => {
-                                if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
+                                if (ai && typeof ai === "object" && ai.type === type && ai.upload) {
                                     delete ai.upload;
                                     delete ai.type;
                                     files.push(ai);
@@ -276,7 +276,7 @@ export default class {
                 const item = formData[i];
                 if (item && typeof item === "object" && Array.isArray(item)) {
                     (item || []).map(ai => {
-                        if (ai && typeof ai === "object" && ai.type === "file" && ai.upload) {
+                        if (ai && typeof ai === "object" && ai.type === type && ai.upload) {
                             delete ai.upload;
                             delete ai.type;
                             files.push(ai);
@@ -327,7 +327,7 @@ export default class {
         return data;
     }
 
-    extractFiles(data) {
+    extractFiles(data, type = "file") {
         const files = [];
         if (this.schemas.part) {
             this.parts.map(part => {
@@ -336,7 +336,7 @@ export default class {
                         const item = data[part][i];
                         if (item && typeof item === "object" && Array.isArray(item)) {
                             (item || []).map(ai => {
-                                if (ai && typeof ai === "object" && ai.type === "file") {
+                                if (ai && typeof ai === "object" && ai.type === type) {
                                     files.push(ai.id);
                                 }
                             });
@@ -350,7 +350,7 @@ export default class {
                 const item = data[i];
                 if (item && typeof item === "object" && Array.isArray(item)) {
                     (item || []).map(ai => {
-                        if (ai && typeof ai === "object" && ai.type === "file") {
+                        if (ai && typeof ai === "object" && ai.type === type) {
                             files.push(ai.id);
                         }
                     });

@@ -10,7 +10,7 @@ export default () => ({
             acl
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
@@ -18,7 +18,7 @@ export default () => ({
         const dataEditRoot = cloneDeep(dataEdit.root);
         dataEditRoot.required = ["id"];
         const extendedValidation = new req.ExtendedValidation(req.body, dataEditRoot);
-        const extendedValidationResult = extendedValidation.validate();
+        const extendedValidationResult = await extendedValidation.validate();
         if (extendedValidationResult.failed) {
             log.error(null, extendedValidationResult.message);
             response.validationError(extendedValidationResult);
@@ -29,22 +29,12 @@ export default () => ({
                 _id: req.body.id
             });
             if (!data) {
-                response.requestError({
-                    failed: true,
-                    error: "Database error",
-                    errorKeyword: "dataNotFound",
-                    errorData: []
-                });
+                response.databaseError("dataNotFound");
                 return;
             }
             // Check permission
             if (!acl.checkPermission("registry", "read", data._id)) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
+                response.requestAccessDeniedError();
                 return;
             }
             const valueData = cloneDeep(data);

@@ -39,6 +39,33 @@ export default class {
             });
     }
 
+    requestAccessDeniedError() {
+        this.requestError({
+            failed: true,
+            error: "Access Denied",
+            errorKeyword: "accessDenied",
+            errorData: []
+        });
+    }
+
+    deleteError() {
+        this.requestError({
+            failed: true,
+            error: "Could not delete one or more items",
+            errorKeyword: "deleteError",
+            errorData: []
+        });
+    }
+
+    databaseError(errorKeyword = "databaseError") {
+        this.requestError({
+            failed: true,
+            error: "Database error",
+            errorKeyword,
+            errorData: []
+        });
+    }
+
     unauthorizedError(invalidUsernameOrPassword) {
         this.rep.code(401).type("application/json")
             .send({

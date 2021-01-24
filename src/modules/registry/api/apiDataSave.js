@@ -24,7 +24,7 @@ export default () => ({
             acl
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
@@ -33,7 +33,7 @@ export default () => ({
         // Initialize validator
         const extendedValidation = new req.ExtendedValidation(req.body, dataEditRoot);
         // Perform validation
-        const extendedValidationResult = extendedValidation.validate();
+        const extendedValidationResult = await extendedValidation.validate();
         // Check if there are any validation errors
         if (extendedValidationResult.failed) {
             log.error(null, extendedValidationResult.message);
@@ -58,12 +58,7 @@ export default () => ({
             }
             // Check permission
             if (!acl.checkPermission("registry", "create") || !acl.checkPermission("registry", "update", data._id)) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
+                response.requestAccessDeniedError();
                 return;
             }
             // Update database
@@ -79,12 +74,7 @@ export default () => ({
             });
             // Check result
             if (!update || !update.result || !update.result.ok) {
-                response.requestError({
-                    failed: true,
-                    error: "Database error",
-                    errorKeyword: "databaseError",
-                    errorData: []
-                });
+                response.databaseError();
                 return;
             }
             // Return "success" result

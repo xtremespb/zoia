@@ -18,7 +18,7 @@ export default () => ({
             acl
         } = req.zoia;
         // Check permissions
-        if (!auth.checkStatus("admin")) {
+        if (!auth.statusAdmin()) {
             response.unauthorizedError();
             return;
         }
@@ -26,7 +26,7 @@ export default () => ({
         const formData = await req.processMultipart();
         const extendedValidation = new req.ExtendedValidation(formData, pageEdit.root, pageEdit.part, pageEdit.files, Object.keys(req.zoiaConfig.languages));
         // Perform validation
-        const extendedValidationResult = extendedValidation.validate();
+        const extendedValidationResult = await extendedValidation.validate();
         // Check if there are any validation errors
         if (extendedValidationResult.failed) {
             log.error(null, extendedValidationResult.message);
@@ -41,12 +41,7 @@ export default () => ({
             const data = extendedValidation.filterDataFiles(dataRaw);
             // Check permission
             if ((!id && !acl.checkPermission("pages", "create")) || !acl.checkPermission("pages", "update", data.filename)) {
-                response.requestError({
-                    failed: true,
-                    error: "Access Denied",
-                    errorKeyword: "accessDenied",
-                    errorData: []
-                });
+                response.requestAccessDeniedError();
                 return;
             }
             // Check for path duplicates
@@ -132,12 +127,7 @@ export default () => ({
             });
             // Check result
             if (!update || !update.result || !update.result.ok) {
-                response.requestError({
-                    failed: true,
-                    error: "Database error",
-                    errorKeyword: "databaseError",
-                    errorData: []
-                });
+                response.databaseError();
                 return;
             }
             // Return "success" result
