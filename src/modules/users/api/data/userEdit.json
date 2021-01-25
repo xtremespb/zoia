@@ -40,23 +40,31 @@
                 "uniqueItems": true
             },
             "password": {
-                "type": "string",
-                "anyOf": [{
-                    "minLength": 8,
-                    "maxLength": 64
+                "oneOf": [{
+                    "type": "string",
+                    "anyOf": [{
+                        "minLength": 8,
+                        "maxLength": 64
+                    }, {
+                        "minLength": 0,
+                        "maxLength": 0
+                    }]
                 }, {
-                    "minLength": 0,
-                    "maxLength": 0
+                    "type": "null"
                 }]
             },
             "passwordRepeat": {
-                "type": "string",
-                "anyOf": [{
-                    "minLength": 8,
-                    "maxLength": 64
+                "oneOf": [{
+                    "type": "string",
+                    "anyOf": [{
+                        "minLength": 8,
+                        "maxLength": 64
+                    }, {
+                        "minLength": 0,
+                        "maxLength": 0
+                    }]
                 }, {
-                    "minLength": 0,
-                    "maxLength": 0
+                    "type": "null"
                 }]
             }
         },

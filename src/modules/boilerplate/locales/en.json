@@ -21,5 +21,6 @@
     "couldNotLoadDataFromServer": "Could not load data from server",
     "mFormErr.dataNotFound": "Data not found on server",
     "mFormErr.anyOf": "Invalid length",
+    "mFormErr.oneOf": "Invalid length",
     "mFormErr.alreadyExists": "Already exists"
 }
