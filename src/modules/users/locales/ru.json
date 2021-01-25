@@ -20,6 +20,8 @@
     "admin": "Администратор",
     "login": "Авторизация",
     "authorized": "Успешная авторизация, осуществляется переход…",
+    "mFormErr.anyOf": "Неверная длина",
+    "mFormErr.oneOf": "Неверная длина",
     "mFormErr.userAlreadyExists": "Пользователь уже существует в системе",
     "mFormErr.emailAlreadyExists": "E-mail уже существует в системе",
     "mFormErr.userNotFound": "Пользователь не найден в системе",

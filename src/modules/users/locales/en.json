@@ -20,6 +20,8 @@
     "admin": "Administrator",
     "login": "Log In",
     "authorized": "Authorized, redirecting…",
+    "mFormErr.anyOf": "Invalid length",
+    "mFormErr.oneOf": "Invalid length",
     "mFormErr.userAlreadyExists": "User already exists in the database",
     "mFormErr.emailAlreadyExists": "E-mail already exists in the database",
     "mFormErr.userNotFound": "User not found in the database",

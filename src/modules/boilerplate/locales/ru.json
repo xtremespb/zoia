@@ -19,5 +19,6 @@
     "couldNotLoadDataFromServer": "Ошибка во время загрузки данных с сервера",
     "mFormErr.dataNotFound": "Данные не найдены на сервере",
     "mFormErr.anyOf": "Неверная длина",
+    "mFormErr.oneOf": "Неверная длина",
     "mFormErr.alreadyExists": "Запись уже существует"
 }
