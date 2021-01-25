@@ -1,3 +1,10 @@
+## [3.1.30](https://github.com/xtremespb/zoia3/compare/v3.1.29...v3.1.30) (2021-01-25)
+
+
+### Bug Fixes
+
+* wrong path in generated server configuration files ([23aec22](https://github.com/xtremespb/zoia3/commit/23aec2285f3574b468c981886dba4fd2f1d582c6))
+
 ## [3.1.29](https://github.com/xtremespb/zoia3/compare/v3.1.28...v3.1.29) (2021-01-11)
 
 
