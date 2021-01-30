@@ -8,10 +8,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      GITHUB_BRANCH: ${{ github.event.after }}  
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Get branch info
+      run: |
+       branch = ${{ github.event.after }}
+       echo $branch
+       message = git log --format=%B -n 1 ${{ github.event.after }}
+       echo $message
     - name: Set up Python 
       uses: actions/setup-python@v2
       with:
@@ -22,7 +29,7 @@ jobs:
         python -m pip install requests
         
     - name: Send commit and trigger tests on Gitlab
-      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py ${{ github.event.after }}
+      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
