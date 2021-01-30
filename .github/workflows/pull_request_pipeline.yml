@@ -4,7 +4,11 @@ name: CI for pull requests, triggers tests in GitLab, but no release and no depl
 
 on:
   pull_request
-  
+env:
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+  TITLE: ${{ github.event.pull_request.title }}  
+  BODY: ${{ github.event.pull_request.body }}
+  HEAD: ${{ github.event.pull_request.head.sha }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,6 +30,4 @@ jobs:
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
-        GITLAB_BRANCH: "pull_request"   
-        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}  
-        COMMIT_BRANCH: ${{GITHUB_REF##*/}}  
+        GITLAB_BRANCH: "pull_request"
