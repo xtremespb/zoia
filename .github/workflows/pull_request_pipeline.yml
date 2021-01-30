@@ -7,10 +7,11 @@ on:
   
 jobs:
   build:
-    runs-on: ubuntu-latest
-    env:
-      COMMIT_MESSAGE: ${{ github.event.head_commit.message }}  
+    runs-on: ubuntu-latest 
     steps:
+    - name: set the head commit message as env
+      run: |
+          echo '::set-env name=COMMIT_MESSAGE::${{ github.event.head_commit.message }}'
     - name: Checkout
       uses: actions/checkout@v2
     - name: Set up Python 
