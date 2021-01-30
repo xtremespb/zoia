@@ -14,9 +14,8 @@ jobs:
       uses: actions/checkout@v2
     - name: Show pull request
       env: 
-        PR_VAR: ${{ github.event.pull_request.body}}  
-      run: |
-        echo ${{PR_VAR}}  
+        PR_VAR: ${{ github.event.pull_request.body }}  
+      run: | 
         echo ${PR_VAR}  
         echo $PR_VAR
     - name: Set up Python 
