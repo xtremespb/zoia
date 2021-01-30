@@ -8,10 +8,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+     PR_VAR: ${{ github.event.pull_request.body}}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Show PR
+      run: |
+       echo $PR_VAR
+       echo ${PR_VAR}  
     - name: Set up Python 
       uses: actions/setup-python@v2
       with:
@@ -27,5 +32,3 @@ jobs:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
         GITLAB_BRANCH: "pull_request"   
-        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}  
-        COMMIT_BRANCH: ${{GITHUB_REF##*/}}  
