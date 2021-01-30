@@ -22,7 +22,10 @@ jobs:
         python -m pip install requests
         
     - name: Send commit and trigger tests on Gitlab
-      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py "pull_request" ${{ github.event.head_commit.message }}
+      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
+        GITLAB_BRANCH: "pull_request"   
+        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}  
+        COMMIT_BRANCH: ${{GITHUB_REF##*/}}  
