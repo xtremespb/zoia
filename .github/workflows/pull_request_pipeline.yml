@@ -17,6 +17,9 @@ jobs:
        readonly local last_commit_log=$(git log -2 --pretty=format:"%s")
        echo "last commit log: $last_commit_log"
        git branch
+       readonly local last_commit_log_branch=$(git log master..parameters_for_GitLab -2 --pretty=format:"%s")
+       echo "last commit log branch: $last_commit_log_branch"
+
     - name: Set up Python 
       uses: actions/setup-python@v2
       with:
