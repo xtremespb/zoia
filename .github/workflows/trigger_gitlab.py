@@ -13,7 +13,7 @@ print("GitLab branch to send commit to = " + GITLAB_BRANCH)
 GITHUB_BRANCH = os.environ.get('GITHUB_HEAD_REF')
 print("Commit branch to be cloned in GitLab = " + GITHUB_BRANCH)
 
-COMMIT_MESSAGE = os.environ.get('github.event.head_commit.message')
+COMMIT_MESSAGE = sys.argv[1]
 print("Commit message to send to GitLab: " + COMMIT_MESSAGE)
 
 
