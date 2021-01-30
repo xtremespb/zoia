@@ -1,0 +1,28 @@
+# Triggers pipeline in GitLab's branch "pull_request" when pull request is created on GitHub
+
+name: CI for pull requests, triggers tests in GitLab, but no release and no deployment to production
+
+on:
+  pull_request
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up Python 
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install requests
+        
+    - name: Send commit and trigger tests on Gitlab
+      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py "pull_request" ${{ github.event.head_commit.message }}
+      env:
+        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
