@@ -8,7 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      COMMIT_MESSAGE: ${{ github.event.head_commit.message }}  
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -22,7 +23,7 @@ jobs:
         python -m pip install requests
         
     - name: Send commit and trigger tests on Gitlab
-      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py ${{ github.event.head_commit.message }}
+      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py 
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
