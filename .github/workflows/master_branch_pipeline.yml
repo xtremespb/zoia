@@ -22,7 +22,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install requests
         
-    - name: Trigger gitlab
+    - name: Send commit and trigger tests on Gitlab
       run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py "master" ${{ github.event.head_commit.message }}
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
@@ -43,7 +43,7 @@ jobs:
      - name: Install
        run: npm ci
 
-     - name: Release
+     - name: Update Zoia version using semantic versioning plugin
        run: |
          npm install @semantic-release/git @semantic-release/changelog -D 
          npx semantic-release --debug --plugins "@semantic-release/commit-analyzer","@semantic-release/release-notes-generator","@semantic-release/changelog","@semantic-release/npm","@semantic-release/git"
@@ -65,7 +65,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install requests
         
-    - name: Trigger gitlab
+    - name: Trigger deployment of Demo Zoia in Gitlab
       run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py "deploy_zoia_to_prod" "Deploying Demo Zoia to production after successfully testing this commit ${{ github.event.head_commit.message }}"
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
