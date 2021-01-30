@@ -23,10 +23,13 @@ jobs:
         python -m pip install requests
         
     - name: Send commit and trigger tests on Gitlab
-      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py "master" ${{ github.event.head_commit.message }}
+      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py 
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-        GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}  
+        GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
+        GITLAB_BRANCH: "pull_request"   
+        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}  
+        COMMIT_BRANCH: "master"   
           
   release:
     runs-on: ubuntu-latest
@@ -66,7 +69,10 @@ jobs:
         python -m pip install requests
         
     - name: Trigger deployment of Demo Zoia in Gitlab
-      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py "deploy_zoia_to_prod" "Deploying Demo Zoia to production after successfully testing this commit ${{ github.event.head_commit.message }}"
+      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}    
+        GITLAB_BRANCH: "deploy_zoia_to_prod"   
+        COMMIT_MESSAGE: "Deploying Demo Zoia to production after successfully testing pull request"  
+        COMMIT_BRANCH: "master" 
