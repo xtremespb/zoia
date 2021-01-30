@@ -4,7 +4,6 @@ import time;
 import sys, os;
 
 # send GitHub commit to GitLab, thereby triggering pipeline
-
 GITLAB_TOKEN = os.environ.get('GITLAB_TOKEN')
 BRANCH = sys.argv[1]
 COMMIT_MESSAGE = sys.argv[2]
