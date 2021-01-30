@@ -12,6 +12,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: get commit message
+      run: |
+       echo ::set-env name=commitmsg::$(git log --format=%B -n 1 ${{ github.event.after }})
+    - name: show commit message
+      run : echo $commitmsg
     - name: Set up Python 
       uses: actions/setup-python@v2
       with:
