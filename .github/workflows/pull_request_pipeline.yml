@@ -7,11 +7,21 @@ on:
   
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    env:
+      commitmsg: ${{ github.event.head_commit.message }}
+    runs-on: ubuntu-latest 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: set the head commit message as env
+      run: |
+       git branch
+       # Get last commit message
+       readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
+       echo "last commit log: $last_commit_log"
+    - name: get commit message
+      run: |
+        echo Commit MSG = ${{ env.commitmsg }}
     - name: Set up Python 
       uses: actions/setup-python@v2
       with:
@@ -22,10 +32,8 @@ jobs:
         python -m pip install requests
         
     - name: Send commit and trigger tests on Gitlab
-      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py
+      run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py 
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
-        GITLAB_BRANCH: "pull_request"   
-        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}  
-        COMMIT_BRANCH: ${{GITHUB_REF##*/}}  
+        GITLAB_BRANCH: "pull_request"
