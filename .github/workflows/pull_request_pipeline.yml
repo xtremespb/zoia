@@ -9,13 +9,13 @@ jobs:
   build:
     runs-on: ubuntu-latest 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: set the head commit message as env
       run: |
        # Get last commit message
        readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
        echo "last commit log: $last_commit_log"
-    - name: Checkout
-      uses: actions/checkout@v2
     - name: Set up Python 
       uses: actions/setup-python@v2
       with:
