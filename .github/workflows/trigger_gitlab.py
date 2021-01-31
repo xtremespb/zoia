@@ -48,7 +48,7 @@ def createCommitInGitLab(data):
 def triggerGitlab():
   # send GitHub commit to GitLab, thereby triggering pipeline
   create_commit_response = createCommitInGitLab(createDataForCommitRequest())
-  print("Response to posting commit to GitLab: " + create_commit_response)
+  print("Response to posting commit to GitLab: " + create_commit_response.text)
   commit_id = json.loads(post_commit_response.text)['id']
   print("Commit id in GitLab: " + commit_id)
   
