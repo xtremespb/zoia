@@ -12,6 +12,7 @@ GITLAB_CREATE_COMMIT_URL = 'https://gitlab.com/api/v4/projects/19934840/reposito
 GITLAB_COMMIT_TOKEN = os.environ.get('GITLAB_CREATE_COMMIT')
 GITLAB_BRANCH = os.environ.get('GITLAB_BRANCH')
 print("GitLab branch to send commit to = " + GITLAB_BRANCH)
+GITHUB_COMMIT_MESSAGE = os.environ.get('COMMIT_MESSAGE')
 
 ####################################
 ### functions#######################
@@ -20,14 +21,14 @@ def createFileContentForGitLab():
  if GITLAB_BRANCH == PULL_REQUEST :
   return os.environ.get('PULL_REQUEST_NUMBER')
  else :
-  return os.environ.get('PULL_REQUEST_TITLE')
+  return os.environ.get('GITHUB_COMMIT_MESSAGE')
 
 
 def createCommitMessageForGitlab():
  if GITLAB_BRANCH == PULL_REQUEST :
   return "Pull request number " + os.environ.get('PULL_REQUEST_NUMBER') + " in GitHub. Title: " + os.environ.get('PULL_REQUEST_TITLE')
  else :
-  return os.environ.get('PULL_REQUEST_TITLE')
+  return "GitHub message: " + os.environ.get('GITHUB_COMMIT_MESSAGE')
   
 def createDataForCommitRequest():
   fileContent = createFileContentForGitLab()
@@ -40,7 +41,7 @@ def createDataForCommitRequest():
 def createCommitInGitLab(data):
   print("Creating commit for GitLab")
   HEADERS = {'PRIVATE-TOKEN' : str(GITLAB_COMMIT_TOKEN), 'Content-type': 'application/json'}
-  print(json.dumps(HEADERS))
+  
   # send POST request to create new commit in GitLab
   return requests.post(GITLAB_CREATE_COMMIT_URL, json=data, headers=HEADERS)
  
