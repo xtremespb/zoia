@@ -25,7 +25,7 @@ def createFileContentForGitLab():
 
 def createCommitMessageForGitlab():
  if GITLAB_BRANCH == PULL_REQUEST :
-  return "Pull request number " + os.environ.get('PULL_REQUEST_NUMBER') + "in GitHub. Title: " + os.environ.get('PULL_REQUEST_TITLE')
+  return "Pull request number " + os.environ.get('PULL_REQUEST_NUMBER') + " in GitHub. Title: " + os.environ.get('PULL_REQUEST_TITLE')
  else :
   return os.environ.get('PULL_REQUEST_TITLE')
   
@@ -49,7 +49,7 @@ def triggerGitlab():
   # send GitHub commit to GitLab, thereby triggering pipeline
   create_commit_response = createCommitInGitLab(createDataForCommitRequest())
   print("Response to posting commit to GitLab: " + create_commit_response.text)
-  commit_id = json.loads(post_commit_response.text)['id']
+  commit_id = json.loads(create_commit_response.text)['id']
   print("Commit id in GitLab: " + commit_id)
   
 #####################################################################################
