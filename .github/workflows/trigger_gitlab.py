@@ -9,7 +9,7 @@ import sys, os;
 ####################################
 PULL_REQUEST = "pull_request";
 GITLAB_CREATE_COMMIT_URL = 'https://gitlab.com/api/v4/projects/19934840/repository/commits'
-GITLAB_TOKEN = os.environ.get('GITLAB_CREATE_COMMIT')
+GITLAB_COMMIT_TOKEN = os.environ.get('GITLAB_CREATE_COMMIT')
 GITLAB_BRANCH = os.environ.get('GITLAB_BRANCH')
 print("GitLab branch to send commit to = " + GITLAB_BRANCH)
 
@@ -39,7 +39,7 @@ def createDataForCommitRequest():
 
 def createCommitInGitLab(data):
   print("Creating commit for GitLab")
-  HEADERS = {'PRIVATE-TOKEN' : str(GITLAB_TOKEN), 'Content-type': 'application/json'}
+  HEADERS = {'PRIVATE-TOKEN' : str(GITLAB_COMMIT_TOKEN), 'Content-type': 'application/json'}
   print(json.dumps(HEADERS))
   # send POST request to create new commit in GitLab
   return requests.post(GITLAB_CREATE_COMMIT_URL, json=data, headers=HEADERS)
