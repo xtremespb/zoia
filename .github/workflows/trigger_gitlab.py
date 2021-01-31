@@ -34,7 +34,7 @@ def createDataForCommitRequest():
   action = {"action": "update", "file_path": "from_GitHub.txt", "content": fileContent}
   commit_message = createCommitMessageForGitlab()
   data = {'commit_message': commit_message, 'branch': GITLAB_BRANCH, 'actions' : [action]}
-  print("Data to send to GitLab: " + data)
+  print("Data to send to GitLab: " + json.dumps(data))
   return data
 
 def createCommitInGitLab(data):
