@@ -3,6 +3,9 @@ import json;
 import time;
 import sys, os;
 
+# constants
+PULL_REQUEST = "pull_request";
+
 # send GitHub commit to GitLab, thereby triggering pipeline
 
 GITLAB_TOKEN = os.environ.get('GITLAB_TOKEN')
@@ -10,10 +13,11 @@ GITLAB_TOKEN = os.environ.get('GITLAB_TOKEN')
 GITLAB_BRANCH = os.environ.get('GITLAB_BRANCH')
 print("GitLab branch to send commit to = " + GITLAB_BRANCH)
 
-COMMIT_MESSAGE = os.environ.get('COMMIT_MESSAGE')
-print("Commit message to send to GitLab: " + COMMIT_MESSAGE)
+if GITLAB_BRANCH == PULL_REQUEST :
+  COMMIT_MESSAGE = os.environ.get('PULL_REQUEST_TITLE')
+  print("Commit message to send to GitLab: " + COMMIT_MESSAGE)
 
-GITHUB_BRANCH = os.environ.get('COMMIT_BRANCH')
-print("Commit branch to be cloned in GitLab = " + GITHUB_BRANCH)
+  PULL_REQUEST_NUMBER = os.environ.get('PULL_REQUEST_NUMBER')
+  print("Pull request to be cloned in GitLab is number " + PULL_REQUEST_NUMBER)
 
 

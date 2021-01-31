@@ -4,6 +4,12 @@ name: CI for pull requests, triggers tests in GitLab, but no release and no depl
 
 on:
   pull_request
+env:
+  PULL_REQUEST_TITLE: ${{github.event.pull_request.title}} 
+  PULL_REQUEST_NUMBER: ${{github.event.pull_request.number}}  
+  GITLAB_BRANCH: "pull_request"  
+  GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+  GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
   
 jobs:
   build:
@@ -23,9 +29,3 @@ jobs:
         
     - name: Send commit and trigger tests on Gitlab
       run: python /home/runner/work/zoia/zoia/.github/workflows/trigger_gitlab.py
-      env:
-        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-        GITLAB_READ_TOKEN: ${{ secrets.GITLAB_READ_TOKEN }}
-        GITLAB_BRANCH: "pull_request"   
-        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}  
-        COMMIT_BRANCH: ${{GITHUB_REF##*/}}  
