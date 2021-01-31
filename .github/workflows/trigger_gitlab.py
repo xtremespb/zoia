@@ -3,29 +3,16 @@ import json;
 import time;
 import sys, os;
 
-# constants
-PULL_REQUEST = "pull_request";
-GITLAB_CREATE_COMMIT_URL = 'https://gitlab.com/api/v4/projects/19934840/repository/commits'
-GITLAB_TOKEN = os.environ.get('GITLAB_TOKEN')
-GITLAB_BRANCH = os.environ.get('GITLAB_BRANCH')
-print("GitLab branch to send commit to = " + GITLAB_BRANCH)
-
-# send GitHub commit to GitLab, thereby triggering pipeline
-create_commit_response = create_commit_in_GitLab(createDataForCommitRequest())
-print("Response to posting commit to GitLab: " + create_commit_response)
-commit_id = json.loads(post_commit_response.text)['id']
-print("Commit id in GitLab: " + commit_id)
-
-#################################################################
-#################################################################
-# functions
+####################################
+### functions#######################
+####################################
 def createDataForCommitRequest():
   fileContent = createFileContentForGitLab()
   action = {"action": "update", "file_path": "from_GitHub.txt", "content": fileContent}
   commit_message = createCommitMessageForGitlab()
-  DATA = {'commit_message': commit_message, 'branch': GITLAB_BRANCH, 'actions' : [action]}
-  print("Data to send to GitLab: " + DATA)
-  return DATA
+  data = {'commit_message': commit_message, 'branch': GITLAB_BRANCH, 'actions' : [action]}
+  print("Data to send to GitLab: " + data)
+  return data
 
 def createCommitMessageForGitlab():
  if GITLAB_BRANCH == PULL_REQUEST :
@@ -39,11 +26,32 @@ def createFileContentForGitLab():
  else :
   return os.environ.get('PULL_REQUEST_TITLE')
  
-
-def create_commit_in_GitLab(data):
+def createCommitInGitLab(data):
   print("Creating commit for GitLab")
   HEADERS = {'PRIVATE-TOKEN' : str(GITLAB_TOKEN), 'Content-type': 'application/json'}
   
   # send POST request to create new commit in GitLab
   return requests.post(GITLAB_CREATE_COMMIT_URL, data=data, headers=HEADERS)
+
+def initConstants():
+  PULL_REQUEST = "pull_request";
+  GITLAB_CREATE_COMMIT_URL = 'https://gitlab.com/api/v4/projects/19934840/repository/commits'
+  GITLAB_TOKEN = os.environ.get('GITLAB_TOKEN')
+  GITLAB_BRANCH = os.environ.get('GITLAB_BRANCH')
+  print("GitLab branch to send commit to = " + GITLAB_BRANCH)
+
+def triggerGitlab():
+  initConstants()
+  # send GitHub commit to GitLab, thereby triggering pipeline
+  create_commit_response = createCommitInGitLab(createDataForCommitRequest())
+  print("Response to posting commit to GitLab: " + create_commit_response)
+  commit_id = json.loads(post_commit_response.text)['id']
+  print("Commit id in GitLab: " + commit_id)
   
+#####################################################################################
+#####################################################################################
+if __name__ == "__main__":
+  triggerGitlab()
+
+
+
