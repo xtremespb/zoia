@@ -40,7 +40,7 @@ def createDataForCommitRequest():
 def createCommitInGitLab(data):
   print("Creating commit for GitLab")
   HEADERS = {'PRIVATE-TOKEN' : str(GITLAB_TOKEN), 'Content-type': 'application/json'}
-  
+  print(json.dumps(HEADERS))
   # send POST request to create new commit in GitLab
   return requests.post(GITLAB_CREATE_COMMIT_URL, json=data, headers=HEADERS)
  
