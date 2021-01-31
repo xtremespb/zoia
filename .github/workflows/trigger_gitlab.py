@@ -24,14 +24,14 @@ def createFileContentForGitLab():
  if GITLAB_BRANCH == PULL_REQUEST :
   return os.environ.get('PULL_REQUEST_NUMBER')
  else :
-  return os.environ.get('GITHUB_COMMIT_MESSAGE')
+  return GITHUB_COMMIT_MESSAGE
 
 
 def createCommitMessageForGitlab():
  if GITLAB_BRANCH == PULL_REQUEST :
   return "Pull request number " + os.environ.get('PULL_REQUEST_NUMBER') + " in GitHub. Title: " + os.environ.get('PULL_REQUEST_TITLE')
  else :
-  return "GitHub message: " + os.environ.get('GITHUB_COMMIT_MESSAGE')
+  return "GitHub message: " + GITHUB_COMMIT_MESSAGE
   
 def createDataForCommitRequest():
   fileContent = createFileContentForGitLab()
