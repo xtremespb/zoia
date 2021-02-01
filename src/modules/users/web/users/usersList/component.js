@@ -9,6 +9,7 @@ module.exports = class {
     }
 
     onMount() {
+        this.notify = this.getComponent("usersList_mnotify");
         this.state.processValue = (id, value, column, row) => {
             switch (column) {
             case "status":
@@ -24,8 +25,8 @@ module.exports = class {
                 return value;
             }
         };
-        if (this.input.successNotification) {
-            this.getComponent(`usersList_mnotify`).func.show(this.i18n.t("dataSaveSuccess"), "is-success");
+        if (this.input.successNotification && this.notify && this.notify.func) {
+            this.notify.func.show(this.i18n.t("dataSaveSuccess"), "is-success");
         }
     }
 

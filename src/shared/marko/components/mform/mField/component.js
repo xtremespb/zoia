@@ -175,40 +175,42 @@ module.exports = class {
             if (!document.getElementById(`${this.input.id}_${this.state.item.id}_ace`)) {
                 return;
             }
-            [this.aceEditorElement] = document.getElementById(`${this.input.id}_${this.state.item.id}_ace`).getElementsByTagName("div");
-            this.aceEditor = ace.edit(this.aceEditorElement);
-            const aceDefaults = {
-                mode: "ace/mode/html",
-                theme: "ace/theme/chrome",
-                fontSize: "16px",
-                wrap: true,
-                useSoftTabs: true,
-                tabSize: 2
-            };
-            this.aceEditor.setOptions(this.state.item.aceOptions ? {
-                ...aceDefaults,
-                ...this.state.item.aceOptions
-            } : aceDefaults);
-            this.aceEditor.getSession().on("change", () => {
-                const value = this.aceEditor.getSession().getValue();
-                this.emit("value-change", {
-                    type: "input",
-                    id: this.state.item.id,
-                    value
+            setTimeout(() => {
+                [this.aceEditorElement] = document.getElementById(`${this.input.id}_${this.state.item.id}_ace`).getElementsByTagName("div");
+                this.aceEditor = ace.edit(this.aceEditorElement);
+                const aceDefaults = {
+                    mode: "ace/mode/html",
+                    theme: "ace/theme/chrome",
+                    fontSize: "16px",
+                    wrap: true,
+                    useSoftTabs: true,
+                    tabSize: 2
+                };
+                this.aceEditor.setOptions(this.state.item.aceOptions ? {
+                    ...aceDefaults,
+                    ...this.state.item.aceOptions
+                } : aceDefaults);
+                this.aceEditor.getSession().on("change", () => {
+                    const value = this.aceEditor.getSession().getValue();
+                    this.emit("value-change", {
+                        type: "input",
+                        id: this.state.item.id,
+                        value
+                    });
                 });
+                // Remove annotations, e.g.
+                // "Non-space characters found without seeing a doctype first. Expected e.g. <!DOCTYPE html>."
+                this.aceEditor.getSession().on("changeAnnotation", () => {
+                    const annotations = this.aceEditor.getSession().getAnnotations();
+                    const annotationsFiltered = annotations.filter(a => a && !a.text.match(/DOCTYPE html/));
+                    if (annotations.length > annotationsFiltered.length) {
+                        this.aceEditor.getSession().setAnnotations(annotationsFiltered);
+                    }
+                });
+                // if (this.state.item.wysiwyg) {
+                //     await this.initCkEditor();
+                // }
             });
-            // Remove annotations, e.g.
-            // "Non-space characters found without seeing a doctype first. Expected e.g. <!DOCTYPE html>."
-            this.aceEditor.getSession().on("changeAnnotation", () => {
-                const annotations = this.aceEditor.getSession().getAnnotations();
-                const annotationsFiltered = annotations.filter(a => a && !a.text.match(/DOCTYPE html/));
-                if (annotations.length > annotationsFiltered.length) {
-                    this.aceEditor.getSession().setAnnotations(annotationsFiltered);
-                }
-            });
-            // if (this.state.item.wysiwyg) {
-            //     await this.initCkEditor();
-            // }
             break;
         }
         this.emit("settled");

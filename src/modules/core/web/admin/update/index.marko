@@ -6,10 +6,10 @@
     <progress class="progress is-danger" max="100"/>
   </if>
   <else>
-    <button class="button" on-click("onRebuildClick")>${out.global.i18n.t("rebuild")}</button>
+    <button class="button" on-click("onUpdateClick")>${out.global.i18n.t("update")}</button>
   </else>
 </div>
-<mconfirm key="z3_ap_ad_rebuildConfirm" on-confirm("onRebuildConfirm")/>
+<mconfirm key="z3_ap_ad_updateConfirm" on-confirm("onUpdateConfirm")/>
 <mnotify key="z3_ap_ad_mnotify"/>
 <status key="z3_ap_ad_status"/>
 <spinner key="z3_ap_ad_spinner"/>

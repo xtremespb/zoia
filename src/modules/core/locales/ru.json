@@ -62,5 +62,6 @@
     "production": "production",
     "development": "development",
     "pid": "ID процесса",
-    "setupAll": "Запуск установочных скриптов..."
+    "setupAll": "Запуск установочных скриптов...",
+    "update": "Обновление"
 }

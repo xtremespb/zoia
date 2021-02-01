@@ -33,16 +33,12 @@ export default async (zoia, test, page, userData) => {
         zoia.log.step("Saving");
         await page.click("#userEditForm_btnSave");
         zoia.log.step("Waiting for the table to load");
-        await page.waitForSelector(".z3-ap-head-thin", {
-            visible: true,
-            timeout: 15000
-        });
         await page.waitForSelector(`#users_btnEdit_${userData._id}`, {
-            visible: true,
             timeout: 15000
         });
         zoia.log.step("Clicking on Edit button");
         await page.click(`#users_btnEdit_${userData._id}`);
+        zoia.log.step("Waiting for a form to load");
         await page.waitForSelector("#userEditForm_email", {
             visible: true,
             timeout: 15000

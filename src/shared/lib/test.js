@@ -14,7 +14,8 @@ export default class {
         this.browser = await puppeteer.launch({
             headless: this.zoia.config.test.headless,
             args: this.zoia.config.test.args,
-            defaultViewport: this.zoia.config.test.defaultViewport
+            defaultViewport: this.zoia.config.test.defaultViewport,
+            devtools: true
         });
     }
 
