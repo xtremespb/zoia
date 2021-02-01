@@ -1,3 +1,11 @@
+## [3.1.31](https://github.com/xtremespb/zoia3/compare/v3.1.30...v3.1.31) (2021-02-01)
+
+
+### Bug Fixes
+
+* Marko 5 related fixed (ACE Editor, tests etc.) ([f8b336d](https://github.com/xtremespb/zoia3/commit/f8b336dd20f4a0edd0eb95f71917c73402493ed8))
+* Marko Update to 5.1.5 ([7e8a050](https://github.com/xtremespb/zoia3/commit/7e8a050c3eda8434c0b7217b9f4c0b8e3ae1c2d9))
+
 ## [3.1.30](https://github.com/xtremespb/zoia3/compare/v3.1.29...v3.1.30) (2021-01-25)
 
 
