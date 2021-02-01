@@ -1,3 +1,10 @@
+## [3.1.32](https://github.com/xtremespb/zoia3/compare/v3.1.31...v3.1.32) (2021-02-01)
+
+
+### Bug Fixes
+
+* images were not displaying properly in core/images ([a9cda66](https://github.com/xtremespb/zoia3/commit/a9cda66f19a88abd1a30955ced8979e50abc93bf))
+
 ## [3.1.31](https://github.com/xtremespb/zoia3/compare/v3.1.30...v3.1.31) (2021-02-01)
 
 
