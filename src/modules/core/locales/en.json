@@ -62,5 +62,7 @@
     "production": "production build",
     "development": "development build",
     "pid": "PID",
-    "setupAll": "Running ZOIA installation scripts..."
+    "setupAll": "Running ZOIA installation scripts...",
+    "warnUpdateText": "You are going to update your ZOIA version. This process may take a long time depending on your server configuration. When finished, the instance will be restarted. Please make sure that you have an access to your system console so you can check logs and restart manually when necessary.",
+    "update": "Update"
 }

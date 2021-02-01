@@ -1,13 +1,9 @@
-import Test from "../../../shared/lib/test";
-
-export default async (zoia, userData) => {
+export default async (test, zoia, userData) => {
     const result = {
         success: true,
-        page: null,
-        test: null
+        page: null
     };
     try {
-        const test = new Test(zoia);
         try {
             zoia.log.warn(`Auth test starting`);
             await test.init();
@@ -26,7 +22,6 @@ export default async (zoia, userData) => {
             });
             zoia.log.success(`Auth test success, running time: ${(test.getRunTimeMs() / 1000).toFixed(2)} second(s)`);
             result.page = authPage;
-            result.test = test;
         } catch (e) {
             zoia.log.error(`Auth test failed: ${e.message}`);
             result.success = false;

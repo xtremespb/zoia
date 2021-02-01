@@ -6,6 +6,7 @@ import {
     MongoClient
 } from "mongodb";
 import Log from "./log";
+import Utils from "./utils";
 
 (async () => {
     const zoia = {
@@ -40,6 +41,8 @@ import Log from "./log";
             });
             zoia.log.info(`Connected to Redis Server (${zoia.config.redis.host}:${zoia.config.redis.port})`);
         }
+        // Init Utils
+        zoia.utils = new Utils(zoia.config, zoia.modulesConfig, zoia.db, zoia.redis);
         // Load Modules
         zoia.modules.map(m => {
             try {
@@ -111,5 +114,5 @@ import Log from "./log";
         zoia.log.print(`Module: ${m}, total test(s): ${testResults[m].total}, success: ${testResults[m].success}, verdict: ${testResults[m].total === testResults[m].success ? "OK" : "FAIL"}`, testResults[m].total === testResults[m].success ? "success" : "error");
     });
     zoia.log.print(`Total test(s): ${totalTests}, success: ${totalTestsSuccess}, verdict: ${failed ? "FAIL" : "OK"}`, failed ? "error" : "success");
-    process.exit(failed ? 1 : 0);
+    // process.exit(failed ? 1 : 0);
 })();

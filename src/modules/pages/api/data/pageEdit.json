@@ -33,13 +33,25 @@
                 "maxLength": 128
             },
             "content": {
-                "type": "string"
+                "oneOf": [{
+                    "type": "string"
+                }, {
+                    "type": "null"
+                }]
             },
             "css": {
-                "type": "string"
+                "oneOf": [{
+                    "type": "string"
+                }, {
+                    "type": "null"
+                }]
             },
             "js": {
-                "type": "string"
+                "oneOf": [{
+                    "type": "string"
+                }, {
+                    "type": "null"
+                }]
             },
             "attachments": {
                 "type": "array",

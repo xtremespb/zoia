@@ -94,5 +94,9 @@
         "files": "data",
         "publicImages": "build/public/files/images",
         "publicFiles": "build/public/files"
+    },
+    "update": {
+        "tags": "https://api.github.com/repos/xtremespb/zoia/tags",
+        "archive": "https://github.com/xtremespb/zoia/archive/v{{version}}.zip"
     }
 }

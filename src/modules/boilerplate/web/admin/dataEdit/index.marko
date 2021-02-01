@@ -119,5 +119,5 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
       ]
     }
   ] validation=input.editData progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") on-load-success("onLoadSuccess") tabsAvail=languageTabs tabsActive=[languageTabs[0].id]/>
-  <lockedModal key=`z3_ap_${moduleConfig.id}_lockedModal`/>
+  <lockedModal key=(`z3_ap_${moduleConfig.id}_lockedModal`)/>
 </div>
