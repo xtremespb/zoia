@@ -1,3 +1,10 @@
+## [3.1.33](https://github.com/xtremespb/zoia3/compare/v3.1.32...v3.1.33) (2021-02-08)
+
+
+### Bug Fixes
+
+* auto update system ([82b5d16](https://github.com/xtremespb/zoia3/commit/82b5d164632ff2a68e11808c30173cfa1f63fbd7))
+
 ## [3.1.32](https://github.com/xtremespb/zoia3/compare/v3.1.31...v3.1.32) (2021-02-01)
 
 
