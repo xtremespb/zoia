@@ -1,3 +1,4 @@
+import axios from "axios";
 import template from "./template.marko";
 import moduleData from "../../module.json";
 
@@ -25,6 +26,15 @@ export default () => ({
             };
             const maintenanceStatus = maintenanceDb ? maintenanceDb.status : false;
             const updateStatus = updateDb ? updateDb.status : null;
+            let updateTag = null;
+            try {
+                [updateTag] = (await axios({
+                    method: "get",
+                    url: req.zoiaConfig.update,
+                })).data;
+            } catch {
+                // Ignore
+            }
             const render = await template.stream({
                 $global: {
                     serializedGlobals: {
@@ -35,6 +45,8 @@ export default () => ({
                         updateStatus: true,
                         buildJson: true,
                         pid: true,
+                        updateTag: true,
+                        packageJson: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
@@ -44,6 +56,8 @@ export default () => ({
                     updateStatus,
                     buildJson: req.zoiaBuildJson,
                     pid: process.pid,
+                    updateTag,
+                    packageJson: this.zoiaPackageJson,
                     ...await site.getGlobals(),
                 },
                 modules: req.zoiaAdmin,
