@@ -10,6 +10,8 @@ module.exports = class {
         this.cookieOptions = out.global.cookieOptions;
         this.siteId = out.global.siteId;
         this.updateStatus = out.global.updateStatus;
+        this.currentVersion = out.global.packageJson.version;
+        this.updateVersion = out.global.updateTag.name;
     }
 
     onMount() {
@@ -26,24 +28,26 @@ module.exports = class {
     }
 
     onUpdateClick() {
-        this.updateConfirm.func.setActive(true, this.i18n.t("update"), this.i18n.t("warnUpdateText"));
+        this.updateConfirm.func.setActive(true, `${this.i18n.t("update")}: ${this.currentVersion} → ${this.updateVersion.replace(/^v/, "")}`, this.i18n.t("warnUpdateText"));
     }
 
     getStatus(code) {
         switch (code) {
-        case C.REBUILD_STATUS_COPY_SRC_DIR:
+        case C.UPDATE_STATUS_DOWNLOAD:
+            return this.i18n.t("downloadUpdatePackage");
+        case C.UPDATE_STATUS_COPY_SRC_DIR:
             return this.i18n.t("processCopyFiles");
-        case C.REBUILD_STATUS_NPM_INSTALL:
+        case C.UPDATE_STATUS_NPM_INSTALL:
             return this.i18n.t("processInstallNPM");
-        case C.REBUILD_STATUS_NPM_BUILD_UPDATE:
+        case C.UPDATE_STATUS_NPM_BUILD_UPDATE:
             return this.i18n.t("processBuildUpdate");
-        case C.REBUILD_STATUS_NPM_UPDATE_COPY:
+        case C.UPDATE_STATUS_NPM_UPDATE_COPY:
             return this.i18n.t("processUpdateCopy");
-        case C.REBUILD_STATUS_SUCCESS:
+        case C.UPDATE_STATUS_SUCCESS:
             return this.i18n.t("processSuccess");
-        case C.REBUILD_STATUS_ERROR:
+        case C.UPDATE_STATUS_ERROR:
             return this.i18n.t("processError");
-        case C.REBUILD_STATUS_SETUP_ALL:
+        case C.UPDATE_STATUS_SETUP_ALL:
             return this.i18n.t("setupAll");
         default:
             return this.i18n.t("processStarted");
@@ -77,6 +81,7 @@ module.exports = class {
             this.statusDialog.func.setActive(true, this.i18n.t("processRestarting"));
             this.restartInterval = setInterval(this.restartStatusCheck.bind(this), 3000);
         } catch (e) {
+            this.statusDialog.func.setActive(false);
             this.spinner.func.setActive(false);
             const error = e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword ? this.i18n.t(e.response.data.error.errorKeyword) : this.i18n.t("updateRestartGeneralError");
             this.notify.func.show(error, "is-danger");
@@ -95,11 +100,11 @@ module.exports = class {
             if (res && res.data) {
                 const status = res.data.status === null ? null : parseInt(res.data.status, 10);
                 this.statusDialog.func.setActive(true, this.getStatus(status));
-                if (status === C.REBUILD_STATUS_SUCCESS) {
+                if (status === C.UPDATE_STATUS_SUCCESS) {
                     clearInterval(this.statusInterval);
                     this.sendRestartRequest();
                 }
-                if (status === C.REBUILD_STATUS_ERROR) {
+                if (status === C.UPDATE_STATUS_ERROR) {
                     clearInterval(this.statusInterval);
                     this.statusDialog.func.setActive(false);
                     this.notify.func.show(this.i18n.t("processError"), "is-danger");

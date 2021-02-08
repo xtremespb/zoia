@@ -133,7 +133,6 @@ import Env from "../../lib/env";
         }
         // Create MongoDB client and connect
         const mongoClient = new MongoClient(config.mongo.url, {
-            useNewUrlParser: true,
             useUnifiedTopology: true
         });
         await mongoClient.connect();
