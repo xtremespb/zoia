@@ -23,9 +23,7 @@ module.exports = (argv) => ({
         splitChunks: false,
         minimizer: [
             new TerserPlugin({
-                cache: true,
                 parallel: true,
-                sourceMap: false,
                 extractComments: false,
             })
         ]

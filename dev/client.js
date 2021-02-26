@@ -2,7 +2,6 @@ const path = require("path");
 const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
-const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const OptimizeCSSPlugin = require("optimize-css-assets-webpack-plugin");
 const CssoWebpackPlugin = require("csso-webpack-plugin").default;
 const babelConfig = require("./babel.config");
@@ -75,9 +74,7 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
         },
         minimizer: [
             new TerserPlugin({
-                cache: true,
                 parallel: true,
-                sourceMap: false,
                 extractComments: false,
             })
         ]
@@ -91,7 +88,6 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
         new webpack.DefinePlugin({
             "process.browser": true
         }),
-        new FixStyleOnlyEntriesPlugin(),
         new ExtractCssChunks({
             filename: "[name]_[contenthash:8].css",
             chunkFilename: "[name]_[contenthash:8].css",
@@ -103,9 +99,5 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
     ],
     performance: {
         hints: false
-    },
-    node: {
-        fs: "empty",
-        "fs-extra": "empty"
     }
 });

@@ -35,9 +35,9 @@ try {
 const command = Object.keys(options)[0];
 const params = {
     dev: "--mode development --config ./dev/config.js",
-    maps: "--display minimal --progress --mode development --config ./dev/config.js --maps true",
-    update: `--display minimal --progress --mode ${buildMode} --config ./dev/config.js --type update`,
-    production: "--display minimal --progress --mode production --config ./dev/config.js",
+    maps: "--progress --mode development --config ./dev/config.js --maps true",
+    update: `--progress --mode ${buildMode} --config ./dev/config.js --type update`,
+    production: "--progress --mode production --config ./dev/config.js",
 };
 
 if (!params[command]) {

@@ -29,21 +29,16 @@ module.exports = (markoPlugin, argv) => ({
         splitChunks: false,
         minimizer: [
             new TerserPlugin({
-                cache: true,
                 parallel: true,
-                sourceMap: false,
                 extractComments: false,
             })
         ]
     } : {},
     output: {
-        libraryTarget: "commonjs2",
+        // libraryTarget: "commonjs2",
         path: path.resolve(`${__dirname}/../build/bin`),
         filename: argv.type === "update" ? "zoia_update.js" : "zoia.js",
         publicPath: `/zoia/`,
-    },
-    node: {
-        __dirname: false
     },
     plugins: [
         new webpack.DefinePlugin({
@@ -53,6 +48,6 @@ module.exports = (markoPlugin, argv) => ({
         new webpack.optimize.LimitChunkCountPlugin({
             maxChunks: 1
         }),
-        markoPlugin.server
+        markoPlugin.server,
     ]
 });
