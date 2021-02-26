@@ -47,7 +47,7 @@ module.exports = class {
             captchaData: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
             captchaSecret: "",
             toggleAce: {},
-            modeAce: "ace",
+            modeAce: input.item.source ? "ace" : "ck",
             visible: true,
             enabled: true,
             mandatory: input.item.mandatory,
@@ -206,6 +206,9 @@ module.exports = class {
                         this.aceEditor.getSession().setAnnotations(annotationsFiltered);
                     }
                 });
+                if (this.state.item.wysiwyg && !this.state.item.source) {
+                    this.initCkEditor();
+                }
                 // if (this.state.item.wysiwyg) {
                 //     await this.initCkEditor();
                 // }

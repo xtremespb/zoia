@@ -1,0 +1,205 @@
+.ck-editor__editable li+li {
+    margin-top: 0.25em;
+}
+
+.ck-editor__editable p:not(:last-child),
+.ck-editor__editable dl:not(:last-child),
+.ck-editor__editable ol:not(:last-child),
+.ck-editor__editable ul:not(:last-child),
+.ck-editor__editable blockquote:not(:last-child),
+.ck-editor__editable pre:not(:last-child),
+.ck-editor__editable table:not(:last-child) {
+    margin-bottom: 1em;
+}
+
+.ck-editor__editable h1,
+.ck-editor__editable h2,
+.ck-editor__editable h3,
+.ck-editor__editable h4,
+.ck-editor__editable h5,
+.ck-editor__editable h6 {
+    color: #363636;
+    font-weight: 600;
+    line-height: 1.125;
+}
+
+.ck-editor__editable h1 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+.ck-editor__editable h1:not(:first-child) {
+    margin-top: 1em;
+}
+
+.ck-editor__editable h2 {
+    font-size: 1.75em;
+    margin-bottom: 0.5714em;
+}
+
+.ck-editor__editable h2:not(:first-child) {
+    margin-top: 1.1428em;
+}
+
+.ck-editor__editable h3 {
+    font-size: 1.5em;
+    margin-bottom: 0.6666em;
+}
+
+.ck-editor__editable h3:not(:first-child) {
+    margin-top: 1.3333em;
+}
+
+.ck-editor__editable h4 {
+    font-size: 1.25em;
+    margin-bottom: 0.8em;
+}
+
+.ck-editor__editable h5 {
+    font-size: 1.125em;
+    margin-bottom: 0.8888em;
+}
+
+.ck-editor__editable h6 {
+    font-size: 1em;
+    margin-bottom: 1em;
+}
+
+.ck-editor__editable blockquote {
+    background-color: whitesmoke;
+    border-left: 5px solid #dbdbdb;
+    padding: 1.25em 1.5em;
+}
+
+.ck-editor__editable ol {
+    list-style-position: outside;
+    margin-left: 2em;
+    margin-top: 1em;
+}
+
+.ck-editor__editable ol:not([type]) {
+    list-style-type: decimal;
+}
+
+.ck-editor__editable ol:not([type]).is-lower-alpha {
+    list-style-type: lower-alpha;
+}
+
+.ck-editor__editable ol:not([type]).is-lower-roman {
+    list-style-type: lower-roman;
+}
+
+.ck-editor__editable ol:not([type]).is-upper-alpha {
+    list-style-type: upper-alpha;
+}
+
+.ck-editor__editable ol:not([type]).is-upper-roman {
+    list-style-type: upper-roman;
+}
+
+.ck-editor__editable ul {
+    list-style: disc outside;
+    margin-left: 2em;
+    margin-top: 1em;
+}
+
+.ck-editor__editable ul ul {
+    list-style-type: circle;
+    margin-top: 0.5em;
+}
+
+.ck-editor__editable ul ul ul {
+    list-style-type: square;
+}
+
+.ck-editor__editable dd {
+    margin-left: 2em;
+}
+
+.ck-editor__editable figure {
+    margin-left: 2em;
+    margin-right: 2em;
+    text-align: center;
+}
+
+.ck-editor__editable figure:not(:first-child) {
+    margin-top: 2em;
+}
+
+.ck-editor__editable figure:not(:last-child) {
+    margin-bottom: 2em;
+}
+
+.ck-editor__editable figure img {
+    display: inline-block;
+}
+
+.ck-editor__editable figure figcaption {
+    font-style: italic;
+}
+
+.ck-editor__editable pre {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    padding: 1.25em 1.5em;
+    white-space: pre;
+    word-wrap: normal;
+}
+
+.ck-editor__editable sup,
+.ck-editor__editable sub {
+    font-size: 75%;
+}
+
+.ck-editor__editable table {
+    width: 100%;
+}
+
+.ck-editor__editable table td,
+.ck-editor__editable table th {
+    border: 1px solid #dbdbdb;
+    border-width: 0 0 1px;
+    padding: 0.5em 0.75em;
+    vertical-align: top;
+}
+
+.ck-editor__editable table th {
+    color: #363636;
+}
+
+.ck-editor__editable table th:not([align]) {
+    text-align: inherit;
+}
+
+.ck-editor__editable table thead td,
+.ck-editor__editable table thead th {
+    border-width: 0 0 2px;
+    color: #363636;
+}
+
+.ck-editor__editable table tfoot td,
+.ck-editor__editable table tfoot th {
+    border-width: 2px 0 0;
+    color: #363636;
+}
+
+.ck-editor__editable table tbody tr:last-child td,
+.ck-editor__editable table tbody tr:last-child th {
+    border-bottom-width: 0;
+}
+
+.ck-editor__editable .tabs li+li {
+    margin-top: 0;
+}
+
+.ck-editor__editable.is-small {
+    font-size: 0.75rem;
+}
+
+.ck-editor__editable.is-medium {
+    font-size: 1.25rem;
+}
+
+.ck-editor__editable.is-large {
+    font-size: 1.5rem;
+}

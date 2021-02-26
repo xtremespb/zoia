@@ -254,9 +254,11 @@ ACE
   <if(state.item.wysiwyg)>
     <div class="tabs is-toggle is-small mb-1">
       <ul>
-        <li class=(state.modeAce === "ace" ? "is-active" : "")>
-          <a on-click("onAceModeChange") data-id="ace">${out.global.i18n.t("mForm.ace")}</a>
-        </li>
+        <if(state.item.source)>
+          <li class=(state.modeAce === "ace" ? "is-active" : "")>
+            <a on-click("onAceModeChange") data-id="ace">${out.global.i18n.t("mForm.ace")}</a>
+          </li>
+        </if>
         <li class=(state.modeAce === "ck" ? "is-active" : "")>
           <a on-click("onAceModeChange") data-id="ck">${out.global.i18n.t("mForm.ck")}</a>
         </li>
