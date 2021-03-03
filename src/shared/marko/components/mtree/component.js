@@ -2,7 +2,7 @@ const cloneDeep = require("lodash.clonedeep");
 const {
     v4: uuidv4
 } = require("uuid");
-const md5 = require("crypto-js/md5");
+const md5 = require("./md5");
 const Utils = require("./utils");
 
 module.exports = class {

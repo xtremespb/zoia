@@ -5,33 +5,26 @@ const webpack = require("webpack");
 module.exports = (markoPlugin, argv) => ({
     name: "Server Part",
     context: path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko`),
+    devtool: argv.mode === "production" ? false : "eval",
     resolve: {
         extensions: [".js", ".json", ".marko"]
     },
     module: {
         rules: [{
-                test: /\.marko$/,
-                loader: "@marko/webpack/loader"
-            },
-            {
-                test: /\.s[ac]ss$/i,
-                use: [
-                    "style-loader",
-                    "css-loader",
-                    "sass-loader",
-                ],
-            }
-        ]
+            test: /\.s?css$/,
+            loader: "ignore-loader"
+        }, {
+            test: /\.marko$/,
+            loader: "@marko/webpack/loader"
+        }]
     },
-    target: "node",
+    target: "async-node",
     externals: [/^[^./!]/],
     optimization: argv.mode === "production" ? {
         splitChunks: false,
         minimizer: [
             new TerserPlugin({
-                cache: true,
                 parallel: true,
-                sourceMap: false,
                 extractComments: false,
             })
         ]
@@ -42,17 +35,15 @@ module.exports = (markoPlugin, argv) => ({
         filename: argv.type === "update" ? "zoia_update.js" : "zoia.js",
         publicPath: `/zoia/`,
     },
-    node: {
-        __dirname: false
-    },
     plugins: [
         new webpack.DefinePlugin({
             "process.browser": undefined,
-            "process.env.BUNDLE": true
+            "process.env.BUNDLE": true,
+            "typeof window": "'undefined'"
         }),
         new webpack.optimize.LimitChunkCountPlugin({
             maxChunks: 1
         }),
-        markoPlugin.server
+        markoPlugin.server,
     ]
 });

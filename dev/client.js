@@ -1,32 +1,21 @@
 const path = require("path");
-const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
-const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
-const OptimizeCSSPlugin = require("optimize-css-assets-webpack-plugin");
-const CssoWebpackPlugin = require("csso-webpack-plugin").default;
+const CSSExtractPlugin = require("mini-css-extract-plugin");
+const MinifyCSSPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const babelConfig = require("./babel.config");
 
 module.exports = (moduleDirs, markoPlugin, argv) => ({
-    name: "Client Part",
-    context: path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko`),
-    resolve: {
-        extensions: [".js", ".json", ".marko"]
-    },
+    context: path.resolve(`${__dirname}/src/shared/marko`),
+    name: "frontend",
+    target: ["web", "es5"],
+    devtool: argv.mode === "production" ? false : "eval",
     module: {
-        rules: [argv.mode === "production" ? {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: "babel-loader",
-                options: babelConfig()
-            } : {}, {
-                test: /\.marko$/,
-                use: ["babel-loader", "@marko/webpack/loader"],
-            },
-            {
+        rules: [{
                 test: /\.s?css$/,
                 use: [{
-                        loader: ExtractCssChunks.loader
+                        loader: MiniCssExtractPlugin.loader
                     }, {
                         loader: "css-loader"
                     },
@@ -34,78 +23,90 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
                         loader: "sass-loader"
                     }
                 ]
-            },
-            {
-                test: /\.(woff(2)?|ttf|eot|svg|otf|png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
+            }, {
+                test: /\.(woff(2)?|ttf|eot|otf|png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [{
                     loader: "file-loader",
                     options: {
-                        name: "[name]_[contenthash:8].[ext]",
+                        name: "[contenthash:8].[ext]",
                     }
                 }]
             },
             {
+                test: /\.marko$/,
+                loader: "@marko/webpack/loader",
+                options: {
+                    babelConfig: {
+                        presets: [
+                            [
+                                "@babel/preset-env"
+                            ]
+                        ]
+                    }
+                }
+            },
+            {
+                test: /\.svg/,
+                loader: "svg-url-loader"
+            },
+            {
+                test: /\.(jpg|jpeg|gif|png)$/,
+                loader: "file-loader",
+                options: {
+                    outputPath: "../client",
+                    publicPath: `/zoia/`,
+                }
+            },
+            argv.mode === "production" ? {
                 test: /\.js$/,
-                exclude: /node_modules/,
                 loader: "babel-loader",
-            }
+                exclude: /ace-builds/,
+                options: {
+                    cacheDirectory: true,
+                    ...babelConfig()
+                }
+            } : {},
         ]
     },
-    devtool: argv.maps ? "source-map" : false,
-    optimization: argv.mode === "production" ? {
+    optimization: {
         splitChunks: {
             chunks: "all",
-            automaticNameDelimiter: "_",
+            maxInitialRequests: 3,
             cacheGroups: {
-                styles: {
-                    name: "styles",
-                    test: /\.(s?css|sass)$/,
-                    chunks: "all",
-                    minChunks: moduleDirs.length,
-                    enforce: true
+                defaultVendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10,
+                    reuseExistingChunk: true,
+                    filename: "npm.[contenthash:8].js",
                 },
-                vendor: {
-                    test: /[\\/](node_modules)[\\/]/,
-                    name(module) {
-                        const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-                        return `npm.${packageName.replace("@", "")}`;
-                    },
-                }
+                default: {
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true,
+                },
             }
         },
-        minimizer: [
+        minimizer: argv.mode === "production" ? [
             new TerserPlugin({
-                cache: true,
                 parallel: true,
-                sourceMap: false,
                 extractComments: false,
             })
-        ]
-    } : {},
+        ] : []
+    },
     output: {
-        filename: "[name].[contenthash:8].js",
+        filename: "[contenthash:8].js",
         path: path.resolve(`${__dirname}/../build/public/${argv.type === "update" ? "update_" : "zoia_"}`),
         publicPath: `/zoia/`,
     },
     plugins: [
         new webpack.DefinePlugin({
+            "typeof window": "'object'",
             "process.browser": true
         }),
-        new FixStyleOnlyEntriesPlugin(),
-        new ExtractCssChunks({
-            filename: "[name]_[contenthash:8].css",
-            chunkFilename: "[name]_[contenthash:8].css",
-            ignoreOrder: true
+        new CSSExtractPlugin({
+            filename: "[contenthash:8].css"
         }),
-        argv.mode === "production" ? new OptimizeCSSPlugin() : () => {},
-        argv.mode === "production" ? new CssoWebpackPlugin() : () => {},
-        markoPlugin.browser,
-    ],
-    performance: {
-        hints: false
-    },
-    node: {
-        fs: "empty",
-        "fs-extra": "empty"
-    }
+        argv.mode === "production" ? new MinifyCSSPlugin() : () => {},
+        markoPlugin.browser
+    ]
 });
