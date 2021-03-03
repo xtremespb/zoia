@@ -1,6 +1,6 @@
 {
     "name": "zoia3",
-    "version": "3.1.34",
+    "version": "3.1.35",
     "description": "ZOIA Content Management System",
     "scripts": {
         "config": "node ./dev/bin/config.js",

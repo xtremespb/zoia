@@ -1,3 +1,11 @@
+## [3.1.35](https://github.com/xtremespb/zoia3/compare/v3.1.34...v3.1.35) (2021-03-03)
+
+
+### Bug Fixes
+
+* missing CLI and TEST builds ([7171b3a](https://github.com/xtremespb/zoia3/commit/7171b3aa1a594ef1fe3c670b392ec2c00884faa3))
+* now using Webpack 5 and latest modules ([6119835](https://github.com/xtremespb/zoia3/commit/6119835041f56878b2e72dccd8d5693183483155))
+
 ## [3.1.34](https://github.com/xtremespb/zoia3/compare/v3.1.33...v3.1.34) (2021-02-26)
 
 
