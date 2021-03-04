@@ -1,3 +1,10 @@
+## [3.1.36](https://github.com/xtremespb/zoia3/compare/v3.1.35...v3.1.36) (2021-03-04)
+
+
+### Bug Fixes
+
+* modules updated & cleaned up ([d1ab059](https://github.com/xtremespb/zoia3/commit/d1ab05935a9a823dc45db78094748481eb426fcd))
+
 ## [3.1.35](https://github.com/xtremespb/zoia3/compare/v3.1.34...v3.1.35) (2021-03-03)
 
 
