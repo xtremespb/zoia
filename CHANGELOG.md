@@ -1,3 +1,10 @@
+## [3.1.37](https://github.com/xtremespb/zoia3/compare/v3.1.36...v3.1.37) (2021-03-04)
+
+
+### Bug Fixes
+
+* invalid width for tree column in Files module ([99ccaf5](https://github.com/xtremespb/zoia3/commit/99ccaf5c6f6b23cec2f27525626e72e2ca6c2d71))
+
 ## [3.1.36](https://github.com/xtremespb/zoia3/compare/v3.1.35...v3.1.36) (2021-03-04)
 
 
