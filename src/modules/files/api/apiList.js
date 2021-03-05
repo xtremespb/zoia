@@ -1,10 +1,8 @@
 import path from "path";
 import fs from "fs-extra";
 import mime from "mime-types";
-import {
-    isBinary
-} from "istextorbinary";
 import utils from "../../../shared/lib/utils";
+import TextOrBinary from "../../../shared/lib/textorbinary";
 import filesListData from "./data/filesList.json";
 
 export default () => ({
@@ -13,6 +11,7 @@ export default () => ({
     },
     attachValidation: true,
     async handler(req) {
+        const textOrBinary = new TextOrBinary();
         const {
             log,
             response,
@@ -69,7 +68,7 @@ export default () => ({
                 if (stats.isFile()) {
                     data.size = utils.formatBytes(stats.size);
                     data.mime = f.indexOf(".") > 0 ? mime.lookup(f) || "application/octet-stream" : "application/octet-stream";
-                    if ((f.indexOf(".") > 0 && isBinary(f)) || stats.size > req.zoiaModulesConfig["files"].maxFileEditSizeBytes) {
+                    if ((f.indexOf(".") > 0 && textOrBinary.isBinary(f)) || stats.size > req.zoiaModulesConfig["files"].maxFileEditSizeBytes) {
                         data.ro = true;
                     }
                     if (data.mime === "application/zip") {

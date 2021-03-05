@@ -1,9 +1,7 @@
 import path from "path";
 import fs from "fs-extra";
-import {
-    isBinary
-} from "istextorbinary";
 import mime from "mime-types";
+import TextOrBinary from "../../../shared/lib/textorbinary";
 import fileLoadData from "./data/fileLoad.json";
 
 export default () => ({
@@ -12,6 +10,7 @@ export default () => ({
     },
     attachValidation: true,
     async handler(req) {
+        const textOrBinary = new TextOrBinary();
         const {
             log,
             response,
@@ -77,7 +76,7 @@ export default () => ({
                     });
                     return;
                 }
-                if (isBinary(req.body.name, data.content)) {
+                if (textOrBinary.isBinary(req.body.name, data.content)) {
                     response.requestError({
                         failed: true,
                         error: "One or more file(s) could not be processed",
