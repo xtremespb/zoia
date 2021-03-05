@@ -1,3 +1,10 @@
+## [3.1.38](https://github.com/xtremespb/zoia3/compare/v3.1.37...v3.1.38) (2021-03-05)
+
+
+### Bug Fixes
+
+* fixed some acebuilds-related bugs, moved textorbinary and xxhash64 to internal libraries ([6780799](https://github.com/xtremespb/zoia3/commit/6780799987a8a31889feb1a77e2e1685e52ab33c))
+
 ## [3.1.37](https://github.com/xtremespb/zoia3/compare/v3.1.36...v3.1.37) (2021-03-04)
 
 
