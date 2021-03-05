@@ -1,6 +1,6 @@
-import xxhash from "xxhashjs";
 import fastifyPlugin from "fastify-plugin";
 import ipAddr from "ipaddr.js";
+import xx64 from "./xxhash";
 
 const checkIp = (addr, cidr) => {
     try {
@@ -139,8 +139,8 @@ const buildRate = async (fastify, settings, routeOptions) => {
             next();
             return response.getCode204();
         }
-        const hashFull = xxhash.h64(`${req.ip}${req.urlData().path}`, fastify.zoiaConfig.secretInt).toString(16);
-        const hashIP = xxhash.h64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
+        const hashFull = xx64(`${req.ip}${req.urlData().path}`, fastify.zoiaConfig.secretInt).toString(16);
+        const hashIP = xx64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
         const dataLimit = await getLimitData(fastify, settings, hashFull);
         dataLimit.max += 1;
         const timestampNow = new Date().getTime();
@@ -181,7 +181,7 @@ const buildRate = async (fastify, settings, routeOptions) => {
             response.sendError("Forbidden (blacklisted)", 403);
             return response.getCode204(rep);
         }
-        const hashIP = xxhash.h64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
+        const hashIP = xx64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
         const dataBan = await getBanData(fastify, settings, hashIP);
         if (dataBan) {
             response.sendError("Forbidden", 403);
