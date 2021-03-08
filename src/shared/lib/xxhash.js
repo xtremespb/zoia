@@ -15,9 +15,7 @@ xxHash64 implementation in pure Javascript
 Copyright (C) 2016, Pierre Curto
 MIT license
 */
-const {
-    UINT64
-} = require("cuint");
+const UINT64 = require("./uint64");
 
 /*
  * Constants
