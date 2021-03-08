@@ -1,3 +1,10 @@
+## [3.1.39](https://github.com/xtremespb/zoia3/compare/v3.1.38...v3.1.39) (2021-03-08)
+
+
+### Bug Fixes
+
+* missing module for UINT64 replaced by internal library ([4f457a7](https://github.com/xtremespb/zoia3/commit/4f457a7a62f1fa9d9dcc82411ca5cb83903747d8))
+
 ## [3.1.38](https://github.com/xtremespb/zoia3/compare/v3.1.37...v3.1.38) (2021-03-05)
 
 
