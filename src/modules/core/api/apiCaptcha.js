@@ -1,5 +1,5 @@
-import captcha from "zoia-captcha";
-import Cryptr from "cryptr";
+import Cryptr from "../../../shared/lib/cryptr";
+import captcha from "../../../shared/lib/captcha";
 
 export default () => ({
     async handler(req) {

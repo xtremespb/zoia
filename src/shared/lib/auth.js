@@ -2,11 +2,14 @@ import {
     ObjectId
 } from "mongodb";
 import crypto from "crypto";
-import Cryptr from "cryptr";
+import {
+    ActiveDirectory
+} from "node-ad-tools";
 import {
     v4 as uuid
 } from "uuid";
 import C from "./constants";
+import Cryptr from "./cryptr";
 
 export default class {
     constructor(db, fastify, req, rep, token = C.USE_COOKIE_FOR_TOKEN) {
@@ -31,6 +34,9 @@ export default class {
             this.token = req.headers.authorization && typeof req.headers.authorization === "string" ? req.headers.authorization.replace(/^Bearer /, "") : null;
         } else if (!token) {
             this.token = req.cookies[`${fastify.zoiaConfig.id || "zoia3"}.authToken`];
+        }
+        if (this.zoiaConfig.activeDirectory && this.zoiaConfig.activeDirectory.enabled) {
+            this.ad = new ActiveDirectory(this.zoiaConfig.activeDirectory.config);
         }
     }
 
@@ -122,8 +128,17 @@ export default class {
             const user = await this.db.collection(this.collectionUsers).findOne({
                 username
             });
+            let adAuth = false;
+            if (this.ad) {
+                try {
+                    const adAuthResult = await this.ad.loginUser(`${username}${this.zoiaConfig.activeDirectory.usernameSuffix}`, password);
+                    adAuth = adAuthResult.success;
+                } catch {
+                    // Ignore
+                }
+            }
             const passwordHash = crypto.createHmac("sha256", this.zoiaConfig.secret).update(password).digest("hex");
-            if (!user || user.password !== passwordHash || !user.status || user.status.indexOf("active") === -1) {
+            if (!user || (!adAuth && user.password !== passwordHash) || !user.status || user.status.indexOf("active") === -1) {
                 return null;
             }
             const sid = user.sid || this.generateSid();

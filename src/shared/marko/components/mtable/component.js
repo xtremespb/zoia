@@ -272,6 +272,7 @@ module.exports = class {
     onSearchFieldInput(e) {
         const val = e.target.value.trim();
         this.setState("searchText", val);
+        this.setState("page", 1);
         this.dataRequestDebounced();
     }
 

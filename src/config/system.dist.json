@@ -95,5 +95,13 @@
         "publicImages": "build/public/files/images",
         "publicFiles": "build/public/files"
     },
-    "update": "https://api.github.com/repos/xtremespb/zoia/tags"
+    "update": "https://api.github.com/repos/xtremespb/zoia/tags",
+    "activeDirectory": {
+        "enabled": false,
+        "usernameSuffix": "@example.com",
+        "config": {
+            "url": "ldap://example.com",
+            "base": "dc=example,dc=com"
+        }
+    }
 }

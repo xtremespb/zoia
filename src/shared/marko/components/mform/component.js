@@ -5,7 +5,7 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images", "range"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images", "image", "range"];
 
 module.exports = class {
     onCreate(input) {
@@ -270,6 +270,9 @@ module.exports = class {
             const prev = data[this.state.activeTabId][obj.id] ? data[this.state.activeTabId][obj.id] : [];
             value = [...prev, ...Array.from(value)];
             break;
+        case "image":
+            value = Array.from(value);
+            break;
         case "arr":
             let currentItemState = cloneDeep(data[this.state.activeTabId][obj.id]);
             const checked = !!value;
@@ -476,6 +479,7 @@ module.exports = class {
                 }
             }
         });
+        // console.log(validationResult);
         return validationResult;
     }
 
@@ -490,7 +494,7 @@ module.exports = class {
         } else if (value === "" && field.emptyNull) {
             valueProcess = null;
         }
-        if ((field.type === "file" || field.type === "images") && !Array.isArray(value)) {
+        if ((field.type === "file" || field.type === "images" || field.type === "image") && !Array.isArray(value)) {
             valueProcess = [];
         }
         if (field.type === "keyvalue") {

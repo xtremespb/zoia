@@ -49,7 +49,7 @@ export default () => ({
             // Process case for UID
             data.uid = data.uid.trim().toLowerCase();
             // Check permission
-            if ((!id && !acl.checkPermission(moduleConfig.id, "create")) || !acl.checkPermission(moduleConfig.id, "update", data.id)) {
+            if ((!id && !acl.checkPermission(moduleConfig.id, "create")) || !acl.checkPermission(moduleConfig.id, "update", id)) {
                 response.requestAccessDeniedError();
                 return;
             }
@@ -92,12 +92,12 @@ export default () => ({
             delete data.passwordRepeat;
             delete data.password;
             // Set createdAt timestamp if that's a new record
-            if (!data.id) {
+            if (!id) {
                 updateExtras.createdAt = new Date();
             }
             // Update database
-            const update = await this.mongo.db.collection(collectionName).updateOne(data.id ? {
-                _id: new ObjectId(data.id)
+            const update = await this.mongo.db.collection(collectionName).updateOne(id ? {
+                _id: new ObjectId(id)
             } : {
                 uid: data.uid,
             }, {
