@@ -8,7 +8,7 @@
                 "maxLength": 128
             },
             "value": {
-                "type": "string"
+                "type": ["string", "null"]
             }
         },
         "required": ["_id", "value"]
