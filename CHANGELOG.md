@@ -1,3 +1,10 @@
+## [3.1.41](https://github.com/xtremespb/zoia3/compare/v3.1.40...v3.1.41) (2021-03-31)
+
+
+### Bug Fixes
+
+* error 500 & nulls ([aaea8c1](https://github.com/xtremespb/zoia3/commit/aaea8c1fb4b149f931aa204a2a42f23da0494ce2))
+
 ## [3.1.40](https://github.com/xtremespb/zoia3/compare/v3.1.39...v3.1.40) (2021-03-31)
 
 
