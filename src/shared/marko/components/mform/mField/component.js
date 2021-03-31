@@ -296,7 +296,7 @@ module.exports = class {
     onImageInputChange(e) {
         this.emit("value-change", {
             id: e.target.dataset.id,
-            type: "file",
+            type: "images",
             value: Array.from(e.target.files).map((file, index) => {
                 const fileData = e.target.files[index];
                 const uid = uuidv4();
@@ -308,6 +308,34 @@ module.exports = class {
                     data: e.target.files[index],
                 };
             })
+        });
+    }
+
+    onSingleImageInputChange(e) {
+        this.emit("value-change", {
+            id: e.target.dataset.id,
+            type: "image",
+            value: Array.from(e.target.files).map((file, index) => {
+                const fileData = e.target.files[index];
+                const uid = uuidv4();
+                fileData.zuid = uid;
+                return {
+                    type: "image",
+                    name: file.name,
+                    id: uid,
+                    data: e.target.files[index],
+                };
+            })
+        });
+    }
+
+    onSingleImageRemove(e) {
+        e.preventDefault();
+        const dataset = e.target ? (Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {}) : e;
+        this.emit("value-change", {
+            id: dataset.id,
+            type: "image",
+            value: []
         });
     }
 

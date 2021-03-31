@@ -1,5 +1,5 @@
 import fastifyPlugin from "fastify-plugin";
-import ipAddr from "ipaddr.js";
+import ipAddr from "./ipaddr";
 import xx64 from "./xxhash";
 
 const checkIp = (addr, cidr) => {
