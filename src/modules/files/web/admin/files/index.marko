@@ -184,7 +184,7 @@ import icons from "../../../data/mime.json"
     <div>${state.dir === "/" ? "" : state.dir}/${state.currentFile}</div>
   </if>
   <div class="z3-ap-f-textEditorWrap" key="z3_ap_f_textEditorWrap" style=(state.currentMode === "edit" ? "" : "display:none")>
-    <div class="z3-ap-f-ace"/>
+    <div class="z3-ap-f-ace" no-update/>
   </div>
   <if(state.loadingFile)>
     <div class="z3-ap-f-loading">

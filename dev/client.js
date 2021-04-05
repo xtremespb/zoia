@@ -49,14 +49,6 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
                 test: /\.svg/,
                 loader: "svg-url-loader"
             },
-            {
-                test: /\.(jpg|jpeg|gif|png)$/,
-                loader: "file-loader",
-                options: {
-                    outputPath: "../client",
-                    publicPath: `/zoia/`,
-                }
-            },
             argv.mode === "production" ? {
                 test: /\.js$/,
                 loader: "babel-loader",

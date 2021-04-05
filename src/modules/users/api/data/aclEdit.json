@@ -18,7 +18,7 @@
                 "maxLength": 64
             },
             "comment": {
-                "type": "string",
+                "type": ["string", "null"],
                 "minLength": 0,
                 "maxLength": 128
             }

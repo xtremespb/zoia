@@ -16,6 +16,7 @@ export default () => ({
             const auth = new Auth(this.mongo.db, this, req, rep, C.USE_COOKIE_FOR_TOKEN);
             const site = new req.ZoiaSite(req, "backup", this.mongo.db);
             const response = new this.Response(req, rep, site);
+            response.setSite(site);
             if (!(await auth.getUserData()) || !auth.statusAdmin()) {
                 auth.clearAuthCookie();
                 return response.redirectToLogin(req.zoiaModulesConfig["backup"].routes.backup);

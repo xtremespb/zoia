@@ -301,5 +301,11 @@ export default {
                 resolve(stdout || stderr);
             });
         });
-    }
+    },
+    getImageBuffer(image) {
+        return new Promise(resolve => image.getBuffer("image/png", (err, buf) => resolve(buf)));
+    },
+    getRandomInt(low, high) {
+        return Math.floor(Math.random() * (high - low) + low);
+    },
 };

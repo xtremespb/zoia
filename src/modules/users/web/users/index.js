@@ -10,6 +10,7 @@ export default routeId => ({
                 acl
             } = req.zoia;
             const site = new req.ZoiaSite(req, "users", this.mongo.db);
+            response.setSite(site);
             if (!auth.statusAdmin()) {
                 auth.clearAuthCookie();
                 return response.redirectToLogin(req.zoiaModulesConfig["users"].routes.users);
