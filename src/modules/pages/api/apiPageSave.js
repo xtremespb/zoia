@@ -89,9 +89,8 @@ export default () => ({
                         data[k].contentMin = await minify({
                             compressor: htmlMinifier,
                             options: {
-                                removeAttributeQuotes: true,
-                                collapseWhitespace: true,
-                                html5: true
+                                collapseInlineTagWhitespace: false,
+                                decodeEntities: true,
                             },
                             content: data[k].content
                         });
