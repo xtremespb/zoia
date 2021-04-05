@@ -1,3 +1,46 @@
+## [3.1.41](https://github.com/xtremespb/zoia3/compare/v3.1.40...v3.1.41) (2021-03-31)
+
+
+### Bug Fixes
+
+* error 500 & nulls ([aaea8c1](https://github.com/xtremespb/zoia3/commit/aaea8c1fb4b149f931aa204a2a42f23da0494ce2))
+
+## [3.1.40](https://github.com/xtremespb/zoia3/compare/v3.1.39...v3.1.40) (2021-03-31)
+
+
+### Bug Fixes
+
+* fixed internal components ([a5eeb5b](https://github.com/xtremespb/zoia3/commit/a5eeb5bd3a1a1680c1188c088b27cadaced01209))
+* modules updated ([707cca8](https://github.com/xtremespb/zoia3/commit/707cca88511ee3376870ed45b9986aa6d0a34a11))
+
+## [3.1.39](https://github.com/xtremespb/zoia3/compare/v3.1.38...v3.1.39) (2021-03-08)
+
+
+### Bug Fixes
+
+* missing module for UINT64 replaced by internal library ([4f457a7](https://github.com/xtremespb/zoia3/commit/4f457a7a62f1fa9d9dcc82411ca5cb83903747d8))
+
+## [3.1.38](https://github.com/xtremespb/zoia3/compare/v3.1.37...v3.1.38) (2021-03-05)
+
+
+### Bug Fixes
+
+* fixed some acebuilds-related bugs, moved textorbinary and xxhash64 to internal libraries ([6780799](https://github.com/xtremespb/zoia3/commit/6780799987a8a31889feb1a77e2e1685e52ab33c))
+
+## [3.1.37](https://github.com/xtremespb/zoia3/compare/v3.1.36...v3.1.37) (2021-03-04)
+
+
+### Bug Fixes
+
+* invalid width for tree column in Files module ([99ccaf5](https://github.com/xtremespb/zoia3/commit/99ccaf5c6f6b23cec2f27525626e72e2ca6c2d71))
+
+## [3.1.36](https://github.com/xtremespb/zoia3/compare/v3.1.35...v3.1.36) (2021-03-04)
+
+
+### Bug Fixes
+
+* modules updated & cleaned up ([d1ab059](https://github.com/xtremespb/zoia3/commit/d1ab05935a9a823dc45db78094748481eb426fcd))
+
 ## [3.1.35](https://github.com/xtremespb/zoia3/compare/v3.1.34...v3.1.35) (2021-03-03)
 
 
