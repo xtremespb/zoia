@@ -1,3 +1,10 @@
+## [3.1.43](https://github.com/xtremespb/zoia3/compare/v3.1.42...v3.1.43) (2021-04-05)
+
+
+### Bug Fixes
+
+* html minifier configuration ([2bcef5f](https://github.com/xtremespb/zoia3/commit/2bcef5fa34b5d684bf997a7399a9739816719426))
+
 ## [3.1.42](https://github.com/xtremespb/zoia3/compare/v3.1.41...v3.1.42) (2021-04-05)
 
 
