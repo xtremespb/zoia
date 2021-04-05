@@ -19,10 +19,14 @@ export default () => ({
                     serializedGlobals: {
                         template: true,
                         pageTitle: true,
+                        routes: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
                     pageTitle: site.i18n.t("moduleTitleImages"),
+                    routes: {
+                        ...req.zoiaConfig.routes
+                    },
                     ...await site.getGlobals(),
                 }
             });

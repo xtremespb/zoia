@@ -17,6 +17,7 @@ module.exports = class {
         this.cookieOptions = out.global.cookieOptions;
         this.siteId = out.global.siteId;
         this.i18n = out.global.i18n;
+        this.routes = out.global.routes;
     }
 
     setError(msg) {
@@ -380,7 +381,7 @@ module.exports = class {
         if (this.state.selectedCount === 1 && window.opener) {
             const item = this.state.files.find(i => i.name === this.state.selected[0]);
             if (item && !item.dir) {
-                window.opener.__zoiaCoreImagesBrowser.insertImageURL(`/images/${this.state.dir.join("/")}/${item.name}`.replace(/\/+/g, "/"));
+                window.opener.__zoiaCoreImagesBrowser.insertImageURL(`${this.routes.publicImages}/${this.state.dir.join("/")}/${item.name}`.replace(/\/+/g, "/"));
                 window.close();
             }
         }
