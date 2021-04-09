@@ -4,6 +4,7 @@ const browserPlugin = require("router5-plugin-browser").default;
 module.exports = class {
     onCreate(input) {
         this.routes = input.routes || [];
+        this.options = input.options || null;
     }
 
     onMount() {
