@@ -1,3 +1,10 @@
+## [3.1.44](https://github.com/xtremespb/zoia3/compare/v3.1.43...v3.1.44) (2021-04-09)
+
+
+### Bug Fixes
+
+* ability to add options for a router ([ca01055](https://github.com/xtremespb/zoia3/commit/ca01055d14043e3757b7a19930d455c971fddb13))
+
 ## [3.1.43](https://github.com/xtremespb/zoia3/compare/v3.1.42...v3.1.43) (2021-04-05)
 
 
