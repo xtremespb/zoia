@@ -272,7 +272,12 @@ export default {
         }));
     },
     getFormDataId(formData) {
-        return formData.fields.id && typeof formData.fields.id === "string" && formData.fields.id.match(/^[a-f0-9]{24}$/) ? formData.fields.id : undefined;
+        const id = formData.fields.id && typeof formData.fields.id === "string" && formData.fields.id.match(/^[a-f0-9]{24}$/) ? formData.fields.id : undefined;
+        return id;
+    },
+    getFormDataNumericId(formData) {
+        const id = formData.fields.id && typeof formData.fields.id === "string" && formData.fields.id.match(/^[0-9]+$/) ? parseInt(formData.fields.id, 10) : undefined;
+        return id;
     },
     formatBytes(bytes, decimals = 2) {
         const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];

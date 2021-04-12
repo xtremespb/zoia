@@ -243,7 +243,7 @@ module.exports = class {
             this.setState("deleteDialogActive", true);
             this.setState("deleteDialogIds", [dataset.id]);
             if (this.input.genericDelete.title) {
-                const titles = this.state.data.map(item => dataset.id === item.id || dataset.id === item._id ? item[this.input.genericDelete.title] : null).filter(item => item);
+                const titles = this.state.data.map(item => String(dataset.id) === String(item.id) || String(dataset.id) === String(item._id) ? item[this.input.genericDelete.title] : null).filter(item => item);
                 this.setState("deleteDialogTitles", titles);
             }
         }
