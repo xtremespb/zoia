@@ -24,7 +24,10 @@ module.exports = class {
             deleteDialogTitles: [],
             deleteDialogProgress: false,
             anyCheckboxSelected: false,
-            itemsPerPage: null
+            itemsPerPage: null,
+            filterDialogActive: false,
+            filterSelected: "",
+            filterSelectedData: {},
         };
         this.state = this.initialState;
         this.mounted = false;
@@ -280,6 +283,10 @@ module.exports = class {
         this.setState("deleteDialogActive", false);
     }
 
+    onFilterDialogClose() {
+        this.setState("filterDialogActive", false);
+    }
+
     async onDeleteDialogSubmit() {
         this.setState("deleteDialogProgress", true);
         try {
@@ -301,6 +308,27 @@ module.exports = class {
             this.setState("deleteDialogActive", false);
             this.setState("deleteDialogProgress", false);
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTableErr.delete`), "is-danger");
+        }
+    }
+
+    onFilterDialogSubmit() {
+        // Submit
+    }
+
+    onAddFilterClick(e) {
+        e.preventDefault();
+        this.setState("filterSelected", "");
+        this.setState("filterDialogActive", true);
+    }
+
+    onFilterSelectChange(e) {
+        e.preventDefault();
+        const filterId = e.target.value ? e.target.value : e.target.parentNode.value ? e.target.parentNode.value : e.target.parentNode.parentNode.value ? e.target.parentNode.parentNode.value : "";
+        this.setState("filterSelected", filterId);
+        const filterData = this.input.filter.find(f => f.id === filterId) || {};
+        this.setState("filterSelectedData", filterData);
+        if (filterData.type === "select") {
+            this.getComponent("z3_mt_mselect").func.setItems(filterData.items);
         }
     }
 };

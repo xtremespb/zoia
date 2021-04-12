@@ -1,0 +1,19 @@
+style.scss {
+    @import "./mselect.scss";
+}
+
+<if(input.active)>
+    <div class="z3-ms-wrap">
+        <for|i| of=state.items>
+            <div class="z3-ms-checkbox-row" on-click("onInputChange") data-id=i.id>
+                <div class="z3-pretty p-icon">
+                    <input type="checkbox" checked=(state.value.indexOf(String(i.id)) > -1)/>
+                    <div class="state">
+                        <i class="icon mdi mdi-check"/>
+                        <label>${i.label}</label>
+                    </div>
+                </div>
+            </div>
+        </for>
+    </div>
+</if>

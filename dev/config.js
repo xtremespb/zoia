@@ -26,6 +26,7 @@ module.exports = (env, argv) => {
     utils.generateModulesConfig(moduleDirs, languages, argv);
     utils.installRequiredPackages(moduleDirs, argv);
     utils.generateTemplatesJSON(argv);
+    utils.generateVariablesSCSS(argv);
     utils.rebuildMarkoTemplates(argv);
     utils.copyPublic(argv);
     utils.copyMailTemplates(argv);

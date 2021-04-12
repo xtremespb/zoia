@@ -37,6 +37,11 @@ style.scss {
     <div class="notification is-danger">${state.error}</div>
   </if>
   <else>
+    <if(input.filter && input.filter.length)>
+      <div class="mb-4">
+        <button class="button is-small" on-click("onAddFilterClick")>${out.global.i18n.t("mTable.addFilter")}</button>
+      </div>
+    </if>
     <div class="table-container">
       <table class=input.css id=`${input.id}_tableWrap`>
         <thead class="z3-mt-noselect">
@@ -153,6 +158,38 @@ style.scss {
           <fieldset disabled=state.deleteDialogProgress>
             <button class=`button is-primary${state.deleteDialogProgress ? " is-loading" : ""}` id=`${input.id}_deleteConfirmButton` on-click("onDeleteDialogSubmit")>${input.i18n.t("mTable.delete")}</button>
             <button class="button" on-click("onDeleteDialogClose")>${input.i18n.t("mTable.cancel")}</button>
+          </fieldset>
+        </footer>
+      </div>
+    </div>
+  </if>
+  <if(input.filter && input.filter.length)>
+    <div class=`modal${state.filterDialogActive ? " is-active" : ""}`>
+      <div class="modal-background"/>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">${input.i18n.t("mTable.addFilter")}</p>
+          <if(!state.deleteDialogProgress)>
+            <button class="delete" aria-label="close" on-click("onFilterDialogClose")/>
+          </if>
+        </header>
+        <section class="modal-card-body">
+          <div class="select is-fullwidth">
+            <select on-change("onFilterSelectChange")>
+              <option value="" selected=(state.filterSelected === "")>&ndash;</option>
+              <for|f| of=input.filter>
+                <option value=f.id selected=(state.filterSelected === f.id)>${f.label}</option>
+              </for>
+            </select>
+          </div>
+          <div class="mt-2">
+            <mselect key="z3_mt_mselect" active=(state.filterSelectedData.type === "select")/>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <fieldset>
+            <button class="button is-primary" on-click("onFilterDialogSubmit")>${input.i18n.t("mTable.add")}</button>
+            <button class="button" on-click("onFilterDialogClose")>${input.i18n.t("mTable.cancel")}</button>
           </fieldset>
         </footer>
       </div>

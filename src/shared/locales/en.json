@@ -45,6 +45,8 @@
     "mTable.deleteSuccess": "Operation complete",
     "mTableErr.general": "Could not load data from server, please try to reload",
     "mTableErr.delete": "Could not delete one or more items",
+    "mTable.addFilter": "Add Filter",
+    "mTable.add": "Add",
     "loading": "Loading, please wait…",
     "Bytes": "Bytes",
     "KB": "KB",

@@ -11,7 +11,7 @@ module.exports = class {
         this.siteId = out.global.siteId;
         this.updateStatus = out.global.updateStatus;
         this.currentVersion = out.global.packageJson.version;
-        this.updateVersion = out.global.updateTag.name;
+        this.updateVersion = out.global.updateTag ? out.global.updateTag.name : "";
     }
 
     onMount() {

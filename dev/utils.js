@@ -54,6 +54,17 @@ const generateTemplatesJSON = argv => {
     fs.writeJSONSync(path.resolve(`${__dirname}/../build/etc/templates.json`), templatesJSON);
 };
 
+const generateVariablesSCSS = async argv => {
+    const variablesSrcDir = `${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/src/bulma`;
+    const variablesDestDir = `${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/marko/zoia/variables`;
+    await fs.ensureDir(variablesDestDir);
+    await Promise.allSettled(["frontend", "admin", "components"].map(async s => {
+        if (!fs.existsSync(path.resolve(`${variablesDestDir}/${s}.scss`))) {
+            await fs.copy(path.resolve(`${variablesSrcDir}/${s}.scss`), path.resolve(`${variablesDestDir}/${s}.scss`));
+        }
+    }));
+};
+
 const rebuildMarkoTemplates = argv => {
     const templates = require(`${__dirname}/../build/etc/templates.json`);
     console.log("Re-building Marko templates macro...");
@@ -203,5 +214,6 @@ module.exports = {
     copyPublic,
     copyMailTemplates,
     installRequiredPackages,
-    runBuildScripts
+    runBuildScripts,
+    generateVariablesSCSS,
 };
