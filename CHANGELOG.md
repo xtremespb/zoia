@@ -1,3 +1,10 @@
+## [3.1.45](https://github.com/xtremespb/zoia3/compare/v3.1.44...v3.1.45) (2021-04-12)
+
+
+### Bug Fixes
+
+* variables are now split into different files ([6c03284](https://github.com/xtremespb/zoia3/commit/6c03284dca41ab793b051a359e5050da302932b8))
+
 ## [3.1.44](https://github.com/xtremespb/zoia3/compare/v3.1.43...v3.1.44) (2021-04-09)
 
 
