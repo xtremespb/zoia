@@ -1,0 +1,21 @@
+@import "../../zoia/variables/components.scss";
+
+.z3-ms-wrap {
+    border: 1px solid #eee;
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 200px;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.z3-ms-checkbox-row {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.z3-ms-checkbox-row:hover {
+    background: $yellow;
+}
