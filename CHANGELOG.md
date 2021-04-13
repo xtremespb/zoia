@@ -1,3 +1,10 @@
+## [3.1.46](https://github.com/xtremespb/zoia3/compare/v3.1.45...v3.1.46) (2021-04-13)
+
+
+### Bug Fixes
+
+* added "convert to boolean" for mform ([ab497ba](https://github.com/xtremespb/zoia3/commit/ab497bad650ad06563a69e32b526dd0640156725))
+
 ## [3.1.45](https://github.com/xtremespb/zoia3/compare/v3.1.44...v3.1.45) (2021-04-12)
 
 
