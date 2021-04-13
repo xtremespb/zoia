@@ -318,6 +318,7 @@ module.exports = class {
     onAddFilterClick(e) {
         e.preventDefault();
         this.setState("filterSelected", "");
+        this.setState("filterSelectedData", {});
         this.setState("filterDialogActive", true);
     }
 
@@ -328,6 +329,7 @@ module.exports = class {
         const filterData = this.input.filter.find(f => f.id === filterId) || {};
         this.setState("filterSelectedData", filterData);
         if (filterData.type === "select") {
+            this.getComponent("z3_mt_mselect").func.setValue([]);
             this.getComponent("z3_mt_mselect").func.setItems(filterData.items);
         }
     }

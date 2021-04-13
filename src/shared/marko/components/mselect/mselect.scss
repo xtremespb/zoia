@@ -16,6 +16,10 @@
     cursor: pointer;
 }
 
-.z3-ms-checkbox-row:hover {
+.z3-ms-checkbox-row-checked {
     background: $yellow;
+}
+
+.z3-ms-checkbox-row:hover:not(.z3-ms-checkbox-row-checked) {
+    background: $grey-lightest;
 }
