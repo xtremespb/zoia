@@ -9,11 +9,36 @@ module.exports = class {
         this.state = state;
         this.func = {
             setItems: this.setItems.bind(this),
+            setValue: this.setValue.bind(this),
+            getValue: this.getValue.bind(this),
         };
+    }
+
+    onMount() {
+        this.state.items = [];
+        this.state.value = [];
     }
 
     setItems(items) {
         this.state.items = items;
+    }
+
+    setValue(value) {
+        this.state.value = value;
+    }
+
+    getValue() {
+        const value = [];
+        this.state.value.map(v => {
+            const item = this.state.items.find(i => i.id === v);
+            if (item) {
+                value.push({
+                    id: v,
+                    label: item.label
+                });
+            }
+        });
+        return value;
     }
 
     onInputChange(e) {
@@ -26,7 +51,6 @@ module.exports = class {
         if (data.indexOf(dataset.id) > -1 && !checked) {
             data = data.filter(i => i !== dataset.id);
         }
-        this.state.value = data; 
-        console.log(this.state.value);
+        this.state.value = data;
     }
 };

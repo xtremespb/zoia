@@ -243,7 +243,7 @@ module.exports = class {
             this.setState("deleteDialogActive", true);
             this.setState("deleteDialogIds", [dataset.id]);
             if (this.input.genericDelete.title) {
-                const titles = this.state.data.map(item => dataset.id === item.id || dataset.id === item._id ? item[this.input.genericDelete.title] : null).filter(item => item);
+                const titles = this.state.data.map(item => String(dataset.id) === String(item.id) || String(dataset.id) === String(item._id) ? item[this.input.genericDelete.title] : null).filter(item => item);
                 this.setState("deleteDialogTitles", titles);
             }
         }
@@ -318,6 +318,7 @@ module.exports = class {
     onAddFilterClick(e) {
         e.preventDefault();
         this.setState("filterSelected", "");
+        this.setState("filterSelectedData", {});
         this.setState("filterDialogActive", true);
     }
 
@@ -328,6 +329,7 @@ module.exports = class {
         const filterData = this.input.filter.find(f => f.id === filterId) || {};
         this.setState("filterSelectedData", filterData);
         if (filterData.type === "select") {
+            this.getComponent("z3_mt_mselect").func.setValue([]);
             this.getComponent("z3_mt_mselect").func.setItems(filterData.items);
         }
     }
