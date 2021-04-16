@@ -5,6 +5,7 @@
         "Prehandler",
         "Regitser",
         "clonedeep",
+        "decidalo",
         "fastify",
         "formbody",
         "gulet",

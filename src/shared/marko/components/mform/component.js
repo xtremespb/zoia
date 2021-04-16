@@ -489,7 +489,7 @@ module.exports = class {
             if (!value || value === "") {
                 valueProcess = null;
             } else {
-                valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value, "") : String(value);
+                valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value, "") : field.convert === "boolean" ? value === "true" || value === "1" : String(value);
             }
         } else if (value === "" && field.emptyNull) {
             valueProcess = null;
