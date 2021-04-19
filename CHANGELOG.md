@@ -1,3 +1,10 @@
+## [3.1.48](https://github.com/xtremespb/zoia3/compare/v3.1.47...v3.1.48) (2021-04-19)
+
+
+### Bug Fixes
+
+* updated NPM modules (and disabled bulma-calendar for now) ([ebad7a8](https://github.com/xtremespb/zoia3/commit/ebad7a8687b8ee3afa504c617cf6ea5960c581bf))
+
 ## [3.1.47](https://github.com/xtremespb/zoia3/compare/v3.1.46...v3.1.47) (2021-04-16)
 
 
