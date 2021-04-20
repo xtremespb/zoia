@@ -1,3 +1,10 @@
+## [3.1.49](https://github.com/xtremespb/zoia3/compare/v3.1.48...v3.1.49) (2021-04-20)
+
+
+### Bug Fixes
+
+* NPM modules updated ([c6f5666](https://github.com/xtremespb/zoia3/commit/c6f5666e18bc9d07003dc34fd58eedaf59179e48))
+
 ## [3.1.48](https://github.com/xtremespb/zoia3/compare/v3.1.47...v3.1.48) (2021-04-19)
 
 
