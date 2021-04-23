@@ -1,4 +1,7 @@
 {
+    "global.dateFormatShort": "DD/MM/YYYY",
+    "global.langCode": "ru",
+    "global.weekStart": 1,
     "adminPanel": "Панель администратора",
     "modules": "Модули",
     "logOut": "Выход",
@@ -73,5 +76,10 @@
     "mFormErr.dataNotFound": "Данные не найдены",
     "maintenanceTitle": "Режим обслуживания",
     "maintenanceMessage": "В настояший момент сайт находится в режиме обслуживания. Пожалуйста, заходите позже.",
-    "demoMessage": "ZOIA запущена в демонстрационном режиме; вы не сможете вносить какие-либо изменения в базу данных или файловую систему"
+    "demoMessage": "ZOIA запущена в демонстрационном режиме; вы не сможете вносить какие-либо изменения в базу данных или файловую систему",
+    "calendar.today": "Сегодня",
+    "calendar.clear": "Очистить",
+    "calendar.cancel": "Отмена",
+    "calendar.now": "Сейчас",
+    "calendar.validate": "Проверить"
 }

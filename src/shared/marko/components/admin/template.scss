@@ -2,8 +2,8 @@
 @import "~@mdi/font/scss/materialdesignicons.scss";
 @import "../../../fonts/source-sans-pro/source-sans-pro.css";
 @import "~bulma/bulma";
-@import "~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass";
-@import "~bulma-extensions/bulma-switch/src/sass/index.sass";
+@import "../../../widgets/bulma-tooltip/index.sass";
+@import "../../../widgets/bulma-switch/index.sass";
 
 .z3-ap-html,
 .z3-ap-body {

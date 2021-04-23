@@ -6,6 +6,10 @@ const throttle = require("lodash.throttle");
 const {
     v4: uuidv4
 } = require("uuid");
+const {
+    addDays,
+    startOfWeek,
+} = require("date-fns");
 const axios = require("axios");
 const {
     cloneDeep
@@ -52,7 +56,19 @@ module.exports = class {
             enabled: true,
             mandatory: input.item.mandatory,
             item: input.item,
-            imageDragging: false
+            imageDragging: false,
+            calendar: {
+                data: [],
+                year: new Date().getFullYear(),
+                month: new Date().getMonth(),
+                day: new Date().getDay(),
+                visible: false,
+                selected: {
+                    d: null,
+                    m: null,
+                    y: null
+                },
+            }
         };
         this.state = state;
         this.func = {
@@ -129,6 +145,22 @@ module.exports = class {
         this.aceEditor.getSession().setValue(value);
         if (this.state.item.wysiwyg && this.ckEditor) {
             this.ckEditor.setData(value);
+        }
+    }
+
+    updateDatePicker() {
+        if (!this.calendar) {
+            return;
+        }
+        const value = this.input.value || {
+            start: null,
+            end: null,
+        };
+        if (value.start) {
+            this.calendar.startDate = value.start;
+        }
+        if (value.end) {
+            this.calendar.endDate = value.end;
         }
     }
 
@@ -209,9 +241,19 @@ module.exports = class {
                 if (this.state.item.wysiwyg && !this.state.item.source) {
                     this.initCkEditor();
                 }
-                // if (this.state.item.wysiwyg) {
-                //     await this.initCkEditor();
-                // }
+            });
+            break;
+        case "datepicker":
+            const calendar = cloneDeep(this.state.calendar);
+            calendar.data = this.updateCalendarData(this.state.calendar.year, this.state.calendar.month);
+            this.setState("calendar", calendar);
+            document.addEventListener("click", e => {
+                const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
+                if (this.state.calendar.visible && !calendarArea.contains(e.target)) {
+                    const calendarState = cloneDeep(this.state.calendar);
+                    calendarState.visible = false;
+                    this.setState("calendar", calendarState);
+                }
             });
             break;
         }
@@ -492,5 +534,76 @@ module.exports = class {
 
     onImageDragEnter(e) {
         e.preventDefault();
+    }
+
+    updateCalendarData(year, month) {
+        const startDate = startOfWeek(new Date(year, month, 1), {
+            weekStartsOn: parseInt(this.i18n.t("global.weekStart"), 10)
+        });
+        const rows = 6;
+        const cols = 7;
+        const length = rows * cols;
+        const data = Array.from({
+                length
+            })
+            .map((_, index) => ({
+                d: addDays(startDate, index).getDate(),
+                m: addDays(startDate, index).getMonth(),
+                y: addDays(startDate, index).getFullYear()
+            }))
+            .reduce((matrix, current, index, days) => !(index % cols !== 0) ? [...matrix, days.slice(index, index + cols)] : matrix, []);
+        if (data[5][0].d < 10) {
+            data.splice(5, 1);
+        }
+        return data;
+    }
+
+    onCalendarLeft(e) {
+        e.preventDefault();
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.month -= 1;
+        if (calendarOptions.month < 0) {
+            calendarOptions.month = 11;
+            calendarOptions.year -= 1;
+        }
+        calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
+        this.setState("calendar", calendarOptions);
+    }
+
+    onCalendarRight(e) {
+        e.preventDefault();
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.month += 1;
+        if (calendarOptions.month > 11) {
+            calendarOptions.month = 0;
+            calendarOptions.year += 1;
+        }
+        calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
+        this.setState("calendar", calendarOptions);
+    }
+
+    onDatePickerInputClick(e) {
+        e.stopPropagation();
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.visible = !calendarOptions.visible;
+        this.setState("calendar", calendarOptions);
+    }
+
+    onCalendarCellClick(e) {
+        if (e.target && e.target.dataset && e.target.dataset.y) {
+            const {
+                d,
+                m,
+                y
+            } = e.target.dataset;
+            const calendarOptions = cloneDeep(this.state.calendar);
+            calendarOptions.selected = {
+                d: parseInt(d, 10),
+                m: parseInt(m, 10),
+                y: parseInt(y, 10)
+            };
+            calendarOptions.visible = false;
+            this.setState("calendar", calendarOptions);
+        }
     }
 };

@@ -5,7 +5,7 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images", "image", "range"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images", "image", "range", "datepicker"];
 
 module.exports = class {
     onCreate(input) {
@@ -86,6 +86,10 @@ module.exports = class {
         case "keyvalue":
             return {
                 data: "", label: ""
+            };
+        case "datepicker":
+            return {
+                start: null, end: null
             };
         default:
             return null;
@@ -284,6 +288,9 @@ module.exports = class {
             }
             value = currentItemState;
             break;
+        case "datepicker":
+            value = cloneDeep(value);
+            break;
         default:
             value = String(value).trim();
         }
@@ -479,7 +486,6 @@ module.exports = class {
                 }
             }
         });
-        // console.log(validationResult);
         return validationResult;
     }
 
@@ -499,6 +505,9 @@ module.exports = class {
         }
         if (field.type === "keyvalue") {
             valueProcess = value.data;
+        }
+        if (field.type === "datepicker") {
+            valueProcess = value;
         }
         return valueProcess;
     }

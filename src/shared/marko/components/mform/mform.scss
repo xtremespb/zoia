@@ -1,3 +1,5 @@
+@import "../../zoia/variables/components.scss";
+
 .z3-mf-field-columns,
 .z3-mf-field-columns-group {
     margin-top: 0 !important;
@@ -168,6 +170,58 @@
 
 .z3-mf-drop-area-over {
     background: hsl(48, 100%, 67%);
+}
+
+.z3-mf-calendar-wrap {
+    border: 1px solid $grey-lightest;
+    min-width: 230px;
+    position: absolute;
+    z-index: 1000;
+    background: $white;
+    box-shadow: -2px 4px 8px -5px rgba(34, 60, 80, 0.2);
+    margin-top: 1px;
+    border-radius: 4px;
+}
+
+.z3-mf-calendar-dow {
+    background: $grey-light;
+}
+
+.z3-mf-calendar-cell {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 1px;
+}
+
+.z3-mf-calendar-cell-day {
+    cursor: pointer;
+}
+
+.z3-mf-calendar-cell-day:hover {
+    border: 1px solid $primary;
+}
+
+.z3-mf-calendar-cell-day-side {
+    background: $grey-lightest;
+}
+
+.z3-mf-calendar-cell-day-today {
+    border: 1px dotted $grey;
+}
+
+.z3-mf-calendar-cell-day-selected {
+    background: $primary;
+    color: $white;
+}
+
+.z3-mf-calendar-head-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (max-width: 1024px) {

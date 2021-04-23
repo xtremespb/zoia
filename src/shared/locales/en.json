@@ -1,4 +1,9 @@
 {
+    "global.dateFormatShort": "yyyy-MM-dd",
+    "global.langCode": "en",
+    "global.weekStart": "0",
+    "global.weekDays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "global.monthsFull": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     "adminPanel": "Admin Panel",
     "modules": "Modules",
     "logOut": "Log Out",
@@ -75,5 +80,10 @@
     "mFormErr.dataNotFound": "Data not found",
     "maintenanceTitle": "Maintenance",
     "maintenanceMessage": "Site is currently in the maintenance mode, please come back later.",
-    "demoMessage": "ZOIA is started in Demo Mode, which means that you won't be able to perform any changes to database or file system"
+    "demoMessage": "ZOIA is started in Demo Mode, which means that you won't be able to perform any changes to database or file system",
+    "calendar.today": "Today",
+    "calendar.clear": "Clear",
+    "calendar.cancel": "Cancel",
+    "calendar.now": "Now",
+    "calendar.validate": "Validate"
 }
