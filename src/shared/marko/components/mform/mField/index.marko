@@ -473,6 +473,11 @@ Date Picker
             </for>
           </div>
         </for>
+        <div class="columns is-gapless is-mobile is-size-7">
+          <div class="column is-one-third z3-mf-calendar-control has-text-primary" on-click("onCalendarToday")>${out.global.i18n.t("calendar.today")}</div>
+          <div class="column is-one-third z3-mf-calendar-control has-text-danger" on-click("onCalendarClear")>${out.global.i18n.t("calendar.clear")}</div>
+          <div class="column is-one-third z3-mf-calendar-control has-text-grey" on-click("hideCalendar")>${out.global.i18n.t("calendar.cancel")}</div>
+        </div>
     </if>
     <if(state.calendar.mode === "month")>
       <div class="columns is-gapless is-mobile is-multiline is-size-7">

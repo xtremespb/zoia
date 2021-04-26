@@ -191,7 +191,7 @@ module.exports = class {
     }
 
     updateDatePicker(value) {
-        const calendar = cloneDeep(this.state.calendar);
+        let calendar = cloneDeep(this.state.calendar);
         calendar.value = parse(value, "yyyyMMdd", new Date()) || null;
         // If the date object is invalid it will return 'NaN' on getTime() and NaN is never equal to itself.
         // eslint-disable-next-line no-self-compare
@@ -205,24 +205,14 @@ module.exports = class {
             calendar.year = calendar.selected.y;
             calendar.month = calendar.selected.m;
         } else {
-            calendar.value = null;
-            calendar.valueText = null;
-            calendar.year = new Date().getFullYear();
-            calendar.month = new Date().getMonth();
-            calendar.selected = {
-                d: null,
-                m: null,
-                y: null
-            };
+            calendar = this.clearCalendar(calendar);
         }
         calendar.data = this.updateCalendarData(calendar.year, calendar.month);
         this.setState("calendar", calendar);
         document.addEventListener("click", e => {
             const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
             if (this.state.calendar.visible && !calendarArea.contains(e.target)) {
-                const calendarState = cloneDeep(this.state.calendar);
-                calendarState.visible = false;
-                this.setState("calendar", calendarState);
+                this.hideCalendar();
             }
         });
     }
@@ -289,9 +279,7 @@ module.exports = class {
             document.addEventListener("click", e => {
                 const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
                 if (this.state.calendar.visible && !calendarArea.contains(e.target)) {
-                    const calendarState = cloneDeep(this.state.calendar);
-                    calendarState.visible = false;
-                    this.setState("calendar", calendarState);
+                    this.hideCalendar();
                 }
             });
 
@@ -698,5 +686,61 @@ module.exports = class {
         calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
         calendarOptions.mode = "date";
         this.setState("calendar", calendarOptions);
+    }
+
+    hideCalendar(e) {
+        if (e && e.preventDefault) {
+            e.preventDefault();
+        }
+        const calendarState = cloneDeep(this.state.calendar);
+        calendarState.visible = false;
+        this.setState("calendar", calendarState);
+    }
+
+    clearCalendar(calendar) {
+        calendar.value = null;
+        calendar.valueText = null;
+        calendar.year = new Date().getFullYear();
+        calendar.month = new Date().getMonth();
+        calendar.selected = {
+            d: null,
+            m: null,
+            y: null
+        };
+        return calendar;
+    }
+
+    onCalendarClear(e) {
+        e.preventDefault();
+        const calendar = this.clearCalendar(cloneDeep(this.state.calendar));
+        calendar.visible = false;
+        this.setState("calendar", calendar);
+        this.emit("value-change", {
+            type: "datepicker",
+            id: this.state.item.id,
+            value: calendar.value
+        });
+    }
+
+    onCalendarToday(e) {
+        e.preventDefault();
+        const calendar = cloneDeep(this.state.calendar);
+        calendar.value = new Date();
+        calendar.valueText = format(calendar.value, this.i18n.t("global.dateFormatShort"));
+        calendar.selected = {
+            y: calendar.value.getFullYear(),
+            m: calendar.value.getMonth(),
+            d: calendar.value.getDate(),
+        };
+        calendar.year = calendar.selected.y;
+        calendar.month = calendar.selected.m;
+        calendar.data = this.updateCalendarData(calendar.year, calendar.month);
+        calendar.visible = false;
+        this.setState("calendar", calendar);
+        this.emit("value-change", {
+            type: "datepicker",
+            id: this.state.item.id,
+            value: calendar.value
+        });
     }
 };

@@ -251,6 +251,19 @@
     overflow-y: scroll;
 }
 
+.z3-mf-calendar-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border-top: 1px solid $grey-lightest;
+    cursor: pointer;
+}
+
+.z3-mf-calendar-control:hover {
+    background: $white-bis;
+}
+
 @media (max-width: 1024px) {
 
     .z3-mf-captcha-input,
