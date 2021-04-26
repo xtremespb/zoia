@@ -192,8 +192,10 @@ module.exports = class {
 
     updateDatePicker(value) {
         const calendar = cloneDeep(this.state.calendar);
-        if (value) {
-            calendar.value = parse(value, "yyyyMMdd", new Date());
+        calendar.value = parse(value, "yyyyMMdd", new Date()) || null;
+        // If the date object is invalid it will return 'NaN' on getTime() and NaN is never equal to itself.
+        // eslint-disable-next-line no-self-compare
+        if (value && calendar.value && calendar.value instanceof Date && calendar.value.getTime() === calendar.value.getTime()) {
             calendar.valueText = format(calendar.value, this.i18n.t("global.dateFormatShort"));
             calendar.selected = {
                 y: calendar.value.getFullYear(),
@@ -625,6 +627,7 @@ module.exports = class {
         const calendarOptions = cloneDeep(this.state.calendar);
         // calendarOptions.visible = !calendarOptions.visible;
         calendarOptions.visible = true;
+        calendarOptions.mode = "date";
         this.setState("calendar", calendarOptions);
     }
 
@@ -667,6 +670,33 @@ module.exports = class {
         } = e.target.dataset;
         const calendarOptions = cloneDeep(this.state.calendar);
         calendarOptions.mode = mode;
+        this.setState("calendar", calendarOptions);
+        if (mode === "year") {
+            setTimeout(() => document.getElementById(`${this.input.id}_${this.input.item.id}_year_${this.state.calendar.year}`).scrollIntoView(), 100);
+        }
+    }
+
+    onCalendarMonthClick(e) {
+        e.preventDefault();
+        const {
+            month
+        } = e.target.dataset;
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.month = parseInt(month, 10);
+        calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
+        calendarOptions.mode = "date";
+        this.setState("calendar", calendarOptions);
+    }
+
+    onCalendarYearClick(e) {
+        e.preventDefault();
+        const {
+            year
+        } = e.target.dataset;
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.year = parseInt(year, 10);
+        calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
+        calendarOptions.mode = "date";
         this.setState("calendar", calendarOptions);
     }
 };

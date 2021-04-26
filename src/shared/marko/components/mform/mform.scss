@@ -224,11 +224,31 @@
     justify-content: center;
 }
 
-.z3-mf-calednar-cell-month {
+.z3-mf-calednar-cell-month,
+.z3-mf-calednar-cell-year {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 30px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.z3-mf-calednar-cell-year-now,
+.z3-mf-calednar-cell-month-now {
+    background: $primary;
+    color: $white;
+}
+
+.z3-mf-calednar-cell-year:hover:not(.z3-mf-calednar-cell-year-now),
+.z3-mf-calednar-cell-month:hover:not(.z3-mf-calednar-month-year-now) {
+    background: $grey-lightest;
+    color: $black;
+}
+
+.z3-mf-calednar-wrap-year {
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 @media (max-width: 1024px) {

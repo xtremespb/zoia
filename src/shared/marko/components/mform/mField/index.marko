@@ -412,7 +412,7 @@ Range Input
     </if>
   </label>
   <div class="control z3-mf-range-wrap">
-    <input type="range" class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` value=input.value min=input.item.min max=input.item.max on-change("onFieldValueChange") on-input("onRangeFieldValueChange") data-id=state.item.id disabled=!state.enabled/>
+    <input type="range" class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` value=input.value min=input.item.min max=input.item.max on-change("onFieldValueChange") on-input("onRangeFieldValueChange") data-id=state.item.id disabled=(!state.enabled)/>
     <span class="tag is-light mt-2 ml-2">${input.value}</span>
   </div>
   <if(state.item.helpText)>
@@ -449,7 +449,7 @@ Date Picker
             </a>
           </div>
           <div class="column is-auto z3-mf-calendar-head-date">
-            <a data-mode="month" on-click("onCalendarModeChange")>${out.global.i18n.t("global.monthsFull")[state.calendar.month]}</a>&nbsp;${state.calendar.year}
+            <a data-mode="month" on-click("onCalendarModeChange")>${out.global.i18n.t("global.monthsFull")[state.calendar.month]}</a>&nbsp;<a data-mode="year" on-click("onCalendarModeChange")>${state.calendar.year}</a>
           </div>
           <div class="column is-narrow">
             <a class="button is-ghost" on-click("onCalendarRight")>
@@ -477,7 +477,14 @@ Date Picker
     <if(state.calendar.mode === "month")>
       <div class="columns is-gapless is-mobile is-multiline is-size-7">
         <for|m,i| of=out.global.i18n.t("global.monthsFull")>
-          <div class="column is-one-third z3-mf-calednar-cell-month">${m}</div>
+          <div class=`column is-one-third z3-mf-calednar-cell-month${state.calendar.month === i ? " z3-mf-calednar-cell-month-now" : ""}` data-month=i on-click("onCalendarMonthClick")>${m}</div>
+        </for>
+      </div>
+    </if>
+    <if(state.calendar.mode === "year")>
+      <div class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year">
+        <for|y,i| of=[...Array(100).keys()].map(i => i + new Date().getFullYear() - 50)>
+          <div class=`column is-one-third z3-mf-calednar-cell-year${state.calendar.year === y ? " z3-mf-calednar-cell-year-now" : ""}` id=`${input.id}_${state.item.id}_year_${y}` data-year=y on-click("onCalendarYearClick")>${y}</div>
         </for>
       </div>
     </if>
