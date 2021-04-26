@@ -1,6 +1,9 @@
 const {
     InputMask
 } = require("imask");
+const {
+    format,
+} = require("date-fns");
 const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
@@ -87,10 +90,8 @@ module.exports = class {
             return {
                 data: "", label: ""
             };
-        case "datepicker":
-            return {
-                start: null, end: null
-            };
+            // case "datepicker":
+            // return "";
         default:
             return null;
         }
@@ -289,7 +290,7 @@ module.exports = class {
             value = currentItemState;
             break;
         case "datepicker":
-            value = cloneDeep(value);
+            value = value ? format(value, "yyyyMMdd") : null;
             break;
         default:
             value = String(value).trim();

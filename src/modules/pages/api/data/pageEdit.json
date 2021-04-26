@@ -22,15 +22,7 @@
                 "maxLength": 64
             },
             "date": {
-                "type": "object",
-                "properties": {
-                    "start": {
-                        "type": ["object", "null"]
-                    },
-                    "end": {
-                        "type": ["object", "null"]
-                    }
-                },
+                "type": "string",
                 "required": []
             }
         },

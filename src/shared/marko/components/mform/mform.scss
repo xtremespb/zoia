@@ -174,7 +174,7 @@
 
 .z3-mf-calendar-wrap {
     border: 1px solid $grey-lightest;
-    min-width: 230px;
+    width: 230px;
     position: absolute;
     z-index: 1000;
     background: $white;
@@ -222,6 +222,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.z3-mf-calednar-cell-month {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
 }
 
 @media (max-width: 1024px) {

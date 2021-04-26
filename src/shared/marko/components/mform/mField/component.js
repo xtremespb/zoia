@@ -9,6 +9,8 @@ const {
 const {
     addDays,
     startOfWeek,
+    format,
+    parse,
 } = require("date-fns");
 const axios = require("axios");
 const {
@@ -61,13 +63,15 @@ module.exports = class {
                 data: [],
                 year: new Date().getFullYear(),
                 month: new Date().getMonth(),
-                day: new Date().getDay(),
                 visible: false,
                 selected: {
                     d: null,
                     m: null,
                     y: null
                 },
+                value: null,
+                valueText: null,
+                mode: "date",
             }
         };
         this.state = state;
@@ -110,6 +114,9 @@ module.exports = class {
         case "ace":
             throttle(this.updateAce.bind(this), 300)();
             break;
+        case "datepicker":
+            this.updateDatePicker(this.input.value);
+            break;
         }
     }
 
@@ -148,22 +155,6 @@ module.exports = class {
         }
     }
 
-    updateDatePicker() {
-        if (!this.calendar) {
-            return;
-        }
-        const value = this.input.value || {
-            start: null,
-            end: null,
-        };
-        if (value.start) {
-            this.calendar.startDate = value.start;
-        }
-        if (value.end) {
-            this.calendar.endDate = value.end;
-        }
-    }
-
     async reloadCaptcha() {
         if (this.state.item.type === "captcha") {
             try {
@@ -196,6 +187,41 @@ module.exports = class {
                 id: this.state.item.id,
                 value
             });
+        });
+    }
+
+    updateDatePicker(value) {
+        const calendar = cloneDeep(this.state.calendar);
+        if (value) {
+            calendar.value = parse(value, "yyyyMMdd", new Date());
+            calendar.valueText = format(calendar.value, this.i18n.t("global.dateFormatShort"));
+            calendar.selected = {
+                y: calendar.value.getFullYear(),
+                m: calendar.value.getMonth(),
+                d: calendar.value.getDate(),
+            };
+            calendar.year = calendar.selected.y;
+            calendar.month = calendar.selected.m;
+        } else {
+            calendar.value = null;
+            calendar.valueText = null;
+            calendar.year = new Date().getFullYear();
+            calendar.month = new Date().getMonth();
+            calendar.selected = {
+                d: null,
+                m: null,
+                y: null
+            };
+        }
+        calendar.data = this.updateCalendarData(calendar.year, calendar.month);
+        this.setState("calendar", calendar);
+        document.addEventListener("click", e => {
+            const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
+            if (this.state.calendar.visible && !calendarArea.contains(e.target)) {
+                const calendarState = cloneDeep(this.state.calendar);
+                calendarState.visible = false;
+                this.setState("calendar", calendarState);
+            }
         });
     }
 
@@ -245,7 +271,18 @@ module.exports = class {
             break;
         case "datepicker":
             const calendar = cloneDeep(this.state.calendar);
-            calendar.data = this.updateCalendarData(this.state.calendar.year, this.state.calendar.month);
+            if (this.input.value) {
+                calendar.value = parse(this.input.value, "yyyyMMdd");
+                calendar.valueText = format(this.input.value, this.i18n.t("global.dateFormatShort"));
+                calendar.selected = {
+                    y: calendar.value.getFullYear(),
+                    m: calendar.value.getMonth(),
+                    d: calendar.value.getDate(),
+                };
+                calendar.year = calendar.selected.y;
+                calendar.month = calendar.selected.m;
+            }
+            calendar.data = this.updateCalendarData(calendar.year, calendar.month);
             this.setState("calendar", calendar);
             document.addEventListener("click", e => {
                 const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
@@ -255,6 +292,7 @@ module.exports = class {
                     this.setState("calendar", calendarState);
                 }
             });
+
             break;
         }
         this.emit("settled");
@@ -585,8 +623,17 @@ module.exports = class {
     onDatePickerInputClick(e) {
         e.stopPropagation();
         const calendarOptions = cloneDeep(this.state.calendar);
-        calendarOptions.visible = !calendarOptions.visible;
+        // calendarOptions.visible = !calendarOptions.visible;
+        calendarOptions.visible = true;
         this.setState("calendar", calendarOptions);
+    }
+
+    onDatePickerKeyPress(e) {
+        if ((e.which || e.keyCode) === 9 && this.state.calendar.visible) {
+            const calendarOptions = cloneDeep(this.state.calendar);
+            calendarOptions.visible = false;
+            this.setState("calendar", calendarOptions);
+        }
     }
 
     onCalendarCellClick(e) {
@@ -603,7 +650,23 @@ module.exports = class {
                 y: parseInt(y, 10)
             };
             calendarOptions.visible = false;
+            calendarOptions.value = new Date(calendarOptions.selected.y, calendarOptions.selected.m, calendarOptions.selected.d);
+            calendarOptions.valueText = format(calendarOptions.value, this.i18n.t("global.dateFormatShort"));
             this.setState("calendar", calendarOptions);
+            this.emit("value-change", {
+                type: "datepicker",
+                id: this.state.item.id,
+                value: calendarOptions.value
+            });
         }
+    }
+
+    onCalendarModeChange(e) {
+        const {
+            mode
+        } = e.target.dataset;
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.mode = mode;
+        this.setState("calendar", calendarOptions);
     }
 };
