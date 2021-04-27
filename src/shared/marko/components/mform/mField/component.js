@@ -11,12 +11,30 @@ const {
     startOfWeek,
     format,
     parse,
+    parseISO,
 } = require("date-fns");
 const axios = require("axios");
 const {
     cloneDeep
 } = require("lodash");
 const CKEditorImageUploadAdapter = require("./CKEditorImageUploadAdapter");
+
+// Polyfill for Object.fromEntries (missing in CKEditor)
+if (!Object.fromEntries) {
+    Object.defineProperty(Object, "fromEntries", {
+        value(entries) {
+            if (!entries || !entries[Symbol.iterator]) {
+                throw new Error("Object.fromEntries() requires a single iterable argument");
+            }
+            const o = {};
+            Object.keys(entries).forEach((key) => {
+                const [k, v] = entries[key];
+                o[k] = v;
+            });
+            return o;
+        },
+    });
+}
 
 if (process.browser) {
     // require("ace-builds/webpack-resolver");
@@ -193,6 +211,10 @@ module.exports = class {
     updateDatePicker(value) {
         let calendar = cloneDeep(this.state.calendar);
         calendar.value = parse(value, "yyyyMMdd", new Date()) || null;
+        // eslint-disable-next-line no-self-compare
+        if (!calendar.value || calendar.value instanceof Date || calendar.value.getTime() !== calendar.value.getTime()) {
+            calendar.value = parseISO(value);
+        }
         // If the date object is invalid it will return 'NaN' on getTime() and NaN is never equal to itself.
         // eslint-disable-next-line no-self-compare
         if (value && calendar.value && calendar.value instanceof Date && calendar.value.getTime() === calendar.value.getTime()) {

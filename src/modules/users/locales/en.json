@@ -46,5 +46,6 @@
     "read": "Read",
     "update": "Update",
     "whitelist": "White List",
-    "blacklist": "Black List"
+    "blacklist": "Black List",
+    "coreFunctions": "Core"
 }

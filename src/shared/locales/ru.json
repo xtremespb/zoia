@@ -1,7 +1,9 @@
 {
-    "global.dateFormatShort": "DD/MM/YYYY",
+    "global.dateFormatShort": "dd/MM/yyyy",
     "global.langCode": "ru",
     "global.weekStart": 1,
+    "global.weekDays": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+    "global.monthsFull": ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
     "adminPanel": "Панель администратора",
     "modules": "Модули",
     "logOut": "Выход",
@@ -78,8 +80,6 @@
     "maintenanceMessage": "В настояший момент сайт находится в режиме обслуживания. Пожалуйста, заходите позже.",
     "demoMessage": "ZOIA запущена в демонстрационном режиме; вы не сможете вносить какие-либо изменения в базу данных или файловую систему",
     "calendar.today": "Сегодня",
-    "calendar.clear": "Очистить",
-    "calendar.cancel": "Отмена",
-    "calendar.now": "Сейчас",
-    "calendar.validate": "Проверить"
+    "calendar.clear": "Очистка",
+    "calendar.cancel": "Отмена"
 }

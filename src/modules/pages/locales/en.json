@@ -34,5 +34,7 @@
     "couldNotLoadDataFromServer": "Could not load data from server",
     "cannotLoadFoldersTree": "Could not load folder data from server, please refresh this page",
     "duplicateTreeId": "Another folder with such ID already exists",
-    "folderIdHelpText": "Latin characters and numbers only"
+    "folderIdHelpText": "Latin characters and numbers only",
+    "date": "Date",
+    "dateHelpText": "Publish Date"
 }

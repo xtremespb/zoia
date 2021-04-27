@@ -52,6 +52,9 @@ export default class {
             } else {
                 this.allowEverything();
             }
+            if (this.permissions["users"]) {
+                this.permissions["acl"] = this.permissions["users"];
+            }
         } catch {
             // Ignore
         }

@@ -17,7 +17,17 @@ style.scss {
   <body class="z3-cr-images-body">
     <i18n/>
     <div class="container z3-cr-images-container">
-      <browser/>
+      <if(out.global.accessAllowed)>
+        <browser/>
+      </if>
+      <else>
+        <h1 class="z3-ap-head-thin">
+          <span class="icon">
+            <i class="mdi z3-ap-mdi-head mdi-dark mdi-cancel"/>
+          </span>&nbsp;${out.global.i18n.t("accessDenied")}
+        </h1>
+        <div class="mt-3">${out.global.i18n.t("accessDeniedDesc")}</div>
+      </else>
     </div>
   </body>
 </html>

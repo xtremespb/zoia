@@ -494,7 +494,7 @@ module.exports = class {
         let valueProcess = value;
         if (field.convert) {
             if (!value || value === "") {
-                valueProcess = null;
+                valueProcess = field.convert === "string" ? "" : null;
             } else {
                 valueProcess = field.convert === "integer" ? parseInt(value, 10) : field.convert === "float" ? parseFloat(value, "") : field.convert === "boolean" ? value === "true" || value === "1" : String(value);
             }

@@ -6,15 +6,17 @@
         <div class="panel-block">
           <ul class="menu-list z3-ap-side-menu-list">
             <for|module| of=input.modules>
-              <li>
-                <a href=out.global.i18n.getLocalizedURL(module.link, out.global.language) class=(module.id === input.moduleId ? "is-active" : "")>
-                  <div class="z3-ap-menu-icon-wrap">
-                    <span class="icon">
-                      <i class=`mdi mdi-18px mdi-${module.icon}`/>
-                    </span>
-                  </div>${module.title[out.global.language]}
-                </a>
-              </li>
+              <if(module.allowed !== false)>
+                <li>
+                  <a href=out.global.i18n.getLocalizedURL(module.link, out.global.language) class=(module.id === input.moduleId ? "is-active" : "")>
+                    <div class="z3-ap-menu-icon-wrap">
+                      <span class="icon">
+                        <i class=`mdi mdi-18px mdi-${module.icon}`/>
+                      </span>
+                    </div>${module.title[out.global.language]}
+                  </a>
+                </li>
+              </if>
             </for>
           </ul>
         </div>

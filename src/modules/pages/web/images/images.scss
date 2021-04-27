@@ -156,3 +156,14 @@
 .z3-cr-images-menu {
     position: absolute;
 }
+
+.z3-ap-head-thin {
+    font-size: 180%;
+    font-weight: 200;
+    margin: -10px -20px 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    z-index: 9;
+    border-bottom: 1px solid $grey-lightest;
+}
