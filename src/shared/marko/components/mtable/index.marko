@@ -182,8 +182,18 @@ style.scss {
               </for>
             </select>
           </div>
-          <div class="mt-2">
-            <mselect key="z3_mt_mselect" active=(state.filterSelectedData.type === "select")/>
+          <div class=`select is-fullwidth mt-2 mb-2${state.filterSelected === "" ? " is-hidden" : ""}`>
+            <select on-change("onFilterModeSelectChange")>
+              <for|f| of=["equals", "notEquals", "oneOf", "noneOf", "largerThan", "largerThanOrEquals", "smallerThan", "smallerThanOrEquals"]>
+                <if((!f.match(/^larger/) && !f.match(/^smaller/)) || state.filterSelectedData.integer)>
+                  <option value=f selected=(state.filterMode === f)>${input.i18n.t(`mTable.filter.${f}`)}</option>
+                </if>
+              </for>
+            </select>
+          </div>
+          <mselect key="z3_mt_mselect" active=(state.filterSelectedData.type === "select")/>
+          <div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")>
+            <input class="input" type="text" placeholder=input.i18n.t("mTable.filterValue")>
           </div>
         </section>
         <footer class="modal-card-foot">

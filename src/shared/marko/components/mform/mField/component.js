@@ -212,7 +212,7 @@ module.exports = class {
         let calendar = cloneDeep(this.state.calendar);
         calendar.value = parse(value, "yyyyMMdd", new Date()) || null;
         // eslint-disable-next-line no-self-compare
-        if (!calendar.value || calendar.value instanceof Date || calendar.value.getTime() !== calendar.value.getTime()) {
+        if (!calendar.value || (calendar.value instanceof Date && calendar.value.getTime() !== calendar.value.getTime())) {
             calendar.value = parseISO(value);
         }
         // If the date object is invalid it will return 'NaN' on getTime() and NaN is never equal to itself.

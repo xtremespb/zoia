@@ -3,6 +3,8 @@ const {
 } = require("imask");
 const {
     format,
+    parse,
+    parseISO,
 } = require("date-fns");
 const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
@@ -716,6 +718,20 @@ module.exports = class {
                 data[tab.id] = {};
                 this.fieldsFlat.map(field => {
                     data[tab.id][field.id] = raw[tab.id] && raw[tab.id][field.id] ? raw[tab.id][field.id] : this.getDefaultValue(field);
+                    if (field.type === "datepicker" && data[tab.id][field.id]) {
+                        const date = data[tab.id][field.id];
+                        data[tab.id][field.id] = parse(date, "yyyyMMdd", new Date()) || null;
+                        // eslint-disable-next-line no-self-compare
+                        if (!data[tab.id][field.id] || (data[tab.id][field.id] instanceof Date && data[tab.id][field.id].getTime() !== data[tab.id][field.id].getTime())) {
+                            data[tab.id][field.id] = parseISO(date);
+                        }
+                        // eslint-disable-next-line no-self-compare
+                        if (data[tab.id][field.id] instanceof Date && data[tab.id][field.id].getTime() === data[tab.id][field.id].getTime()) {
+                            data[tab.id][field.id] = format(data[tab.id][field.id], "yyyyMMdd");
+                        } else {
+                            data[tab.id][field.id] = null;
+                        }
+                    }
                     if (this.masked[field.id]) {
                         this.masked[field.id].destroy();
                         setTimeout(() => {
@@ -730,6 +746,20 @@ module.exports = class {
                 this.fieldsFlat.map(field => {
                     if (raw[field.id]) {
                         data[tab.id][field.id] = raw[field.id];
+                        if (field.type === "datepicker" && data[tab.id][field.id]) {
+                            const date = data[tab.id][field.id];
+                            data[tab.id][field.id] = parse(date, "yyyyMMdd", new Date()) || null;
+                            // eslint-disable-next-line no-self-compare
+                            if (!data[tab.id][field.id] || (data[tab.id][field.id] instanceof Date && data[tab.id][field.id].getTime() !== data[tab.id][field.id].getTime())) {
+                                data[tab.id][field.id] = parseISO(date);
+                            }
+                            // eslint-disable-next-line no-self-compare
+                            if (data[tab.id][field.id] instanceof Date && data[tab.id][field.id].getTime() === data[tab.id][field.id].getTime()) {
+                                data[tab.id][field.id] = format(data[tab.id][field.id], "yyyyMMdd");
+                            } else {
+                                data[tab.id][field.id] = null;
+                            }
+                        }
                         if (this.masked[field.id]) {
                             this.masked[field.id].destroy();
                             setTimeout(() => {
@@ -745,6 +775,20 @@ module.exports = class {
             data.__default = {};
             this.fieldsFlat.map(field => {
                 data.__default[field.id] = raw[field.id] || this.getDefaultValue(field);
+                if (field.type === "datepicker" && data.__default[field.id]) {
+                    const date = data.__default[field.id];
+                    data.__default[field.id] = parse(date, "yyyyMMdd", new Date()) || null;
+                    // eslint-disable-next-line no-self-compare
+                    if (!data.__default[field.id] || (data.__default[field.id] instanceof Date && data.__default[field.id].getTime() !== data.__default[field.id].getTime())) {
+                        data.__default[field.id] = parseISO(date);
+                    }
+                    // eslint-disable-next-line no-self-compare
+                    if (data.__default[field.id] instanceof Date && data.__default[field.id].getTime() === data.__default[field.id].getTime()) {
+                        data.__default[field.id] = format(data.__default[field.id], "yyyyMMdd");
+                    } else {
+                        data.__default[field.id] = null;
+                    }
+                }
                 if (this.masked[field.id]) {
                     this.masked[field.id].destroy();
                     setTimeout(() => {

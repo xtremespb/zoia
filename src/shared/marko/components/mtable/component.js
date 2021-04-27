@@ -27,6 +27,7 @@ module.exports = class {
             itemsPerPage: null,
             filterDialogActive: false,
             filterSelected: "",
+            filterMode: "equals",
             filterSelectedData: {},
         };
         this.state = this.initialState;
@@ -318,6 +319,7 @@ module.exports = class {
     onAddFilterClick(e) {
         e.preventDefault();
         this.setState("filterSelected", "");
+        this.setState("filterMode", "equals");
         this.setState("filterSelectedData", {});
         this.setState("filterDialogActive", true);
     }
@@ -332,5 +334,11 @@ module.exports = class {
             this.getComponent("z3_mt_mselect").func.setValue([]);
             this.getComponent("z3_mt_mselect").func.setItems(filterData.items);
         }
+    }
+
+    onFilterModeSelectChange(e) {
+        e.preventDefault();
+        const filterMode = e.target.value ? e.target.value : e.target.parentNode.value ? e.target.parentNode.value : e.target.parentNode.parentNode.value ? e.target.parentNode.parentNode.value : "";
+        this.setState("filterMode", filterMode);
     }
 };
