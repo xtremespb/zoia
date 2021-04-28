@@ -1,6 +1,7 @@
 const axios = require("axios");
 const throttle = require("lodash.throttle");
 const debounce = require("lodash.debounce");
+const cloneDeep = require("lodash.clonedeep");
 
 module.exports = class {
     onCreate(input) {
@@ -29,6 +30,7 @@ module.exports = class {
             filterSelected: "",
             filterMode: "equals",
             filterSelectedData: {},
+            dropdownVisible: {},
         };
         this.state = this.initialState;
         this.mounted = false;
@@ -68,6 +70,13 @@ module.exports = class {
         // Set functions for window object
         window.__z3_mtable_func = window.__z3_mtable_func || {};
         window.__z3_mtable_func[this.input.id] = this.func;
+        // Hide drop drowns on click
+        document.addEventListener("click", e => {
+            if (!document.getElementById(`${this.input.id}_top_buttons`) || !document.getElementById(`${this.input.id}_top_buttons`).contains(e.target)) {
+                this.setState("dropdownVisible", {});
+                console.log("dropdown hide (global)");
+            }
+        });
     }
 
     onWindowResize(reload) {
@@ -256,6 +265,7 @@ module.exports = class {
     }
 
     onTopButtonClick(e) {
+        console.log("top button click");
         const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
         // Process "generic" deletion data
         if (this.input.genericDelete && dataset.button === "btnDeleteSelectedGeneric") {
@@ -266,11 +276,20 @@ module.exports = class {
                 const titles = this.state.data.map(item => ids.indexOf(item.id) > -1 || ids.indexOf(item._id) > -1 ? item[this.input.genericDelete.title] : null).filter(item => item).sort();
                 this.setState("deleteDialogTitles", titles);
             }
+            this.setState("dropdownVisible", {});
         }
-        // Emit button event
-        this.emit("top-button-click", {
-            button: dataset.button
-        });
+        if (typeof dataset.isdropdown === "string") {
+            console.log("dropdown open");
+            const dropdownVisible = {};
+            dropdownVisible[dataset.button] = true;
+            this.setState("dropdownVisible", dropdownVisible);
+        } else {
+            this.setState("dropdownVisible", {});
+            // Emit button event
+            this.emit("top-button-click", {
+                button: dataset.button
+            });
+        }
     }
 
     onSearchFieldInput(e) {

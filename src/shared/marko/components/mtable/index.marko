@@ -6,19 +6,33 @@ style.scss {
   <div class="columns">
     <div class="column is-four-fifths">
       <if(input.buttons && input.buttons.length)>
-        <div class="field has-addons">
+        <div class="field has-addons" id=`${input.id}_top_buttons`>
           <for|btn| of=input.buttons>
             <p class="control">
-              <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id id=`${input.id}_${btn.id}` type="button" on-click("onTopButtonClick") data-tooltip=btn.text>
-                <if(btn.icon)>
-                  <div class="z3-mt-icon-wrap">
-                    <span class="icon">
-                      <i class=btn.icon data-button=btn.id/>
-                    </span>
-                  </div>
-                </if>
-                <if(btn.displayText && btn.text)>${btn.text}</if>
-              </button>
+              <div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}`>
+                <div class="dropdown-trigger">
+                  <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id data-isdropdown=(btn.dropdown && btn.dropdown.length) id=`${input.id}_${btn.id}` type="button" on-click("onTopButtonClick") data-tooltip=btn.text aria-haspopup="true">
+                    <if(btn.icon)>
+                      <div class="z3-mt-icon-wrap">
+                        <span class="icon">
+                          <i class=btn.icon data-button=btn.id/>
+                        </span>
+                      </div>
+                    </if>
+                    <if(btn.displayText && btn.text)>${btn.text}</if>
+                  </button>
+                </div>
+                <div class="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <a href="#" class="dropdown-item">
+                      Overview
+                    </a>
+                    <a href="#" class="dropdown-item">
+                      Modifiers
+                    </a>
+                  </div> 
+                </div> 
+              </div>
             </p>
           </for>
         </div>
