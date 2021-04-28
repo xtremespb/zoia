@@ -1,7 +1,6 @@
 const axios = require("axios");
 const throttle = require("lodash.throttle");
 const debounce = require("lodash.debounce");
-const cloneDeep = require("lodash.clonedeep");
 
 module.exports = class {
     onCreate(input) {
@@ -39,12 +38,17 @@ module.exports = class {
             setLoading: this.setLoading.bind(this),
             dataRequest: this.dataRequest.bind(this),
             setError: this.setError.bind(this),
+            getCheckboxes: this.getCheckboxes.bind(this),
         };
         this.i18n = input.i18n;
     }
 
     setError(err) {
         this.setState("error", err);
+    }
+
+    getCheckboxes() {
+        return Object.keys(this.state.checkboxes).map(k => this.state.checkboxes[k] ? String(k).replace(/^i/, "") : null).filter(i => i);
     }
 
     onMount() {
@@ -72,9 +76,14 @@ module.exports = class {
         window.__z3_mtable_func[this.input.id] = this.func;
         // Hide drop drowns on click
         document.addEventListener("click", e => {
-            if (!document.getElementById(`${this.input.id}_top_buttons`) || !document.getElementById(`${this.input.id}_top_buttons`).contains(e.target)) {
+            let hide = true;
+            Array.from(document.getElementsByClassName("z3-mt-top-control")).map(i => {
+                if (i.contains(e.target)) {
+                    hide = false;
+                }
+            });
+            if (hide) {
                 this.setState("dropdownVisible", {});
-                console.log("dropdown hide (global)");
             }
         });
     }
@@ -265,8 +274,7 @@ module.exports = class {
     }
 
     onTopButtonClick(e) {
-        console.log("top button click");
-        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.parentNode.dataset : {};
         // Process "generic" deletion data
         if (this.input.genericDelete && dataset.button === "btnDeleteSelectedGeneric") {
             this.setState("deleteDialogActive", true);
@@ -278,10 +286,9 @@ module.exports = class {
             }
             this.setState("dropdownVisible", {});
         }
-        if (typeof dataset.isdropdown === "string") {
-            console.log("dropdown open");
+        if (dataset.dropdown === "true") {
             const dropdownVisible = {};
-            dropdownVisible[dataset.button] = true;
+            dropdownVisible[dataset.button] = !(this.state.dropdownVisible[dataset.button]);
             this.setState("dropdownVisible", dropdownVisible);
         } else {
             this.setState("dropdownVisible", {});
@@ -359,5 +366,14 @@ module.exports = class {
         e.preventDefault();
         const filterMode = e.target.value ? e.target.value : e.target.parentNode.value ? e.target.parentNode.value : e.target.parentNode.parentNode.value ? e.target.parentNode.parentNode.value : "";
         this.setState("filterMode", filterMode);
+    }
+
+    onDropdownItemClick(e) {
+        e.preventDefault();
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        this.emit("top-button-click", {
+            button: dataset.id
+        });
+        this.setState("dropdownVisible", {});
     }
 };

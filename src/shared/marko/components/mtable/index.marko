@@ -6,32 +6,33 @@ style.scss {
   <div class="columns">
     <div class="column is-four-fifths">
       <if(input.buttons && input.buttons.length)>
-        <div class="field has-addons" id=`${input.id}_top_buttons`>
+        <div class="field has-addons columns is-gapless is-multiline" id=`${input.id}_top_buttons`>
           <for|btn| of=input.buttons>
-            <p class="control">
+            <p class="control" class="z3-mt-top-control mt-1 mr-1">
               <div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}`>
                 <div class="dropdown-trigger">
-                  <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id data-isdropdown=(btn.dropdown && btn.dropdown.length) id=`${input.id}_${btn.id}` type="button" on-click("onTopButtonClick") data-tooltip=btn.text aria-haspopup="true">
+                  <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id data-dropdown=(String(!!(btn.dropdown && btn.dropdown.length))) id=`${input.id}_${btn.id}` type="button" on-click("onTopButtonClick") data-tooltip=btn.text aria-haspopup="true">
                     <if(btn.icon)>
                       <div class="z3-mt-icon-wrap">
                         <span class="icon">
-                          <i class=btn.icon data-button=btn.id/>
+                          <i class=btn.icon/>
                         </span>
                       </div>
                     </if>
                     <if(btn.displayText && btn.text)>${btn.text}</if>
                   </button>
                 </div>
-                <div class="dropdown-menu" role="menu">
-                  <div class="dropdown-content">
-                    <a href="#" class="dropdown-item">
-                      Overview
-                    </a>
-                    <a href="#" class="dropdown-item">
-                      Modifiers
-                    </a>
-                  </div> 
-                </div> 
+                <if(btn.dropdown && btn.dropdown.length)>
+                  <div class="dropdown-menu" role="menu">
+                    <div class="dropdown-content">
+                      <for|i| of=btn.dropdown>
+                        <a href="" on-click("onDropdownItemClick") data-id=i.id class="dropdown-item">
+                          ${i.label}
+                        </a>
+                      </for>
+                    </div> 
+                  </div>
+                </if>
               </div>
             </p>
           </for>

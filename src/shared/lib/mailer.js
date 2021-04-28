@@ -3,7 +3,9 @@ import nodemailer from "nodemailer";
 import {
     v4 as uuid
 } from "uuid";
-import htmlToText from "html-to-text";
+import {
+    htmlToText
+} from "html-to-text";
 
 export default class {
     constructor(fastify, language) {
@@ -50,7 +52,7 @@ export default class {
             subject: this.message.subject,
             preheader: this.preheader,
             meta: this.siteMetadata,
-            content: fromHTML ? htmlToText.fromString(value) : value
+            content: fromHTML ? htmlToText(value) : value
         });
     }
 
