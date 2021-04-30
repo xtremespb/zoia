@@ -1,6 +1,7 @@
 const axios = require("axios");
 const throttle = require("lodash.throttle");
 const debounce = require("lodash.debounce");
+const cloneDeep = require("lodash.clonedeep");
 
 module.exports = class {
     onCreate(input) {
@@ -29,6 +30,9 @@ module.exports = class {
             filterSelected: "",
             filterMode: "equals",
             filterSelectedData: {},
+            filterValue: "",
+            filterError: null,
+            filters: [],
             dropdownVisible: {},
         };
         this.state = this.initialState;
@@ -54,8 +58,11 @@ module.exports = class {
     onMount() {
         // Do we need to auto-set itemsPerPage?
         // On mobile device, we shall not
+        this.selectField = this.getComponent("z3_mt_mselect");
         this.onWindowResize();
-        window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
+        if (this.input.updateOnWindowResize) {
+            window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
+        }
         // Define inputs
         this.state.sortId = this.input.sortId;
         this.state.sortDirection = this.input.sortDirection;
@@ -338,15 +345,13 @@ module.exports = class {
         }
     }
 
-    onFilterDialogSubmit() {
-        // Submit
-    }
-
     onAddFilterClick(e) {
         e.preventDefault();
+        this.setState("filterError", null);
         this.setState("filterSelected", "");
         this.setState("filterMode", "equals");
         this.setState("filterSelectedData", {});
+        this.setState("filterValue", "");
         this.setState("filterDialogActive", true);
     }
 
@@ -356,9 +361,10 @@ module.exports = class {
         this.setState("filterSelected", filterId);
         const filterData = this.input.filter.find(f => f.id === filterId) || {};
         this.setState("filterSelectedData", filterData);
+        this.setState("filterValue", "");
         if (filterData.type === "select") {
-            this.getComponent("z3_mt_mselect").func.setValue([]);
-            this.getComponent("z3_mt_mselect").func.setItems(filterData.items);
+            this.selectField.func.setValue([]);
+            this.selectField.func.setItems(filterData.items);
         }
     }
 
@@ -375,5 +381,53 @@ module.exports = class {
             button: dataset.id
         });
         this.setState("dropdownVisible", {});
+    }
+
+    onFilterValueChange(e) {
+        const {
+            value
+        } = e.target;
+        this.setState("filterValue", value);
+    }
+
+    onFilterFormSubmit(e) {
+        this.setState("filterError", null);
+        e.preventDefault();
+        const filter = {
+            id: this.state.filterSelected,
+            mode: this.state.filterMode,
+            value: {},
+        };
+        switch (this.state.filterSelectedData.type) {
+        case "select":
+            const selectData = this.selectField.func.getSelectData();
+            const selectValue = this.selectField.func.getValue();
+            let label = "";
+            let plus = 0;
+            if (selectValue && selectValue.length) {
+                label = selectValue[0].label;
+                plus = selectValue.length - 1;
+            }
+            filter.value = {
+                id: selectData,
+                label,
+                plus,
+            };
+            break;
+        default:
+            filter.value = {
+                id: this.state.filterValue,
+                label: this.state.filterValue,
+                plus: 0,
+            };
+        }
+        if (!filter.value.id.length) {
+            this.setState("filterError", this.i18n.t("mTable.filterError.invalidValue"));
+            return;
+        }
+        this.setState("filterDialogActive", false);
+        const filters = cloneDeep(this.state.filters);
+        filters.push(filter);
+        this.setState("filters", filters);
     }
 };

@@ -53,8 +53,27 @@ style.scss {
   </if>
   <else>
     <if(input.filter && input.filter.length)>
-      <div class="mb-4">
-        <button class="button is-small" on-click("onAddFilterClick")>${out.global.i18n.t("mTable.addFilter")}</button>
+      <div class="field is-grouped is-grouped-multiline mt-2">
+        <div class="control">
+          <button class="button is-small" on-click("onAddFilterClick")>${out.global.i18n.t("mTable.addFilter")}</button>
+        </div>
+        <if(state.filters.length)>
+          <for|f,i| of=state.filters>
+            <div class="control">
+              <div class="tags has-addons z3-mt-filter-tag">
+                <span class="tag is-link">
+                  ${f.value.label}
+                  <if(f.value.plus > 0)>
+                    <span class="z3-mt-filter-tag-plus">
+                      +${f.value.plus}
+                    </span>
+                  </if>
+                </span>
+                <a class="tag is-delete"></a>
+              </div>
+            </div>
+          </for>
+        </if>
       </div>
     </if>
     <div class="table-container">
@@ -180,15 +199,21 @@ style.scss {
   </if>
   <if(input.filter && input.filter.length)>
     <div class=`modal${state.filterDialogActive ? " is-active" : ""}`>
+      <form on-submit("onFilterFormSubmit")>
       <div class="modal-background"/>
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">${input.i18n.t("mTable.addFilter")}</p>
           <if(!state.deleteDialogProgress)>
-            <button class="delete" aria-label="close" on-click("onFilterDialogClose")/>
+            <button class="delete" type="button" aria-label="close" on-click("onFilterDialogClose")/>
           </if>
         </header>
         <section class="modal-card-body">
+          <if(state.filterError)>
+            <div class="notification is-danger">
+              ${state.filterError}
+            </div>
+          </if>
           <div class="select is-fullwidth">
             <select on-change("onFilterSelectChange")>
               <option value="" selected=(state.filterSelected === "")>&ndash;</option>
@@ -199,7 +224,7 @@ style.scss {
           </div>
           <div class=`select is-fullwidth mt-2 mb-2${state.filterSelected === "" ? " is-hidden" : ""}`>
             <select on-change("onFilterModeSelectChange")>
-              <for|f| of=["equals", "notEquals", "oneOf", "noneOf", "largerThan", "largerThanOrEquals", "smallerThan", "smallerThanOrEquals"]>
+              <for|f| of=["equals", "notEquals", "isLike", "oneOf", "noneOf", "largerThan", "largerThanOrEquals", "smallerThan", "smallerThanOrEquals"]>
                 <if((!f.match(/^larger/) && !f.match(/^smaller/)) || state.filterSelectedData.integer)>
                   <option value=f selected=(state.filterMode === f)>${input.i18n.t(`mTable.filter.${f}`)}</option>
                 </if>
@@ -208,16 +233,17 @@ style.scss {
           </div>
           <mselect key="z3_mt_mselect" active=(state.filterSelectedData.type === "select")/>
           <div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")>
-            <input class="input" type="text" placeholder=input.i18n.t("mTable.filterValue")>
+            <input class="input" type="text" value=state.filterValue on-change("onFilterValueChange") placeholder=input.i18n.t("mTable.filterValue")>
           </div>
         </section>
         <footer class="modal-card-foot">
           <fieldset>
-            <button class="button is-primary" on-click("onFilterDialogSubmit")>${input.i18n.t("mTable.add")}</button>
-            <button class="button" on-click("onFilterDialogClose")>${input.i18n.t("mTable.cancel")}</button>
+            <button class="button is-primary" type="submit">${input.i18n.t("mTable.add")}</button>
+            <button class="button" type="button" on-click("onFilterDialogClose")>${input.i18n.t("mTable.cancel")}</button>
           </fieldset>
         </footer>
       </div>
+      </form>
     </div>
   </if>
   <mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>

@@ -249,6 +249,13 @@ export default class {
         if (this.schemas.root) {
             Object.keys(this.schemas.root.properties).map(field => {
                 data[field] = formData[field];
+                if (formData[field] && this.schemas.root.properties[field].zoiaConvert) {
+                    switch (this.schemas.root.properties[field].zoiaConvert) {
+                        case "YYYYMMDD":
+                            data[field] = parse(formData[field], "yyyyMMdd", new Date());
+                            break;
+                    }
+                }
             });
         }
         return data;

@@ -1,3 +1,5 @@
+@import "../../zoia/variables/components.scss";
+
 .z3-mt-wrap {
     position: relative;
 }
@@ -65,4 +67,14 @@
 
 .z3-mt-pagination {
     margin-bottom: unset !important;
+}
+
+.z3-mt-filter-tag {
+    margin-top: 3px;
+}
+
+.z3-mt-filter-tag-plus {
+    border-radius: 50%;
+    background: $grey-lightest;
+    font-size: 80%;
 }

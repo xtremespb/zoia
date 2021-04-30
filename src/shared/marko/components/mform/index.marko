@@ -31,21 +31,38 @@ style.scss {
   <form on-submit("onFormSubmit") key=`${input.id}_mForm_Wrap`>
     <fieldset disabled=state.disabled class=`z3-mf-fields-wrap z3-mf-noselect${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-fields-border" : ""}`>
       <if(state.activeTabId)>
+        $ let isArea = false;
+        $ let areaClass = "";
+        $ let areaBorder = false;
         <for|tItem, tIndex| of=input.fields>
           <if(typeof tItem === "object" && tItem.type)>
-            <div class="field columns is-multiline z3-mf-field-columns" key=`mf_cmp_${tItem.id}_wrap` style=(state.visible[tItem.id] ? "" : "position:absolute;top:-100000px")>
-              <div class=`control column ${tItem.wrapCSS || ""}` style=`position:unset;${tItem.alignBottom ? "display:flex;flex-direction:column;justify-content:flex-end" : ""}`>
-                <mField id=input.id key=`mf_cmp_${tItem.id}` item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-value-set("onValueSet") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue") on-context-menu("onContextMenu") on-settled("onFieldSettled")/>
+            <if(tItem.type === "areaStart")>
+              $ isArea = true;
+              $ areaClass = tItem.css || ""; 
+              $ areaBorder = !!tItem.border;
+              <div class=`z3-mf-area-start${areaBorder ? " z3-mf-area-border-s" : ""}`>${tItem.label}</div>
+            </if>
+            <if(tItem.type === "areaEnd")>
+              <div class=`z3-mf-area-end${areaBorder ? " z3-mf-area-border-e" : ""}`/>
+              $ isArea = false;
+            </if>
+            <div class=(isArea ? `z3-mf-area ${areaClass || ""}${areaBorder ? " z3-mf-area-border-lr" : ""}` : "")>
+              <div class="field columns is-multiline z3-mf-field-columns" key=`mf_cmp_${tItem.id}_wrap` style=(state.visible[tItem.id] ? "" : "position:absolute;top:-100000px")>
+                <div class=`control column ${tItem.wrapCSS || ""}` style=`position:unset;${tItem.alignBottom ? "display:flex;flex-direction:column;justify-content:flex-end" : ""}`>
+                  <mField id=input.id key=`mf_cmp_${tItem.id}` item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-value-set("onValueSet") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue") on-context-menu("onContextMenu") on-settled("onFieldSettled")/>
+                </div>
               </div>
             </div>
           </if>
           <if(Array.isArray(tItem))>
-            <div class="field columns is-multiline is-gapless z3-mf-field-columns-group">
-              <for|sItem, sIndex| of=tItem>
-                <div class=`control column ${sItem.wrapCSS || ""}` key=`mf_cmp_${sItem.id}_wrap` style=`${state.visible[sItem.id] ? "position:unset;" : "position:absolute;top:-100000px;"}${sItem.alignBottom ? "display:flex;flex-direction:column;justify-content:flex-end" : ""}`>
-                  <mField id=input.id key=`mf_cmp_${sItem.id}` item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-value-set("onValueSet") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue") on-context-menu("onContextMenu") on-settled("onFieldSettled")/>
-                </div>
-              </for>
+            <div class=(isArea ? `z3-mf-area ${areaClass || ""}${areaBorder ? " z3-mf-area-border-lr" : ""}` : "")>
+              <div class=`field columns is-multiline is-gapless z3-mf-field-columns-group`>
+                <for|sItem, sIndex| of=tItem>
+                  <div class=`control column ${sItem.wrapCSS || ""}` key=`mf_cmp_${sItem.id}_wrap` style=`${state.visible[sItem.id] ? "position:unset;" : "position:absolute;top:-100000px;"}${sItem.alignBottom ? "display:flex;flex-direction:column;justify-content:flex-end" : ""}`>
+                    <mField id=input.id key=`mf_cmp_${sItem.id}` item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-value-set("onValueSet") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue") on-context-menu("onContextMenu") on-settled("onFieldSettled")/>
+                  </div>
+                </for>
+              </div>
             </div>
           </if>
         </for>

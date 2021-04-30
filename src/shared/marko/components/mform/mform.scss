@@ -23,7 +23,7 @@
 }
 
 .z3-mf-fields-wrap>div:not(:last-child) {
-    margin-bottom: 9px !important;
+    padding-bottom: 9px !important;
 }
 
 .z3-mf-field-columns-group>div:not(:last-child) {
@@ -262,6 +262,59 @@
 
 .z3-mf-calendar-control:hover {
     background: $white-bis;
+}
+
+.z3-mf-area {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.z3-mf-area-border-lr {
+    border-left: 1px solid $grey-lightest;
+    border-right: 1px solid $grey-lightest;
+}
+
+.z3-mf-area-border-s {
+    border-bottom: 1px solid $grey-lightest;
+}
+
+.z3-mf-area-border-e {
+    border-top: 1px solid $grey-lightest;
+}
+
+.z3-mf-area-start {
+    color: $grey;
+    font-size: 0.75em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.z3-mf-area-end {
+    margin-bottom: 0 !important;
+}
+
+.z3-mf-area-green {
+    background: #d9e4dd;
+}
+
+.z3-mf-area-yellow {
+    background: #fbf7f0;
+}
+
+.z3-mf-area-violet {
+    background: #f4eeff;
+}
+
+.z3-mf-area-pink {
+    background: #f6e5f5;
+}
+
+.z3-mf-area-grey {
+    background: #e8ecf1;
+}
+
+.z3-mf-wysiwyg-toggle>ul>li:not(.is-active) {
+    background: $white;
 }
 
 @media (max-width: 1024px) {
