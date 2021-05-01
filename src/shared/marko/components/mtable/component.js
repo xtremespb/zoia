@@ -395,6 +395,7 @@ module.exports = class {
         e.preventDefault();
         const filter = {
             id: this.state.filterSelected,
+            label: this.state.filterSelectedData.label,
             mode: this.state.filterMode,
             value: {},
         };

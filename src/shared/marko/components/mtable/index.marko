@@ -61,14 +61,20 @@ style.scss {
           <for|f,i| of=state.filters>
             <div class="control">
               <div class="tags has-addons z3-mt-filter-tag">
-                <span class="tag is-link">
-                  ${f.value.label}
+                <div class="tag is-info">
+                  <div class="z3-mt-filter-tag-label z3-mt-filter-tag-label-short">${f.label}</div>
+                </div>
+                <span class="tag is-dark">
+                  ${out.global.i18n.t(`mTable.filter.${f.mode}Short`)}
+                </span>
+                <div class="tag is-link">
+                  <span class="z3-mt-filter-tag-label">${f.value.label}</span>
                   <if(f.value.plus > 0)>
                     <span class="z3-mt-filter-tag-plus">
                       +${f.value.plus}
                     </span>
                   </if>
-                </span>
+                </div>
                 <a class="tag is-delete"></a>
               </div>
             </div>

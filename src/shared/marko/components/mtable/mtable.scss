@@ -74,7 +74,32 @@
 }
 
 .z3-mt-filter-tag-plus {
+    position: relative;
+    color: $white;
+    background-color: $grey;
     border-radius: 50%;
-    background: $grey-lightest;
-    font-size: 80%;
+    line-height: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px;
+    margin-left: 5px;
+}
+
+.z3-mt-filter-tag-plus::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+.z3-mt-filter-tag-label {
+    display: inline-block;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.z3-mt-filter-tag-label-short {
+    max-width: 50px !important;
 }
