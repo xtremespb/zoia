@@ -3,7 +3,6 @@ style.scss {
   @import "~@mdi/font/scss/materialdesignicons.scss";
   @import "../../../../shared/fonts/source-sans-pro/source-sans-pro.css";
   @import "~bulma/bulma";
-  @import "../../../../shared/widgets/bulma-tooltip/index.sass";
   @import "./images.scss";
 }
 
@@ -16,6 +15,7 @@ style.scss {
   </head>
   <body class="z3-cr-images-body">
     <i18n/>
+    <tippy/>
     <div class="container z3-cr-images-container">
       <if(out.global.accessAllowed)>
         <browser/>

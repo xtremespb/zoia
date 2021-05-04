@@ -24,7 +24,7 @@ import icons from "../../../data/mime.json"
       <div class="column is-narrow">
         <div class="field has-addons">
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("refresh") on-click("onRefreshClick") disabled=state.loading>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("refresh") on-click("onRefreshClick") disabled=state.loading>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-reload"/>
               </span>
@@ -35,14 +35,14 @@ import icons from "../../../data/mime.json"
       <div class="column is-narrow">
         <div class="field has-addons">
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("selectAll") on-click("onSelectAllClick") disabled=state.loading>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("selectAll") on-click("onSelectAllClick") disabled=state.loading>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-checkbox-marked-outline"/>
               </span>
             </button>
           </p>
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("selectNone") on-click("onSelectNoneClick") disabled=state.loading>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("selectNone") on-click("onSelectNoneClick") disabled=state.loading>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-checkbox-blank-outline"/>
               </span>
@@ -53,14 +53,14 @@ import icons from "../../../data/mime.json"
       <div class="column is-narrow">
         <div class="field has-addons">
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("levelUp") disabled=(state.loading || state.dir === "/") on-click("onLevelUpClick")>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("levelUp") disabled=(state.loading || state.dir === "/") on-click("onLevelUpClick")>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-folder-upload-outline"/>
               </span>
             </button>
           </p>
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("createDir") disabled=state.loading on-click("onCreateDir")>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("createDir") disabled=state.loading on-click("onCreateDir")>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-folder-plus-outline"/>
               </span>
@@ -71,28 +71,28 @@ import icons from "../../../data/mime.json"
       <div class="column is-narrow">
         <div class="field has-addons">
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("doCreateFile") disabled=state.loading on-click("onCreateFile")>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doCreateFile") disabled=state.loading on-click("onCreateFile")>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-file-plus-outline"/>
               </span>
             </button>
           </p>
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("doCopy") disabled=(state.loading || !state.checkedCount) on-click("onCopyClick")>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doCopy") disabled=(state.loading || !state.checkedCount) on-click("onCopyClick")>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-content-copy"/>
               </span>
             </button>
           </p>
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("doCut") disabled=(state.loading || !state.checkedCount) on-click("onCutClick")>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doCut") disabled=(state.loading || !state.checkedCount) on-click("onCutClick")>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-content-cut"/>
               </span>
             </button>
           </p>
           <p class="control">
-            <button class="button tooltip" data-tooltip=`${state.clipboard.mode === "cut" ? out.global.i18n.t("doCut") : out.global.i18n.t("doCopy")} → ${out.global.i18n.t("doPaste")}` disabled=(state.loading || !state.clipboard.src || state.clipboard.src === state.dir) on-click("onPasteClick")>
+            <button class="button tooltip" data-tippy-content=`${state.clipboard.mode === "cut" ? out.global.i18n.t("doCut") : out.global.i18n.t("doCopy")} → ${out.global.i18n.t("doPaste")}` disabled=(state.loading || !state.clipboard.src || state.clipboard.src === state.dir) on-click("onPasteClick")>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-content-paste"/>
               </span>
@@ -102,14 +102,14 @@ import icons from "../../../data/mime.json"
             </button>
           </p>
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("doDelete") disabled=(state.loading || !state.checkedCount) on-click("onDeleteClick")>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doDelete") disabled=(state.loading || !state.checkedCount) on-click("onDeleteClick")>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-trash-can-outline"/>
               </span>
             </button>
           </p>
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("doZIP") disabled=(state.loading || !state.checkedCount) on-click("onZIPClick")>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doZIP") disabled=(state.loading || !state.checkedCount) on-click("onZIPClick")>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-package-variant-closed"/>
               </span>
@@ -120,7 +120,7 @@ import icons from "../../../data/mime.json"
       <div class="column is-narrow">
         <div class="field has-addons">
           <p class="control">
-            <button class="button tooltip" data-tooltip=out.global.i18n.t("upload") on-click("onUploadClick") disabled=state.loading>
+            <button class="button tooltip" data-tippy-content=out.global.i18n.t("upload") on-click("onUploadClick") disabled=state.loading>
               <span class="icon">
                 <i class="mdi mdi-24px mdi-upload-outline"/>
               </span>
