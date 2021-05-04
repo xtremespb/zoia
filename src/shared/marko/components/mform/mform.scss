@@ -1,3 +1,5 @@
+@import "../../zoia/variables/components.scss";
+
 .z3-mf-field-columns,
 .z3-mf-field-columns-group {
     margin-top: 0 !important;
@@ -21,7 +23,7 @@
 }
 
 .z3-mf-fields-wrap>div:not(:last-child) {
-    margin-bottom: 9px !important;
+    padding-bottom: 9px !important;
 }
 
 .z3-mf-field-columns-group>div:not(:last-child) {
@@ -168,6 +170,151 @@
 
 .z3-mf-drop-area-over {
     background: hsl(48, 100%, 67%);
+}
+
+.z3-mf-calendar-wrap {
+    border: 1px solid $grey-lightest;
+    width: 230px;
+    position: absolute;
+    z-index: 1000;
+    background: $white;
+    box-shadow: -2px 4px 8px -5px rgba(34, 60, 80, 0.2);
+    margin-top: 1px;
+    border-radius: 4px;
+}
+
+.z3-mf-calendar-dow {
+    background: $grey-light;
+}
+
+.z3-mf-calendar-cell {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 1px;
+}
+
+.z3-mf-calendar-cell-day {
+    cursor: pointer;
+}
+
+.z3-mf-calendar-cell-day:hover {
+    border: 1px solid $primary;
+}
+
+.z3-mf-calendar-cell-day-side {
+    background: $grey-lightest;
+}
+
+.z3-mf-calendar-cell-day-today {
+    border: 1px dotted $grey;
+}
+
+.z3-mf-calendar-cell-day-selected {
+    background: $primary;
+    color: $white;
+}
+
+.z3-mf-calendar-head-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.z3-mf-calednar-cell-month,
+.z3-mf-calednar-cell-year {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    cursor: pointer;
+}
+
+.z3-mf-calednar-cell-year-now,
+.z3-mf-calednar-cell-month-now {
+    background: $primary;
+    color: $white;
+}
+
+.z3-mf-calednar-cell-year:hover:not(.z3-mf-calednar-cell-year-now),
+.z3-mf-calednar-cell-month:hover:not(.z3-mf-calednar-month-year-now) {
+    background: $grey-lightest;
+    color: $black;
+}
+
+.z3-mf-calednar-wrap-year {
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.z3-mf-calendar-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border-top: 1px solid $grey-lightest;
+    cursor: pointer;
+}
+
+.z3-mf-calendar-control:hover {
+    background: $white-bis;
+}
+
+.z3-mf-area {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.z3-mf-area-border-lr {
+    border-left: 1px solid $grey-lightest;
+    border-right: 1px solid $grey-lightest;
+}
+
+.z3-mf-area-border-s {
+    border-bottom: 1px solid $grey-lightest;
+}
+
+.z3-mf-area-border-e {
+    border-top: 1px solid $grey-lightest;
+}
+
+.z3-mf-area-start {
+    color: $grey;
+    font-size: 0.75em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.z3-mf-area-end {
+    margin-bottom: 0 !important;
+}
+
+.z3-mf-area-green {
+    background: #d9e4dd;
+}
+
+.z3-mf-area-yellow {
+    background: #fbf7f0;
+}
+
+.z3-mf-area-violet {
+    background: #f4eeff;
+}
+
+.z3-mf-area-pink {
+    background: #f6e5f5;
+}
+
+.z3-mf-area-grey {
+    background: #e8ecf1;
+}
+
+.z3-mf-wysiwyg-toggle>ul>li:not(.is-active) {
+    background: $white;
 }
 
 @media (max-width: 1024px) {

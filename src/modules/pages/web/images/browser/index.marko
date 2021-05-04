@@ -4,7 +4,7 @@
     <div class="column is-narrow">
       <div class="field has-addons">
         <p class="control">
-          <button class="button tooltip" data-tooltip=out.global.i18n.t("refresh") on-click("onToolbarButtonClick") data-id="refresh">
+          <button class="button tooltip" data-tippy-content=out.global.i18n.t("refresh") on-click("onToolbarButtonClick") data-id="refresh">
             <span class="icon">
               <i class="mdi mdi-24px mdi-reload"/>
             </span>
@@ -15,14 +15,14 @@
     <div class="column is-narrow">
       <div class="field has-addons">
         <p class="control">
-          <button class="button tooltip" data-tooltip=out.global.i18n.t("selectAll") on-click("onToolbarButtonClick") data-id="selectAll">
+          <button class="button tooltip" data-tippy-content=out.global.i18n.t("selectAll") on-click("onToolbarButtonClick") data-id="selectAll">
             <span class="icon">
               <i class="mdi mdi-24px mdi-checkbox-marked-outline"/>
             </span>
           </button>
         </p>
         <p class="control">
-          <button class="button tooltip" data-tooltip=out.global.i18n.t("selectNone") on-click("onToolbarButtonClick") data-id="selectNone">
+          <button class="button tooltip" data-tippy-content=out.global.i18n.t("selectNone") on-click("onToolbarButtonClick") data-id="selectNone">
             <span class="icon">
               <i class="mdi mdi-24px mdi-checkbox-blank-outline"/>
             </span>
@@ -33,14 +33,14 @@
     <div class="column is-narrow">
       <div class="field has-addons">
         <p class="control">
-          <button class="button tooltip" data-tooltip=out.global.i18n.t("levelUp") on-click("onToolbarButtonClick") data-id="levelUp" disabled=(state.loading || !state.dir.length)>
+          <button class="button tooltip" data-tippy-content=out.global.i18n.t("levelUp") on-click("onToolbarButtonClick") data-id="levelUp" disabled=(state.loading || !state.dir.length)>
             <span class="icon">
               <i class="mdi mdi-24px mdi-folder-upload-outline"/>
             </span>
           </button>
         </p>
         <p class="control">
-          <button class="button tooltip" data-tooltip=out.global.i18n.t("createDir") on-click("onToolbarButtonClick") data-id="createDir" disabled=state.loading>
+          <button class="button tooltip" data-tippy-content=out.global.i18n.t("createDir") on-click("onToolbarButtonClick") data-id="createDir" disabled=state.loading>
             <span class="icon">
               <i class="mdi mdi-24px mdi-folder-plus-outline"/>
             </span>
@@ -51,21 +51,21 @@
     <div class="column is-narrow">
       <div class="field has-addons">
         <p class="control">
-          <button class="button tooltip" data-tooltip=out.global.i18n.t("copy") on-click("onToolbarButtonClick") data-id="copy" disabled=(state.loading || !state.selectedCount)>
+          <button class="button tooltip" data-tippy-content=out.global.i18n.t("copy") on-click("onToolbarButtonClick") data-id="copy" disabled=(state.loading || !state.selectedCount)>
             <span class="icon">
               <i class="mdi mdi-24px mdi-content-copy"/>
             </span>
           </button>
         </p>
         <p class="control">
-          <button class="button tooltip" data-tooltip=out.global.i18n.t("cut") on-click("onToolbarButtonClick") data-id="cut" disabled=(state.loading || !state.selectedCount)>
+          <button class="button tooltip" data-tippy-content=out.global.i18n.t("cut") on-click("onToolbarButtonClick") data-id="cut" disabled=(state.loading || !state.selectedCount)>
             <span class="icon">
               <i class="mdi mdi-24px mdi-content-cut"/>
             </span>
           </button>
         </p>
         <p class="control">
-          <button class="button tooltip" data-tooltip=`${state.clipboard.mode === "cut" ? out.global.i18n.t("cut") : out.global.i18n.t("copy")} → ${out.global.i18n.t("paste")}` disabled=(state.loading || !state.clipboard.filesCount || state.clipboard.src === state.dir.join("/")) on-click("onToolbarButtonClick") data-id="paste">
+          <button class="button tooltip" data-tippy-content=`${state.clipboard.mode === "cut" ? out.global.i18n.t("cut") : out.global.i18n.t("copy")} → ${out.global.i18n.t("paste")}` disabled=(state.loading || !state.clipboard.filesCount || state.clipboard.src === state.dir.join("/")) on-click("onToolbarButtonClick") data-id="paste">
             <span class="icon">
               <i class="mdi mdi-24px mdi-content-paste"/>
             </span>
@@ -75,14 +75,14 @@
           </button>
         </p>
         <p class="control">
-          <button class="button tooltip" data-tooltip=out.global.i18n.t("delete") on-click("onToolbarButtonClick") data-id="delete" disabled=(state.loading || !state.selectedCount)>
+          <button class="button tooltip" data-tippy-content=out.global.i18n.t("delete") on-click("onToolbarButtonClick") data-id="delete" disabled=(state.loading || !state.selectedCount)>
             <span class="icon">
               <i class="mdi mdi-24px mdi-trash-can-outline"/>
             </span>
           </button>
         </p>
         <p class="control">
-          <button class="button tooltip" data-tooltip=out.global.i18n.t("upload") on-click("onToolbarButtonClick") data-id="upload" disabled=state.loading>
+          <button class="button tooltip" data-tippy-content=out.global.i18n.t("upload") on-click("onToolbarButtonClick") data-id="upload" disabled=state.loading>
             <span class="icon">
               <i class="mdi mdi-24px mdi-upload-outline"/>
             </span>

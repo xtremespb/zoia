@@ -1,6 +1,10 @@
 const axios = require("axios");
 const throttle = require("lodash.throttle");
 const debounce = require("lodash.debounce");
+const cloneDeep = require("lodash.clonedeep");
+const {
+    format,
+} = require("date-fns");
 
 module.exports = class {
     onCreate(input) {
@@ -26,8 +30,15 @@ module.exports = class {
             anyCheckboxSelected: false,
             itemsPerPage: null,
             filterDialogActive: false,
+            filterDialogEdit: null,
             filterSelected: "",
+            filterMode: "equals",
             filterSelectedData: {},
+            filterValue: "",
+            filterDate: null,
+            filterError: null,
+            filters: [],
+            dropdownVisible: {},
         };
         this.state = this.initialState;
         this.mounted = false;
@@ -36,6 +47,7 @@ module.exports = class {
             setLoading: this.setLoading.bind(this),
             dataRequest: this.dataRequest.bind(this),
             setError: this.setError.bind(this),
+            getCheckboxes: this.getCheckboxes.bind(this),
         };
         this.i18n = input.i18n;
     }
@@ -44,11 +56,19 @@ module.exports = class {
         this.setState("error", err);
     }
 
+    getCheckboxes() {
+        return Object.keys(this.state.checkboxes).map(k => this.state.checkboxes[k] ? String(k).replace(/^i/, "") : null).filter(i => i);
+    }
+
     onMount() {
         // Do we need to auto-set itemsPerPage?
         // On mobile device, we shall not
+        this.selectField = this.getComponent("z3_mt_mselect");
+        this.calendarField = this.getComponent("z3_mt_filter_date");
         this.onWindowResize();
-        window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
+        if (this.input.updateOnWindowResize) {
+            window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
+        }
         // Define inputs
         this.state.sortId = this.input.sortId;
         this.state.sortDirection = this.input.sortDirection;
@@ -67,6 +87,18 @@ module.exports = class {
         // Set functions for window object
         window.__z3_mtable_func = window.__z3_mtable_func || {};
         window.__z3_mtable_func[this.input.id] = this.func;
+        // Hide drop drowns on click
+        document.addEventListener("click", e => {
+            let hide = true;
+            Array.from(document.getElementsByClassName("z3-mt-top-control")).map(i => {
+                if (i.contains(e.target)) {
+                    hide = false;
+                }
+            });
+            if (hide) {
+                this.setState("dropdownVisible", {});
+            }
+        });
     }
 
     onWindowResize(reload) {
@@ -109,6 +141,7 @@ module.exports = class {
             sortDirection: this.state.sortDirection,
             searchText: this.state.searchText,
             itemsPerPage: this.state.itemsPerPage,
+            filters: this.state.filters,
             ...extras
         };
         try {
@@ -255,7 +288,7 @@ module.exports = class {
     }
 
     onTopButtonClick(e) {
-        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.parentNode.dataset : {};
         // Process "generic" deletion data
         if (this.input.genericDelete && dataset.button === "btnDeleteSelectedGeneric") {
             this.setState("deleteDialogActive", true);
@@ -265,11 +298,19 @@ module.exports = class {
                 const titles = this.state.data.map(item => ids.indexOf(item.id) > -1 || ids.indexOf(item._id) > -1 ? item[this.input.genericDelete.title] : null).filter(item => item).sort();
                 this.setState("deleteDialogTitles", titles);
             }
+            this.setState("dropdownVisible", {});
         }
-        // Emit button event
-        this.emit("top-button-click", {
-            button: dataset.button
-        });
+        if (dataset.dropdown === "true") {
+            const dropdownVisible = {};
+            dropdownVisible[dataset.button] = !(this.state.dropdownVisible[dataset.button]);
+            this.setState("dropdownVisible", dropdownVisible);
+        } else {
+            this.setState("dropdownVisible", {});
+            // Emit button event
+            this.emit("top-button-click", {
+                button: dataset.button
+            });
+        }
     }
 
     onSearchFieldInput(e) {
@@ -311,14 +352,14 @@ module.exports = class {
         }
     }
 
-    onFilterDialogSubmit() {
-        // Submit
-    }
-
     onAddFilterClick(e) {
         e.preventDefault();
+        this.setState("filterError", null);
         this.setState("filterSelected", "");
+        this.setState("filterMode", "equals");
         this.setState("filterSelectedData", {});
+        this.setState("filterValue", "");
+        this.setState("filterDialogEdit", null);
         this.setState("filterDialogActive", true);
     }
 
@@ -328,9 +369,139 @@ module.exports = class {
         this.setState("filterSelected", filterId);
         const filterData = this.input.filter.find(f => f.id === filterId) || {};
         this.setState("filterSelectedData", filterData);
+        this.setState("filterMode", filterData.modes ? filterData.modes[0] : "equals");
+        this.setState("filterValue", "");
+        this.setState("filterDate", null);
         if (filterData.type === "select") {
-            this.getComponent("z3_mt_mselect").func.setValue([]);
-            this.getComponent("z3_mt_mselect").func.setItems(filterData.items);
+            this.selectField.func.setValue([]);
+            this.selectField.func.setItems(filterData.items);
         }
+        if (filterData.type === "date") {
+            this.calendarField.func.clear();
+        }
+    }
+
+    onFilterModeSelectChange(e) {
+        e.preventDefault();
+        const filterMode = e.target.value ? e.target.value : e.target.parentNode.value ? e.target.parentNode.value : e.target.parentNode.parentNode.value ? e.target.parentNode.parentNode.value : "";
+        this.setState("filterMode", filterMode);
+    }
+
+    onDropdownItemClick(e) {
+        e.preventDefault();
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        this.emit("top-button-click", {
+            button: dataset.id
+        });
+        this.setState("dropdownVisible", {});
+    }
+
+    onFilterValueChange(e) {
+        const {
+            value
+        } = e.target;
+        this.setState("filterValue", value);
+    }
+
+    onFilterFormSubmit(e) {
+        this.setState("filterError", null);
+        e.preventDefault();
+        const filter = {
+            id: this.state.filterSelected,
+            label: this.state.filterSelectedData.label,
+            type: this.state.filterSelectedData.type,
+            mode: this.state.filterMode,
+            value: {},
+        };
+        switch (this.state.filterSelectedData.type) {
+        case "select":
+            const selectData = this.selectField.func.getSelectData();
+            if (this.state.filterSelectedData.isNumber) {
+                selectData.map((s, i) => selectData[i] = parseFloat(selectData[i]));
+            }
+            const selectValue = this.selectField.func.getValue();
+            let label = "";
+            let plus = 0;
+            if (selectValue && selectValue.length) {
+                label = selectValue[0].label;
+                plus = selectValue.length - 1;
+            }
+            filter.value = {
+                id: selectData,
+                label,
+                plus,
+            };
+            break;
+        case "date":
+            filter.value = {
+                id: this.state.filterDate ? format(this.state.filterDate, "yyyyMMdd") : undefined,
+                label: this.state.filterDate ? format(this.state.filterDate, this.i18n.t("global.dateFormatShort")) : null,
+                plus: 0
+            };
+            break;
+        default:
+            let value = this.state.filterValue;
+            if (this.state.filterSelectedData.isNumber) {
+                value = parseFloat(value);
+            }
+            filter.value = {
+                id: value,
+                label: this.state.filterValue,
+                plus: 0,
+            };
+        }
+        if (!String(filter.value.id).length || filter.value.id === undefined) {
+            this.setState("filterError", this.i18n.t("mTable.filterError.invalidValue"));
+            return;
+        }
+        this.setState("filterDialogActive", false);
+        const filters = cloneDeep(this.state.filters);
+        if (this.state.filterDialogEdit !== null) {
+            filters[this.state.filterDialogEdit] = filter;
+        } else {
+            filters.push(filter);
+        }
+        this.setState("filters", filters);
+        window.__zoiaTippyJs.reset();
+        this.setState("page", 1);
+        this.dataRequest();
+    }
+
+    onFilterTagClick(e) {
+        const filterIndex = (e.target.dataset.filterindex || e.target.parentNode.dataset.filterindex || e.target.parentNode.parentNode.dataset.filterindex || e.target.parentNode.parentNode.parentNode.dataset.filterindex) - 1;
+        this.setState("filterDialogEdit", filterIndex);
+        const data = this.state.filters[filterIndex];
+        this.setState("filterSelected", data.id);
+        this.setState("filterMode", data.mode);
+        const filterData = this.input.filter.find(f => f.id === data.id) || {};
+        this.setState("filterSelectedData", filterData);
+        let filterValue = null;
+        switch (this.state.filterSelectedData.type) {
+        case "select":
+            this.selectField.func.setValue(data.value.id);
+            this.selectField.func.setItems(filterData.items);
+            break;
+        case "date":
+            this.calendarField.func.setDate(data.value.id);
+            break;
+        default:
+            filterValue = data.value.id;
+        }
+        this.setState("filterValue", filterValue);
+        this.setState("filterError", null);
+        this.setState("filterDialogActive", true);
+    }
+
+    onFilterTagDeleteClick(e) {
+        const filterIndex = (e.target.dataset.filterindex || e.target.parentNode.dataset.filterindex || e.target.parentNode.parentNode.dataset.filterindex || e.target.parentNode.parentNode.parentNode.dataset.filterindex) - 1;
+        const filters = cloneDeep(this.state.filters);
+        filters.splice(filterIndex, 1);
+        this.setState("filters", filters);
+        this.setState("page", 1);
+        this.dataRequest();
+    }
+
+    onFilterCalendarValueChange(value) {
+        this.setState("filterDate", value || null);
     }
 };

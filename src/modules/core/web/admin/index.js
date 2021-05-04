@@ -8,6 +8,7 @@ export default () => ({
             const {
                 response,
                 auth,
+                acl,
             } = req.zoia;
             const site = new req.ZoiaSite(req, "core", this.mongo.db);
             response.setSite(site);
@@ -60,7 +61,10 @@ export default () => ({
                     packageJson: this.zoiaPackageJson,
                     ...await site.getGlobals(),
                 },
-                modules: req.zoiaAdmin,
+                modules: req.zoiaAdmin.map(m => ({
+                    ...m,
+                    allowed: acl.checkPermission(m.id, "read")
+                })),
                 version: req.zoiaPackageJson.version,
                 moduleId: moduleData.id,
             });

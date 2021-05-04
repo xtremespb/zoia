@@ -11,6 +11,7 @@ module.exports = class {
             setItems: this.setItems.bind(this),
             setValue: this.setValue.bind(this),
             getValue: this.getValue.bind(this),
+            getSelectData: this.getSelectData.bind(this),
         };
     }
 
@@ -39,6 +40,10 @@ module.exports = class {
             }
         });
         return value;
+    }
+
+    getSelectData() {
+        return this.state.value;
     }
 
     onInputChange(e) {

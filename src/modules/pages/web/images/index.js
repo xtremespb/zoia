@@ -6,6 +6,7 @@ export default () => ({
             const {
                 response,
                 auth,
+                acl,
             } = req.zoia;
             const site = new req.ZoiaSite(req, "core", this.mongo.db);
             response.setSite(site);
@@ -20,6 +21,7 @@ export default () => ({
                         template: true,
                         pageTitle: true,
                         routes: true,
+                        accessAllowed: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
@@ -27,6 +29,7 @@ export default () => ({
                     routes: {
                         ...req.zoiaConfig.routes
                     },
+                    accessAllowed: acl.checkPermission("pages", "read"),
                     ...await site.getGlobals(),
                 }
             });

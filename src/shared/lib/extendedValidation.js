@@ -1,5 +1,6 @@
 import Ajv from "ajv";
 import cloneDeep from "lodash/cloneDeep";
+import parse from "date-fns/parse";
 
 export default class {
     constructor(data, root = {}, part = {}, files = {}, parts = []) {
@@ -235,12 +236,26 @@ export default class {
                 data[part] = {};
                 Object.keys(this.schemas.part.properties).map(field => {
                     data[part][field] = formData[part][field];
+                    if (formData[part][field] && this.schemas.part.properties[field].zoiaConvert) {
+                        switch (this.schemas.part.properties[field].zoiaConvert) {
+                            case "YYYYMMDD":
+                                data[part][field] = parse(formData[part][field], "yyyyMMdd", new Date());
+                                break;
+                        }
+                    }
                 });
             }
         });
         if (this.schemas.root) {
             Object.keys(this.schemas.root.properties).map(field => {
                 data[field] = formData[field];
+                if (formData[field] && this.schemas.root.properties[field].zoiaConvert) {
+                    switch (this.schemas.root.properties[field].zoiaConvert) {
+                        case "YYYYMMDD":
+                            data[field] = parse(formData[field], "yyyyMMdd", new Date());
+                            break;
+                    }
+                }
             });
         }
         return data;

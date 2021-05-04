@@ -1,0 +1,55 @@
+@import './_vars.scss';
+
+.#{$namespace-prefix}-box {
+  &[data-placement^='top'] > .#{$namespace-prefix}-svg-arrow {
+    bottom: 0;
+
+    &::after,
+    > svg {
+      top: 16px;
+      transform: rotate(180deg);
+    }
+  }
+
+  &[data-placement^='bottom'] > .#{$namespace-prefix}-svg-arrow {
+    top: 0;
+
+    > svg {
+      bottom: 16px;
+    }
+  }
+
+  &[data-placement^='left'] > .#{$namespace-prefix}-svg-arrow {
+    right: 0;
+
+    &::after,
+    > svg {
+      transform: rotate(90deg);
+      top: calc(50% - 3px);
+      left: 11px;
+    }
+  }
+
+  &[data-placement^='right'] > .#{$namespace-prefix}-svg-arrow {
+    left: 0;
+
+    &::after,
+    > svg {
+      transform: rotate(-90deg);
+      top: calc(50% - 3px);
+      right: 11px;
+    }
+  }
+}
+
+.#{$namespace-prefix}-svg-arrow {
+  position: absolute;
+  width: $arrow-size;
+  height: $arrow-size;
+  fill: #333;
+  text-align: initial;
+
+  > svg {
+    position: absolute;
+  }
+}

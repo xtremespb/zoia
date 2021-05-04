@@ -6,11 +6,35 @@ const throttle = require("lodash.throttle");
 const {
     v4: uuidv4
 } = require("uuid");
+const {
+    addDays,
+    startOfWeek,
+    format,
+    parse,
+    parseISO,
+} = require("date-fns");
 const axios = require("axios");
 const {
     cloneDeep
 } = require("lodash");
 const CKEditorImageUploadAdapter = require("./CKEditorImageUploadAdapter");
+
+// Polyfill for Object.fromEntries (missing in CKEditor)
+if (!Object.fromEntries) {
+    Object.defineProperty(Object, "fromEntries", {
+        value(entries) {
+            if (!entries || !entries[Symbol.iterator]) {
+                throw new Error("Object.fromEntries() requires a single iterable argument");
+            }
+            const o = {};
+            Object.keys(entries).forEach((key) => {
+                const [k, v] = entries[key];
+                o[k] = v;
+            });
+            return o;
+        },
+    });
+}
 
 if (process.browser) {
     // require("ace-builds/webpack-resolver");
@@ -52,7 +76,21 @@ module.exports = class {
             enabled: true,
             mandatory: input.item.mandatory,
             item: input.item,
-            imageDragging: false
+            imageDragging: false,
+            calendar: {
+                data: [],
+                year: new Date().getFullYear(),
+                month: new Date().getMonth(),
+                visible: false,
+                selected: {
+                    d: null,
+                    m: null,
+                    y: null
+                },
+                value: null,
+                valueText: null,
+                mode: "date",
+            }
         };
         this.state = state;
         this.func = {
@@ -93,6 +131,9 @@ module.exports = class {
         switch (this.state.item.type) {
         case "ace":
             throttle(this.updateAce.bind(this), 300)();
+            break;
+        case "datepicker":
+            this.updateDatePicker(this.input.value);
             break;
         }
     }
@@ -167,6 +208,37 @@ module.exports = class {
         });
     }
 
+    updateDatePicker(value) {
+        let calendar = cloneDeep(this.state.calendar);
+        calendar.value = parse(value, "yyyyMMdd", new Date()) || null;
+        // eslint-disable-next-line no-self-compare
+        if (!calendar.value || (calendar.value instanceof Date && calendar.value.getTime() !== calendar.value.getTime())) {
+            calendar.value = parseISO(value);
+        }
+        // If the date object is invalid it will return 'NaN' on getTime() and NaN is never equal to itself.
+        // eslint-disable-next-line no-self-compare
+        if (value && calendar.value && calendar.value instanceof Date && calendar.value.getTime() === calendar.value.getTime()) {
+            calendar.valueText = format(calendar.value, this.i18n.t("global.dateFormatShort"));
+            calendar.selected = {
+                y: calendar.value.getFullYear(),
+                m: calendar.value.getMonth(),
+                d: calendar.value.getDate(),
+            };
+            calendar.year = calendar.selected.y;
+            calendar.month = calendar.selected.m;
+        } else {
+            calendar = this.clearCalendar(calendar);
+        }
+        calendar.data = this.updateCalendarData(calendar.year, calendar.month);
+        this.setState("calendar", calendar);
+        document.addEventListener("click", e => {
+            const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
+            if (this.state.calendar.visible && !calendarArea.contains(e.target)) {
+                this.hideCalendar();
+            }
+        });
+    }
+
     async onMount() {
         await this.reloadCaptcha();
         switch (this.state.item.type) {
@@ -209,10 +281,30 @@ module.exports = class {
                 if (this.state.item.wysiwyg && !this.state.item.source) {
                     this.initCkEditor();
                 }
-                // if (this.state.item.wysiwyg) {
-                //     await this.initCkEditor();
-                // }
             });
+            break;
+        case "datepicker":
+            const calendar = cloneDeep(this.state.calendar);
+            if (this.input.value) {
+                calendar.value = parse(this.input.value, "yyyyMMdd");
+                calendar.valueText = format(this.input.value, this.i18n.t("global.dateFormatShort"));
+                calendar.selected = {
+                    y: calendar.value.getFullYear(),
+                    m: calendar.value.getMonth(),
+                    d: calendar.value.getDate(),
+                };
+                calendar.year = calendar.selected.y;
+                calendar.month = calendar.selected.m;
+            }
+            calendar.data = this.updateCalendarData(calendar.year, calendar.month);
+            this.setState("calendar", calendar);
+            document.addEventListener("click", e => {
+                const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
+                if (this.state.calendar.visible && !calendarArea.contains(e.target)) {
+                    this.hideCalendar();
+                }
+            });
+
             break;
         }
         this.emit("settled");
@@ -492,5 +584,185 @@ module.exports = class {
 
     onImageDragEnter(e) {
         e.preventDefault();
+    }
+
+    updateCalendarData(year, month) {
+        const startDate = startOfWeek(new Date(year, month, 1), {
+            weekStartsOn: parseInt(this.i18n.t("global.weekStart"), 10)
+        });
+        const rows = 6;
+        const cols = 7;
+        const length = rows * cols;
+        const data = Array.from({
+                length
+            })
+            .map((_, index) => ({
+                d: addDays(startDate, index).getDate(),
+                m: addDays(startDate, index).getMonth(),
+                y: addDays(startDate, index).getFullYear()
+            }))
+            .reduce((matrix, current, index, days) => !(index % cols !== 0) ? [...matrix, days.slice(index, index + cols)] : matrix, []);
+        if (data[5][0].d < 10) {
+            data.splice(5, 1);
+        }
+        return data;
+    }
+
+    onCalendarLeft(e) {
+        e.preventDefault();
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.month -= 1;
+        if (calendarOptions.month < 0) {
+            calendarOptions.month = 11;
+            calendarOptions.year -= 1;
+        }
+        calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
+        this.setState("calendar", calendarOptions);
+    }
+
+    onCalendarRight(e) {
+        e.preventDefault();
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.month += 1;
+        if (calendarOptions.month > 11) {
+            calendarOptions.month = 0;
+            calendarOptions.year += 1;
+        }
+        calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
+        this.setState("calendar", calendarOptions);
+    }
+
+    onDatePickerInputClick(e) {
+        e.stopPropagation();
+        const calendarOptions = cloneDeep(this.state.calendar);
+        // calendarOptions.visible = !calendarOptions.visible;
+        calendarOptions.visible = true;
+        calendarOptions.mode = "date";
+        this.setState("calendar", calendarOptions);
+    }
+
+    onDatePickerKeyPress(e) {
+        if ((e.which || e.keyCode) === 9 && this.state.calendar.visible) {
+            const calendarOptions = cloneDeep(this.state.calendar);
+            calendarOptions.visible = false;
+            this.setState("calendar", calendarOptions);
+        }
+    }
+
+    onCalendarCellClick(e) {
+        if (e.target && e.target.dataset && e.target.dataset.y) {
+            const {
+                d,
+                m,
+                y
+            } = e.target.dataset;
+            const calendarOptions = cloneDeep(this.state.calendar);
+            calendarOptions.selected = {
+                d: parseInt(d, 10),
+                m: parseInt(m, 10),
+                y: parseInt(y, 10)
+            };
+            calendarOptions.visible = false;
+            calendarOptions.value = new Date(calendarOptions.selected.y, calendarOptions.selected.m, calendarOptions.selected.d);
+            calendarOptions.valueText = format(calendarOptions.value, this.i18n.t("global.dateFormatShort"));
+            this.setState("calendar", calendarOptions);
+            this.emit("value-change", {
+                type: "datepicker",
+                id: this.state.item.id,
+                value: calendarOptions.value
+            });
+        }
+    }
+
+    onCalendarModeChange(e) {
+        const {
+            mode
+        } = e.target.dataset;
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.mode = mode;
+        this.setState("calendar", calendarOptions);
+        if (mode === "year") {
+            setTimeout(() => document.getElementById(`${this.input.id}_${this.input.item.id}_year_${this.state.calendar.year}`).scrollIntoView(), 100);
+        }
+    }
+
+    onCalendarMonthClick(e) {
+        e.preventDefault();
+        const {
+            month
+        } = e.target.dataset;
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.month = parseInt(month, 10);
+        calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
+        calendarOptions.mode = "date";
+        this.setState("calendar", calendarOptions);
+    }
+
+    onCalendarYearClick(e) {
+        e.preventDefault();
+        const {
+            year
+        } = e.target.dataset;
+        const calendarOptions = cloneDeep(this.state.calendar);
+        calendarOptions.year = parseInt(year, 10);
+        calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
+        calendarOptions.mode = "date";
+        this.setState("calendar", calendarOptions);
+    }
+
+    hideCalendar(e) {
+        if (e && e.preventDefault) {
+            e.preventDefault();
+        }
+        const calendarState = cloneDeep(this.state.calendar);
+        calendarState.visible = false;
+        this.setState("calendar", calendarState);
+    }
+
+    clearCalendar(calendar) {
+        calendar.value = null;
+        calendar.valueText = null;
+        calendar.year = new Date().getFullYear();
+        calendar.month = new Date().getMonth();
+        calendar.selected = {
+            d: null,
+            m: null,
+            y: null
+        };
+        return calendar;
+    }
+
+    onCalendarClear(e) {
+        e.preventDefault();
+        const calendar = this.clearCalendar(cloneDeep(this.state.calendar));
+        calendar.visible = false;
+        this.setState("calendar", calendar);
+        this.emit("value-change", {
+            type: "datepicker",
+            id: this.state.item.id,
+            value: calendar.value
+        });
+    }
+
+    onCalendarToday(e) {
+        e.preventDefault();
+        const calendar = cloneDeep(this.state.calendar);
+        calendar.value = new Date();
+        calendar.valueText = format(calendar.value, this.i18n.t("global.dateFormatShort"));
+        calendar.selected = {
+            y: calendar.value.getFullYear(),
+            m: calendar.value.getMonth(),
+            d: calendar.value.getDate(),
+        };
+        calendar.year = calendar.selected.y;
+        calendar.month = calendar.selected.m;
+        calendar.data = this.updateCalendarData(calendar.year, calendar.month);
+        calendar.visible = false;
+        this.setState("calendar", calendar);
+        this.emit("value-change", {
+            type: "datepicker",
+            id: this.state.item.id,
+            value: calendar.value
+        });
     }
 };

@@ -252,7 +252,7 @@ ACE
     </if>
   </label>
   <if(state.item.wysiwyg)>
-    <div class="tabs is-toggle is-small mb-1">
+    <div class="tabs is-toggle is-small mb-1 z3-mf-wysiwyg-toggle">
       <ul>
         <if(state.item.source)>
           <li class=(state.modeAce === "ace" ? "is-active" : "")>
@@ -412,7 +412,7 @@ Range Input
     </if>
   </label>
   <div class="control z3-mf-range-wrap">
-    <input type="range" class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` value=input.value min=input.item.min max=input.item.max on-change("onFieldValueChange") on-input("onRangeFieldValueChange") data-id=state.item.id disabled=!state.enabled/>
+    <input type="range" class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` value=input.value min=input.item.min max=input.item.max on-change("onFieldValueChange") on-input("onRangeFieldValueChange") data-id=state.item.id disabled=(!state.enabled)/>
     <span class="tag is-light mt-2 ml-2">${input.value}</span>
   </div>
   <if(state.item.helpText)>
@@ -421,4 +421,84 @@ Range Input
   <if(input.errors[state.item.id])>
     <p class="help is-danger">${input.errors[state.item.id]}</p>
   </if>
+</if>
+<!--
+Date Picker
+-->
+<if(state.item.type === "datepicker")>
+  <div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+    <label class="label" style="white-space:nowrap">
+      ${state.item.label}:<if(state.mandatory)>
+        &nbsp;<span class="has-text-danger">*</span>
+      </if>
+    </label>
+    <div class="control has-icons-left">
+      <input type="text" class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` data-id=state.item.id disabled=(!state.enabled || !state.visible) value=state.calendar.valueText readonly=true on-click("onDatePickerInputClick") on-focus("onDatePickerInputClick") on-keydown("onDatePickerKeyPress") />
+      <span class="icon is-small is-left">
+        <i class="mdi mdi-calendar-month"></i>
+      </span>
+    </div>
+    <div class=`z3-mf-calendar-wrap${state.calendar.visible ? "" :" is-hidden"}` id=`${input.id}_${state.item.id}_datepicker`>
+    <if(state.calendar.mode === "date")>
+        <div class="columns m-0 is-gapless is-mobile">
+          <div class="column is-narrow">
+            <a class="button is-ghost" on-click("onCalendarLeft")>
+              <span class="icon is-small">
+                <i class="mdi mdi-chevron-left"></i>
+              </span>
+            </a>
+          </div>
+          <div class="column is-auto z3-mf-calendar-head-date">
+            <a data-mode="month" on-click("onCalendarModeChange")>${out.global.i18n.t("global.monthsFull")[state.calendar.month]}</a>&nbsp;<a data-mode="year" on-click("onCalendarModeChange")>${state.calendar.year}</a>
+          </div>
+          <div class="column is-narrow">
+            <a class="button is-ghost" on-click("onCalendarRight")>
+              <span class="icon is-small">
+                <i class="mdi mdi-chevron-right"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+        <div class="columns m-0 is-gapless is-size-7 z3-mf-calendar-dow is-mobile">
+          <for|d| of=out.global.i18n.t("global.weekDays")>
+            <div class="column z3-mf-calendar-cell">${d}</div>
+          </for>
+        </div>
+        <for|r| of=state.calendar.data>
+          <div class="columns m-0 is-gapless is-mobile" on-click("onCalendarCellClick")>
+            <for|i| of=r>
+              <div class=`column${state.calendar.month !== i.m ? " z3-mf-calendar-cell-day-side" : ""}`>
+                <div class=`z3-mf-calendar-cell z3-mf-calendar-cell-day${i.m === new Date().getMonth() && i.d === new Date().getDate() && i.y === new Date().getFullYear() ? " z3-mf-calendar-cell-day-today" : ""}${i.m === state.calendar.selected.m && i.d === state.calendar.selected.d && i.y === state.calendar.selected.y ? " z3-mf-calendar-cell-day-selected" : ""}` data-d=i.d data-m=i.m data-y=i.y>${i.d}</div>
+              </div>
+            </for>
+          </div>
+        </for>
+        <div class="columns is-gapless is-mobile is-size-7">
+          <div class="column is-one-third z3-mf-calendar-control has-text-primary" on-click("onCalendarToday")>${out.global.i18n.t("calendar.today")}</div>
+          <div class="column is-one-third z3-mf-calendar-control has-text-danger" on-click("onCalendarClear")>${out.global.i18n.t("calendar.clear")}</div>
+          <div class="column is-one-third z3-mf-calendar-control has-text-grey" on-click("hideCalendar")>${out.global.i18n.t("calendar.cancel")}</div>
+        </div>
+    </if>
+    <if(state.calendar.mode === "month")>
+      <div class="columns is-gapless is-mobile is-multiline is-size-7">
+        <for|m,i| of=out.global.i18n.t("global.monthsFull")>
+          <div class=`column is-one-third z3-mf-calednar-cell-month${state.calendar.month === i ? " z3-mf-calednar-cell-month-now" : ""}` data-month=i on-click("onCalendarMonthClick")>${m}</div>
+        </for>
+      </div>
+    </if>
+    <if(state.calendar.mode === "year")>
+      <div class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year">
+        <for|y,i| of=[...Array(100).keys()].map(i => i + new Date().getFullYear() - 50)>
+          <div class=`column is-one-third z3-mf-calednar-cell-year${state.calendar.year === y ? " z3-mf-calednar-cell-year-now" : ""}` id=`${input.id}_${state.item.id}_year_${y}` data-year=y on-click("onCalendarYearClick")>${y}</div>
+        </for>
+      </div>
+    </if>
+    </div>
+    <if(state.item.helpText)>
+      <p class="help">${state.item.helpText}</p>
+    </if>
+    <if(input.errors[state.item.id])>
+      <p class="help is-danger">${input.errors[state.item.id]}</p>
+    </if>
+  </div>
 </if>

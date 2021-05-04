@@ -1,0 +1,26 @@
+@import '../_mixins.scss';
+@import '../_vars.scss';
+
+@mixin hidden-transform($placement) {
+  @if ($placement == 'top') {
+    transform: translateY(10px);
+  } @else if ($placement == 'bottom') {
+    transform: translateY(-10px);
+  } @else if ($placement == 'left') {
+    transform: translateX(10px);
+  } @else if ($placement == 'right') {
+    transform: translateX(-10px);
+  }
+}
+
+.#{$namespace-prefix}-box {
+  &[data-animation='shift-away'][data-state='hidden'] {
+    opacity: 0;
+
+    @each $placement in $placements {
+      &[data-placement^='#{$placement}'] {
+        @include hidden-transform($placement);
+      }
+    }
+  }
+}

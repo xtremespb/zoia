@@ -33,7 +33,10 @@ export default () => ({
                     accessAllowed: acl.checkPermission("files", "read"),
                     ...await site.getGlobals(),
                 },
-                modules: req.zoiaAdmin,
+                modules: req.zoiaAdmin.map(m => ({
+                    ...m,
+                    allowed: acl.checkPermission(m.id, "read")
+                })),
                 moduleId: moduleData.id,
             });
             return response.sendHTML(render);

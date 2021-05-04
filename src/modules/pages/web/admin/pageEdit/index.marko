@@ -53,7 +53,15 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, labe
         type: "text",
         label: out.global.i18n.t("title"),
         helpText: out.global.i18n.t("titleHelpText"),
-        wrapCSS: "z3-is-large"
+        wrapCSS: "z3-is-large",
+        convert: "string"
+      },
+      {
+        id: "date",
+        type: "datepicker",
+        wrapCSS: "z3-is-medium",
+        label: out.global.i18n.t("date"),
+        helpText: out.global.i18n.t("dateHelpText"),
       }
     ],
     {

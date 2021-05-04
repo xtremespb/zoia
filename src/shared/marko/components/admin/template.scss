@@ -2,8 +2,7 @@
 @import "~@mdi/font/scss/materialdesignicons.scss";
 @import "../../../fonts/source-sans-pro/source-sans-pro.css";
 @import "~bulma/bulma";
-@import "~bulma-extensions/bulma-tooltip/dist/css/bulma-tooltip.sass";
-@import "~bulma-extensions/bulma-switch/src/sass/index.sass";
+@import "../../../widgets/bulma-switch/index.sass";
 
 .z3-ap-html,
 .z3-ap-body {
@@ -86,13 +85,6 @@
     padding-top: 10px;
     padding-bottom: 10px;
     z-index: 9;
-    // background: $z3-head-background-color;
-    // color: $z3-head-text-color;
-    // background: repeating-linear-gradient(-55deg,
-    //         $white-bis,
-    //         $white-bis 5px,
-    //         $white-ter 5px,
-    //         $white-ter 10px);
     border-bottom: 1px solid $grey-lightest;
 }
 

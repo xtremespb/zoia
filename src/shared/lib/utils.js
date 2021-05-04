@@ -4,7 +4,13 @@ import mime from "mime-types";
 import Jimp from "jimp";
 import {
     exec
-} from "child_process";
+}
+from "child_process";
+import {
+    parse,
+    startOfDay,
+    endOfDay,
+} from "date-fns";
 
 export default {
     checkDatabaseDuplicates: async (rep, db, collection, query, errorKeyword, field) => {
@@ -313,4 +319,154 @@ export default {
     getRandomInt(low, high) {
         return Math.floor(Math.random() * (high - low) + low);
     },
+    buildFilterQuery(filters) {
+        const query = [];
+        const convertSpecialVariables = variable => {
+            switch (variable) {
+            case "z3:convert:null":
+                return null;
+            case "z3:convert:true":
+                return true;
+            case "z3:convert:false":
+                return false;
+            default:
+                return variable;
+            }
+        };
+        filters.map(f => {
+            const filter = {};
+            f.value.id = Array.isArray(f.value.id) ? f.value.id.map(i => convertSpecialVariables(i)) : convertSpecialVariables(f.value.id);
+            if (f.type === "date" && f.value.id) {
+                f.value.id = parse(f.value.id, "yyyyMMdd", new Date());
+            }
+            switch (f.mode) {
+            case "equals":
+                if (f.type === "date") {
+                    const filter1 = {};
+                    filter1[f.id] = {
+                        $gte: startOfDay(f.value.id)
+                    };
+                    query.push(filter1);
+                    const filter2 = {};
+                    filter2[f.id] = {
+                        $lte: endOfDay(f.value.id)
+                    };
+                    query.push(filter2);
+                } else {
+                    filter[f.id] = {
+                        $eq: f.value.id
+                    };
+                    query.push(filter);
+                }
+                break;
+            case "notEquals":
+                if (f.type === "date") {
+                    filter.$or = [];
+                    const filter1 = {};
+                    filter1[f.id] = {
+                        $lt: startOfDay(f.value.id)
+                    };
+                    filter.$or.push(filter1);
+                    const filter2 = {};
+                    filter2[f.id] = {
+                        $gt: endOfDay(f.value.id)
+                    };
+                    filter.$or.push(filter2);
+                    query.push(filter);
+                } else {
+                    filter[f.id] = {
+                        $ne: f.value.id
+                    };
+                    query.push(filter);
+                }
+                break;
+            case "isLike":
+                filter[f.id] = {
+                    $regex: f.value.id,
+                    $options: "i"
+                };
+                query.push(filter);
+                break;
+            case "notLike":
+                filter[f.id] = {
+                    $not: {
+                        $regex: f.value.id,
+                        $options: "i"
+                    }
+                };
+                query.push(filter);
+                break;
+            case "oneOf":
+                filter.$or = [];
+                f.value.id.map(i => {
+                    if (i !== undefined) {
+                        const oneOfFilter = {};
+                        oneOfFilter[f.id] = {
+                            $eq: i
+                        };
+                        filter.$or.push(oneOfFilter);
+                    }
+                });
+                query.push(filter);
+                break;
+            case "noneOf":
+                f.value.id.map(i => {
+                    filter[f.id] = {
+                        $ne: i
+                    };
+                    query.push(filter);
+                });
+                break;
+            case "greaterThan":
+                if (f.type === "date") {
+                    filter[f.id] = {
+                        $gt: endOfDay(f.value.id)
+                    };
+                } else {
+                    filter[f.id] = {
+                        $gt: parseFloat(f.value.id)
+                    };
+                }
+                query.push(filter);
+                break;
+            case "greaterThanOrEquals":
+                if (f.type === "date") {
+                    filter[f.id] = {
+                        $gte: startOfDay(f.value.id)
+                    };
+                } else {
+                    filter[f.id] = {
+                        $gte: parseFloat(f.value.id)
+                    };
+                }
+                query.push(filter);
+                break;
+            case "lessThan":
+                if (f.type === "date") {
+                    filter[f.id] = {
+                        $lt: startOfDay(f.value.id)
+                    };
+                } else {
+                    filter[f.id] = {
+                        $lt: parseFloat(f.value.id)
+                    };
+                }
+                query.push(filter);
+                break;
+            case "lessThanOrEquals":
+                if (f.type === "date") {
+                    filter[f.id] = {
+                        $lte: endOfDay(f.value.id)
+                    };
+                } else {
+                    filter[f.id] = {
+                        $lte: parseFloat(f.value.id)
+                    };
+                }
+                query.push(filter);
+                break;
+            }
+        });
+        return query;
+    }
 };
