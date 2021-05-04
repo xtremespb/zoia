@@ -1,3 +1,16 @@
+## [3.1.51](https://github.com/xtremespb/zoia3/compare/v3.1.50...v3.1.51) (2021-05-04)
+
+
+### Bug Fixes
+
+* Calendar functions implemented ([e844268](https://github.com/xtremespb/zoia3/commit/e844268125202f27f9dab4cbd570de5e423c1e03))
+* Calendar WIP ([a0d48fb](https://github.com/xtremespb/zoia3/commit/a0d48fb2626681b463a77b42c6b51682a07ef811))
+* Calendar WIP ([88e2ab7](https://github.com/xtremespb/zoia3/commit/88e2ab75c0d176ee15b087217dabf4ca005d6d22))
+* moved Images browser to Pages module ([cd120ee](https://github.com/xtremespb/zoia3/commit/cd120ee220101289998cb13f0682b9c9859bf8bb))
+* new feature for mtable component ([ba60478](https://github.com/xtremespb/zoia3/commit/ba60478aa0d0c6c1c710102fb4a0593852151094))
+* NPM modules updated ([389070a](https://github.com/xtremespb/zoia3/commit/389070ab6ce9ed3933f6e1a7833100e9bea803cb))
+* working on table filter ([195198f](https://github.com/xtremespb/zoia3/commit/195198f102e336a66c4516cf4361207f30a61a81))
+
 ## [3.1.50](https://github.com/xtremespb/zoia3/compare/v3.1.49...v3.1.50) (2021-04-20)
 
 
