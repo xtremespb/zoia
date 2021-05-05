@@ -1,7 +1,12 @@
+import Cookies from "../../../../shared/lib/cookies"
+import filterSave from "../../../../modules/core/api/data/filterSave.json"
+
 style.scss {
   @import "./mtable.scss";
 }
 
+$ const cookies = new Cookies(out.global.cookieOptions);
+$ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 <div class="z3-mt-wrap" id=`${input.id}_wrap`>
   <div class="columns">
     <div class="column is-four-fifths">
@@ -53,6 +58,9 @@ style.scss {
                   <div class="dropdown-content">
                     <a href="" on-click("onAddFilterClick") class="dropdown-item">
                       ${out.global.i18n.t("mTable.addFilter")}
+                    </a>
+                    <a href="" on-click("onSaveCurrentFilterSet") class="dropdown-item">
+                      ${out.global.i18n.t("mTable.saveCurrentFilterSet")}
                     </a>
                   </div>
                 </div>
@@ -272,6 +280,57 @@ style.scss {
       </div>
       </form>
     </div>
+  </if>
+  <if(state.filterSaveDialogActive)>
+  <div class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-content z3-mt-filter-save-dialog">
+      <div class="z3-mt-filter-save-dialog-form-wrap">
+      <mform key="filterSaveForm" id="filterSaveForm" save={
+        url: "/api/core/filters/save",
+        extras: {
+          filters: state.filters,
+          table: input.id,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      } fields=[
+        {
+          id: "title",
+          type: "text",
+          label: out.global.i18n.t("mTable.filterTitle"),
+          helpText: out.global.i18n.t("mTable.filterTitleHelpText"),
+          autoFocus: true,
+          mandatory: true
+        },
+        {
+          id: "div1",
+          type: "divider"
+        },
+        {
+          id: "bg1",
+          type: "buttons",
+          data: [
+            {
+              id: "btnSave",
+              type: "button",
+              buttonType: "submit",
+              label: out.global.i18n.t("mTable.save"),
+              css: "is-primary"
+            },
+            {
+              id: "btnCancel",
+              type: "button",
+              buttonType: "button",
+              label: out.global.i18n.t("mTable.cancel")
+            }
+          ]
+        }
+      ] validation=filterSave progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFilterSaveFormPostSuccess") on-button-click("onFilterSaveFormButtonClick") on-unauthorized("onUnauthorized")/>
+      </div>
+    </div>
+  </div>
   </if>
   <mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
 </div>

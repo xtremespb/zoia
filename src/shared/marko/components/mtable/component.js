@@ -38,6 +38,7 @@ module.exports = class {
             filterDate: null,
             filterError: null,
             filters: [],
+            filterSaveDialogActive: false,
             dropdownVisible: {},
         };
         this.state = this.initialState;
@@ -361,6 +362,7 @@ module.exports = class {
         this.setState("filterValue", "");
         this.setState("filterDialogEdit", null);
         this.setState("filterDialogActive", true);
+        this.setState("dropdownVisible", {});
     }
 
     onFilterSelectChange(e) {
@@ -503,5 +505,27 @@ module.exports = class {
 
     onFilterCalendarValueChange(value) {
         this.setState("filterDate", value || null);
+    }
+
+    onSaveCurrentFilterSet(e) {
+        this.setState("dropdownVisible", {});
+        this.setState("filterSaveDialogActive", true);
+        e.preventDefault();
+    }
+
+    onUnauthorized() {
+        window.location.href = this.i18n.getLocalizedURL(`${this.routes.login}?_=${new Date().getTime()}`, this.language);
+    }
+
+    onFilterSaveFormPostSuccess() {
+        this.setState("filterSaveDialogActive", false);
+    }
+
+    onFilterSaveFormButtonClick(obj) {
+        switch (obj.id) {
+        case "btnCancel":
+            this.setState("filterSaveDialogActive", false);
+            break;
+        }
     }
 };

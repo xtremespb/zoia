@@ -7,6 +7,7 @@ import apiRebuild from "./apiRebuild";
 import apiRebuildRestart from "./apiRebuildRestart";
 import apiRebuildStatus from "./apiRebuildStatus";
 import apiUpdate from "./apiUpdate";
+import apiFiltersSave from "./apiFiltersSave";
 
 export default fastify => {
     fastify.post("/api/core/captcha", apiCaptcha());
@@ -20,4 +21,5 @@ export default fastify => {
     fastify.post("/api/core/update/start", apiUpdate());
     fastify.post("/api/core/update/restart", apiRebuildRestart());
     fastify.post("/api/core/update/status", apiRebuildStatus());
+    fastify.post("/api/core/filters/save", apiFiltersSave());
 };
