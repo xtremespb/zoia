@@ -45,6 +45,7 @@
         "no-cond-assign": "off",
         "no-new": "off",
         "consistent-return": "off",
-        "no-restricted-syntax": "off"
+        "no-restricted-syntax": "off",
+        "no-await-in-loop": "off"
     }
 }

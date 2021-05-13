@@ -57,5 +57,6 @@ module.exports = class {
             data = data.filter(i => i !== dataset.id);
         }
         this.state.value = data;
+        this.emit("value-change", this.getValue());
     }
 };

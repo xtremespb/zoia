@@ -42,7 +42,7 @@
     width: 30%;
 }
 
-.z3-mt-loading-spinner {
+.z3-mt-loading-z3-mt-filter-spinner {
     background: rgba(255, 255, 255, 0) !important;
 }
 
@@ -74,6 +74,10 @@
     cursor: pointer;
 }
 
+.z3-mt-filter-meta {
+    margin-top: 3px;
+}
+
 .z3-mt-filter-tag-plus {
     position: relative;
     color: $white;
@@ -103,4 +107,73 @@
 
 .z3-mt-filter-tag-label-short {
     max-width: 50px !important;
+}
+
+.z3-mt-filter-save-dialog,
+.z3-mt-filter-manage-dialog {
+    background: $white;
+    overflow: hidden;
+}
+
+.z3-mt-filter-save-dialog-form-wrap,
+.z3-mt-filter-manage-dialog-content-wrap {
+    padding: 15px;
+    min-height: 230px;
+}
+
+.z3-mt-filter-spinner-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 230px;
+}
+
+.z3-mt-filter-spinner {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.z3-mt-filter-mselect {
+    min-height: 200px;
+}
+
+.z3-mt-filter-spinner div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid $grey-lighter;
+    border-radius: 50%;
+    animation: z3-mt-filter-spinner 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: $grey-lighter transparent transparent transparent;
+}
+
+.z3-mt-filter-spinner div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+
+.z3-mt-filter-spinner div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.z3-mt-filter-spinner div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+.z3-mt-filter-manage-buttons {
+    min-width: 180px;
+}
+
+@keyframes z3-mt-filter-spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

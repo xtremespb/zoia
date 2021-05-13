@@ -1,0 +1,26 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "minLength": 24,
+                "maxLength": 24,
+                "pattern": "^[a-f0-9]+$"
+            },
+            "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+
+            },
+            "type": {
+                "type": "integer",
+                "enum": [1, 2]
+            }
+        },
+        "required": ["id", "title", "type"]
+    },
+    "projection": {},
+    "search": []
+}
