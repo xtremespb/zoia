@@ -2,335 +2,539 @@ import Cookies from "../../../../shared/lib/cookies"
 import filterSave from "../../../../modules/core/api/data/filterSave.json"
 
 style.scss {
-  @import "./mtable.scss";
+	@import "./mtable.scss";
 }
 
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 <div class="z3-mt-wrap" id=`${input.id}_wrap`>
-  <div class="columns">
-    <div class="column is-four-fifths">
-      <if(input.buttons && input.buttons.length)>
-        <div class="field has-addons columns is-gapless is-multiline" id=`${input.id}_top_buttons`>
-          <for|btn| of=input.buttons>
-            <p class="control" class="z3-mt-top-control mt-1 mr-1">
-              <div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}`>
-                <div class="dropdown-trigger">
-                  <button disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected) class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}` data-button=btn.id data-dropdown=(String(!!(btn.dropdown && btn.dropdown.length))) id=`${input.id}_${btn.id}` type="button" on-click("onTopButtonClick") data-tippy-content=btn.text aria-haspopup="true">
-                    <if(btn.icon)>
-                      <div class="z3-mt-icon-wrap">
-                        <span class="icon">
-                          <i class=btn.icon/>
-                        </span>
-                      </div>
-                    </if>
-                    <if(btn.displayText && btn.text)>${btn.text}</if>
-                  </button>
-                </div>
-                <if(btn.dropdown && btn.dropdown.length)>
-                  <div class="dropdown-menu" role="menu">
-                    <div class="dropdown-content">
-                      <for|i| of=btn.dropdown>
-                        <a href="" on-click("onDropdownItemClick") data-id=i.id class="dropdown-item">
-                          ${i.label}
-                        </a>
-                      </for>
-                    </div>
-                  </div>
-                </if>
-              </div>
-            </p>
-          </for>
-          <if(input.filter && input.filter.length)>
-            <p class="control" class="z3-mt-top-control mt-1 mr-1">
-              <div class=`dropdown${state.dropdownVisible["filterGeneric"] ? " is-active" : ""}`>
-                <div class="dropdown-trigger">
-                  <button class="button" type="button" data-dropdown="true" on-click("onTopButtonClick") data-tippy-content=`${out.global.i18n.t("mTable.filter")}` data-button="filterGeneric">
-                      <div class="z3-mt-icon-wrap">
-                        <span class="icon">
-                          <i class="mdi mdi-filter-outline"/>
-                        </span>
-                      </div>
-                      ${out.global.i18n.t("mTable.filter")}
-                  </button>
-                </div>  
-                <div class="dropdown-menu" role="menu">
-                  <div class="dropdown-content">
-                    <a href="" on-click("onAddFilterClick") class="dropdown-item">
-                      ${out.global.i18n.t("mTable.addFilter")}
-                    </a>
-                    <a href="" on-click("onSaveCurrentFilterSet") class="dropdown-item">
-                      ${out.global.i18n.t("mTable.saveCurrentFilterSet")}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </p>
-          </if>
-        </div>
-      </if>
-    </div>
-    <div class="column">
-      <div class="control has-icons-right">
-        <input class="input" type="text" on-input("onSearchFieldInput") value=state.searchText id=`${input.id}_searchInput`/>
-        <span class="icon is-small is-right">
-          <i class="mdi mdi-magnify"/>
-        </span>
-      </div>
-    </div>
-  </div>
-  <if(input.filter && input.filter.length && state.filters.length)>
-    <div class="field is-grouped is-grouped-multiline mb-2">
-      <for|f,i| of=state.filters>
-        <div class="control">
-          <div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
-            <div class="tag is-info" on-click("onFilterTagClick")>
-              <div class="z3-mt-filter-tag-label z3-mt-filter-tag-label-short" data-tippy-content=`${f.label}`>${f.label}</div>
-            </div>
-            <span class="tag is-dark" on-click("onFilterTagClick") data-tippy-content=out.global.i18n.t(`mTable.filter.${f.mode}`)>
-              ${out.global.i18n.t(`mTable.filter.${f.mode}Short`)}
-            </span>
-            <div class="tag is-link" on-click("onFilterTagClick")>
-              <span class="z3-mt-filter-tag-label" data-tippy-content=f.value.label>${f.value.label}</span>
-              <if(f.value.plus > 0)>
-              <span class="z3-mt-filter-tag-plus">
-                  +${f.value.plus}
-                </span>
-              </if>
-            </div>
-            <a class="tag is-delete" on-click("onFilterTagDeleteClick")></a>
-          </div>
-        </div>
-      </for>
-    </div>
-  </if>
-  <if(state.error)>
-    <div class="notification is-danger">${state.error}</div>
-  </if>
-  <else>
-    <div class="table-container">
-      <table class=input.css id=`${input.id}_tableWrap`>
-        <thead class="z3-mt-noselect">
-          <tr>
-            <if(input.checkboxColumn)>
-              <th style="width:10px">
-                <div class="z3-pretty p-default">
-                  <input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
-                  <div class="state p-primary">
-                    <label/>
-                  </div>
-                </div>
-              </th>
-            </if>
-            <for|column| of=input.columns>
-              <th data-id=column.id data-sortable=column.sortable class=`${column.css || ""}${column.sortable ? " z3-mt-sortable" : ""}` on-click("onColumnClick")>
-                ${column.title}&nbsp;<i class=`mdi ${state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
-              </th>
-            </for>
-            <if(input.actions && input.actions.length)>
-              <th>${input.actionsTitle}</th>
-            </if>
-          </tr>
-        </thead>
-        <tbody>
-          <if(state.data.length)>
-            <for|row| of=state.data>
-              <tr>
-                <if(input.checkboxColumn)>
-                  <td style="width:10px">
-                    <div class="z3-pretty p-icon">
-                      <input data-id=(row.id || row._id) type="checkbox" checked=state.checkboxes[`i${row.id || row._id}`] on-change("setCheckbox")/>
-                      <div class="state">
-                        <i class="icon mdi mdi-check"/>
-                        <label/>
-                      </div>
-                    </div>
-                  </td>
-                </if>
-                <for|column| of=input.columns.map(c => c.id)>
-                  <td>$!{row[column] ? (input.processValue ? input.processValue(row.id || row._id, row[column], column, row) : row[column]) : ""}</td>
-                </for>
-                <if(input.actions && input.actions.length)>
-                  <td class="z3-mt-actions-wrap">
-                    <for|action| of=input.actions>
-                      <button class=`${action.css} z3-mt-action-button${action.tooltip ? " tooltip" : ""}` id=`${input.id}_${action.id}_${row.id || row._id}` data-action=action.id data-id=(row.id || row._id) type="button" on-click("onActionButtonClick") data-tippy-content=action.text>
-                        <if(action.icon)>
-                          <span class="icon">
-                            <i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
-                          </span>
-                        </if>
-                        <if(action.displayText && action.text)>&nbsp;${action.text}</if>
-                      </button>
-                    </for>
-                  </td>
-                </if>
-              </tr>
-            </for>
-          </if>
-          <else>
-            <if(state.loading)>
-              <tr>
-                <td colspan="100%">${input.i18n.t("mTable.loading")}</td>
-              </tr>
-            </if>
-            <else>
-              <tr>
-                <td colspan="100%">${input.i18n.t("mTable.noData")}</td>
-              </tr>
-            </else>
-          </else>
-        </tbody>
-      </table>
-    </div>
-    <if(state.paginationData.length)>
-      <nav class="pagination is-small z3-mt-pagination" role="navigation" aria-label="pagination">
-        <ul class="pagination-list">
-          <for|pi| of=state.paginationData>
-            <if(pi.type === "page")>
-              <li>
-                <a class=`pagination-link${pi.active ? " is-current" : ""}` data-page=pi.page on-click("onPageClick")>${pi.page}</a>
-              </li>
-            </if>
-            <if(pi.type === "dots")>
-              <li>
-                <span class="pagination-ellipsis">&hellip;</span>
-              </li>
-            </if>
-          </for>
-        </ul>
-      </nav>
-    </if>
-  </else>
-  <if(state.loading)>
-    <div class="z3-mt-loading">
-      <span class="button is-white is-loading is-large z3-mt-loading-spinner">&nbsp;</span>
-    </div>
-  </if>
-  <if(input.genericDelete)>
-    <div class=`modal${state.deleteDialogActive ? " is-active" : ""}`>
-      <div class="modal-background"/>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">${input.i18n.t("mTable.deleteTitle")}</p>
-          <if(!state.deleteDialogProgress)>
-            <button class="delete" aria-label="close" on-click("onDeleteDialogClose")/>
-          </if>
-        </header>
-        <section class="modal-card-body">
-          <p>${input.i18n.t("mTable.deleteDesc")}:</p>
-          <div class="z3-margin-top">${state.deleteDialogTitles.map(i => `"${i}"`).join(", ")}</div>
-        </section>
-        <footer class="modal-card-foot">
-          <fieldset disabled=state.deleteDialogProgress>
-            <button class=`button is-primary${state.deleteDialogProgress ? " is-loading" : ""}` id=`${input.id}_deleteConfirmButton` on-click("onDeleteDialogSubmit")>${input.i18n.t("mTable.delete")}</button>
-            <button class="button" on-click("onDeleteDialogClose")>${input.i18n.t("mTable.cancel")}</button>
-          </fieldset>
-        </footer>
-      </div>
-    </div>
-  </if>
-  <if(input.filter && input.filter.length)>
-    <div class=`modal${state.filterDialogActive ? " is-active" : ""}`>
-      <form on-submit("onFilterFormSubmit")>
-      <div class="modal-background" on-click("onFilterDialogClose")/>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">${state.filterDialogEdit !== null ? input.i18n.t("mTable.editFilter") : input.i18n.t("mTable.addFilter")}</p>
-          <if(!state.deleteDialogProgress)>
-            <button class="delete" type="button" aria-label="close" on-click("onFilterDialogClose")/>
-          </if>
-        </header>
-        <section class="modal-card-body">
-          <if(state.filterError)>
-            <div class="notification is-danger">
-              ${state.filterError}
-            </div>
-          </if>
-          <div class="select is-fullwidth">
-            <select on-change("onFilterSelectChange")>
-              <option value="" selected=(state.filterSelected === "")>&ndash;</option>
-              <for|f| of=input.filter>
-                <option value=f.id selected=(state.filterSelected === f.id)>${f.label}</option>
-              </for>
-            </select>
-          </div>
-          <div class=`select is-fullwidth mt-2 mb-2${state.filterSelected === "" ? " is-hidden" : ""}`>
-            <select on-change("onFilterModeSelectChange")>
-              <for|f| of=(state.filterSelectedData.modes || ["equals", "notEquals", "isLike", "notLike", "oneOf", "noneOf", "greaterThan", "greaterThanOrEquals", "lessThan", "lessThanOrEquals"])>
-                <if((!f.match(/^larger/) && !f.match(/^smaller/)) || state.filterSelectedData.isNumber)>
-                  <option value=f selected=(state.filterMode === f)>${input.i18n.t(`mTable.filter.${f}`)}</option>
-                </if>
-              </for>
-            </select>
-          </div>
-          <mselect key="z3_mt_mselect" active=(state.filterSelectedData.type === "select")/>
-          <div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")>
-            <input class="input" type="text" value=state.filterValue on-change("onFilterValueChange") placeholder=input.i18n.t("mTable.filterValue")>
-          </div>
-          <div class=(state.filterSelectedData.type !== "date" ? "is-hidden" : "")>
-            <mcalendar id="z3_mt_filter_date" key="z3_mt_filter_date" on-value-change("onFilterCalendarValueChange")/>
-          </div>
-        </section>
-        <footer class="modal-card-foot">
-          <fieldset>
-            <button class="button is-primary" type="submit">${state.filterDialogEdit !== null ? input.i18n.t("mTable.save") : input.i18n.t("mTable.add")}</button>
-            <button class="button" type="button" on-click("onFilterDialogClose")>${input.i18n.t("mTable.cancel")}</button>
-          </fieldset>
-        </footer>
-      </div>
-      </form>
-    </div>
-  </if>
-  <if(state.filterSaveDialogActive)>
-  <div class="modal is-active">
-    <div class="modal-background"></div>
-    <div class="modal-content z3-mt-filter-save-dialog">
-      <div class="z3-mt-filter-save-dialog-form-wrap">
-      <mform key="filterSaveForm" id="filterSaveForm" save={
-        url: "/api/core/filters/save",
-        extras: {
-          filters: state.filters,
-          table: input.id,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      } fields=[
-        {
-          id: "title",
-          type: "text",
-          label: out.global.i18n.t("mTable.filterTitle"),
-          helpText: out.global.i18n.t("mTable.filterTitleHelpText"),
-          autoFocus: true,
-          mandatory: true
-        },
-        {
-          id: "div1",
-          type: "divider"
-        },
-        {
-          id: "bg1",
-          type: "buttons",
-          data: [
-            {
-              id: "btnSave",
-              type: "button",
-              buttonType: "submit",
-              label: out.global.i18n.t("mTable.save"),
-              css: "is-primary"
-            },
-            {
-              id: "btnCancel",
-              type: "button",
-              buttonType: "button",
-              label: out.global.i18n.t("mTable.cancel")
-            }
-          ]
-        }
-      ] validation=filterSave progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFilterSaveFormPostSuccess") on-button-click("onFilterSaveFormButtonClick") on-unauthorized("onUnauthorized")/>
-      </div>
-    </div>
-  </div>
-  </if>
-  <mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
+	<div class="columns">
+		<div class="column is-four-fifths">
+			<if(input.buttons && input.buttons.length)>
+				<div
+					class="field has-addons columns is-gapless is-multiline"
+					id=`${input.id}_top_buttons`>
+					<for|btn| of=input.buttons>
+						<p class="z3-mt-top-control mt-1 mr-1">
+							<div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}`>
+								<div class="dropdown-trigger">
+									<button
+										disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected)
+										class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}`
+										data-button=btn.id
+										data-dropdown=String(!!(btn.dropdown && btn.dropdown.length))
+										id=`${input.id}_${btn.id}`
+										type="button"
+										on-click("onTopButtonClick")
+										data-tippy-content=btn.text
+										aria-haspopup="true">
+										<if(btn.icon)>
+											<div class="z3-mt-icon-wrap">
+												<span class="icon">
+													<i class=btn.icon/>
+												</span>
+											</div>
+										</if>
+										<if(btn.displayText && btn.text)>${btn.text}</if>
+									</button>
+								</div>
+								<if(btn.dropdown && btn.dropdown.length)>
+									<div class="dropdown-menu" role="menu">
+										<div class="dropdown-content">
+											<for|i| of=btn.dropdown>
+												<a href="" on-click("onDropdownItemClick") data-id=i.id class="dropdown-item">
+													${i.label}
+												</a>
+											</for>
+										</div>
+									</div>
+								</if>
+							</div>
+						</p>
+					</for>
+					<if(input.filter && input.filter.length)>
+						<p class="z3-mt-top-control mt-1 mr-1">
+							<div class=`dropdown${
+								state.dropdownVisible["filterGeneric"] ? " is-active" : ""
+							}`>
+								<div class="dropdown-trigger">
+									<button
+										class="button"
+										type="button"
+										data-dropdown="true"
+										on-click("onTopButtonClick")
+										data-tippy-content=`${out.global.i18n.t("mTable.filter")}`
+										data-button="filterGeneric">
+										<div class="z3-mt-icon-wrap">
+											<span class="icon">
+												<i class="mdi mdi-filter-outline"/>
+											</span>
+										</div>
+										${out.global.i18n.t("mTable.filter")}
+									</button>
+								</div> 
+								<div class="dropdown-menu" role="menu">
+									<div class="dropdown-content">
+										<a href="" on-click("onAddFilterClick") class="dropdown-item">
+											${out.global.i18n.t("mTable.addFilter")}
+										</a>
+										<if(state.filterCurrentId)>
+											<a href="" on-click("onSaveCurrentFilterSet") class="dropdown-item">
+												${out.global.i18n.t("mTable.saveCurrentFilterSet")}
+											</a>
+										</if>
+										<if(state.filters.length)>
+											<a href="" on-click("onSaveCurrentFilterSetAs") class="dropdown-item">
+												${out.global.i18n.t("mTable.saveCurrentFilterSetAs")}
+											</a>
+										</if>
+										<a href="" on-click("onManageFilters") class="dropdown-item">
+											${out.global.i18n.t("mTable.manageFilters")}
+										</a>
+										<if(state.filters.length)>
+											<a href="" on-click("onRemoveAllFilters") class="dropdown-item">
+												${out.global.i18n.t("mTable.removeAllFilters")}
+											</a>
+										</if>
+									</div>
+								</div>
+							</div>
+						</p>
+					</if>
+				</div>
+			</if>
+		</div>
+		<div class="column">
+			<div class="control has-icons-right">
+				<input
+					class="input"
+					type="text"
+					on-input("onSearchFieldInput")
+					value=state.searchText
+					id=`${input.id}_searchInput`/>
+				<span class="icon is-small is-right">
+					<i class="mdi mdi-magnify"/>
+				</span>
+			</div>
+		</div>
+	</div>
+	<if(input.filter && input.filter.length && state.filters.length)>
+		<div class="field is-grouped is-grouped-multiline mb-2">
+			<if(state.filterCurrentId)>
+				<div class="control">
+					<div class="tags">
+						<div class="tag is-success z3-mt-filter-meta">
+							${state.filterCurrentTitle}
+						</div>
+					</div>
+				</div>
+			</if>
+			<for|f, i| of=state.filters>
+				<div class="control">
+					<div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
+						<div class="tag is-info" on-click("onFilterTagClick")>
+							<div
+								class="z3-mt-filter-tag-label z3-mt-filter-tag-label-short"
+								data-tippy-content=`${f.label}`>
+								${f.label}
+							</div>
+						</div>
+						<span
+							class="tag is-dark"
+							on-click("onFilterTagClick")
+							data-tippy-content=out.global.i18n.t(`mTable.filter.${f.mode}`)>
+							${out.global.i18n.t(`mTable.filter.${f.mode}Short`)}
+						</span>
+						<div class="tag is-link" on-click("onFilterTagClick")>
+							<span class="z3-mt-filter-tag-label" data-tippy-content=f.value.label>
+								${f.value.label}
+							</span>
+							<if(f.value.plus > 0)>
+								<span class="z3-mt-filter-tag-plus">+${f.value.plus}</span>
+							</if>
+						</div>
+						<a class="tag is-delete" on-click("onFilterTagDeleteClick")/>
+					</div>
+				</div>
+			</for>
+		</div>
+	</if>
+	<if(state.error)>
+		<div class="notification is-danger">${state.error}</div>
+	</if>
+	<else>
+		<div class="table-container">
+			<table class=input.css id=`${input.id}_tableWrap`>
+				<thead class="z3-mt-noselect">
+					<tr>
+						<if(input.checkboxColumn)>
+							<th style="width:10px">
+								<div class="z3-pretty p-default">
+									<input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
+									<div class="state p-primary">
+										<label/>
+									</div>
+								</div>
+							</th>
+						</if>
+						<for|column| of=input.columns>
+							<th
+								data-id=column.id
+								data-sortable=column.sortable
+								class=`${column.css || ""}${column.sortable ? " z3-mt-sortable" : ""}`
+								on-click("onColumnClick")>
+								${column.title}&nbsp;<i class=`mdi ${
+									state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"
+								}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
+							</th>
+						</for>
+						<if(input.actions && input.actions.length)>
+							<th>${input.actionsTitle}</th>
+						</if>
+					</tr>
+				</thead>
+				<tbody>
+					<if(state.data.length)>
+						<for|row| of=state.data>
+							<tr>
+								<if(input.checkboxColumn)>
+									<td style="width:10px">
+										<div class="z3-pretty p-icon">
+											<input
+												data-id=(row.id || row._id)
+												type="checkbox"
+												checked=state.checkboxes[`i${row.id || row._id}`]
+												on-change("setCheckbox")/>
+											<div class="state">
+												<i class="icon mdi mdi-check"/>
+												<label/>
+											</div>
+										</div>
+									</td>
+								</if>
+								<for|column| of=input.columns.map(c => c.id)>
+									<td>
+										$!{row[column]
+										? input.processValue
+											? input.processValue(row.id || row._id, row[column], column, row)
+											: row[column]
+										: ""}
+									</td>
+								</for>
+								<if(input.actions && input.actions.length)>
+									<td class="z3-mt-actions-wrap">
+										<for|action| of=input.actions>
+											<button
+												class=`${action.css} z3-mt-action-button${
+													action.tooltip ? " tooltip" : ""
+												}`
+												id=`${input.id}_${action.id}_${row.id || row._id}`
+												data-action=action.id
+												data-id=(row.id || row._id)
+												type="button"
+												on-click("onActionButtonClick")
+												data-tippy-content=action.text>
+												<if(action.icon)>
+													<span class="icon">
+														<i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
+													</span>
+												</if>
+												<if(action.displayText && action.text)>&nbsp;${action.text}</if>
+											</button>
+										</for>
+									</td>
+								</if>
+							</tr>
+						</for>
+					</if>
+					<else>
+						<if(state.loading)>
+							<tr>
+								<td colspan="100%">${input.i18n.t("mTable.loading")}</td>
+							</tr>
+						</if>
+						<else>
+							<tr>
+								<td colspan="100%">${input.i18n.t("mTable.noData")}</td>
+							</tr>
+						</else>
+					</else>
+				</tbody>
+			</table>
+		</div>
+		<if(state.paginationData.length)>
+			<nav
+				class="pagination is-small z3-mt-pagination"
+				role="navigation"
+				aria-label="pagination">
+				<ul class="pagination-list">
+					<for|pi| of=state.paginationData>
+						<if(pi.type === "page")>
+							<li>
+								<a
+									class=`pagination-link${pi.active ? " is-current" : ""}`
+									data-page=pi.page
+									on-click("onPageClick")>
+									${pi.page}
+								</a>
+							</li>
+						</if>
+						<if(pi.type === "dots")>
+							<li>
+								<span class="pagination-ellipsis">&hellip;</span>
+							</li>
+						</if>
+					</for>
+				</ul>
+			</nav>
+		</if>
+	</else>
+	<if(state.loading)>
+		<div class="z3-mt-loading">
+			<span class="button is-white is-loading is-large z3-mt-loading-spinner">
+				&nbsp;
+			</span>
+		</div>
+	</if>
+	<if(input.genericDelete)>
+		<div class=`modal${state.deleteDialogActive ? " is-active" : ""}`>
+			<div class="modal-background"/>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">${input.i18n.t("mTable.deleteTitle")}</p>
+					<if(!state.deleteDialogProgress)>
+						<button class="delete" aria-label="close" on-click("onDeleteDialogClose")/>
+					</if>
+				</header>
+				<section class="modal-card-body">
+					<p>${input.i18n.t("mTable.deleteDesc")}:</p>
+					<div class="z3-margin-top">
+						${state.deleteDialogTitles.map(i => `"${i}"`).join(", ")}
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<fieldset disabled=state.deleteDialogProgress>
+						<button
+							class=`button is-primary${
+								state.deleteDialogProgress ? " is-loading" : ""
+							}`
+							id=`${input.id}_deleteConfirmButton`
+							on-click("onDeleteDialogSubmit")>
+							${input.i18n.t("mTable.delete")}
+						</button>
+						<button class="button" on-click("onDeleteDialogClose")>
+							${input.i18n.t("mTable.cancel")}
+						</button>
+					</fieldset>
+				</footer>
+			</div>
+		</div>
+	</if>
+	<if(input.filter && input.filter.length)>
+		<div class=`modal${state.filterDialogActive ? " is-active" : ""}`>
+			<form on-submit("onFilterFormSubmit")>
+				<div class="modal-background" on-click("onFilterDialogClose")/>
+				<div class="modal-card">
+					<header class="modal-card-head">
+						<p class="modal-card-title">
+							${state.filterDialogEdit !== null
+							? input.i18n.t("mTable.editFilter")
+							: input.i18n.t("mTable.addFilter")}
+						</p>
+						<if(!state.deleteDialogProgress)>
+							<button
+								class="delete"
+								type="button"
+								aria-label="close"
+								on-click("onFilterDialogClose")/>
+
+						</if>
+					</header>
+					<section class="modal-card-body">
+						<if(state.filterError)>
+							<div class="notification is-danger">${state.filterError}</div>
+						</if>
+						<div class="select is-fullwidth">
+							<select on-change("onFilterSelectChange")>
+								<option value="" selected=(state.filterSelected === "")>&ndash;</option>
+								<for|f| of=input.filter>
+									<option value=f.id selected=(state.filterSelected === f.id)>${f.label}</option>
+								</for>
+							</select>
+						</div>
+						<div class=`select is-fullwidth mt-2 mb-2${
+							state.filterSelected === "" ? " is-hidden" : ""
+						}`>
+							<select on-change("onFilterModeSelectChange")>
+								<for|f| of=(state.filterSelectedData.modes || [
+									"equals",
+									"notEquals",
+									"isLike",
+									"notLike",
+									"oneOf",
+									"noneOf",
+									"greaterThan",
+									"greaterThanOrEquals",
+									"lessThan",
+									"lessThanOrEquals"
+								])>
+									<if(
+										(!f.match(/^larger/) && !f.match(/^smaller/)) ||
+										state.filterSelectedData.isNumber
+									)>
+										<option value=f selected=(state.filterMode === f)>
+											${input.i18n.t(`mTable.filter.${f}`)}
+										</option>
+									</if>
+								</for>
+							</select>
+						</div>
+						<mselect key=`${input.id}_mselect` active=(state.filterSelectedData.type === "select")/>
+						<div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")>
+							<input
+								class="input"
+								type="text"
+								value=state.filterValue
+								on-change("onFilterValueChange")
+								placeholder=input.i18n.t("mTable.filterValue")/>
+						</div>
+						<div class=(state.filterSelectedData.type !== "date" ? "is-hidden" : "")>
+							<mcalendar
+								id=`${input.id}_filterDate`
+								key=`${input.id}_filterDate`
+								on-value-change("onFilterCalendarValueChange")/>
+						</div>
+					</section>
+					<footer class="modal-card-foot">
+						<fieldset>
+							<button class="button is-primary" type="submit">
+								${state.filterDialogEdit !== null
+								? input.i18n.t("mTable.save")
+								: input.i18n.t("mTable.add")}
+							</button>
+							<button class="button" type="button" on-click("onFilterDialogClose")>
+								${input.i18n.t("mTable.cancel")}
+							</button>
+						</fieldset>
+					</footer>
+				</div>
+			</form>
+		</div>
+	</if>
+	<if(state.filterManageDialogActive)>
+		<div class="modal is-active">
+			<div class="modal-background" on-click("onFilterManageDialogClose")/>
+			<div class="modal-content z3-mt-filter-manage-dialog">
+				<div class="z3-mt-filter-manage-dialog-content-wrap">
+					<if(state.filterManageDialogError)>
+						<div class="notification is-danger mb-2">
+							${state.filterManageDialogError}
+					  	</div>
+					</if>  
+					<div class="z3-mt-filter-spinner-wrap" style=(state.filterManageDialogLoading ? "display:flex" : "display:none")>
+						<div class="z3-mt-filter-spinner">
+							<div/><div/><div/><div/>
+						</div>
+					</div>
+					<div style=(state.filterManageDialogLoading ? "display:none" : "") class="columns is-variable is-1">
+						<div class="column is-narrow z3-mt-filter-manage-buttons">
+							<div>
+								<button class="button is-fullwidth" disabled=(state.filterManageSelected.length !== 1) on-click("onFilterSetLoadClick")>
+									${out.global.i18n.t("mTable.filter.loadSelected")}
+								</button>
+							</div>
+							<div>
+								<button class="button mt-2 is-fullwidth" disabled=(state.filterManageSelected.length !== 1) on-click("onFilterSetEditClick")>
+									${out.global.i18n.t("mTable.filter.editSelected")}
+								</button>
+							</div>
+							<div>
+								<button class="button mt-2 is-danger is-fullwidth" disabled=(state.filterManageSelected.length === 0) on-click("onFilterDeleteClick")>
+									${out.global.i18n.t("mTable.filter.deleteSelected")}
+								</button>
+							</div>
+							<div>
+								<button class="button mt-5 is-fullwidth" on-click("onFilterManageDialogClose")>
+									${out.global.i18n.t("btnCloseGeneric")}
+								</button>
+							</div>
+						</div>
+						<div class="column">
+							<mselect key=`${input.id}_mselect_filter` active=true css="z3-mt-filter-mselect" on-value-change("onMSelectFilterChange")/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</if>
+	<div class=`modal${state.filterEditDialogActive ? " is-active" : ""}`>
+		<div class="modal-background" on-click("onFilterEditDialogClose")/>
+		<div class="modal-content z3-mt-filter-save-dialog">
+			<div class="z3-mt-filter-save-dialog-form-wrap">
+				<mform
+					manual=true
+					key=`${input.id}_filterEditForm`
+					id=`${input.id}_filterEditForm`
+					fields=[
+						{
+							id: "title",
+							type: "text",
+							label: out.global.i18n.t("mTable.filterTitle"),
+							helpText: out.global.i18n.t("mTable.filterTitleHelpText"),
+							autoFocus: true,
+							mandatory: true
+						},
+						{
+							id: "type",
+							type: "select",
+							label: out.global.i18n.t("mTable.filterType"),
+							options: [
+								{
+									value: 1,
+									label: out.global.i18n.t("mTable.filterType.local")
+								},
+								{
+									value: 2,
+									label: out.global.i18n.t("mTable.filterType.global")
+								}
+							],
+							wrapCSS: "z3-is-large",
+							css: "is-fullwidth",
+							defaultValue: 1,
+							convert: "integer",
+							mandatory: true
+						},
+						{
+							id: "div1",
+							type: "divider"
+						},
+						{
+							id: "bg1",
+							type: "buttons",
+							data: [
+								{
+									id: "btnSave",
+									type: "button",
+									buttonType: "submit",
+									label: out.global.i18n.t("mTable.save"),
+									css: "is-primary"
+								},
+								{
+									id: "btnCancel",
+									type: "button",
+									buttonType: "button",
+									label: out.global.i18n.t("mTable.cancel")
+								}
+							]
+						}
+					]
+					validation=filterSave
+					i18n=out.global.i18n
+					progressButtonId="btnSave"
+					on-button-click("onFilterEditFormButtonClick")/>
+			</div>
+		</div>
+	</div>
+	<mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
+	<mconfirm key=`${input.id}_filterDeleteConfirm` on-confirm("onFilterDeleteConfirm")/>
 </div>

@@ -1,7 +1,7 @@
 import {
     ObjectID
 } from "mongodb";
-import filterSaveData from "./data/filterSave.json";
+import filterSaveData from "./data/filterEdit.json";
 
 export default () => ({
     schema: {
@@ -26,30 +26,18 @@ export default () => ({
             return;
         }
         try {
-            if (req.body.id) {
-                await this.mongo.db.collection(req.zoiaModulesConfig["core"].collectionFilters || "filters").updateOne({
-                    _id: new ObjectID(req.body.id),
-                }, {
-                    $set: {
-                        filters: req.body.filters,
-                    }
-                }, {
-                    upsert: false,
-                });
-                response.successJSON({});
-            } else {
-                const result = await this.mongo.db.collection(req.zoiaModulesConfig["core"].collectionFilters || "filters").insertOne({
-                    table: req.body.table,
-                    type: req.body.type,
+            await this.mongo.db.collection(req.zoiaModulesConfig["core"].collectionFilters || "filters").updateOne({
+                _id: new ObjectID(req.body.id),
+            }, {
+                $set: {
                     title: req.body.title,
-                    filters: req.body.filters,
+                    type: req.body.type,
                     userId: String(auth.getUser()._id),
-                });
-                const id = result.insertedId;
-                response.successJSON({
-                    id
-                });
-            }
+                }
+            }, {
+                upsert: false,
+            });
+            response.successJSON();
             return;
         } catch (e) {
             log.error(e);

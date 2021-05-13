@@ -5,9 +5,10 @@ const cloneDeep = require("lodash.clonedeep");
 const {
     format,
 } = require("date-fns");
+const Cookies = require("../../../lib/cookies").default;
 
 module.exports = class {
-    onCreate(input) {
+    onCreate(input, out) {
         this.initialState = {
             data: [],
             totalCount: 0,
@@ -38,8 +39,14 @@ module.exports = class {
             filterDate: null,
             filterError: null,
             filters: [],
-            filterSaveDialogActive: false,
+            filterEditDialogActive: false,
             dropdownVisible: {},
+            filterManageDialogActive: false,
+            filterManageDialogLoading: false,
+            filterManageDialogError: null,
+            filterManageSelected: [],
+            filterCurrentId: null,
+            filterCurrentTitle: "",
         };
         this.state = this.initialState;
         this.mounted = false;
@@ -51,6 +58,8 @@ module.exports = class {
             getCheckboxes: this.getCheckboxes.bind(this),
         };
         this.i18n = input.i18n;
+        this.cookieOptions = out.global.cookieOptions;
+        this.siteId = out.global.siteId;
     }
 
     setError(err) {
@@ -64,8 +73,9 @@ module.exports = class {
     onMount() {
         // Do we need to auto-set itemsPerPage?
         // On mobile device, we shall not
-        this.selectField = this.getComponent("z3_mt_mselect");
-        this.calendarField = this.getComponent("z3_mt_filter_date");
+        this.selectField = this.getComponent(`${this.input.id}_mselect`);
+        this.calendarField = this.getComponent(`${this.input.id}_filterDate`);
+        this.filterDeleteConfirm = this.getComponent(`${this.input.id}_filterDeleteConfirm`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
             window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
@@ -100,6 +110,8 @@ module.exports = class {
                 this.setState("dropdownVisible", {});
             }
         });
+        const cookies = new Cookies(this.cookieOptions);
+        this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
     }
 
     onWindowResize(reload) {
@@ -296,7 +308,7 @@ module.exports = class {
             const ids = Object.keys(this.state.checkboxes).map(i => this.state.checkboxes[i] ? i.replace(/^i/, "") : null).filter(i => i !== undefined && i !== null);
             this.setState("deleteDialogIds", ids);
             if (this.input.genericDelete.title) {
-                const titles = this.state.data.map(item => ids.indexOf(item.id) > -1 || ids.indexOf(item._id) > -1 ? item[this.input.genericDelete.title] : null).filter(item => item).sort();
+                const titles = this.state.data.map(item => ids.indexOf(String(item.id)) > -1 || ids.indexOf(String(item._id)) > -1 ? item[this.input.genericDelete.title] : null).filter(item => item).sort();
                 this.setState("deleteDialogTitles", titles);
             }
             this.setState("dropdownVisible", {});
@@ -507,25 +519,238 @@ module.exports = class {
         this.setState("filterDate", value || null);
     }
 
-    onSaveCurrentFilterSet(e) {
-        this.setState("dropdownVisible", {});
-        this.setState("filterSaveDialogActive", true);
+    onSaveCurrentFilterSetAs(e) {
         e.preventDefault();
+        this.setState("dropdownVisible", {});
+        this.setState("filterManageSelected", []);
+        this.setState("filterEditDialogActive", true);
+        this.getComponent(`${this.input.id}_filterEditForm`).func.resetData();
+        setTimeout(() => this.getComponent(`${this.input.id}_filterEditForm`).func.autoFocus(), 50);
+    }
+
+    async onSaveCurrentFilterSet(e) {
+        e.preventDefault();
+        this.setState("dropdownVisible", {});
+        this.setLoading(true);
+        try {
+            await axios({
+                method: "post",
+                url: "/api/core/filters/save",
+                data: {
+                    id: this.state.filterCurrentId,
+                    title: "unset",
+                    type: 1,
+                    table: "unset",
+                    filters: this.state.filters,
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setLoading(false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTable.filterSaveSuccess"), "is-success");
+        } catch {
+            this.setLoading(false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.filterSave"), "is-danger");
+        }
     }
 
     onUnauthorized() {
         window.location.href = this.i18n.getLocalizedURL(`${this.routes.login}?_=${new Date().getTime()}`, this.language);
     }
 
-    onFilterSaveFormPostSuccess() {
-        this.setState("filterSaveDialogActive", false);
-    }
-
-    onFilterSaveFormButtonClick(obj) {
+    async onFilterEditFormButtonClick(obj) {
         switch (obj.id) {
         case "btnCancel":
-            this.setState("filterSaveDialogActive", false);
+            this.setState("filterEditDialogActive", false);
             break;
+        case "btnSave":
+            if (this.state.filterManageSelected.length) {
+                if (!await this.getComponent(`${this.input.id}_filterEditForm`).func.submitForm()) {
+                    break;
+                }
+                const {
+                    id
+                } = this.state.filterManageSelected[0];
+                const title = this.getComponent(`${this.input.id}_filterEditForm`).func.getValue("title");
+                const type = parseInt(this.getComponent(`${this.input.id}_filterEditForm`).func.getValue("type"), 10);
+                this.setState("filterEditDialogActive", false);
+                this.setState("filterManageDialogLoading", true);
+                this.getComponent(`${this.input.id}_filterEditForm`).func.setError(null);
+                try {
+                    await axios({
+                        method: "post",
+                        url: "/api/core/filters/edit",
+                        data: {
+                            id,
+                            title,
+                            type
+                        },
+                        headers: {
+                            Authorization: `Bearer ${this.token}`
+                        }
+                    });
+                    this.setState("filterManageDialogLoading", false);
+                    const currentFilter = this.filtersData.find(f => f._id === id);
+                    currentFilter.title = title;
+                    currentFilter.type = type;
+                    this.getComponent(`${this.input.id}_mselect_filter`).func.setItems(this.filtersData.map(i => ({
+                        id: i._id,
+                        label: i.title,
+                        labelSecondary: i.type === 1 ? this.i18n.t("mTable.filterType.local") : this.i18n.t("mTable.filterType.global"),
+                    })));
+                } catch {
+                    this.setState("filterManageDialogError", this.i18n.t("mTableErr.filterSave"));
+                    this.setState("filterManageDialogLoading", false);
+                }
+            } else {
+                const title = this.getComponent(`${this.input.id}_filterEditForm`).func.getValue("title");
+                const type = parseInt(this.getComponent(`${this.input.id}_filterEditForm`).func.getValue("type"), 10);
+                if (!await this.getComponent(`${this.input.id}_filterEditForm`).func.submitForm()) {
+                    break;
+                }
+                this.getComponent(`${this.input.id}_filterEditForm`).func.setProgress(true);
+                try {
+                    const res = await axios({
+                        method: "post",
+                        url: "/api/core/filters/save",
+                        data: {
+                            title,
+                            type,
+                            table: this.input.id,
+                            filters: this.state.filters,
+                        },
+                        headers: {
+                            Authorization: `Bearer ${this.token}`
+                        }
+                    });
+                    this.getComponent(`${this.input.id}_filterEditForm`).func.setProgress(false);
+                    this.setState("filterEditDialogActive", false);
+                    this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTable.filterSaveSuccess"), "is-success");
+                    this.setState("filterCurrentId", res.data.id);
+                    this.setState("filterCurrentTitle", title);
+                } catch {
+                    this.getComponent(`${this.input.id}_filterEditForm`).func.setProgress(false);
+                    this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.filterSave"), "is-danger");
+                }
+            }
+            break;
+        }
+    }
+
+    onFilterEditDialogClose() {
+        this.setState("filterEditDialogActive", false);
+    }
+
+    onFilterManageDialogClose() {
+        this.setState("filterManageDialogActive", false);
+    }
+
+    async onManageFilters(e) {
+        e.preventDefault();
+        this.setState("dropdownVisible", {});
+        this.setState("filterManageSelected", []);
+        this.setState("filterManageDialogActive", true);
+        this.setState("filterManageDialogLoading", true);
+        this.setState("filterManageDialogError", false);
+        try {
+            const res = await axios({
+                method: "post",
+                url: "/api/core/filters/list",
+                data: {
+                    table: this.input.id
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setState("filterManageDialogLoading", false);
+            this.getComponent(`${this.input.id}_mselect_filter`).func.setValue([]);
+            this.getComponent(`${this.input.id}_mselect_filter`).func.setItems(res.data.filters.map(i => ({
+                id: i._id,
+                label: i.title,
+                labelSecondary: i.type === 1 ? this.i18n.t("mTable.filterType.local") : this.i18n.t("mTable.filterType.global"),
+            })));
+            this.filtersData = res.data.filters;
+        } catch {
+            this.setState("filterManageDialogLoading", false);
+            this.setState("filterManageDialogActive", false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTableErr.filterLoad`), "is-danger");
+        }
+    }
+
+    onMSelectFilterChange(value) {
+        this.setState("filterManageSelected", value);
+    }
+
+    onFilterSetEditClick(e) {
+        e.preventDefault();
+        const selectedFilterId = this.state.filterManageSelected[0].id;
+        const currentFilter = this.filtersData.find(f => f._id === selectedFilterId);
+        this.setState("filterEditDialogActive", true);
+        this.getComponent(`${this.input.id}_filterEditForm`).func.resetData();
+        this.getComponent(`${this.input.id}_filterEditForm`).func.setValue("title", currentFilter.title);
+        this.getComponent(`${this.input.id}_filterEditForm`).func.setValue("type", String(currentFilter.type));
+        setTimeout(() => this.getComponent(`${this.input.id}_filterEditForm`).func.autoFocus(), 50);
+    }
+
+    onFilterSetLoadClick(e) {
+        e.preventDefault();
+        const {
+            id
+        } = this.state.filterManageSelected[0];
+        const currentFilter = this.filtersData.find(f => f._id === id);
+        this.setState("filters", cloneDeep(currentFilter.filters));
+        this.setState("filterManageDialogActive", false);
+        this.setState("filterCurrentId", id);
+        this.setState("filterCurrentTitle", currentFilter.title);
+        window.__zoiaTippyJs.reset();
+        this.setState("page", 1);
+        this.dataRequest();
+    }
+
+    onRemoveAllFilters(e) {
+        e.preventDefault();
+        this.setState("dropdownVisible", {});
+        this.setState("filters", []);
+        this.setState("filterCurrentId", null);
+        this.setState("filterCurrentTitle", null);
+        window.__zoiaTippyJs.reset();
+        this.setState("page", 1);
+        this.dataRequest();
+    }
+
+    onFilterDeleteClick(e) {
+        e.preventDefault();
+        this.filterDeleteConfirm.func.setActive(true, this.i18n.t("mTable.filter.filterDeleteConfirmTitle"), `${this.i18n.t("mTable.filter.filterDeleteConfirmText")}: ${this.state.filterManageSelected.map(f => `"${f.label}"`).join(", ")}`);
+    }
+
+    async onFilterDeleteConfirm() {
+        this.filterDeleteConfirm.func.setActive(false);
+        this.setState("filterManageDialogLoading", true);
+        try {
+            await axios({
+                method: "post",
+                url: "/api/core/filters/delete",
+                data: {
+                    ids: this.state.filterManageSelected.map(i => i.id),
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            this.setState("filterManageDialogLoading", false);
+            this.filtersData = this.filtersData.filter(i => !(this.state.filterManageSelected.find(f => f.id === i._id)));
+            this.getComponent(`${this.input.id}_mselect_filter`).func.setItems(this.filtersData.map(i => ({
+                id: i._id,
+                label: i.title,
+                labelSecondary: i.type === 1 ? this.i18n.t("mTable.filterType.local") : this.i18n.t("mTable.filterType.global"),
+            })));
+            this.getComponent(`${this.input.id}_mselect_filter`).func.setValue([]);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTable.deleteSuccess`), "is-success");
+        } catch {
+            this.setState("filterManageDialogLoading", false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTableErr.filterSave`), "is-danger");
         }
     }
 };

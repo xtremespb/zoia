@@ -683,7 +683,7 @@ module.exports = class {
     }
 
     async submitForm(noEmit) {
-        this.onFormSubmit(noEmit);
+        return this.onFormSubmit(noEmit);
     }
 
     async onFormSubmit(e) {
@@ -700,7 +700,7 @@ module.exports = class {
             this.emit("form-submit", data);
         }
         if (this.input.manual && e !== true) {
-            return;
+            return true;
         }
         await this.upload(data);
         return false;

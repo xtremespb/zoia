@@ -1,0 +1,19 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "ids": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "minLength": 24,
+                    "maxLength": 24,
+                    "pattern": "^[a-f0-9]+$"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+            }
+        },
+        "required": ["ids"]
+    }
+}

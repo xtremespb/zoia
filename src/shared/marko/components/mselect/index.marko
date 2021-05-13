@@ -3,7 +3,7 @@ style.scss {
 }
 
 <if(input.active)>
-    <div class="z3-ms-wrap">
+    <div class=`z3-ms-wrap ${input.css || ""}`>
         <for|i| of=state.items>
             <div class=`z3-ms-checkbox-row${state.value.indexOf(String(i.id)) > -1 ? " z3-ms-checkbox-row-checked" : ""}` on-click("onInputChange") data-id=i.id>
                 <div class="z3-pretty p-icon">
@@ -13,6 +13,9 @@ style.scss {
                         <label>${i.label}</label>
                     </div>
                 </div>
+                <if(i.labelSecondary)>
+                    <div class="menu-label z3-ms-checkbox-label-secondary">${i.labelSecondary}</div>
+                </if>
             </div>
         </for>
     </div>

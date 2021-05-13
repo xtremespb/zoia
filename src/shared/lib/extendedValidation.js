@@ -22,7 +22,7 @@ export default class {
             Object.keys(this.schemas.files).map(f => {
                 // If it's shared and there is no "part" defined, don't check
                 // minAmount because it's already validated
-                if ((!this.schemas.root.properties[f] && !part) || (this.schemas.root.properties[f] && part)) {
+                if ((this.schemas.root && !this.schemas.root.properties[f] && !part) || (this.schemas.root && this.schemas.root.properties[f] && part)) {
                     return;
                 }
                 if (this.schemas.files[f].minAmount && this.schemas.files[f].minAmount > 0 && (!data[f] || !data[f].length)) {
@@ -187,7 +187,7 @@ export default class {
             // const formData = this.body || data || JSON.parse(this.body.__form);
             let errors = [];
             if (this.schemas.part) {
-                Promise.allSettled(this.parts.map(async part => {
+                await Promise.allSettled(this.parts.map(async part => {
                     if (formData[part]) {
                         const valid = this.ajv.validate(this.schemas.part, formData[part]);
                         if (!valid) {

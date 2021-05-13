@@ -1,4 +1,5 @@
 {
+    "collectionFilters": "filters",
     "database": {
         "collections": {
             "captcha": {
@@ -26,6 +27,10 @@
             },
             "counters": {
                 "indexesAsc": [],
+                "indexesDesc": []
+            },
+            "filters": {
+                "indexesAsc": ["type", "userId"],
                 "indexesDesc": []
             }
         }
