@@ -1,11 +1,10 @@
 const Jimp = require("jimp");
-const Utils = require("./utils");
+const utils = require("./utils").default;
 
 const backgroundCharsDefault = [..."0123456789"];
 const backgroundColorDefault = 0xFFFFFFFF;
 
 exports.getCaptcha = async (code, backgroundChars = backgroundCharsDefault, backgroundColor = backgroundColorDefault) => {
-    const utils = new Utils();
     const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
     const image = await new Jimp(String(code).length * 30 + 30, 50, backgroundColor);
     const cimage = await new Jimp(30, 30, 0xFFFFFF00);
