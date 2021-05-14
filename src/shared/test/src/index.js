@@ -25,9 +25,17 @@ import Utils from "./utils";
         zoia.log.info(`Test mode: ${zoia.config.test.headless ? "headless" : "open browser"}, ${zoia.config.test.args.join(", ")}`);
         zoia.log.info(`Available module(s): ${zoia.modules.map(m => m.id).join(", ")}`);
         // Connect to Mongo
-        zoia.mongoClient = new MongoClient(zoia.config.mongo.url, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
+        zoia.mongoClient = new MongoClient(zoia.config.mongo.url, zoia.config.mongo.options || {
+            useUnifiedTopology: true,
+            connectTimeoutMS: 5000,
+            keepAlive: true,
+            useNewUrlParser: true
+        });
+        zoia.mongoClient.on("serverDescriptionChanged", e => {
+            if (e && e.newDescription && e.newDescription.error) {
+                zoia.log.error("Fatal: connection to MongoDB is broken");
+                process.exit(1);
+            }
         });
         await zoia.mongoClient.connect();
         zoia.log.info(`Connected to Mongo Server: (${zoia.config.mongo.url}/${zoia.config.mongo.dbName})`);

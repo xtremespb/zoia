@@ -132,8 +132,17 @@ import Env from "../../lib/env";
             pino.info(`Serving static folder(s): ${staticFolders.join(", ")}`);
         }
         // Create MongoDB client and connect
-        const mongoClient = new MongoClient(config.mongo.url, {
-            useUnifiedTopology: true
+        const mongoClient = new MongoClient(config.mongo.url, config.mongo.options || {
+            useUnifiedTopology: true,
+            connectTimeoutMS: 5000,
+            keepAlive: true,
+            useNewUrlParser: true
+        });
+        mongoClient.on("serverDescriptionChanged", e => {
+            if (e && e.newDescription && e.newDescription.error) {
+                pino.error("Fatal: connection to MongoDB is broken");
+                process.exit(1);
+            }
         });
         await mongoClient.connect();
         // Regitser MongoDB for Fastify
@@ -141,10 +150,6 @@ import Env from "../../lib/env";
             client: mongoClient,
             database: config.mongo.dbName
         }).register(async (ff, opts, next) => {
-            ff.mongo.client.db(config.mongo.dbName).on("close", () => {
-                pino.error("Fatal: connection to MongoDB is broken");
-                process.exit(1);
-            });
             pino.info(`Connected to Mongo Server: (${config.mongo.url}/${config.mongo.dbName})`);
             next();
         });

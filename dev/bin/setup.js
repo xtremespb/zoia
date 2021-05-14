@@ -66,9 +66,11 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
 (async () => {
     try {
         console.log("* Connecting to the database");
-        const mongoClient = new MongoClient(config.mongo.url, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
+        const mongoClient = new MongoClient(config.mongo.url, config.mongo.options || {
+            useUnifiedTopology: true,
+            connectTimeoutMS: 5000,
+            keepAlive: true,
+            useNewUrlParser: true
         });
         await mongoClient.connect();
         const db = mongoClient.db(config.mongo.dbName);

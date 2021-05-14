@@ -45,7 +45,13 @@
     },
     "mongo": {
         "url": "mongodb://127.0.0.1:27017",
-        "dbName": "zoia3"
+        "dbName": "zoia3",
+        "options": {
+            "useUnifiedTopology": true,
+            "connectTimeoutMS": 5000,
+            "keepAlive": true,
+            "useNewUrlParser": true
+        }
     },
     "redis": {
         "enabled": false,
