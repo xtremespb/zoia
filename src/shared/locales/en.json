@@ -85,7 +85,7 @@
     "mTable.filter.equalsShort": "=",
     "mTable.filter.notEqualsShort": "!=",
     "mTable.filter.isLikeShort": "LIKE",
-    "mTable.filter.isNotLikeShort": "NOT LIKE",
+    "mTable.filter.notLikeShort": "NOT LIKE",
     "mTable.filter.oneOfShort": "ONE",
     "mTable.filter.noneOfShort": "NONE",
     "mTable.filter.greaterThanShort": ">",
