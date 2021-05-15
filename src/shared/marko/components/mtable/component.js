@@ -513,6 +513,10 @@ module.exports = class {
         this.setState("filters", filters);
         this.setState("page", 1);
         this.dataRequest();
+        if (filters.length === 0) {
+            this.setState("filterCurrentId", null);
+            this.setState("filterCurrentTitle", null);
+        }
     }
 
     onFilterCalendarValueChange(value) {

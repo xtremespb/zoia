@@ -12,9 +12,9 @@ module.exports = class {
     }
 
     setActive(state, title = "", message = "") {
-        this.state.active = state;
-        this.state.title = title;
-        this.state.message = message;
+        this.setState("active", state);
+        this.setState("title", title);
+        this.setState("message", message);
     }
 
     onCloseClick() {
