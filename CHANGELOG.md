@@ -1,3 +1,10 @@
+## [3.1.53](https://github.com/xtremespb/zoia3/compare/v3.1.52...v3.1.53) (2021-05-15)
+
+
+### Bug Fixes
+
+* bugfixes for mtable filtering ([9c56a0c](https://github.com/xtremespb/zoia3/commit/9c56a0cc4e7f9f4a8a45027b3edfab2136893f41))
+
 ## [3.1.52](https://github.com/xtremespb/zoia3/compare/v3.1.51...v3.1.52) (2021-05-13)
 
 
