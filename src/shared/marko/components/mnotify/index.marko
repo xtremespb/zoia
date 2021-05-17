@@ -1,7 +1,9 @@
 style.scss {
-  @import "./mnotify.scss";
+	@import "./mnotify.scss";
 }
 
 <if(state.active)>
-  <div class=`notification z3-notification ${state.css || ""} ${state.activeFlag ? "z3-notification-active" : "z3-notification-inactive"}`>${state.message}</div>
+	<div class=`notification z3-notification ${state.css || ""} ${
+		state.activeFlag ? "z3-notification-active" : "z3-notification-inactive"
+	}`>${state.message}</div>
 </if>

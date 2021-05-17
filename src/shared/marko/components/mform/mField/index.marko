@@ -2,503 +2,802 @@
 Text Input
 -->
 <if(state.item.type === "text")>
-  <div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-    <label class="label" style="white-space:nowrap">
-      ${state.item.label}:<if(state.mandatory)>
-        &nbsp;<span class="has-text-danger">*</span>
-      </if>
-    </label>
-    <div class="control">
-      <if(state.item.noUpdate)>
-        <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions) readonly=(state.item.readOnly ? true : false) no-update/>
-      </if>
-      <else>
-        <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id disabled=(!state.enabled || !state.visible) no-update-if(input.maskedOptions) readonly=(state.item.readOnly ? true : false)/>
-      </else>
-    </div>
-    <if(state.item.helpText)>
-      <p class="help">${state.item.helpText}</p>
-    </if>
-    <if(input.errors[state.item.id])>
-      <p class="help is-danger">${input.errors[state.item.id]}</p>
-    </if>
-  </div>
+	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span> 
+			</if> 
+		</label>
+		<div class="control">
+			<if(state.item.noUpdate)>
+				<input
+					class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
+						state.item.readOnly ? " has-background-white-bis" : ""
+					}`
+					id=`${input.id}_${state.item.id}`
+					key=`mf_ctl_${state.item.id}`
+					type=(state.item.textType || "text")
+					placeholder=state.item.placeholder
+					value=input.value
+					on-change("onFieldValueChange")
+					data-id=state.item.id
+					disabled=(!state.enabled || !state.visible)
+					no-update-if(input.maskedOptions)
+					readonly=(state.item.readOnly ? true : false)
+					no-update/> 
+			</if>
+			<else>
+				<input
+					class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
+						state.item.readOnly ? " has-background-white-bis" : ""
+					}`
+					id=`${input.id}_${state.item.id}`
+					key=`mf_ctl_${state.item.id}`
+					type=(state.item.textType || "text")
+					placeholder=state.item.placeholder
+					value=input.value
+					on-change("onFieldValueChange")
+					data-id=state.item.id
+					disabled=(!state.enabled || !state.visible)
+					no-update-if(input.maskedOptions)
+					readonly=(state.item.readOnly ? true : false)/> 
+			</else> 
+		</div>
+		<if(state.item.helpText)>
+			<p class="help">${state.item.helpText}</p> 
+		</if>
+		<if(input.errors[state.item.id])>
+			<p class="help is-danger">${input.errors[state.item.id]}</p> 
+		</if> 
+	</div>
 </if>
 <!--
 File Input
 -->
 <if(state.item.type === "file" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
-    <label class="file-label">
-      <input class="file-input" type="file" multiple=state.item.multiple on-change("onFileInputChange") data-id=state.item.id id=`${input.id}_${state.item.id}`/>
-      <a class="file-cta" key=`mf_ctl_${state.item.id}` tabindex="0">
-        <span class="file-icon">
-          <i class="mdi mdi-upload"/>
-        </span>
-        <span class="file-label">${state.item.buttonLabel}</span>
-      </a>
-    </label>
-  </div>
-  <if(input.value && input.value.length)>
-    <div class="z3-mf-margin-small-top">
-      <for|file, index| of=input.value>
-        <div>
-          <if(file.data || state.item.noDownload)>${file.name}</if>
-          <else>
-            <a href=`/z3/core/download?id=${file.id}` target="_blank">${file.name}</a>
-          </else>
-          &nbsp;
-          <a class="mdi mdi-close" data-id=state.item.id data-itemid=file.id on-click("onFileRemove")/>
-        </div>
-      </for>
-    </div>
-  </if>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
+		<label class="file-label">
+			<input
+				class="file-input"
+				type="file"
+				multiple=state.item.multiple
+				on-change("onFileInputChange")
+				data-id=state.item.id
+				id=`${input.id}_${state.item.id}`/>
+			<a class="file-cta" key=`mf_ctl_${state.item.id}` tabindex="0">
+				<span class="file-icon">
+					<i class="mdi mdi-upload"/>
+				</span>
+				<span class="file-label">${state.item.buttonLabel}</span> 
+			</a> 
+		</label> 
+	</div>
+	<if(input.value && input.value.length)>
+		<div class="z3-mf-margin-small-top">
+			<for|file, index| of=input.value>
+				<div>
+					<if(file.data || state.item.noDownload)>${file.name}</if>
+					<else>
+						<a href=`/z3/core/download?id=${file.id}` target="_blank">${file.name}</a> 
+					</else>
+					&nbsp;
+					<a
+						class="mdi mdi-close"
+						data-id=state.item.id
+						data-itemid=file.id
+						on-click("onFileRemove")/> 
+				</div> 
+			</for> 
+		</div> 
+	</if>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Button
 -->
 <if(state.item.type === "button" && state.visible)>
-  <button class=`button ${state.item.css || ""} ${input.progress && input.progressButtonId === state.item.id ? "is-loading" : ""}` id=`${input.id}_${state.item.id}` type=state.item.buttonType data-id=state.item.id key=`mf_ctl_${state.item.id}` on-click("onButtonClick")>${state.item.label}</button>
+	<button
+		class=`button ${state.item.css || ""} ${
+			input.progress && input.progressButtonId === state.item.id
+				? "is-loading"
+				: ""
+		}`
+		id=`${input.id}_${state.item.id}`
+		type=state.item.buttonType
+		data-id=state.item.id
+		key=`mf_ctl_${state.item.id}`
+		on-click("onButtonClick")>
+		${state.item.label}
+	</button>
 </if>
 <!--
 Button group
 -->
 <if(state.item.type === "buttons" && state.visible)>
-  <div class="buttons">
-    <for|btn| of=state.item.data>
-      <if(btn)>
-        <button class=`button ${btn.css || ""} ${input.progress && input.progressButtonId === btn.id ? "is-loading" : ""}` id=`${input.id}_${btn.id}` type=btn.buttonType data-id=btn.id key=`mf_ctl_${btn.id}` on-click("onButtonClick") disabled=!state.enabled>${btn.label}</button>
-      </if>
-    </for>
-  </div>
+	<div class="buttons">
+		<for|btn| of=state.item.data>
+			<if(btn)>
+				<button
+					class=`button ${btn.css || ""} ${
+						input.progress && input.progressButtonId === btn.id ? "is-loading" : ""
+					}`
+					id=`${input.id}_${btn.id}`
+					type=btn.buttonType
+					data-id=btn.id
+					key=`mf_ctl_${btn.id}`
+					on-click("onButtonClick")
+					disabled=!state.enabled>
+					${btn.label}
+				</button> 
+			</if> 
+		</for> 
+	</div>
 </if>
 <!--
 Divider
 -->
 <if(state.item.type === "divider" && state.visible)>
-  <div class="z3-mf-divider"/>
+	<div class="z3-mf-divider"/>
 </if>
 <!--
 Message
 -->
 <if(state.item.type === "message" && state.visible)>
-  <div class=(state.item.css || "")>${state.item.text || ""}</div>
+	<div class=(state.item.css || "")>${state.item.text || ""}</div>
 </if>
 <!--
 Select
 -->
 <if(state.item.type === "select" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <div class=`select ${state.item.css || ""}${input.errors[state.item.id] ? " is-danger" : ""}`>
-    <select data-id=state.item.id key=`mf_ctl_${state.item.id}` id=`${input.id}_${state.item.id}` value=input.value on-change("onFieldValueChange") disabled=!state.enabled>
-      <for|option| of=state.item.options>
-        <option value=option.value selected=(input.value === String(option.value))>${option.label}</option>
-      </for>
-    </select>
-  </div>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<div class=`select ${state.item.css || ""}${
+		input.errors[state.item.id] ? " is-danger" : ""
+	}`>
+		<select
+			data-id=state.item.id
+			key=`mf_ctl_${state.item.id}`
+			id=`${input.id}_${state.item.id}`
+			value=input.value
+			on-change("onFieldValueChange")
+			disabled=!state.enabled>
+			<for|option| of=state.item.options>
+				<option value=option.value selected=(input.value === String(option.value))>
+					${option.label}
+				</option> 
+			</for> 
+		</select> 
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Radio
 -->
 <if(state.item.type === "radio" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <div>
-    <for|option, index| of=state.item.options>
-      <label class=`radio ${state.item.css || ""}`>
-        <input type="radio" key=`mf_ctl_${state.item.id}_${index}` id=`${input.id}_${state.item.id}_${index}` data-id=state.item.id name=state.item.id value=option.value checked=(input.value === String(option.value)) on-change("onFieldValueChange")/>&nbsp;${option.label}
-      </label>
-    </for>
-  </div>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<div>
+		<for|option, index| of=state.item.options>
+			<label class=`radio ${state.item.css || ""}`>
+				<input
+					type="radio"
+					key=`mf_ctl_${state.item.id}_${index}`
+					id=`${input.id}_${state.item.id}_${index}`
+					data-id=state.item.id
+					name=state.item.id
+					value=option.value
+					checked=(input.value === String(option.value))
+					on-change("onFieldValueChange")/>&nbsp;${option.label}
+			</label> 
+		</for> 
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Checkboxes
 -->
 <if(state.item.type === "checkboxes" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <for|option, index| of=state.item.options>
-    <div class="z3-pretty p-icon">
-      <input type="checkbox" key=`mf_ctl_${state.item.id}_${index}` on-change("onArrInputChange") id=`${input.id}_${state.item.id}_${option.id}` data-id=state.item.id data-inputid=option.id checked=(input.value.indexOf(String(option.id)) > -1)/>
-      <div class="state">
-        <i class="icon mdi mdi-check"/>
-        <label>${option.label}</label>
-      </div>
-    </div>
-  </for>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<for|option, index| of=state.item.options>
+		<div class="z3-pretty p-icon">
+			<input
+				type="checkbox"
+				key=`mf_ctl_${state.item.id}_${index}`
+				on-change("onArrInputChange")
+				id=`${input.id}_${state.item.id}_${option.id}`
+				data-id=state.item.id
+				data-inputid=option.id
+				checked=(input.value.indexOf(String(option.id)) > -1)/>
+			<div class="state">
+				<i class="icon mdi mdi-check"/>
+				<label>${option.label}</label> 
+			</div> 
+		</div> 
+	</for>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Checkbox
 -->
 <if(state.item.type === "checkbox" && state.visible)>
-  <if(state.item.label)>
-    <label class="label">
-      ${state.item.label}:<if(state.mandatory)>
-        &nbsp;<span class="has-text-danger">*</span>
-      </if>
-    </label>
-  </if>
-  <div class="z3-pretty p-default" style=(state.item.style || "")>
-    <input type="checkbox" key=`mf_ctl_${state.item.id}` id=`${input.id}_${state.item.id}` on-change("onBooleanInputChange") data-id=state.item.id checked=input.value class=(state.item.css || "")/>
-    <div class="state p-primary">
-      <label>${state.item.labelCheckbox}</label>
-    </div>
-  </div>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<if(state.item.label)>
+		<label class="label">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span> 
+			</if> 
+		</label> 
+	</if>
+	<div class="z3-pretty p-default" style=(state.item.style || "")>
+		<input
+			type="checkbox"
+			key=`mf_ctl_${state.item.id}`
+			id=`${input.id}_${state.item.id}`
+			on-change("onBooleanInputChange")
+			data-id=state.item.id
+			checked=input.value
+			class=(state.item.css || "")/>
+		<div class="state p-primary">
+			<label>${state.item.labelCheckbox}</label> 
+		</div> 
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Captcha
 -->
 <if(state.item.type === "captcha" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <div class="control">
-    <div class="z3-mf-captcha-wrap">
-      <div>
-        <input class=`z3-mf-captcha-input input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` type="text" placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id/>
-      </div>
-      <div>
-        <img src=state.captchaData class="z3-mf-captcha-img" on-click("reloadCaptcha")/>
-      </div>
-    </div>
-  </div>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<div class="control">
+		<div class="z3-mf-captcha-wrap">
+			<div>
+				<input
+					class=`z3-mf-captcha-input input${
+						input.errors[state.item.id] ? " is-danger" : ""
+					}`
+					id=`${input.id}_${state.item.id}`
+					key=`mf_ctl_${state.item.id}`
+					type="text"
+					placeholder=state.item.placeholder
+					value=input.value
+					on-change("onFieldValueChange")
+					data-id=state.item.id/> 
+			</div>
+			<div>
+				<img src=state.captchaData class="z3-mf-captcha-img" on-click("reloadCaptcha")/> 
+			</div> 
+		</div> 
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Textarea
 -->
 <if(state.item.type === "textarea" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <div class="control">
-    <textarea class=`textarea${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` placeholder=state.item.placeholder value=input.value on-change("onFieldValueChange") data-id=state.item.id/>
-  </div>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<div class="control">
+		<textarea
+			class=`textarea${input.errors[state.item.id] ? " is-danger" : ""}`
+			id=`${input.id}_${state.item.id}`
+			key=`mf_ctl_${state.item.id}`
+			placeholder=state.item.placeholder
+			value=input.value
+			on-change("onFieldValueChange")
+			data-id=state.item.id/> 
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 ACE
 -->
 <if(state.item.type === "ace" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-    <if(state.item.toggle)>
-      <button type="button" class="button is-small is-rounded z3-mf-toggle-wrap" data-id=state.item.id on-click("onAceToggleClick")>
-        <span class="icon is-small">
-          <i class=`mdi mdi-18px ${state.toggleAce[state.item.id] ? "mdi-chevron-up" : "mdi-chevron-down"}` data-id=state.item.id/>
-        </span>
-      </button>
-    </if>
-  </label>
-  <if(state.item.wysiwyg)>
-    <div class="tabs is-toggle is-small mb-1 z3-mf-wysiwyg-toggle">
-      <ul>
-        <if(state.item.source)>
-          <li class=(state.modeAce === "ace" ? "is-active" : "")>
-            <a on-click("onAceModeChange") data-id="ace">${out.global.i18n.t("mForm.ace")}</a>
-          </li>
-        </if>
-        <li class=(state.modeAce === "ck" ? "is-active" : "")>
-          <a on-click("onAceModeChange") data-id="ck">${out.global.i18n.t("mForm.ck")}</a>
-        </li>
-        <li>
-          <a on-click("onImageBrowser")>${out.global.i18n.t("mForm.imageBrowser")}</a>
-        </li>
-      </ul>
-    </div>
-  </if>
-  <div class="control" id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` style=`display:${state.item.toggle ? (state.toggleAce[state.item.id] ? "block" : "none") : "block"}`>
-    <div id=`${input.id}_${state.item.id}_ace` style=(state.modeAce === "ace" ? "" : "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden")>
-      <div class="z3-mf-ace" no-update/>
-    </div>
-    <if(state.item.wysiwyg)>
-      <div class="z3-mf-ckeditor" style=(state.modeAce === "ck" ? "" : "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden")>
-        <div no-update>
-          <div key=`mf_ctl_ckeditor_${state.item.id}` id=`mf_ctl_ckeditor_${input.id}_${state.item.id}` no-update/>
-        </div>
-      </div>
-    </if>
-  </div>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if>
+		<if(state.item.toggle)>
+			<button
+				type="button"
+				class="button is-small is-rounded z3-mf-toggle-wrap"
+				data-id=state.item.id
+				on-click("onAceToggleClick")>
+				<span class="icon is-small">
+					<i
+						class=`mdi mdi-18px ${
+							state.toggleAce[state.item.id] ? "mdi-chevron-up" : "mdi-chevron-down"
+						}`
+						data-id=state.item.id/>
+				</span> 
+			</button> 
+		</if> 
+	</label>
+	<if(state.item.wysiwyg)>
+		<div class="tabs is-toggle is-small mb-1 z3-mf-wysiwyg-toggle">
+			<ul>
+				<if(state.item.source)>
+					<li class=(state.modeAce === "ace" ? "is-active" : "")>
+						<a on-click("onAceModeChange") data-id="ace">
+							${out.global.i18n.t("mForm.ace")}
+						</a> 
+					</li> 
+				</if>
+				<li class=(state.modeAce === "ck" ? "is-active" : "")>
+					<a on-click("onAceModeChange") data-id="ck">
+						${out.global.i18n.t("mForm.ck")}
+					</a> 
+				</li>
+				<li>
+					<a on-click("onImageBrowser")>${out.global.i18n.t("mForm.imageBrowser")}</a> 
+				</li> 
+			</ul> 
+		</div> 
+	</if>
+	<div
+		class="control"
+		id=`${input.id}_${state.item.id}`
+		key=`mf_ctl_${state.item.id}`
+		style=`display:${
+			state.item.toggle
+				? state.toggleAce[state.item.id]
+					? "block"
+					: "none"
+				: "block"
+		}`>
+		<div
+			id=`${input.id}_${state.item.id}_ace`
+			style=(
+				state.modeAce === "ace"
+					? ""
+					: "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden"
+			)>
+			<div class="z3-mf-ace" no-update/> 
+		</div>
+		<if(state.item.wysiwyg)>
+			<div
+				class="z3-mf-ckeditor"
+				style=(
+					state.modeAce === "ck"
+						? ""
+						: "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden"
+				)>
+				<div no-update>
+					<div
+						key=`mf_ctl_ckeditor_${state.item.id}`
+						id=`mf_ctl_ckeditor_${input.id}_${state.item.id}`
+						no-update/> 
+				</div> 
+			</div> 
+		</if> 
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Key-Value Input
 -->
 <if(state.item.type === "keyvalue" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <div class="z3-mf-ctl-keyvalue-wrap">
-    <input class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` type=(state.item.textType || "text") placeholder=state.item.placeholder value=(input.value.data && Array.isArray(input.value.data) && input.value.data.length === 0 && state.item.emptyArrayLabel ? state.item.emptyArrayLabel : input.value.label) on-change("onFieldValueChange") data-id=state.item.id readonly/>
-    &nbsp;
-    <button type="button" class="button is-light" data-id=state.item.id on-click("onKeyValueButtonClick")>
-      <span class="icon is-small">
-        <i class="mdi mdi-dots-horizontal"/>
-      </span>
-    </button>
-  </div>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<div class="z3-mf-ctl-keyvalue-wrap">
+		<input
+			class=`input${input.errors[state.item.id] ? " is-danger" : ""}`
+			id=`${input.id}_${state.item.id}`
+			key=`mf_ctl_${state.item.id}`
+			type=(state.item.textType || "text")
+			placeholder=state.item.placeholder
+			value=(
+				input.value.data &&
+				Array.isArray(input.value.data) &&
+				input.value.data.length === 0 &&
+				state.item.emptyArrayLabel
+					? state.item.emptyArrayLabel
+					: input.value.label
+			)
+			on-change("onFieldValueChange")
+			data-id=state.item.id
+			readonly/>
+		&nbsp;
+		<button
+			type="button"
+			class="button is-light"
+			data-id=state.item.id
+			on-click("onKeyValueButtonClick")>
+			<span class="icon is-small">
+				<i class="mdi mdi-dots-horizontal"/>
+			</span> 
+		</button> 
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Images Input
 -->
 <if(state.item.type === "images" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
-    <label class="file-label">
-      <input class="file-input" type="file" multiple=state.item.multiple on-change("onImageInputChange") data-id=state.item.id id=`${input.id}_${state.item.id}`/>
-      <a class="file-cta" key=`mf_ctl_${state.item.id}` tabindex="0">
-        <span class="file-icon">
-          <i class="mdi mdi-upload"/>
-        </span>
-        <span class="file-label">${state.item.buttonLabel}</span>
-      </a>
-    </label>
-  </div>
-  <if(input.value && input.value.length)>
-    <div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
-      <for|file, index| of=input.value>
-        <if(state.imageDragging)>
-          <div class="z3-mf-drop-area" on-dragover("onImageDragOver") on-dragleave("onImageDragLeave") on-dragenter("onImageDragEnter") on-drop("onImageDrop") data-index=index/>
-        </if>
-        <div class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow` style=(state.item.css || "")>
-          <div on-dragstart("onImageDragStart") on-dragend("onImageDragEnd") draggable="true" data-mfimageid=file.id>
-            <if(file.data)>
-              <img src=window.URL.createObjectURL(file.data) class="z3-mf-image" on-contextmenu("onContextMenu") data-mfimageid=file.id draggable=false/>
-            </if>
-            <else>
-              <img src=`${out.global.publicFiles}/tn_${file.id}.jpg` class="z3-mf-image" on-contextmenu("onContextMenu") data-mfimageid=file.id draggable=false/>
-            </else>
-          </div>
-        </div>
-        <if(index === input.value.length - 1 && state.imageDragging)>
-          <div class="z3-mf-drop-area" on-dragover("onImageDragOver") on-dragleave("onImageDragLeave") on-dragenter("onImageDragEnter") on-drop("onImageDrop") data-index=-1/>
-        </if>
-      </for>
-    </div>
-  </if>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
+		<label class="file-label">
+			<input
+				class="file-input"
+				type="file"
+				multiple=state.item.multiple
+				on-change("onImageInputChange")
+				data-id=state.item.id
+				id=`${input.id}_${state.item.id}`/>
+			<a class="file-cta" key=`mf_ctl_${state.item.id}` tabindex="0">
+				<span class="file-icon">
+					<i class="mdi mdi-upload"/>
+				</span>
+				<span class="file-label">${state.item.buttonLabel}</span> 
+			</a> 
+		</label> 
+	</div>
+	<if(input.value && input.value.length)>
+		<div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
+			<for|file, index| of=input.value>
+				<if(state.imageDragging)>
+					<div
+						class="z3-mf-drop-area"
+						on-dragover("onImageDragOver")
+						on-dragleave("onImageDragLeave")
+						on-dragenter("onImageDragEnter")
+						on-drop("onImageDrop")
+						data-index=index/> 
+				</if>
+				<div
+					class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow`
+					style=(state.item.css || "")>
+					<div
+						on-dragstart("onImageDragStart")
+						on-dragend("onImageDragEnd")
+						draggable="true"
+						data-mfimageid=file.id>
+						<if(file.data)>
+							<img
+								src=window.URL.createObjectURL(file.data)
+								class="z3-mf-image"
+								on-contextmenu("onContextMenu")
+								data-mfimageid=file.id
+								draggable=false/> 
+						</if>
+						<else>
+							<img
+								src=`${out.global.publicFiles}/tn_${file.id}.jpg`
+								class="z3-mf-image"
+								on-contextmenu("onContextMenu")
+								data-mfimageid=file.id
+								draggable=false/> 
+						</else> 
+					</div> 
+				</div>
+				<if(index === input.value.length - 1 && state.imageDragging)>
+					<div
+						class="z3-mf-drop-area"
+						on-dragover("onImageDragOver")
+						on-dragleave("onImageDragLeave")
+						on-dragenter("onImageDragEnter")
+						on-drop("onImageDrop")
+						data-index=-1/> 
+				</if> 
+			</for> 
+		</div> 
+	</if>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Image Input
 -->
 <if(state.item.type === "image" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
-    <label class="file-label">
-      <input class="file-input" type="file" multiple=false on-change("onSingleImageInputChange") data-id=state.item.id id=`${input.id}_${state.item.id}`/>
-      <a class="file-cta mr-1" key=`mf_ctl_${state.item.id}` tabindex="0">
-        <span class="file-icon">
-          <i class="mdi mdi-upload"/>
-        </span>
-        <span class="file-label">${state.item.buttonLabel}</span>
-      </a>
-    </label>
-    <button class="button" type="button" on-click("onSingleImageRemove") data-id=state.item.id><span class="icon is-small"><i class="mdi mdi-cancel"></i></span></button>
-  </div>
-  <if(input.value && input.value.length)>
-    <div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
-      $ const file = input.value[0];
-      <div class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow` style=(state.item.css || "")>
-        <if(file.data)>
-          <img src=window.URL.createObjectURL(file.data) class="z3-mf-image" data-mfimageid=file.id/>
-        </if>
-        <else>
-          <img src=`${out.global.publicFiles}/tn_${file.id}.jpg` class="z3-mf-image" data-mfimageid=file.id/>
-        </else>
-      </div>
-    </div>
-  </if>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
+		<label class="file-label">
+			<input
+				class="file-input"
+				type="file"
+				multiple=false
+				on-change("onSingleImageInputChange")
+				data-id=state.item.id
+				id=`${input.id}_${state.item.id}`/>
+			<a class="file-cta mr-1" key=`mf_ctl_${state.item.id}` tabindex="0">
+				<span class="file-icon">
+					<i class="mdi mdi-upload"/>
+				</span>
+				<span class="file-label">${state.item.buttonLabel}</span> 
+			</a> 
+		</label>
+		<button
+			class="button"
+			type="button"
+			on-click("onSingleImageRemove")
+			data-id=state.item.id>
+			<span class="icon is-small">
+				<i class="mdi mdi-cancel"/>
+			</span> 
+		</button> 
+	</div>
+	<if(input.value && input.value.length)>
+		<div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
+			$ const file = input.value[0];
+			<div
+				class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow`
+				style=(state.item.css || "")>
+				<if(file.data)>
+					<img
+						src=window.URL.createObjectURL(file.data)
+						class="z3-mf-image"
+						data-mfimageid=file.id/> 
+				</if>
+				<else>
+					<img
+						src=`${out.global.publicFiles}/tn_${file.id}.jpg`
+						class="z3-mf-image"
+						data-mfimageid=file.id/> 
+				</else> 
+			</div> 
+		</div> 
+	</if>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Range Input
 -->
 <if(state.item.type === "range" && state.visible)>
-  <label class="label">
-    ${state.item.label}:<if(state.mandatory)>
-      &nbsp;<span class="has-text-danger">*</span>
-    </if>
-  </label>
-  <div class="control z3-mf-range-wrap">
-    <input type="range" class=`input${input.errors[state.item.id] ? " is-danger" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` value=input.value min=input.item.min max=input.item.max on-change("onFieldValueChange") on-input("onRangeFieldValueChange") data-id=state.item.id disabled=(!state.enabled)/>
-    <span class="tag is-light mt-2 ml-2">${input.value}</span>
-  </div>
-  <if(state.item.helpText)>
-    <p class="help">${state.item.helpText}</p>
-  </if>
-  <if(input.errors[state.item.id])>
-    <p class="help is-danger">${input.errors[state.item.id]}</p>
-  </if>
+	<label class="label">
+		${state.item.label}:<if(state.mandatory)>
+			&nbsp;<span class="has-text-danger">*</span> 
+		</if> 
+	</label>
+	<div class="control z3-mf-range-wrap">
+		<input
+			type="range"
+			class=`input${input.errors[state.item.id] ? " is-danger" : ""}`
+			id=`${input.id}_${state.item.id}`
+			key=`mf_ctl_${state.item.id}`
+			value=input.value
+			min=input.item.min
+			max=input.item.max
+			on-change("onFieldValueChange")
+			on-input("onRangeFieldValueChange")
+			data-id=state.item.id
+			disabled=!state.enabled/>
+		<span class="tag is-light mt-2 ml-2">${input.value}</span> 
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p> 
+	</if>
+	<if(input.errors[state.item.id])>
+		<p class="help is-danger">${input.errors[state.item.id]}</p> 
+	</if>
 </if>
 <!--
 Date Picker
 -->
 <if(state.item.type === "datepicker")>
-  <div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-    <label class="label" style="white-space:nowrap">
-      ${state.item.label}:<if(state.mandatory)>
-        &nbsp;<span class="has-text-danger">*</span>
-      </if>
-    </label>
-    <div class="control has-icons-left">
-      <input type="text" class=`input${input.errors[state.item.id] ? " is-danger" : ""}${state.item.readOnly ? " has-background-white-bis" : ""}` id=`${input.id}_${state.item.id}` key=`mf_ctl_${state.item.id}` data-id=state.item.id disabled=(!state.enabled || !state.visible) value=state.calendar.valueText readonly=true on-click("onDatePickerInputClick") on-focus("onDatePickerInputClick") on-keydown("onDatePickerKeyPress") />
-      <span class="icon is-small is-left">
-        <i class="mdi mdi-calendar-month"></i>
-      </span>
-    </div>
-    <div class=`z3-mf-calendar-wrap${state.calendar.visible ? "" :" is-hidden"}` id=`${input.id}_${state.item.id}_datepicker`>
-    <if(state.calendar.mode === "date")>
-        <div class="columns m-0 is-gapless is-mobile">
-          <div class="column is-narrow">
-            <a class="button is-ghost" on-click("onCalendarLeft")>
-              <span class="icon is-small">
-                <i class="mdi mdi-chevron-left"></i>
-              </span>
-            </a>
-          </div>
-          <div class="column is-auto z3-mf-calendar-head-date">
-            <a data-mode="month" on-click("onCalendarModeChange")>${out.global.i18n.t("global.monthsFull")[state.calendar.month]}</a>&nbsp;<a data-mode="year" on-click("onCalendarModeChange")>${state.calendar.year}</a>
-          </div>
-          <div class="column is-narrow">
-            <a class="button is-ghost" on-click("onCalendarRight")>
-              <span class="icon is-small">
-                <i class="mdi mdi-chevron-right"></i>
-              </span>
-            </a>
-          </div>
-        </div>
-        <div class="columns m-0 is-gapless is-size-7 z3-mf-calendar-dow is-mobile">
-          <for|d| of=out.global.i18n.t("global.weekDays")>
-            <div class="column z3-mf-calendar-cell">${d}</div>
-          </for>
-        </div>
-        <for|r| of=state.calendar.data>
-          <div class="columns m-0 is-gapless is-mobile" on-click("onCalendarCellClick")>
-            <for|i| of=r>
-              <div class=`column${state.calendar.month !== i.m ? " z3-mf-calendar-cell-day-side" : ""}`>
-                <div class=`z3-mf-calendar-cell z3-mf-calendar-cell-day${i.m === new Date().getMonth() && i.d === new Date().getDate() && i.y === new Date().getFullYear() ? " z3-mf-calendar-cell-day-today" : ""}${i.m === state.calendar.selected.m && i.d === state.calendar.selected.d && i.y === state.calendar.selected.y ? " z3-mf-calendar-cell-day-selected" : ""}` data-d=i.d data-m=i.m data-y=i.y>${i.d}</div>
-              </div>
-            </for>
-          </div>
-        </for>
-        <div class="columns is-gapless is-mobile is-size-7">
-          <div class="column is-one-third z3-mf-calendar-control has-text-primary" on-click("onCalendarToday")>${out.global.i18n.t("calendar.today")}</div>
-          <div class="column is-one-third z3-mf-calendar-control has-text-danger" on-click("onCalendarClear")>${out.global.i18n.t("calendar.clear")}</div>
-          <div class="column is-one-third z3-mf-calendar-control has-text-grey" on-click("hideCalendar")>${out.global.i18n.t("calendar.cancel")}</div>
-        </div>
-    </if>
-    <if(state.calendar.mode === "month")>
-      <div class="columns is-gapless is-mobile is-multiline is-size-7">
-        <for|m,i| of=out.global.i18n.t("global.monthsFull")>
-          <div class=`column is-one-third z3-mf-calednar-cell-month${state.calendar.month === i ? " z3-mf-calednar-cell-month-now" : ""}` data-month=i on-click("onCalendarMonthClick")>${m}</div>
-        </for>
-      </div>
-    </if>
-    <if(state.calendar.mode === "year")>
-      <div class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year">
-        <for|y,i| of=[...Array(100).keys()].map(i => i + new Date().getFullYear() - 50)>
-          <div class=`column is-one-third z3-mf-calednar-cell-year${state.calendar.year === y ? " z3-mf-calednar-cell-year-now" : ""}` id=`${input.id}_${state.item.id}_year_${y}` data-year=y on-click("onCalendarYearClick")>${y}</div>
-        </for>
-      </div>
-    </if>
-    </div>
-    <if(state.item.helpText)>
-      <p class="help">${state.item.helpText}</p>
-    </if>
-    <if(input.errors[state.item.id])>
-      <p class="help is-danger">${input.errors[state.item.id]}</p>
-    </if>
-  </div>
+	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span> 
+			</if> 
+		</label>
+		<div class="control has-icons-left">
+			<input
+				type="text"
+				class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
+					state.item.readOnly ? " has-background-white-bis" : ""
+				}`
+				id=`${input.id}_${state.item.id}`
+				key=`mf_ctl_${state.item.id}`
+				data-id=state.item.id
+				disabled=(!state.enabled || !state.visible)
+				value=state.calendar.valueText
+				readonly=true
+				on-click("onDatePickerInputClick")
+				on-focus("onDatePickerInputClick")
+				on-keydown("onDatePickerKeyPress")/>
+			<span class="icon is-small is-left">
+				<i class="mdi mdi-calendar-month"/>
+			</span> 
+		</div>
+		<div
+			class=`z3-mf-calendar-wrap${state.calendar.visible ? "" : " is-hidden"}`
+			id=`${input.id}_${state.item.id}_datepicker`>
+			<if(state.calendar.mode === "date")>
+				<div class="columns m-0 is-gapless is-mobile">
+					<div class="column is-narrow">
+						<a class="button is-ghost" on-click("onCalendarLeft")>
+							<span class="icon is-small">
+								<i class="mdi mdi-chevron-left"/>
+							</span> 
+						</a> 
+					</div>
+					<div class="column is-auto z3-mf-calendar-head-date">
+						<a data-mode="month" on-click("onCalendarModeChange")>
+							${out.global.i18n.t("global.monthsFull")[state.calendar.month]}
+						</a>&nbsp;<a data-mode="year" on-click("onCalendarModeChange")>
+							${state.calendar.year}
+						</a> 
+					</div>
+					<div class="column is-narrow">
+						<a class="button is-ghost" on-click("onCalendarRight")>
+							<span class="icon is-small">
+								<i class="mdi mdi-chevron-right"/>
+							</span> 
+						</a> 
+					</div> 
+				</div>
+				<div class="columns m-0 is-gapless is-size-7 z3-mf-calendar-dow is-mobile">
+					<for|d| of=out.global.i18n.t("global.weekDays")>
+						<div class="column z3-mf-calendar-cell">${d}</div> 
+					</for> 
+				</div>
+				<for|r| of=state.calendar.data>
+					<div class="columns m-0 is-gapless is-mobile" on-click("onCalendarCellClick")>
+						<for|i| of=r>
+							<div class=`column${
+								state.calendar.month !== i.m ? " z3-mf-calendar-cell-day-side" : ""
+							}`>
+								<div
+									class=`z3-mf-calendar-cell z3-mf-calendar-cell-day${
+										i.m === new Date().getMonth() &&
+										i.d === new Date().getDate() &&
+										i.y === new Date().getFullYear()
+											? " z3-mf-calendar-cell-day-today"
+											: ""
+									}${
+										i.m === state.calendar.selected.m &&
+										i.d === state.calendar.selected.d &&
+										i.y === state.calendar.selected.y
+											? " z3-mf-calendar-cell-day-selected"
+											: ""
+									}`
+									data-d=i.d
+									data-m=i.m
+									data-y=i.y>
+									${i.d}
+								</div> 
+							</div> 
+						</for> 
+					</div> 
+				</for>
+				<div class="columns is-gapless is-mobile is-size-7">
+					<div
+						class="column is-one-third z3-mf-calendar-control has-text-primary"
+						on-click("onCalendarToday")>
+						${out.global.i18n.t("calendar.today")}
+					</div>
+					<div
+						class="column is-one-third z3-mf-calendar-control has-text-danger"
+						on-click("onCalendarClear")>
+						${out.global.i18n.t("calendar.clear")}
+					</div>
+					<div
+						class="column is-one-third z3-mf-calendar-control has-text-grey"
+						on-click("hideCalendar")>
+						${out.global.i18n.t("calendar.cancel")}
+					</div> 
+				</div> 
+			</if>
+			<if(state.calendar.mode === "month")>
+				<div class="columns is-gapless is-mobile is-multiline is-size-7">
+					<for|m, i| of=out.global.i18n.t("global.monthsFull")>
+						<div
+							class=`column is-one-third z3-mf-calednar-cell-month${
+								state.calendar.month === i ? " z3-mf-calednar-cell-month-now" : ""
+							}`
+							data-month=i
+							on-click("onCalendarMonthClick")>
+							${m}
+						</div> 
+					</for> 
+				</div> 
+			</if>
+			<if(state.calendar.mode === "year")>
+				<div class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year">
+					<for|y, i| of=[...Array(100).keys()].map(i => i + new Date().getFullYear() - 50)>
+						<div
+							class=`column is-one-third z3-mf-calednar-cell-year${
+								state.calendar.year === y ? " z3-mf-calednar-cell-year-now" : ""
+							}`
+							id=`${input.id}_${state.item.id}_year_${y}`
+							data-year=y
+							on-click("onCalendarYearClick")>
+							${y}
+						</div> 
+					</for> 
+				</div> 
+			</if> 
+		</div>
+		<if(state.item.helpText)>
+			<p class="help">${state.item.helpText}</p> 
+		</if>
+		<if(input.errors[state.item.id])>
+			<p class="help is-danger">${input.errors[state.item.id]}</p> 
+		</if> 
+	</div>
 </if>

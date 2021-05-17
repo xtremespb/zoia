@@ -1,58 +1,61 @@
 <if(state.active)>
-  <div id="z3_ap_f_menu" class="z3-ap-f-menu" style=`top:${state.positionTop};left:${state.positionLeft}`>
-    <div class="card z3-ap-f-menu-wrap">
-      <div class="card-content z3-ap-f-menu-inner-wrap">
-        <div class="menu">
-          <ul class="menu-list">
-            <li>
-              <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="rename">
-                <span class="icon">
-                  <i class="mdi mdi-form-textbox"/>
-                </span>&nbsp;${out.global.i18n.t("rename")}
-              </a>
-            </li>
-            <li>
-              <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="cut">
-                <span class="icon">
-                  <i class="mdi mdi-content-cut"/>
-                </span>&nbsp;${out.global.i18n.t("doCut")}
-              </a>
-            </li>
-            <li>
-              <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="copy">
-                <span class="icon">
-                  <i class="mdi mdi-content-copy"/>
-                </span>&nbsp;${out.global.i18n.t("doCopy")}
-              </a>
-            </li>
-            <li>
-              <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="delete">
-                <span class="icon">
-                  <i class="mdi mdi-trash-can-outline"/>
-                </span>&nbsp;${out.global.i18n.t("doDelete")}
-              </a>
-            </li>
-            <if(!state.directory && !state.ro)>
-              <li>
-                <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="edit">
-                  <span class="icon">
-                    <i class="mdi mdi-square-edit-outline"/>
-                  </span>&nbsp;${out.global.i18n.t("edit")}
-                </a>
-              </li>
-            </if>
-            <if(state.zip)>
-              <li>
-                <a on-click("onItemClick") href="" data-uid=state.uid data-cmd="unzip">
-                  <span class="icon">
-                    <i class="mdi mdi-archive-arrow-down-outline"/>
-                  </span>&nbsp;${out.global.i18n.t("unzip")}
-                </a>
-              </li>
-            </if>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div
+		id="z3_ap_f_menu"
+		class="z3-ap-f-menu"
+		style=`top:${state.positionTop};left:${state.positionLeft}`>
+		<div class="card z3-ap-f-menu-wrap">
+			<div class="card-content z3-ap-f-menu-inner-wrap">
+				<div class="menu">
+					<ul class="menu-list">
+						<li>
+							<a on-click("onItemClick") href="" data-uid=state.uid data-cmd="rename">
+								<span class="icon">
+									<i class="mdi mdi-form-textbox"/>
+								</span>&nbsp;${out.global.i18n.t("rename")}
+							</a> 
+						</li>
+						<li>
+							<a on-click("onItemClick") href="" data-uid=state.uid data-cmd="cut">
+								<span class="icon">
+									<i class="mdi mdi-content-cut"/>
+								</span>&nbsp;${out.global.i18n.t("doCut")}
+							</a> 
+						</li>
+						<li>
+							<a on-click("onItemClick") href="" data-uid=state.uid data-cmd="copy">
+								<span class="icon">
+									<i class="mdi mdi-content-copy"/>
+								</span>&nbsp;${out.global.i18n.t("doCopy")}
+							</a> 
+						</li>
+						<li>
+							<a on-click("onItemClick") href="" data-uid=state.uid data-cmd="delete">
+								<span class="icon">
+									<i class="mdi mdi-trash-can-outline"/>
+								</span>&nbsp;${out.global.i18n.t("doDelete")}
+							</a> 
+						</li>
+						<if(!state.directory && !state.ro)>
+							<li>
+								<a on-click("onItemClick") href="" data-uid=state.uid data-cmd="edit">
+									<span class="icon">
+										<i class="mdi mdi-square-edit-outline"/>
+									</span>&nbsp;${out.global.i18n.t("edit")}
+								</a> 
+							</li> 
+						</if>
+						<if(state.zip)>
+							<li>
+								<a on-click("onItemClick") href="" data-uid=state.uid data-cmd="unzip">
+									<span class="icon">
+										<i class="mdi mdi-archive-arrow-down-outline"/>
+									</span>&nbsp;${out.global.i18n.t("unzip")}
+								</a> 
+							</li> 
+						</if> 
+					</ul> 
+				</div> 
+			</div> 
+		</div> 
+	</div>
 </if>

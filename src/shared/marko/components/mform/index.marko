@@ -1,108 +1,199 @@
 style.scss {
-  @import "./mform.scss";
-  @import "./ckeditor.scss";
+	@import "./mform.scss";
+	@import "./ckeditor.scss";
 }
 
 <div class="z3-mf-wrap">
-  <if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
-    <div class=`tabs is-toggle is-toggle-rounded ${input.tabsCSS || ""} ${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-tabs" : ""}`>
-      <ul>
-        <for|tab| of=state.tabs>
-          <li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
-            <a on-click("onTabClick") data-id=tab.id>${tab.label}</a>
-          </li>
-        </for>
-        <if(input.tabsActive)>
-          <li>
-            <a on-click("onTabSettingsClick")>
-              <span class="icon">
-                <i class="mdi mdi-cog" aria-hidden="true"/>
-              </span>
-              <span>${input.i18n.t("mForm.settings")}</span>
-            </a>
-          </li>
-        </if>
-      </ul>
-    </div>
-  </if>
-  <if(state.error)>
-    <div class="notification is-danger" key=`${input.id}_mForm_Error`>${state.error}</div>
-  </if>
-  <form on-submit("onFormSubmit") key=`${input.id}_mForm_Wrap`>
-    <fieldset disabled=state.disabled class=`z3-mf-fields-wrap z3-mf-noselect${((state.tabs && state.tabs.length > 1) || input.tabsActive) && input.borderWhenTabs ? " z3-mf-fields-border" : ""}`>
-      <if(state.activeTabId)>
-        $ let isArea = false;
-        $ let areaClass = "";
-        $ let areaBorder = false;
-        <for|tItem, tIndex| of=input.fields>
-          <if(typeof tItem === "object" && tItem.type)>
-            <if(tItem.type === "areaStart")>
-              $ isArea = true;
-              $ areaClass = tItem.css || ""; 
-              $ areaBorder = !!tItem.border;
-              <div class=`z3-mf-area-start${areaBorder ? " z3-mf-area-border-s" : ""}`>${tItem.label}</div>
-            </if>
-            <if(tItem.type === "areaEnd")>
-              <div class=`z3-mf-area-end${areaBorder ? " z3-mf-area-border-e" : ""}`/>
-              $ isArea = false;
-            </if>
-            <div class=(isArea ? `z3-mf-area ${areaClass || ""}${areaBorder ? " z3-mf-area-border-lr" : ""}` : "")>
-              <div class="field columns is-multiline z3-mf-field-columns" key=`mf_cmp_${tItem.id}_wrap` style=(state.visible[tItem.id] ? "" : "position:absolute;top:-100000px")>
-                <div class=`control column ${tItem.wrapCSS || ""}` style=`position:unset;${tItem.alignBottom ? "display:flex;flex-direction:column;justify-content:flex-end" : ""}`>
-                  <mField id=input.id key=`mf_cmp_${tItem.id}` item=tItem value=state.data[state.activeTabId][tItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-value-set("onValueSet") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue") on-context-menu("onContextMenu") on-settled("onFieldSettled")/>
-                </div>
-              </div>
-            </div>
-          </if>
-          <if(Array.isArray(tItem))>
-            <div class=(isArea ? `z3-mf-area ${areaClass || ""}${areaBorder ? " z3-mf-area-border-lr" : ""}` : "")>
-              <div class=`field columns is-multiline is-gapless z3-mf-field-columns-group`>
-                <for|sItem, sIndex| of=tItem>
-                  <div class=`control column ${sItem.wrapCSS || ""}` key=`mf_cmp_${sItem.id}_wrap` style=`${state.visible[sItem.id] ? "position:unset;" : "position:absolute;top:-100000px;"}${sItem.alignBottom ? "display:flex;flex-direction:column;justify-content:flex-end" : ""}`>
-                    <mField id=input.id key=`mf_cmp_${sItem.id}` item=sItem value=state.data[state.activeTabId][sItem.id] errors=state.errors[state.activeTabId] on-value-change("onValueChange") on-value-set("onValueSet") on-remove-arr-item("onRemoveArrItem") on-button-click("onButtonClick") on-captcha("onCaptcha") progress=state.progress progressButtonId=input.progressButtonId on-get-key-value("onGetKeyValue") on-context-menu("onContextMenu") on-settled("onFieldSettled")/>
-                  </div>
-                </for>
-              </div>
-            </div>
-          </if>
-        </for>
-      </if>
-    </fieldset>
-    <button type="submit" style="display:none"/>
-  </form>
-  <if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
-    <div class=`modal${state.tabSettingsDialogActive ? " is-active" : ""}`>
-      <div class="modal-background"/>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">${input.i18n.t("mForm.settings")}</p>
-          <button class="delete" aria-label="close" on-click("onTabSettingsDialogCloseClick")/>
-        </header>
-        <section class="modal-card-body">
-          <for|tab| of=state.tabsSelect>
-            <div>
-              <div class="z3-pretty p-icon">
-                <input type="checkbox" checked=tab.selected data-id=tab.id on-change("onTabsSelectChange")/>
-                <div class="state">
-                  <i class="icon mdi mdi-check"/>
-                  <label>${tab.label}</label>
-                </div>
-              </div>
-            </div>
-          </for>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-primary" on-click("onTabSettingsDialogSaveClick")>${input.i18n.t("mForm.save")}</button>
-          <button class="button" on-click("onTabSettingsDialogCloseClick")>${input.i18n.t("mForm.cancel")}</button>
-        </footer>
-      </div>
-    </div>
-  </if>
-  <if(state.loading)>
-    <div class="z3-mf-loading">
-      <span class="button is-white is-loading is-large z3-mf-loading-spinner">&nbsp;</span>
-    </div>
-  </if>
-  <mnotify key=`${input.id}_mnotify`/>
-  <imageMenu key="z3_mf_image_menu" on-item-click("onMenuItemClick")/>
+	<if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
+		<div class=`tabs is-toggle is-toggle-rounded ${input.tabsCSS || ""} ${
+			((state.tabs && state.tabs.length > 1) || input.tabsActive) &&
+			input.borderWhenTabs
+				? " z3-mf-tabs"
+				: ""
+		}`>
+			<ul>
+				<for|tab| of=state.tabs>
+					<li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
+						<a on-click("onTabClick") data-id=tab.id>${tab.label}</a> 
+					</li> 
+				</for>
+				<if(input.tabsActive)>
+					<li>
+						<a on-click("onTabSettingsClick")>
+							<span class="icon">
+								<i class="mdi mdi-cog" aria-hidden="true"/>
+							</span>
+							<span>${input.i18n.t("mForm.settings")}</span> 
+						</a> 
+					</li> 
+				</if> 
+			</ul> 
+		</div> 
+	</if>
+	<if(state.error)>
+		<div class="notification is-danger" key=`${input.id}_mForm_Error`>
+			${state.error}
+		</div> 
+	</if>
+	<form on-submit("onFormSubmit") key=`${input.id}_mForm_Wrap`>
+		<fieldset
+			disabled=state.disabled
+			class=`z3-mf-fields-wrap z3-mf-noselect${
+				((state.tabs && state.tabs.length > 1) || input.tabsActive) &&
+				input.borderWhenTabs
+					? " z3-mf-fields-border"
+					: ""
+			}`>
+			<if(state.activeTabId)>
+				$ let isArea = false;
+				$ let areaClass = "";
+				$ let areaBorder = false;
+				<for|tItem, tIndex| of=input.fields>
+					<if(typeof tItem === "object" && tItem.type)>
+						<if(tItem.type === "areaStart")>
+							$ isArea = true;
+							$ areaClass = tItem.css || "";
+							$ areaBorder = !!tItem.border;
+							<div class=`z3-mf-area-start${areaBorder ? " z3-mf-area-border-s" : ""}`>
+								${tItem.label}
+							</div> 
+						</if>
+						<if(tItem.type === "areaEnd")>
+							<div class=`z3-mf-area-end${areaBorder ? " z3-mf-area-border-e" : ""}`/>
+							$ isArea = false;
+						</if>
+						<div class=(
+							isArea
+								? `z3-mf-area ${areaClass || ""}${
+										areaBorder ? " z3-mf-area-border-lr" : ""
+								  }`
+								: ""
+						)>
+							<div
+								class="field columns is-multiline z3-mf-field-columns"
+								key=`mf_cmp_${tItem.id}_wrap`
+								style=(state.visible[tItem.id] ? "" : "position:absolute;top:-100000px")>
+								<div
+									class=`control column ${tItem.wrapCSS || ""}`
+									style=`position:unset;${
+										tItem.alignBottom
+											? "display:flex;flex-direction:column;justify-content:flex-end"
+											: ""
+									}`>
+									<mField
+										id=input.id
+										key=`mf_cmp_${tItem.id}`
+										item=tItem
+										value=state.data[state.activeTabId][tItem.id]
+										errors=state.errors[state.activeTabId]
+										on-value-change("onValueChange")
+										on-value-set("onValueSet")
+										on-remove-arr-item("onRemoveArrItem")
+										on-button-click("onButtonClick")
+										on-captcha("onCaptcha")
+										progress=state.progress
+										progressButtonId=input.progressButtonId
+										on-get-key-value("onGetKeyValue")
+										on-context-menu("onContextMenu")
+										on-settled("onFieldSettled")/> 
+								</div> 
+							</div> 
+						</div> 
+					</if>
+					<if(Array.isArray(tItem))>
+						<div class=(
+							isArea
+								? `z3-mf-area ${areaClass || ""}${
+										areaBorder ? " z3-mf-area-border-lr" : ""
+								  }`
+								: ""
+						)>
+							<div class=`field columns is-multiline is-gapless z3-mf-field-columns-group`>
+								<for|sItem, sIndex| of=tItem>
+									<div
+										class=`control column ${sItem.wrapCSS || ""}`
+										key=`mf_cmp_${sItem.id}_wrap`
+										style=`${
+											state.visible[sItem.id]
+												? "position:unset;"
+												: "position:absolute;top:-100000px;"
+										}${
+											sItem.alignBottom
+												? "display:flex;flex-direction:column;justify-content:flex-end"
+												: ""
+										}`>
+										<mField
+											id=input.id
+											key=`mf_cmp_${sItem.id}`
+											item=sItem
+											value=state.data[state.activeTabId][sItem.id]
+											errors=state.errors[state.activeTabId]
+											on-value-change("onValueChange")
+											on-value-set("onValueSet")
+											on-remove-arr-item("onRemoveArrItem")
+											on-button-click("onButtonClick")
+											on-captcha("onCaptcha")
+											progress=state.progress
+											progressButtonId=input.progressButtonId
+											on-get-key-value("onGetKeyValue")
+											on-context-menu("onContextMenu")
+											on-settled("onFieldSettled")/> 
+									</div> 
+								</for> 
+							</div> 
+						</div> 
+					</if> 
+				</for> 
+			</if> 
+		</fieldset>
+		<button type="submit" style="display:none"/> 
+	</form>
+	<if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
+		<div class=`modal${state.tabSettingsDialogActive ? " is-active" : ""}`>
+			<div class="modal-background"/>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">${input.i18n.t("mForm.settings")}</p>
+					<button
+						class="delete"
+						aria-label="close"
+						on-click("onTabSettingsDialogCloseClick")/> 
+				</header>
+				<section class="modal-card-body">
+					<for|tab| of=state.tabsSelect>
+						<div>
+							<div class="z3-pretty p-icon">
+								<input
+									type="checkbox"
+									checked=tab.selected
+									data-id=tab.id
+									on-change("onTabsSelectChange")/>
+								<div class="state">
+									<i class="icon mdi mdi-check"/>
+									<label>${tab.label}</label> 
+								</div> 
+							</div> 
+						</div> 
+					</for> 
+				</section>
+				<footer class="modal-card-foot">
+					<button class="button is-primary" on-click("onTabSettingsDialogSaveClick")>
+						${input.i18n.t("mForm.save")}
+					</button>
+					<button class="button" on-click("onTabSettingsDialogCloseClick")>
+						${input.i18n.t("mForm.cancel")}
+					</button> 
+				</footer> 
+			</div> 
+		</div> 
+	</if>
+	<if(state.loading)>
+		<div class="z3-mf-loading">
+			<span class="button is-white is-loading is-large z3-mf-loading-spinner">
+				&nbsp;
+			</span> 
+		</div> 
+	</if>
+	<mnotify key=`${input.id}_mnotify`/>
+	<imageMenu key="z3_mf_image_menu" on-item-click("onMenuItemClick")/>
 </div>

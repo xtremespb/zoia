@@ -7,122 +7,138 @@ style.scss {
 
 $ input.userEditData = cloneDeep(userEdit);
 $ if (input.id === "new") {
-  input.userEditData.root.required = [...input.userEditData.root.required, "password", "passwordRepeat"];
+	input.userEditData.root.required = [
+		...input.userEditData.root.required,
+		"password",
+		"passwordRepeat"
+	];
 }
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 <div>
-  <h1 class="z3-ap-head-thin">
-    <span class="icon">
-      <i class="mdi z3-ap-mdi-head mdi-dark mdi-account-edit-outline"/>
-    </span>&nbsp;${input.id === "new" ? out.global.i18n.t("userAdd") : out.global.i18n.t("userEdit")}
-  </h1>
-  <mform key="userEditForm" id="userEditForm" save={
-    url: "/api/users/edit/save",
-    extras: {
-      id: input.id === "new" ? undefined : input.id
-    },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  } load={
-    url: "/api/users/edit/load",
-    extras: {
-      id: input.id
-    },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  } fields=[
-    [
-      {
-        id: "username",
-        type: "text",
-        label: out.global.i18n.t("username"),
-        helpText: out.global.i18n.t("usernameHelpText"),
-        wrapCSS: "z3-is-medium",
-        autoFocus: true,
-        mandatory: true
-      },
-      {
-        id: "email",
-        type: "text",
-        label: out.global.i18n.t("email"),
-        helpText: out.global.i18n.t("emailHelpText"),
-        wrapCSS: "z3-is-large",
-        mandatory: true
-      },
-      {
-        id: "groups",
-        type: "text",
-        label: out.global.i18n.t("groups"),
-        helpText: out.global.i18n.t("groupsHelpText"),
-        wrapCSS: "z3-is-large",
-        tags: true
-      }
-    ],
-    [
-      {
-        id: "password",
-        type: "text",
-        label: out.global.i18n.t("password"),
-        helpText: out.global.i18n.t("passwordHelpText"),
-        wrapCSS: "z3-is-small",
-        mandatory: input.id === "new",
-        textType: "password",
-        shouldMatch: "passwordRepeat"
-      },
-      {
-        id: "passwordRepeat",
-        type: "text",
-        label: out.global.i18n.t("passwordRepeat"),
-        wrapCSS: "z3-is-small",
-        textType: "password",
-        mandatory: input.id === "new",
-        shouldMatch: "password"
-      }
-    ],
-    {
-      id: "status",
-      type: "checkboxes",
-      label: out.global.i18n.t("status"),
-      options: [
-        {
-          id: "active",
-          value: "active",
-          label: out.global.i18n.t("active")
-        },
-        {
-          id: "admin",
-          value: "admin",
-          label: out.global.i18n.t("admin")
-        }
-      ],
-      defaultValue: ["active"]
-    },
-    {
-      id: "div1",
-      type: "divider"
-    },
-    {
-      id: "bg1",
-      type: "buttons",
-      data: [
-        {
-          id: "btnSave",
-          type: "button",
-          buttonType: "submit",
-          label: out.global.i18n.t("save"),
-          css: "is-primary"
-        },
-        {
-          id: "btnCancel",
-          type: "button",
-          buttonType: "button",
-          label: out.global.i18n.t("cancel")
-        }
-      ]
-    }
-  ] validation=input.userEditData progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") on-load-success("onLoadSuccess")/>
-  <lockedModal key="z3_ap_ue_lockedModal"/>
+	<h1 class="z3-ap-head-thin">
+		<span class="icon">
+			<i class="mdi z3-ap-mdi-head mdi-dark mdi-account-edit-outline"/>
+		</span>&nbsp;${input.id === "new" ? out.global.i18n.t("userAdd") : out.global.i18n.t("userEdit")}
+	</h1>
+	<mform
+		key="userEditForm"
+		id="userEditForm"
+		save={
+			url: "/api/users/edit/save",
+			extras: {
+				id: input.id === "new" ? undefined : input.id
+			},
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+		load={
+			url: "/api/users/edit/load",
+			extras: {
+				id: input.id
+			},
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+		fields=[
+			[
+				{
+					id: "username",
+					type: "text",
+					label: out.global.i18n.t("username"),
+					helpText: out.global.i18n.t("usernameHelpText"),
+					wrapCSS: "z3-is-medium",
+					autoFocus: true,
+					mandatory: true
+				},
+				{
+					id: "email",
+					type: "text",
+					label: out.global.i18n.t("email"),
+					helpText: out.global.i18n.t("emailHelpText"),
+					wrapCSS: "z3-is-large",
+					mandatory: true
+				},
+				{
+					id: "groups",
+					type: "text",
+					label: out.global.i18n.t("groups"),
+					helpText: out.global.i18n.t("groupsHelpText"),
+					wrapCSS: "z3-is-large",
+					tags: true
+				}
+			],
+			[
+				{
+					id: "password",
+					type: "text",
+					label: out.global.i18n.t("password"),
+					helpText: out.global.i18n.t("passwordHelpText"),
+					wrapCSS: "z3-is-small",
+					mandatory: input.id === "new",
+					textType: "password",
+					shouldMatch: "passwordRepeat"
+				},
+				{
+					id: "passwordRepeat",
+					type: "text",
+					label: out.global.i18n.t("passwordRepeat"),
+					wrapCSS: "z3-is-small",
+					textType: "password",
+					mandatory: input.id === "new",
+					shouldMatch: "password"
+				}
+			],
+			{
+				id: "status",
+				type: "checkboxes",
+				label: out.global.i18n.t("status"),
+				options: [
+					{
+						id: "active",
+						value: "active",
+						label: out.global.i18n.t("active")
+					},
+					{
+						id: "admin",
+						value: "admin",
+						label: out.global.i18n.t("admin")
+					}
+				],
+				defaultValue: ["active"]
+			},
+			{
+				id: "div1",
+				type: "divider"
+			},
+			{
+				id: "bg1",
+				type: "buttons",
+				data: [
+					{
+						id: "btnSave",
+						type: "button",
+						buttonType: "submit",
+						label: out.global.i18n.t("save"),
+						css: "is-primary"
+					},
+					{
+						id: "btnCancel",
+						type: "button",
+						buttonType: "button",
+						label: out.global.i18n.t("cancel")
+					}
+				]
+			}
+		]
+		validation=input.userEditData
+		progressButtonId="btnSave"
+		i18n=out.global.i18n
+		on-post-success("onFormPostSuccess")
+		on-button-click("onButtonClick")
+		on-unauthorized("onUnauthorized")
+		on-load-success("onLoadSuccess")/>
+	<lockedModal key="z3_ap_ue_lockedModal"/>
 </div>

@@ -1,44 +1,75 @@
 style.scss {
-  @import "./mtree.scss";
+	@import "./mtree.scss";
 }
 
 <div class="z3-mtr-wrap" id=input.id>
-  <if(input.controls)>
-    <div class="field has-addons">
-      <p class="control">
-        <button class="button" disabled=state.loading on-click("onAddClick")>
-          <span class="icon">
-            <i class="mdi mdi-18px mdi-folder-plus-outline"/>
-          </span>
-        </button>
-      </p>
-      <p class="control">
-        <button class="button" disabled=(state.loading || (state.root && state.root.uuid === state.selected)) on-click("onEditClick")>
-          <span class="icon">
-            <i class="mdi mdi-18px mdi-folder-edit-outline"/>
-          </span>
-        </button>
-      </p>
-      <p class="control">
-        <button class="button is-danger" disabled=(state.loading || (state.root && state.root.uuid === state.selected)) on-click("onDeleteClick")>
-          <span class="icon">
-            <i class="mdi mdi-18px mdi-trash-can-outline"/>
-          </span>
-        </button>
-      </p>
-    </div>
-  </if>
-  <if(state.root)>
-    <mtreeItem data=state.root level=0 key=state.root.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected controls=input.controls on-gap-drop("onGapDrop")/>
-  </if>
-  <for|item, order| of=state.data>
-    <mtreeItem data=item level=1 key=item.uuid on-open-close-click("onOpenCloseClick") on-item-click("onItemClick") selected=state.selected controls=input.controls order=order len=state.data.length isDraggable=(input.controls ? true : null) on-gap-drop("onGapDrop") on-item-drop("onItemDrop") on-drag-start("onItemDragStart") on-drag-end("onItemDragEnd") dragging=state.dragging/>
-  </for>
-  <if(state.loading)>
-    <div class="z3-mtr-loading">
-      <span class="button is-white is-loading is-large z3-mtr-loading-spinner">&nbsp;</span>
-    </div>
-  </if>
+	<if(input.controls)>
+		<div class="field has-addons">
+			<p class="control">
+				<button class="button" disabled=state.loading on-click("onAddClick")>
+					<span class="icon">
+						<i class="mdi mdi-18px mdi-folder-plus-outline"/>
+					</span> 
+				</button> 
+			</p>
+			<p class="control">
+				<button
+					class="button"
+					disabled=(state.loading || (state.root && state.root.uuid === state.selected))
+					on-click("onEditClick")>
+					<span class="icon">
+						<i class="mdi mdi-18px mdi-folder-edit-outline"/>
+					</span> 
+				</button> 
+			</p>
+			<p class="control">
+				<button
+					class="button is-danger"
+					disabled=(state.loading || (state.root && state.root.uuid === state.selected))
+					on-click("onDeleteClick")>
+					<span class="icon">
+						<i class="mdi mdi-18px mdi-trash-can-outline"/>
+					</span> 
+				</button> 
+			</p> 
+		</div> 
+	</if>
+	<if(state.root)>
+		<mtreeItem
+			data=state.root
+			level=0
+			key=state.root.uuid
+			on-open-close-click("onOpenCloseClick")
+			on-item-click("onItemClick")
+			selected=state.selected
+			controls=input.controls
+			on-gap-drop("onGapDrop")/> 
+	</if>
+	<for|item, order| of=state.data>
+		<mtreeItem
+			data=item
+			level=1
+			key=item.uuid
+			on-open-close-click("onOpenCloseClick")
+			on-item-click("onItemClick")
+			selected=state.selected
+			controls=input.controls
+			order=order
+			len=state.data.length
+			isDraggable=(input.controls ? true : null)
+			on-gap-drop("onGapDrop")
+			on-item-drop("onItemDrop")
+			on-drag-start("onItemDragStart")
+			on-drag-end("onItemDragEnd")
+			dragging=state.dragging/> 
+	</for>
+	<if(state.loading)>
+		<div class="z3-mtr-loading">
+			<span class="button is-white is-loading is-large z3-mtr-loading-spinner">
+				&nbsp;
+			</span> 
+		</div> 
+	</if>
 </div>
 <deleteModal key="z3_ap_mt_deleteModal" on-delete-confirm("onDeleteConfirm")/>
 <moveModal key="z3_ap_mt_moveModal" on-move-confirm("onMoveConfirm")/>

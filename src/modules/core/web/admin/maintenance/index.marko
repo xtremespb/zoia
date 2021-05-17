@@ -1,6 +1,13 @@
 <div class="field z3-ap-noselect">
-  <input id="z3_ap_switchMaintenance" type="checkbox" class="switch is-rounded is-danger" checked=out.global.maintenanceStatus on-change("onMaintenanceChange")/>
-  <label for="z3_ap_switchMaintenance" class="z3-ap-switch">${out.global.i18n.t("maintenanceMode")}</label>
-  <spinner key="z3_mnt_spinner"/>
-  <mnotify key="z3_mnt_notify"/>
+	<input
+		id="z3_ap_switchMaintenance"
+		type="checkbox"
+		class="switch is-rounded is-danger"
+		checked=out.global.maintenanceStatus
+		on-change("onMaintenanceChange")/>
+	<label for="z3_ap_switchMaintenance" class="z3-ap-switch">
+		${out.global.i18n.t("maintenanceMode")}
+	</label>
+	<spinner key="z3_mnt_spinner"/>
+	<mnotify key="z3_mnt_notify"/>
 </div>

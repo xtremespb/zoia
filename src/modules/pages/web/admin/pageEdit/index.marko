@@ -4,127 +4,150 @@ import pageEdit from "../../../api/data/pageEdit.json"
 
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
-$ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, label: out.global.languages[k] }));
+$ const languageTabs = Object.keys(out.global.languages).map(k => ({
+	id: k,
+	label: out.global.languages[k]
+}));
 <div class="mb-5">
-  <h1 class="z3-ap-head-thin">
-    <span class="icon">
-      <i class="mdi z3-ap-mdi-head mdi-dark mdi-square-edit-outline"/>
-    </span>&nbsp;${input.id === "new" ? out.global.i18n.t("pageAdd") : out.global.i18n.t("pageEdit")}
-  </h1>
-  <mform key="pageEditForm" id="pageEditForm" save={
-    url: "/api/pages/edit/save",
-    extras: {
-      id: input.id === "new" ? undefined : input.id
-    },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  } load={
-    url: "/api/pages/edit/load",
-    extras: {
-      id: input.id
-    },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  } fields=[
-    [
-      {
-        id: "dir",
-        type: "keyvalue",
-        label: out.global.i18n.t("dir"),
-        helpText: out.global.i18n.t("dirHelpText"),
-        wrapCSS: "z3-is-medium",
-        autoFocus: true,
-        mandatory: true,
-        shared: true,
-        emptyArrayLabel: "/"
-      },
-      {
-        id: "filename",
-        type: "text",
-        label: out.global.i18n.t("filename"),
-        helpText: out.global.i18n.t("filenameHelpText"),
-        wrapCSS: "z3-is-medium",
-        shared: true
-      },
-      {
-        id: "title",
-        type: "text",
-        label: out.global.i18n.t("title"),
-        helpText: out.global.i18n.t("titleHelpText"),
-        wrapCSS: "z3-is-large",
-        convert: "string"
-      },
-      {
-        id: "date",
-        type: "datepicker",
-        wrapCSS: "z3-is-medium",
-        label: out.global.i18n.t("date"),
-        helpText: out.global.i18n.t("dateHelpText"),
-      }
-    ],
-    {
-      id: "content",
-      type: "ace",
-      label: out.global.i18n.t("content"),
-      helpText: out.global.i18n.t("contentHelpText"),
-      wysiwyg: true,
-      source: true
-    },
-    {
-      id: "css",
-      type: "ace",
-      label: out.global.i18n.t("css"),
-      helpText: out.global.i18n.t("cssHelpText"),
-      aceOptions: {
-        mode: "ace/mode/css"
-      },
-      toggle: true,
-      source: true
-    },
-    {
-      id: "js",
-      type: "ace",
-      label: out.global.i18n.t("js"),
-      helpText: out.global.i18n.t("jsHelpText"),
-      aceOptions: {
-        mode: "ace/mode/javascript"
-      },
-      toggle: true,
-      source: true
-    },
-    {
-      id: "attachments",
-      type: "file",
-      label: out.global.i18n.t("attachments"),
-      multiple: true,
-      buttonLabel: out.global.i18n.t("selectFiles")
-    },
-    {
-      id: "div1",
-      type: "divider"
-    },
-    {
-      id: "bg1",
-      type: "buttons",
-      data: [
-        {
-          id: "btnSave",
-          type: "button",
-          buttonType: "submit",
-          label: out.global.i18n.t("save"),
-          css: "is-primary"
-        },
-        {
-          id: "btnCancel",
-          type: "button",
-          buttonType: "button",
-          label: out.global.i18n.t("cancel")
-        }
-      ]
-    }
-  ] formType="formData" validation=pageEdit progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") tabsAvail=languageTabs tabsActive=[languageTabs[0].id] on-get-key-value("onGetKeyValue") on-load-success("onLoadSuccess")/>
-  <folderModal key="z3_ap_pe_folderModal" on-confirm("onFolderSelectConfirm") on-got-tree-data("onGotTreeData") on-tree-loading-error("onTreeLoadingError")/>
-  <lockedModal key="z3_ap_pe_lockedModal"/>
+	<h1 class="z3-ap-head-thin">
+		<span class="icon">
+			<i class="mdi z3-ap-mdi-head mdi-dark mdi-square-edit-outline"/>
+		</span>&nbsp;${input.id === "new" ? out.global.i18n.t("pageAdd") : out.global.i18n.t("pageEdit")}
+	</h1>
+	<mform
+		key="pageEditForm"
+		id="pageEditForm"
+		save={
+			url: "/api/pages/edit/save",
+			extras: {
+				id: input.id === "new" ? undefined : input.id
+			},
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+		load={
+			url: "/api/pages/edit/load",
+			extras: {
+				id: input.id
+			},
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+		fields=[
+			[
+				{
+					id: "dir",
+					type: "keyvalue",
+					label: out.global.i18n.t("dir"),
+					helpText: out.global.i18n.t("dirHelpText"),
+					wrapCSS: "z3-is-medium",
+					autoFocus: true,
+					mandatory: true,
+					shared: true,
+					emptyArrayLabel: "/"
+				},
+				{
+					id: "filename",
+					type: "text",
+					label: out.global.i18n.t("filename"),
+					helpText: out.global.i18n.t("filenameHelpText"),
+					wrapCSS: "z3-is-medium",
+					shared: true
+				},
+				{
+					id: "title",
+					type: "text",
+					label: out.global.i18n.t("title"),
+					helpText: out.global.i18n.t("titleHelpText"),
+					wrapCSS: "z3-is-large",
+					convert: "string"
+				},
+				{
+					id: "date",
+					type: "datepicker",
+					wrapCSS: "z3-is-medium",
+					label: out.global.i18n.t("date"),
+					helpText: out.global.i18n.t("dateHelpText")
+				}
+			],
+			{
+				id: "content",
+				type: "ace",
+				label: out.global.i18n.t("content"),
+				helpText: out.global.i18n.t("contentHelpText"),
+				wysiwyg: true,
+				source: true
+			},
+			{
+				id: "css",
+				type: "ace",
+				label: out.global.i18n.t("css"),
+				helpText: out.global.i18n.t("cssHelpText"),
+				aceOptions: {
+					mode: "ace/mode/css"
+				},
+				toggle: true,
+				source: true
+			},
+			{
+				id: "js",
+				type: "ace",
+				label: out.global.i18n.t("js"),
+				helpText: out.global.i18n.t("jsHelpText"),
+				aceOptions: {
+					mode: "ace/mode/javascript"
+				},
+				toggle: true,
+				source: true
+			},
+			{
+				id: "attachments",
+				type: "file",
+				label: out.global.i18n.t("attachments"),
+				multiple: true,
+				buttonLabel: out.global.i18n.t("selectFiles")
+			},
+			{
+				id: "div1",
+				type: "divider"
+			},
+			{
+				id: "bg1",
+				type: "buttons",
+				data: [
+					{
+						id: "btnSave",
+						type: "button",
+						buttonType: "submit",
+						label: out.global.i18n.t("save"),
+						css: "is-primary"
+					},
+					{
+						id: "btnCancel",
+						type: "button",
+						buttonType: "button",
+						label: out.global.i18n.t("cancel")
+					}
+				]
+			}
+		]
+		formType="formData"
+		validation=pageEdit
+		progressButtonId="btnSave"
+		i18n=out.global.i18n
+		on-post-success("onFormPostSuccess")
+		on-button-click("onButtonClick")
+		on-unauthorized("onUnauthorized")
+		tabsAvail=languageTabs
+		tabsActive=[languageTabs[0].id]
+		on-get-key-value("onGetKeyValue")
+		on-load-success("onLoadSuccess")/>
+	<folderModal
+		key="z3_ap_pe_folderModal"
+		on-confirm("onFolderSelectConfirm")
+		on-got-tree-data("onGotTreeData")
+		on-tree-loading-error("onTreeLoadingError")/>
+	<lockedModal key="z3_ap_pe_lockedModal"/>
 </div>

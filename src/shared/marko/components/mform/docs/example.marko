@@ -1,230 +1,238 @@
-<mform fields=[
-  {
-    id: "select1",
-    type: "select",
-    label: "Super Select",
-    options: [
-      {
-        value: 0,
-        label: "Super Label 0"
-      },
-      {
-        value: 1,
-        label: "Super Label 1"
-      },
-      {
-        value: 2,
-        label: "Super Label 2"
-      }
-    ],
-    defaultValue: "2",
-    convert: "integer"
-  },
-  {
-    id: "radio1",
-    type: "radio",
-    label: "Super Radio",
-    options: [
-      {
-        value: 0,
-        label: "Option 0"
-      },
-      {
-        value: 1,
-        label: "Next Option 1"
-      },
-      {
-        value: 2,
-        label: "Option 2"
-      }
-    ],
-    defaultValue: "1",
-    convert: "integer"
-  },
-  {
-    id: "checkboxes1",
-    type: "checkboxes",
-    label: "Super Checkboxes",
-    options: [
-      {
-        id: "box1",
-        value: 0,
-        label: "Option 0"
-      },
-      {
-        id: "box2",
-        value: 1,
-        label: "Next Option 1"
-      },
-      {
-        id: "box3",
-        value: 2,
-        label: "Option 2"
-      }
-    ],
-    autoFocus: true
-  },
-  {
-    id: "checkbox1",
-    type: "checkbox",
-    label: "Super Checkbox",
-    labelCheckbox: "Super Checkbox Label"
-  },
-  {
-    id: "file1",
-    type: "file",
-    label: "File 1",
-    multiple: true,
-    buttonLabel: "Select!"
-  },
-  {
-    id: "file2",
-    type: "file",
-    label: "File 2",
-    multiple: false,
-    shared: true,
-    helpText: "Hello World",
-    buttonLabel: "Select!!!"
-  },
-  {
-    id: "field1",
-    type: "text",
-    label: "Field 1",
-    placeholder: "Field 1 Placeholder",
-    helpText: "Field 1 Help Text",
-    wrapCSS: "is-5",
-    defaultValue: "12345",
-    convert: "integer"
-  },
-  {
-    id: "field2",
-    type: "text",
-    label: "Field 2",
-    placeholder: "Field 2 Placeholder",
-    helpText: "Field 2 Help Text",
-    mandatory: true,
-    shared: true,
-    validation: {
-      minLength: 24,
-      maxLength: 24,
-      pattern: "^[a-f0-9]+$"
-    }
-  },
-  [
-    {
-      id: "field3",
-      type: "text",
-      label: "Field 3",
-      placeholder: "Field 3 Placeholder",
-      helpText: "Field 3 Help Text",
-      wrapCSS: "is-2"
-    },
-    {
-      id: "field4",
-      type: "text",
-      label: "Field 4",
-      placeholder: "Field 4 Placeholder",
-      helpText: "Field 4 Help Text",
-      wrapCSS: "is-3"
-    },
-    {
-      id: "field5",
-      type: "text",
-      label: "Field 5",
-      placeholder: "Field 5 Placeholder",
-      helpText: "Field 5 Help Text",
-      wrapCSS: "is-2"
-    }
-  ],
-  {
-    id: "field6",
-    type: "text",
-    label: "Field 6",
-    placeholder: "Field 6 Placeholder",
-    helpText: "Field 6 Help Text"
-  },
-  [
-    {
-      id: "field7",
-      type: "text",
-      label: "Field 7",
-      placeholder: "Field 7 Placeholder",
-      helpText: "Field 7 Help Text",
-      wrapCSS: "is-2"
-    },
-    {
-      id: "field8",
-      type: "text",
-      label: "Field 8",
-      placeholder: "Field 8 Placeholder",
-      helpText: "Field 8 Help Text",
-      wrapCSS: "is-3"
-    },
-    {
-      id: "field9",
-      type: "text",
-      label: "Field 9",
-      placeholder: "Field 9 Placeholder",
-      helpText: "Field 9 Help Text",
-      wrapCSS: "is-2"
-    }
-  ],
-  [
-    {
-      id: "field11",
-      type: "text",
-      label: "Field 11",
-      placeholder: "Field 11 Placeholder",
-      helpText: "Field 11 Help Text",
-      wrapCSS: "is-2"
-    },
-    {
-      id: "field12",
-      type: "text",
-      label: "Field 12",
-      placeholder: "Field 12 Placeholder",
-      helpText: "Field 12 Help Text",
-      wrapCSS: "is-3"
-    },
-    {
-      id: "field13",
-      type: "text",
-      label: "Field 13",
-      placeholder: "Field 13 Placeholder",
-      helpText: "Field 13 Help Text",
-      wrapCSS: "is-2"
-    }
-  ],
-  {
-    id: "div1",
-    type: "divider"
-  },
-  {
-    id: "bg1",
-    type: "buttons",
-    data: [
-      {
-        id: "btn1",
-        type: "button",
-        buttonType: "submit",
-        label: "Super Mega Button",
-        css: "is-primary"
-      },
-      {
-        id: "btn2",
-        type: "button",
-        buttonType: "button",
-        label: "Just Btn"
-      }
-    ]
-  }
-] tabsAvail=[
-  {
-    id: "en",
-    label: "English"
-  },
-  {
-    id: "ru",
-    label: "Русский"
-  }
-] tabsActive=["en"] formType="formData" validation=test i18n=out.global.i18n borderWhenTabs=false tabsCSS="is-toggle"/>
+<mform
+	fields=[
+		{
+			id: "select1",
+			type: "select",
+			label: "Super Select",
+			options: [
+				{
+					value: 0,
+					label: "Super Label 0"
+				},
+				{
+					value: 1,
+					label: "Super Label 1"
+				},
+				{
+					value: 2,
+					label: "Super Label 2"
+				}
+			],
+			defaultValue: "2",
+			convert: "integer"
+		},
+		{
+			id: "radio1",
+			type: "radio",
+			label: "Super Radio",
+			options: [
+				{
+					value: 0,
+					label: "Option 0"
+				},
+				{
+					value: 1,
+					label: "Next Option 1"
+				},
+				{
+					value: 2,
+					label: "Option 2"
+				}
+			],
+			defaultValue: "1",
+			convert: "integer"
+		},
+		{
+			id: "checkboxes1",
+			type: "checkboxes",
+			label: "Super Checkboxes",
+			options: [
+				{
+					id: "box1",
+					value: 0,
+					label: "Option 0"
+				},
+				{
+					id: "box2",
+					value: 1,
+					label: "Next Option 1"
+				},
+				{
+					id: "box3",
+					value: 2,
+					label: "Option 2"
+				}
+			],
+			autoFocus: true
+		},
+		{
+			id: "checkbox1",
+			type: "checkbox",
+			label: "Super Checkbox",
+			labelCheckbox: "Super Checkbox Label"
+		},
+		{
+			id: "file1",
+			type: "file",
+			label: "File 1",
+			multiple: true,
+			buttonLabel: "Select!"
+		},
+		{
+			id: "file2",
+			type: "file",
+			label: "File 2",
+			multiple: false,
+			shared: true,
+			helpText: "Hello World",
+			buttonLabel: "Select!!!"
+		},
+		{
+			id: "field1",
+			type: "text",
+			label: "Field 1",
+			placeholder: "Field 1 Placeholder",
+			helpText: "Field 1 Help Text",
+			wrapCSS: "is-5",
+			defaultValue: "12345",
+			convert: "integer"
+		},
+		{
+			id: "field2",
+			type: "text",
+			label: "Field 2",
+			placeholder: "Field 2 Placeholder",
+			helpText: "Field 2 Help Text",
+			mandatory: true,
+			shared: true,
+			validation: {
+				minLength: 24,
+				maxLength: 24,
+				pattern: "^[a-f0-9]+$"
+			}
+		},
+		[
+			{
+				id: "field3",
+				type: "text",
+				label: "Field 3",
+				placeholder: "Field 3 Placeholder",
+				helpText: "Field 3 Help Text",
+				wrapCSS: "is-2"
+			},
+			{
+				id: "field4",
+				type: "text",
+				label: "Field 4",
+				placeholder: "Field 4 Placeholder",
+				helpText: "Field 4 Help Text",
+				wrapCSS: "is-3"
+			},
+			{
+				id: "field5",
+				type: "text",
+				label: "Field 5",
+				placeholder: "Field 5 Placeholder",
+				helpText: "Field 5 Help Text",
+				wrapCSS: "is-2"
+			}
+		],
+		{
+			id: "field6",
+			type: "text",
+			label: "Field 6",
+			placeholder: "Field 6 Placeholder",
+			helpText: "Field 6 Help Text"
+		},
+		[
+			{
+				id: "field7",
+				type: "text",
+				label: "Field 7",
+				placeholder: "Field 7 Placeholder",
+				helpText: "Field 7 Help Text",
+				wrapCSS: "is-2"
+			},
+			{
+				id: "field8",
+				type: "text",
+				label: "Field 8",
+				placeholder: "Field 8 Placeholder",
+				helpText: "Field 8 Help Text",
+				wrapCSS: "is-3"
+			},
+			{
+				id: "field9",
+				type: "text",
+				label: "Field 9",
+				placeholder: "Field 9 Placeholder",
+				helpText: "Field 9 Help Text",
+				wrapCSS: "is-2"
+			}
+		],
+		[
+			{
+				id: "field11",
+				type: "text",
+				label: "Field 11",
+				placeholder: "Field 11 Placeholder",
+				helpText: "Field 11 Help Text",
+				wrapCSS: "is-2"
+			},
+			{
+				id: "field12",
+				type: "text",
+				label: "Field 12",
+				placeholder: "Field 12 Placeholder",
+				helpText: "Field 12 Help Text",
+				wrapCSS: "is-3"
+			},
+			{
+				id: "field13",
+				type: "text",
+				label: "Field 13",
+				placeholder: "Field 13 Placeholder",
+				helpText: "Field 13 Help Text",
+				wrapCSS: "is-2"
+			}
+		],
+		{
+			id: "div1",
+			type: "divider"
+		},
+		{
+			id: "bg1",
+			type: "buttons",
+			data: [
+				{
+					id: "btn1",
+					type: "button",
+					buttonType: "submit",
+					label: "Super Mega Button",
+					css: "is-primary"
+				},
+				{
+					id: "btn2",
+					type: "button",
+					buttonType: "button",
+					label: "Just Btn"
+				}
+			]
+		}
+	]
+	tabsAvail=[
+		{
+			id: "en",
+			label: "English"
+		},
+		{
+			id: "ru",
+			label: "Русский"
+		}
+	]
+	tabsActive=["en"]
+	formType="formData"
+	validation=test
+	i18n=out.global.i18n
+	borderWhenTabs=false
+	tabsCSS="is-toggle"/>
