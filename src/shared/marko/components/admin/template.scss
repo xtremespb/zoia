@@ -68,7 +68,7 @@
 
 .z3-ap-content-area {
     padding-top: 52px;
-    min-height: 100vh;
+    min-height: calc(100vh - 30px);
     margin-bottom: 0 !important;
 }
 
@@ -128,6 +128,16 @@
 .switch[type="checkbox"]:focus+label::before,
 .switch[type="checkbox"]:active+label::before {
     outline: none;
+}
+
+.z3-ap-main-footer {
+    height: 30px;
+    border-top: 1px solid $grey-lightest;
+    display: flex;
+    padding-left: 15px;
+    align-items: center;
+    font-size: 70%;
+    color: $grey;
 }
 
 @media (max-width: 768px) {

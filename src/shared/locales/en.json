@@ -88,6 +88,7 @@
     "mTable.filter.notLikeShort": "NOT LIKE",
     "mTable.filter.oneOfShort": "ONE",
     "mTable.filter.noneOfShort": "NONE",
+    "mTable.filter.null": "NULL",
     "mTable.filter.greaterThanShort": ">",
     "mTable.filter.greaterThanOrEqualsShort": ">=",
     "mTable.filter.lessThanShort": "<",
@@ -125,5 +126,7 @@
     "demoMessage": "ZOIA is started in Demo Mode, which means that you won't be able to perform any changes to database or file system",
     "calendar.today": "Today",
     "calendar.clear": "Clear",
-    "calendar.cancel": "Cancel"
+    "calendar.cancel": "Cancel",
+    "license": "Licensed under terms of MIT License",
+    "license.mit": "MIT License"
 }

@@ -90,6 +90,7 @@
         "@babel/plugin-transform-runtime": "^7.14.2",
         "@babel/preset-env": "^7.14.2",
         "@marko/compiler": "^5.10.2",
+        "@marko/prettyprint": "^3.0.1",
         "@marko/webpack": "^9.0.2",
         "@mdi/font": "^5.9.55",
         "@semantic-release/changelog": "^5.0.1",

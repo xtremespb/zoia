@@ -3,7 +3,7 @@
     "filename": "Filename",
     "timestamp": "Date",
     "actions": "Actions",
-    "add": "Create backup",
+    "add": "Create Backup",
     "delete": "Delete",
     "reload": "Reload",
     "backupProcessDesc": "The backup process will take some time. You will be able to download your backup archive when finished.",
