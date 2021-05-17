@@ -1,17 +1,19 @@
-<router routes=[
-  {
-    name: "acl",
-    path: out.global.i18n.getLocalizedURL(out.global.routes.acl)
-  },
-  {
-    name: "acl.edit",
-    path: "/edit/:id"
-  }
-] on-state-change("onStateChange")>
-  <if(state.route.name === "acl")>
-    <aclList ...state.route.params/>
-  </if>
-  <if(state.route.name === "acl.edit")>
-    <aclEdit ...state.route.params/>
-  </if>
+<router
+	routes=[
+		{
+			name: "acl",
+			path: out.global.i18n.getLocalizedURL(out.global.routes.acl)
+		},
+		{
+			name: "acl.edit",
+			path: "/edit/:id"
+		}
+	]
+	on-state-change("onStateChange")>
+	<if(state.route.name === "acl")>
+		<aclList ...state.route.params/> 
+	</if>
+	<if(state.route.name === "acl.edit")>
+		<aclEdit ...state.route.params/> 
+	</if>
 </router>

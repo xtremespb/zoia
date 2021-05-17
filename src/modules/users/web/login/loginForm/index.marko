@@ -1,47 +1,57 @@
 import userLogin from "../../../api/data/userLogin.json"
 
 <div>
-  <if(state.unauthorized)>
-    <mform key="userLoginForm" id="userLoginForm" fields=[
-      [
-        {
-          id: "username",
-          type: "text",
-          label: out.global.i18n.t("username"),
-          helpText: out.global.i18n.t("usernameHelpText"),
-          wrapCSS: "z3-is-medium",
-          autoFocus: true,
-          mandatory: true
-        },
-        {
-          id: "password",
-          type: "text",
-          label: out.global.i18n.t("password"),
-          helpText: out.global.i18n.t("passwordHelpText"),
-          wrapCSS: "z3-is-medium",
-          mandatory: true,
-          textType: "password"
-        }
-      ],
-      {
-        id: "div1",
-        type: "divider"
-      },
-      {
-        id: "btnLogin",
-        type: "button",
-        buttonType: "submit",
-        label: out.global.i18n.t("login"),
-        css: "is-primary"
-      }
-    ] i18n=out.global.i18n save={
-      url: "/api/users/login",
-      extras: {}
-    } validation=userLogin progressButtonId="btnLogin" on-post-success("onFormPostSuccess")/>
-  </if>
-  <else>
-    <p>
-      <button class="button is-loading" style="padding:0;margin:-8px 17px 0 0;border:0"/>${out.global.i18n.t("authorized")}
-    </p>
-  </else>
+	<if(state.unauthorized)>
+		<mform
+			key="userLoginForm"
+			id="userLoginForm"
+			fields=[
+				[
+					{
+						id: "username",
+						type: "text",
+						label: out.global.i18n.t("username"),
+						helpText: out.global.i18n.t("usernameHelpText"),
+						wrapCSS: "z3-is-medium",
+						autoFocus: true,
+						mandatory: true
+					},
+					{
+						id: "password",
+						type: "text",
+						label: out.global.i18n.t("password"),
+						helpText: out.global.i18n.t("passwordHelpText"),
+						wrapCSS: "z3-is-medium",
+						mandatory: true,
+						textType: "password"
+					}
+				],
+				{
+					id: "div1",
+					type: "divider"
+				},
+				{
+					id: "btnLogin",
+					type: "button",
+					buttonType: "submit",
+					label: out.global.i18n.t("login"),
+					css: "is-primary"
+				}
+			]
+			i18n=out.global.i18n
+			save={
+				url: "/api/users/login",
+				extras: {}
+			}
+			validation=userLogin
+			progressButtonId="btnLogin"
+			on-post-success("onFormPostSuccess")/> 
+	</if>
+	<else>
+		<p>
+			<button
+				class="button is-loading"
+				style="padding:0;margin:-8px 17px 0 0;border:0"/>${out.global.i18n.t("authorized")}
+		</p> 
+	</else>
 </div>

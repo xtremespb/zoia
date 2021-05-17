@@ -1,22 +1,29 @@
 style.scss {
-    @import "./mselect.scss";
+	@import "./mselect.scss";
 }
 
 <if(input.active)>
-    <div class=`z3-ms-wrap ${input.css || ""}`>
-        <for|i| of=state.items>
-            <div class=`z3-ms-checkbox-row${state.value.indexOf(String(i.id)) > -1 ? " z3-ms-checkbox-row-checked" : ""}` on-click("onInputChange") data-id=i.id>
-                <div class="z3-pretty p-icon">
-                    <input type="checkbox" checked=(state.value.indexOf(String(i.id)) > -1)/>
-                    <div class="state">
-                        <i class="icon mdi mdi-check"/>
-                        <label>${i.label}</label>
-                    </div>
-                </div>
-                <if(i.labelSecondary)>
-                    <div class="menu-label z3-ms-checkbox-label-secondary">${i.labelSecondary}</div>
-                </if>
-            </div>
-        </for>
-    </div>
+	<div class=`z3-ms-wrap ${input.css || ""}`>
+		<for|i| of=state.items>
+			<div
+				class=`z3-ms-checkbox-row${
+					state.value.indexOf(String(i.id)) > -1 ? " z3-ms-checkbox-row-checked" : ""
+				}`
+				on-click("onInputChange")
+				data-id=i.id>
+				<div class="z3-pretty p-icon">
+					<input type="checkbox" checked=(state.value.indexOf(String(i.id)) > -1)/>
+					<div class="state">
+						<i class="icon mdi mdi-check"/>
+						<label>${i.label}</label> 
+					</div> 
+				</div>
+				<if(i.labelSecondary)>
+					<div class="menu-label z3-ms-checkbox-label-secondary">
+						${i.labelSecondary}
+					</div> 
+				</if> 
+			</div> 
+		</for> 
+	</div>
 </if>

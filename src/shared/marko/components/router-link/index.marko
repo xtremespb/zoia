@@ -2,9 +2,8 @@ $ const attrs = Object.assign({}, input);
 $ delete attrs.renderBody;
 $ delete attrs.activeClass;
 $ delete attrs.parentElement;
-
 <a ...attrs on-click("navigate") key="a">
-  <if(input.renderBody)>
-    <${input.renderBody}/>
-  </if>
+	<if(input.renderBody)>
+		<${input.renderBody}/> 
+	</if>
 </a>

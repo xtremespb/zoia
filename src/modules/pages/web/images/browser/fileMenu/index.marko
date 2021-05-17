@@ -1,49 +1,52 @@
 <if(state.active)>
-  <div id="z3_cr_images_menu" class="z3-cr-images-menu" style=`top:${state.positionTop};left:${state.positionLeft}`>
-    <div class="card z3-cr-images-menu-wrap">
-      <div class="card-content z3-cr-images-menu-inner-wrap">
-        <div class="menu">
-          <ul class="menu-list">
-            <if(state.file.dir)>
-              <li>
-                <a on-click("onItemClick") href="" data-name=state.file.name data-cmd="chdir">
-                  <span class="icon">
-                    <i class="mdi mdi-form-textbox"/>
-                  </span>&nbsp;${out.global.i18n.t("chdir")}
-                </a>
-              </li>
-            </if>
-            <li>
-              <a on-click("onItemClick") href="" data-name=state.file.name data-cmd="rename">
-                <span class="icon">
-                  <i class="mdi mdi-form-textbox"/>
-                </span>&nbsp;${out.global.i18n.t("rename")}
-              </a>
-            </li>
-            <li>
-              <a on-click("onItemClick") href="" data-name=state.file.name data-cmd="cut">
-                <span class="icon">
-                  <i class="mdi mdi-content-cut"/>
-                </span>&nbsp;${out.global.i18n.t("cut")}
-              </a>
-            </li>
-            <li>
-              <a on-click("onItemClick") href="" data-name=state.file.name data-cmd="copy">
-                <span class="icon">
-                  <i class="mdi mdi-content-copy"/>
-                </span>&nbsp;${out.global.i18n.t("copy")}
-              </a>
-            </li>
-            <li>
-              <a on-click("onItemClick") href="" data-name=state.file.name data-cmd="delete">
-                <span class="icon">
-                  <i class="mdi mdi-trash-can-outline"/>
-                </span>&nbsp;${out.global.i18n.t("delete")}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div
+		id="z3_cr_images_menu"
+		class="z3-cr-images-menu"
+		style=`top:${state.positionTop};left:${state.positionLeft}`>
+		<div class="card z3-cr-images-menu-wrap">
+			<div class="card-content z3-cr-images-menu-inner-wrap">
+				<div class="menu">
+					<ul class="menu-list">
+						<if(state.file.dir)>
+							<li>
+								<a on-click("onItemClick") href="" data-name=state.file.name data-cmd="chdir">
+									<span class="icon">
+										<i class="mdi mdi-form-textbox"/>
+									</span>&nbsp;${out.global.i18n.t("chdir")}
+								</a> 
+							</li> 
+						</if>
+						<li>
+							<a on-click("onItemClick") href="" data-name=state.file.name data-cmd="rename">
+								<span class="icon">
+									<i class="mdi mdi-form-textbox"/>
+								</span>&nbsp;${out.global.i18n.t("rename")}
+							</a> 
+						</li>
+						<li>
+							<a on-click("onItemClick") href="" data-name=state.file.name data-cmd="cut">
+								<span class="icon">
+									<i class="mdi mdi-content-cut"/>
+								</span>&nbsp;${out.global.i18n.t("cut")}
+							</a> 
+						</li>
+						<li>
+							<a on-click("onItemClick") href="" data-name=state.file.name data-cmd="copy">
+								<span class="icon">
+									<i class="mdi mdi-content-copy"/>
+								</span>&nbsp;${out.global.i18n.t("copy")}
+							</a> 
+						</li>
+						<li>
+							<a on-click("onItemClick") href="" data-name=state.file.name data-cmd="delete">
+								<span class="icon">
+									<i class="mdi mdi-trash-can-outline"/>
+								</span>&nbsp;${out.global.i18n.t("delete")}
+							</a> 
+						</li> 
+					</ul> 
+				</div> 
+			</div> 
+		</div> 
+	</div>
 </if>

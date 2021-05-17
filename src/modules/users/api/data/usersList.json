@@ -24,6 +24,35 @@
                 "type": "number",
                 "minimum": 0,
                 "maximum": 1000
+            },
+            "filters": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "maxLength": 128
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": ["input", "date", "select"]
+                        },
+                        "mode": {
+                            "type": "string",
+                            "enum": ["equals", "notEquals", "isLike", "notLike", "oneOf", "noneOf", "greaterThan", "greaterThanOrEquals", "lessThan", "lessThanOrEquals"]
+                        },
+                        "value": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": ["string", "array"]
+                                }
+                            }
+                        }
+                    },
+                    "required": ["id", "mode", "value"]
+                }
             }
         },
         "required": ["page", "sortId", "sortDirection"]

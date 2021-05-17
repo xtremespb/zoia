@@ -1,19 +1,21 @@
 import moduleConfig from "../../../module.json"
 
-<router routes=[
-  {
-    name: moduleConfig.id,
-    path: out.global.i18n.getLocalizedURL(out.global.routes.boilerplate)
-  },
-  {
-    name: `${moduleConfig.id}.edit`,
-    path: "/edit/:id"
-  }
-] on-state-change("onStateChange")>
-  <if(state.route.name === moduleConfig.id)>
-    <dataList ...state.route.params/>
-  </if>
-  <if(state.route.name === `${moduleConfig.id}.edit`)>
-    <dataEdit ...state.route.params/>
-  </if>
+<router
+	routes=[
+		{
+			name: moduleConfig.id,
+			path: out.global.i18n.getLocalizedURL(out.global.routes.boilerplate)
+		},
+		{
+			name: `${moduleConfig.id}.edit`,
+			path: "/edit/:id"
+		}
+	]
+	on-state-change("onStateChange")>
+	<if(state.route.name === moduleConfig.id)>
+		<dataList ...state.route.params/> 
+	</if>
+	<if(state.route.name === `${moduleConfig.id}.edit`)>
+		<dataEdit ...state.route.params/> 
+	</if>
 </router>

@@ -1,207 +1,296 @@
 style.scss {
-  @import "./files.scss";
+	@import "./files.scss";
 }
 
 import icons from "../../../data/mime.json"
 
 <h1 class="z3-ap-head-thin">
-  <span class="icon">
-    <i class="mdi z3-ap-mdi-head mdi-dark mdi-folder-outline"/>
-  </span>&nbsp;${out.global.i18n.t("moduleTitle")}
+	<span class="icon">
+		<i class="mdi z3-ap-mdi-head mdi-dark mdi-folder-outline"/>
+	</span>&nbsp;${out.global.i18n.t("moduleTitle")}
 </h1>
 <if(state.error)>
-  <div class="notification is-danger">
-    <button class="delete" on-click("onErrorDeleteClick")/>
-    ${state.error}
-  </div>
+	<div class="notification is-danger">
+		<button class="delete" on-click("onErrorDeleteClick")/>
+		${state.error}
+	</div>
 </if>
-<div class="columns is-variable is-1 z3-ap-noselect" style=(state.currentMode === "list" ? "" : "display:none")>
-  <div class="column is-narrow z3-ap-f-tree-wrap">
-    <mtree key="z3_ap_f_tree" id="z3_ap_f_tree" on-item-click("onTreeItemClick")/>
-  </div>
-  <div class="column">
-    <div class="columns is-mobile is-multiline mb-0 z3-ap-f-toolbar-wrap">
-      <div class="column is-narrow">
-        <div class="field has-addons">
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("refresh") on-click("onRefreshClick") disabled=state.loading>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-reload"/>
-              </span>
-            </button>
-          </p>
-        </div>
-      </div>
-      <div class="column is-narrow">
-        <div class="field has-addons">
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("selectAll") on-click("onSelectAllClick") disabled=state.loading>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-checkbox-marked-outline"/>
-              </span>
-            </button>
-          </p>
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("selectNone") on-click("onSelectNoneClick") disabled=state.loading>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-checkbox-blank-outline"/>
-              </span>
-            </button>
-          </p>
-        </div>
-      </div>
-      <div class="column is-narrow">
-        <div class="field has-addons">
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("levelUp") disabled=(state.loading || state.dir === "/") on-click("onLevelUpClick")>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-folder-upload-outline"/>
-              </span>
-            </button>
-          </p>
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("createDir") disabled=state.loading on-click("onCreateDir")>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-folder-plus-outline"/>
-              </span>
-            </button>
-          </p>
-        </div>
-      </div>
-      <div class="column is-narrow">
-        <div class="field has-addons">
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doCreateFile") disabled=state.loading on-click("onCreateFile")>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-file-plus-outline"/>
-              </span>
-            </button>
-          </p>
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doCopy") disabled=(state.loading || !state.checkedCount) on-click("onCopyClick")>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-content-copy"/>
-              </span>
-            </button>
-          </p>
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doCut") disabled=(state.loading || !state.checkedCount) on-click("onCutClick")>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-content-cut"/>
-              </span>
-            </button>
-          </p>
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=`${state.clipboard.mode === "cut" ? out.global.i18n.t("doCut") : out.global.i18n.t("doCopy")} → ${out.global.i18n.t("doPaste")}` disabled=(state.loading || !state.clipboard.src || state.clipboard.src === state.dir) on-click("onPasteClick")>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-content-paste"/>
-              </span>
-              <if(state.clipboard.filesCount)>
-                <span class=`tag ${state.clipboard.mode === "copy" ? "is-info" : "is-warning"} z3-ap-f-paste-tag`>${state.clipboard.filesCount}</span>
-              </if>
-            </button>
-          </p>
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doDelete") disabled=(state.loading || !state.checkedCount) on-click("onDeleteClick")>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-trash-can-outline"/>
-              </span>
-            </button>
-          </p>
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("doZIP") disabled=(state.loading || !state.checkedCount) on-click("onZIPClick")>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-package-variant-closed"/>
-              </span>
-            </button>
-          </p>
-        </div>
-      </div>
-      <div class="column is-narrow">
-        <div class="field has-addons">
-          <p class="control">
-            <button class="button tooltip" data-tippy-content=out.global.i18n.t("upload") on-click("onUploadClick") disabled=state.loading>
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-upload-outline"/>
-              </span>
-            </button>
-          </p>
-        </div>
-      </div>
-    </div>
-    <if(state.dir !== "/")>
-      <nav class="breadcrumb mb-2" aria-label="breadcrumbs">
-        <ul>
-          <li>
-            <span/>
-          </li>
-          <for|item, i| of=state.dir.split("/").filter(i => i)>
-            <li>
-              <span>${item}</span>
-            </li>
-          </for>
-        </ul>
-      </nav>
-    </if>
-    <div class="z3-ap-f-files-wrap">
-      <div class="z3-ap-f-files columns is-multiline">
-        <for|file| of=state.files>
-          <if(file.dir)>
-            <listItem icon="folder-outline" file=file on-file-click("onFileClick") on-checkbox-change("onCheckboxChange") checked=state.checked[file.name]/>
-          </if>
-        </for>
-      </div>
-      <div class="z3-ap-f-files columns is-multiline">
-        <for|file| of=state.files>
-          <if(!file.dir)>
-            <listItem icon=(icons[file.mime] || "file-outline") file=file on-file-click("onFileClick") on-checkbox-change("onCheckboxChange") checked=state.checked[file.name]/>
-          </if>
-        </for>
-      </div>
-      <if(!state.files.length && !state.loading)>
-        <div class="has-text-weight-light mt-3">${out.global.i18n.t("noFilesInDirectory")}</div>
-      </if>
-      <if(state.loading)>
-        <div class="z3-ap-f-loading">
-          <span class="button is-white is-loading is-large z3-ap-f-loading-spinner">&nbsp;</span>
-        </div>
-      </if>
-    </div>
-  </div>
+<div
+	class="columns is-variable is-1 z3-ap-noselect"
+	style=(state.currentMode === "list" ? "" : "display:none")>
+	<div class="column is-narrow z3-ap-f-tree-wrap">
+		<mtree key="z3_ap_f_tree" id="z3_ap_f_tree" on-item-click("onTreeItemClick")/> 
+	</div>
+	<div class="column">
+		<div class="columns is-mobile is-multiline mb-0 z3-ap-f-toolbar-wrap">
+			<div class="column is-narrow">
+				<div class="field has-addons">
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("refresh")
+							on-click("onRefreshClick")
+							disabled=state.loading>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-reload"/>
+							</span> 
+						</button> 
+					</p> 
+				</div> 
+			</div>
+			<div class="column is-narrow">
+				<div class="field has-addons">
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("selectAll")
+							on-click("onSelectAllClick")
+							disabled=state.loading>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-checkbox-marked-outline"/>
+							</span> 
+						</button> 
+					</p>
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("selectNone")
+							on-click("onSelectNoneClick")
+							disabled=state.loading>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-checkbox-blank-outline"/>
+							</span> 
+						</button> 
+					</p> 
+				</div> 
+			</div>
+			<div class="column is-narrow">
+				<div class="field has-addons">
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("levelUp")
+							disabled=(state.loading || state.dir === "/")
+							on-click("onLevelUpClick")>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-folder-upload-outline"/>
+							</span> 
+						</button> 
+					</p>
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("createDir")
+							disabled=state.loading
+							on-click("onCreateDir")>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-folder-plus-outline"/>
+							</span> 
+						</button> 
+					</p> 
+				</div> 
+			</div>
+			<div class="column is-narrow">
+				<div class="field has-addons">
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("doCreateFile")
+							disabled=state.loading
+							on-click("onCreateFile")>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-file-plus-outline"/>
+							</span> 
+						</button> 
+					</p>
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("doCopy")
+							disabled=(state.loading || !state.checkedCount)
+							on-click("onCopyClick")>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-content-copy"/>
+							</span> 
+						</button> 
+					</p>
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("doCut")
+							disabled=(state.loading || !state.checkedCount)
+							on-click("onCutClick")>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-content-cut"/>
+							</span> 
+						</button> 
+					</p>
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=`${
+								state.clipboard.mode === "cut"
+									? out.global.i18n.t("doCut")
+									: out.global.i18n.t("doCopy")
+							} → ${out.global.i18n.t("doPaste")}`
+							disabled=(
+								state.loading ||
+								!state.clipboard.src ||
+								state.clipboard.src === state.dir
+							)
+							on-click("onPasteClick")>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-content-paste"/>
+							</span>
+							<if(state.clipboard.filesCount)>
+								<span class=`tag ${
+									state.clipboard.mode === "copy" ? "is-info" : "is-warning"
+								} z3-ap-f-paste-tag`>${state.clipboard.filesCount}</span> 
+							</if> 
+						</button> 
+					</p>
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("doDelete")
+							disabled=(state.loading || !state.checkedCount)
+							on-click("onDeleteClick")>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-trash-can-outline"/>
+							</span> 
+						</button> 
+					</p>
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("doZIP")
+							disabled=(state.loading || !state.checkedCount)
+							on-click("onZIPClick")>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-package-variant-closed"/>
+							</span> 
+						</button> 
+					</p> 
+				</div> 
+			</div>
+			<div class="column is-narrow">
+				<div class="field has-addons">
+					<p class="control">
+						<button
+							class="button tooltip"
+							data-tippy-content=out.global.i18n.t("upload")
+							on-click("onUploadClick")
+							disabled=state.loading>
+							<span class="icon">
+								<i class="mdi mdi-24px mdi-upload-outline"/>
+							</span> 
+						</button> 
+					</p> 
+				</div> 
+			</div> 
+		</div>
+		<if(state.dir !== "/")>
+			<nav class="breadcrumb mb-2" aria-label="breadcrumbs">
+				<ul>
+					<li>
+						<span/> 
+					</li>
+					<for|item, i| of=state.dir.split("/").filter(i => i)>
+						<li>
+							<span>${item}</span> 
+						</li> 
+					</for> 
+				</ul> 
+			</nav> 
+		</if>
+		<div class="z3-ap-f-files-wrap">
+			<div class="z3-ap-f-files columns is-multiline">
+				<for|file| of=state.files>
+					<if(file.dir)>
+						<listItem
+							icon="folder-outline"
+							file=file
+							on-file-click("onFileClick")
+							on-checkbox-change("onCheckboxChange")
+							checked=state.checked[file.name]/> 
+					</if> 
+				</for> 
+			</div>
+			<div class="z3-ap-f-files columns is-multiline">
+				<for|file| of=state.files>
+					<if(!file.dir)>
+						<listItem
+							icon=(icons[file.mime] || "file-outline")
+							file=file
+							on-file-click("onFileClick")
+							on-checkbox-change("onCheckboxChange")
+							checked=state.checked[file.name]/> 
+					</if> 
+				</for> 
+			</div>
+			<if(!state.files.length && !state.loading)>
+				<div class="has-text-weight-light mt-3">
+					${out.global.i18n.t("noFilesInDirectory")}
+				</div> 
+			</if>
+			<if(state.loading)>
+				<div class="z3-ap-f-loading">
+					<span class="button is-white is-loading is-large z3-ap-f-loading-spinner">
+						&nbsp;
+					</span> 
+				</div> 
+			</if> 
+		</div> 
+	</div>
 </div>
 <fileMenu key="z3_ap_f_fileMenu" on-item-click("onMenuItemClick")/>
 <deleteModal key="z3_ap_f_deleteModal" on-delete-confirm("onDeleteConfirm")/>
-<uploadModal key="z3_ap_f_uploadModal" on-upload-success("onUploadSuccess") on-upload-error("onUploadError")/>
+<uploadModal
+	key="z3_ap_f_uploadModal"
+	on-upload-success("onUploadSuccess")
+	on-upload-error("onUploadError")/>
 <inputModal key="z3_ap_f_inputModal" on-input-confirm("onInputConfirm")/>
 <div class="z3-ap-f-textEditorArea">
-  <if(state.errorFile && state.currentMode === "edit")>
-    <div class="notification is-danger">
-      <button class="delete" on-click("onFileErrorDeleteClick")/>
-      ${state.errorFile}
-    </div>
-  </if>
-  <if(state.currentMode === "edit")>
-    <div>${state.dir === "/" ? "" : state.dir}/${state.currentFile}</div>
-  </if>
-  <div class="z3-ap-f-textEditorWrap" key="z3_ap_f_textEditorWrap" style=(state.currentMode === "edit" ? "" : "display:none")>
-    <div class="z3-ap-f-ace" no-update/>
-  </div>
-  <if(state.loadingFile)>
-    <div class="z3-ap-f-loading">
-      <span class="button is-white is-loading is-large z3-ap-f-loading-spinner">&nbsp;</span>
-    </div>
-  </if>
-  <if(state.currentMode === "edit")>
-    <div class="mt-4">
-      <div class="field is-grouped">
-        <p class="control">
-          <button class="button is-primary" disabled=state.loadingFile on-click("onFileSave")>${out.global.i18n.t("btnSave")}</button>
-        </p>
-        <p class="control">
-          <button class="button" on-click("returnToListMode")>${out.global.i18n.t("btnCancel")}</button>
-        </p>
-      </div>
-    </div>
-  </if>
+	<if(state.errorFile && state.currentMode === "edit")>
+		<div class="notification is-danger">
+			<button class="delete" on-click("onFileErrorDeleteClick")/>
+			${state.errorFile}
+		</div> 
+	</if>
+	<if(state.currentMode === "edit")>
+		<div>${state.dir === "/" ? "" : state.dir}/${state.currentFile}</div> 
+	</if>
+	<div
+		class="z3-ap-f-textEditorWrap"
+		key="z3_ap_f_textEditorWrap"
+		style=(state.currentMode === "edit" ? "" : "display:none")>
+		<div class="z3-ap-f-ace" no-update/> 
+	</div>
+	<if(state.loadingFile)>
+		<div class="z3-ap-f-loading">
+			<span class="button is-white is-loading is-large z3-ap-f-loading-spinner">
+				&nbsp;
+			</span> 
+		</div> 
+	</if>
+	<if(state.currentMode === "edit")>
+		<div class="mt-4">
+			<div class="field is-grouped">
+				<p class="control">
+					<button
+						class="button is-primary"
+						disabled=state.loadingFile
+						on-click("onFileSave")>
+						${out.global.i18n.t("btnSave")}
+					</button> 
+				</p>
+				<p class="control">
+					<button class="button" on-click("returnToListMode")>
+						${out.global.i18n.t("btnCancel")}
+					</button> 
+				</p> 
+			</div> 
+		</div> 
+	</if>
 </div>
 <mnotify key="files_mnotify"/>

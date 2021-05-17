@@ -353,9 +353,23 @@ export default {
                     };
                     query.push(filter2);
                 } else {
-                    filter[f.id] = {
-                        $eq: f.value.id
-                    };
+                    if (f.value.id) {
+                        filter[f.id] = {
+                            $eq: f.value.id
+                        };
+                    } else {
+                        filter.$or = [];
+                        const filter1 = {};
+                        filter1[f.id] = {
+                            $eq: null
+                        };
+                        filter.$or.push(filter1);
+                        const filter2 = {};
+                        filter2[f.id] = {
+                            $eq: ""
+                        };
+                        filter.$or.push(filter2);
+                    }
                     query.push(filter);
                 }
                 break;
@@ -374,9 +388,23 @@ export default {
                     filter.$or.push(filter2);
                     query.push(filter);
                 } else {
+                    if (f.value.id) {
                     filter[f.id] = {
                         $ne: f.value.id
                     };
+                    } else {
+                        filter.$and = [];
+                        const filter1 = {};
+                        filter1[f.id] = {
+                            $ne: null
+                        };
+                        filter.$and.push(filter1);
+                        const filter2 = {};
+                        filter2[f.id] = {
+                            $ne: ""
+                        };
+                        filter.$and.push(filter2);
+                    }
                     query.push(filter);
                 }
                 break;

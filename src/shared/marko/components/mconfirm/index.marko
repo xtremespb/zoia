@@ -1,16 +1,20 @@
 <div class=`z3-ap-noselect modal${state.active ? " is-active" : ""}`>
-  <div class="modal-background" on-click("onCloseClick")/>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">${state.title}</p>
-      <button class="delete" aria-label="close" on-click("onCloseClick")/>
-    </header>
-    <section class="modal-card-body">
-      <div>${state.message}</div>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button is-primary" on-click("onConfirmClick")>${out.global.i18n.t("btnConfirmGeneric")}</button>
-      <button class="button" on-click("onCloseClick")>${out.global.i18n.t("btnCancelGeneric")}</button>
-    </footer>
-  </div>
+	<div class="modal-background" on-click("onCloseClick")/>
+	<div class="modal-card">
+		<header class="modal-card-head">
+			<p class="modal-card-title">${state.title}</p>
+			<button class="delete" aria-label="close" on-click("onCloseClick")/> 
+		</header>
+		<section class="modal-card-body">
+			<div>${state.message}</div> 
+		</section>
+		<footer class="modal-card-foot">
+			<button class="button is-primary" on-click("onConfirmClick")>
+				${out.global.i18n.t("btnConfirmGeneric")}
+			</button>
+			<button class="button" on-click("onCloseClick")>
+				${out.global.i18n.t("btnCancelGeneric")}
+			</button> 
+		</footer> 
+	</div>
 </div>

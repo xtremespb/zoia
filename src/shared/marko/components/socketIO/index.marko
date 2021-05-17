@@ -2,25 +2,25 @@ import io from "socket.io-client"
 import Cookies from "../../../lib/cookies"
 
 class {
-  onCreate(input, out) {
-    if (!process.browser) {
-      return;
-    }
-    const cookies = new Cookies(out.global.cookieOptions);
-    this.token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
-    out.global.io = io();
-    out.global.io.on("connect", () => {
-      out.global.io.emit("users.auth", { token: this.token });
-    });
-    out.global.io.z3 = {
-      sendMessage: this.sendMessage.bind(this)
-    };
-    this.io = out.global.io;
-  }
+	onCreate(input, out) {
+		if (!process.browser) {
+			return;
+		}
+		const cookies = new Cookies(out.global.cookieOptions);
+		this.token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
+		out.global.io = io();
+		out.global.io.on("connect", () => {
+			out.global.io.emit("users.auth", { token: this.token });
+		});
+		out.global.io.z3 = {
+			sendMessage: this.sendMessage.bind(this)
+		};
+		this.io = out.global.io;
+	}
 
-  sendMessage(cmd, data) {
-    this.io.emit(cmd, { token: this.token, ...data });
-  }
+	sendMessage(cmd, data) {
+		this.io.emit(cmd, { token: this.token, ...data });
+	}
 }
 
 <span/>

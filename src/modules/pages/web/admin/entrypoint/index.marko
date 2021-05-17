@@ -1,17 +1,19 @@
-<router routes=[
-  {
-    name: "pages",
-    path: out.global.i18n.getLocalizedURL(out.global.routes.pages)
-  },
-  {
-    name: "pages.edit",
-    path: "/edit/:id"
-  }
-] on-state-change("onStateChange")>
-  <if(state.route.name === "pages")>
-    <pagesList ...state.route.params/>
-  </if>
-  <if(state.route.name === "pages.edit")>
-    <pageEdit ...state.route.params/>
-  </if>
+<router
+	routes=[
+		{
+			name: "pages",
+			path: out.global.i18n.getLocalizedURL(out.global.routes.pages)
+		},
+		{
+			name: "pages.edit",
+			path: "/edit/:id"
+		}
+	]
+	on-state-change("onStateChange")>
+	<if(state.route.name === "pages")>
+		<pagesList ...state.route.params/> 
+	</if>
+	<if(state.route.name === "pages.edit")>
+		<pageEdit ...state.route.params/> 
+	</if>
 </router>

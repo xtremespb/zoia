@@ -465,8 +465,9 @@ module.exports = class {
             };
         }
         if (!String(filter.value.id).length || filter.value.id === undefined) {
-            this.setState("filterError", this.i18n.t("mTable.filterError.invalidValue"));
-            return;
+            // this.setState("filterError", this.i18n.t("mTable.filterError.invalidValue"));
+            // return;
+            filter.value.id = null;
         }
         this.setState("filterDialogActive", false);
         const filters = cloneDeep(this.state.filters);

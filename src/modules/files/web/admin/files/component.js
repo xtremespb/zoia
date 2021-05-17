@@ -99,7 +99,7 @@ module.exports = class {
         const tree = document.getElementById("z3_ap_f_tree");
         if (tree && tree.getBoundingClientRect()) {
             if (!window.matchMedia("only screen and (max-width: 768px)").matches) {
-                const treeHeight = window.innerHeight - tree.getBoundingClientRect().top - 40;
+                const treeHeight = window.innerHeight - tree.getBoundingClientRect().top - 70;
                 tree.style.minHeight = `${treeHeight}px`;
             } else {
                 tree.style.minHeight = "unset";

@@ -8,116 +8,138 @@ style.scss {
 
 $ input.editData = cloneDeep(editConfigData);
 $ if (input.id === "new") {
-  input.editData.root.required = [...input.editData.root.required, "password", "passwordRepeat"];
+	input.editData.root.required = [
+		...input.editData.root.required,
+		"password",
+		"passwordRepeat"
+	];
 }
-$ const languageTabs = Object.keys(out.global.languages).map(k => ({ id: k, label: out.global.languages[k] }));
+$ const languageTabs = Object.keys(out.global.languages).map(k => ({
+	id: k,
+	label: out.global.languages[k]
+}));
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 <div>
-  <h1 class="z3-ap-head-thin">
-    <span class="icon">
-      <i class="mdi z3-ap-mdi-head mdi-dark mdi-test-tube"/>
-    </span>&nbsp;${input.id === "new" ? out.global.i18n.t("add") : out.global.i18n.t("edit")}
-  </h1>
-  <mform key=`${moduleConfig.id}EditForm` id=`${moduleConfig.id}EditForm` formType="formData" save={
-    url: `/api/${moduleConfig.id}/edit/save`,
-    extras: {
-      id: input.id === "new" ? undefined : input.id
-    },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  } load={
-    url: `/api/${moduleConfig.id}/edit/load`,
-    extras: {
-      id: input.id
-    },
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  } fields=[
-    [
-      {
-        id: "uid",
-        type: "text",
-        label: out.global.i18n.t("uid"),
-        helpText: out.global.i18n.t("uidHelpText"),
-        wrapCSS: "z3-is-medium",
-        autoFocus: true,
-        mandatory: true,
-        shared: true
-      },
-      {
-        id: "title",
-        type: "text",
-        label: out.global.i18n.t("title"),
-        helpText: out.global.i18n.t("titleHelpText"),
-        wrapCSS: "z3-is-xlarge",
-        mandatory: true,
-        shared: false
-      }
-    ],
-    [
-      {
-        id: "password",
-        type: "text",
-        label: out.global.i18n.t("password"),
-        helpText: out.global.i18n.t("passwordHelpText"),
-        wrapCSS: "z3-is-small",
-        mandatory: input.id === "new",
-        textType: "password",
-        shouldMatch: "passwordRepeat",
-        shared: true
-      },
-      {
-        id: "passwordRepeat",
-        type: "text",
-        label: out.global.i18n.t("passwordRepeat"),
-        wrapCSS: "z3-is-small",
-        textType: "password",
-        mandatory: input.id === "new",
-        shouldMatch: "password",
-        shared: true
-      }
-    ],
-    {
-      id: "attachments",
-      type: "file",
-      label: out.global.i18n.t("attachments"),
-      multiple: true,
-      buttonLabel: out.global.i18n.t("selectFiles")
-    },
-    {
-      id: "images",
-      type: "images",
-      label: out.global.i18n.t("images"),
-      multiple: true,
-      buttonLabel: out.global.i18n.t("selectImages"),
-      shared: true
-    },
-    {
-      id: "div1",
-      type: "divider"
-    },
-    {
-      id: "bg1",
-      type: "buttons",
-      data: [
-        {
-          id: "btnSave",
-          type: "button",
-          buttonType: "submit",
-          label: out.global.i18n.t("save"),
-          css: "is-primary"
-        },
-        {
-          id: "btnCancel",
-          type: "button",
-          buttonType: "button",
-          label: out.global.i18n.t("cancel")
-        }
-      ]
-    }
-  ] validation=input.editData progressButtonId="btnSave" i18n=out.global.i18n on-post-success("onFormPostSuccess") on-button-click("onButtonClick") on-unauthorized("onUnauthorized") on-load-success("onLoadSuccess") tabsAvail=languageTabs tabsActive=[languageTabs[0].id]/>
-  <lockedModal key=(`z3_ap_${moduleConfig.id}_lockedModal`)/>
+	<h1 class="z3-ap-head-thin">
+		<span class="icon">
+			<i class="mdi z3-ap-mdi-head mdi-dark mdi-test-tube"/>
+		</span>&nbsp;${input.id === "new" ? out.global.i18n.t("add") : out.global.i18n.t("edit")}
+	</h1>
+	<mform
+		key=`${moduleConfig.id}EditForm`
+		id=`${moduleConfig.id}EditForm`
+		formType="formData"
+		save={
+			url: `/api/${moduleConfig.id}/edit/save`,
+			extras: {
+				id: input.id === "new" ? undefined : input.id
+			},
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+		load={
+			url: `/api/${moduleConfig.id}/edit/load`,
+			extras: {
+				id: input.id
+			},
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+		fields=[
+			[
+				{
+					id: "uid",
+					type: "text",
+					label: out.global.i18n.t("uid"),
+					helpText: out.global.i18n.t("uidHelpText"),
+					wrapCSS: "z3-is-medium",
+					autoFocus: true,
+					mandatory: true,
+					shared: true
+				},
+				{
+					id: "title",
+					type: "text",
+					label: out.global.i18n.t("title"),
+					helpText: out.global.i18n.t("titleHelpText"),
+					wrapCSS: "z3-is-xlarge",
+					mandatory: true,
+					shared: false
+				}
+			],
+			[
+				{
+					id: "password",
+					type: "text",
+					label: out.global.i18n.t("password"),
+					helpText: out.global.i18n.t("passwordHelpText"),
+					wrapCSS: "z3-is-small",
+					mandatory: input.id === "new",
+					textType: "password",
+					shouldMatch: "passwordRepeat",
+					shared: true
+				},
+				{
+					id: "passwordRepeat",
+					type: "text",
+					label: out.global.i18n.t("passwordRepeat"),
+					wrapCSS: "z3-is-small",
+					textType: "password",
+					mandatory: input.id === "new",
+					shouldMatch: "password",
+					shared: true
+				}
+			],
+			{
+				id: "attachments",
+				type: "file",
+				label: out.global.i18n.t("attachments"),
+				multiple: true,
+				buttonLabel: out.global.i18n.t("selectFiles")
+			},
+			{
+				id: "images",
+				type: "images",
+				label: out.global.i18n.t("images"),
+				multiple: true,
+				buttonLabel: out.global.i18n.t("selectImages"),
+				shared: true
+			},
+			{
+				id: "div1",
+				type: "divider"
+			},
+			{
+				id: "bg1",
+				type: "buttons",
+				data: [
+					{
+						id: "btnSave",
+						type: "button",
+						buttonType: "submit",
+						label: out.global.i18n.t("save"),
+						css: "is-primary"
+					},
+					{
+						id: "btnCancel",
+						type: "button",
+						buttonType: "button",
+						label: out.global.i18n.t("cancel")
+					}
+				]
+			}
+		]
+		validation=input.editData
+		progressButtonId="btnSave"
+		i18n=out.global.i18n
+		on-post-success("onFormPostSuccess")
+		on-button-click("onButtonClick")
+		on-unauthorized("onUnauthorized")
+		on-load-success("onLoadSuccess")
+		tabsAvail=languageTabs
+		tabsActive=[languageTabs[0].id]/>
+	<lockedModal key=`z3_ap_${moduleConfig.id}_lockedModal`/>
 </div>

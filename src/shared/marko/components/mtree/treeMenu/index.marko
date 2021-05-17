@@ -1,37 +1,58 @@
 <if(state.active)>
-  <div id="z3_ap_mt_menu" class="z3-ap-mt-menu" style=`top:${state.positionTop};left:${state.positionLeft}`>
-    <div class="card z3-ap-mt-menu-wrap">
-      <div class="card-content z3-ap-mt-menu-inner-wrap">
-        <div class="menu">
-          <ul class="menu-list">
-            <if(state.len > 0 && state.order > 0)>
-              <li>
-                <a on-click("onItemClick") href="" data-uid=state.uid data-order=state.order data-len=state.len data-cmd="up">
-                  <span class="icon">
-                    <i class="mdi mdi-arrow-up"/>
-                  </span>&nbsp;${out.global.i18n.t("moveUpGeneric")}
-                </a>
-              </li>
-            </if>
-            <if(state.len > 0 && state.order !== state.len - 1)>
-              <li>
-                <a on-click("onItemClick") href="" data-uid=state.uid data-order=state.order data-len=state.len data-cmd="down">
-                  <span class="icon">
-                    <i class="mdi mdi-arrow-down"/>
-                  </span>&nbsp;${out.global.i18n.t("moveDownGeneric")}
-                </a>
-              </li>
-            </if>
-            <li>
-              <a on-click("onItemClick") href="" data-uid=state.uid data-order=state.order data-len=state.len data-cmd="move">
-                <span class="icon">
-                  <i class="mdi mdi-swap-horizontal"/>
-                </span>&nbsp;${out.global.i18n.t("moveGeneric")}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div
+		id="z3_ap_mt_menu"
+		class="z3-ap-mt-menu"
+		style=`top:${state.positionTop};left:${state.positionLeft}`>
+		<div class="card z3-ap-mt-menu-wrap">
+			<div class="card-content z3-ap-mt-menu-inner-wrap">
+				<div class="menu">
+					<ul class="menu-list">
+						<if(state.len > 0 && state.order > 0)>
+							<li>
+								<a
+									on-click("onItemClick")
+									href=""
+									data-uid=state.uid
+									data-order=state.order
+									data-len=state.len
+									data-cmd="up">
+									<span class="icon">
+										<i class="mdi mdi-arrow-up"/>
+									</span>&nbsp;${out.global.i18n.t("moveUpGeneric")}
+								</a> 
+							</li> 
+						</if>
+						<if(state.len > 0 && state.order !== state.len - 1)>
+							<li>
+								<a
+									on-click("onItemClick")
+									href=""
+									data-uid=state.uid
+									data-order=state.order
+									data-len=state.len
+									data-cmd="down">
+									<span class="icon">
+										<i class="mdi mdi-arrow-down"/>
+									</span>&nbsp;${out.global.i18n.t("moveDownGeneric")}
+								</a> 
+							</li> 
+						</if>
+						<li>
+							<a
+								on-click("onItemClick")
+								href=""
+								data-uid=state.uid
+								data-order=state.order
+								data-len=state.len
+								data-cmd="move">
+								<span class="icon">
+									<i class="mdi mdi-swap-horizontal"/>
+								</span>&nbsp;${out.global.i18n.t("moveGeneric")}
+							</a> 
+						</li> 
+					</ul> 
+				</div> 
+			</div> 
+		</div> 
+	</div>
 </if>
