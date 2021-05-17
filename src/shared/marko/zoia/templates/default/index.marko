@@ -67,7 +67,7 @@ $ langHTML += "</div></div>";
 					<div id="z3_dt_navbar_menu" class=`navbar-menu z3-dt-navbarMenu`>
 						<div class="navbar-start">$!{navHTML}</div>
 						<div class="navbar-end">
-							<if(Object.keys(out.global.languages).length)>$!{langHTML}</if>
+							<if(Object.keys(out.global.languages).length > 1)>$!{langHTML}</if>
 							<if(out.global.authData && out.global.authData.username)>
 								<div class="navbar-item has-dropdown is-hoverable">
 									<a class="navbar-link">${out.global.authData.username}</a>

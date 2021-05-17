@@ -24,6 +24,55 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		}
 		id="users"
 		key="usersTable"
+		filter=[
+			{
+				id: "username",
+				type: "input",
+				modes: ["equals", "notEquals", "isLike", "notLike"],
+				label: out.global.i18n.t("username")
+			},
+			{
+				id: "createdAt",
+				type: "date",
+				modes: [
+					"equals",
+					"notEquals",
+					"greaterThan",
+					"greaterThanOrEquals",
+					"lessThan",
+					"lessThanOrEquals"
+				],
+				label: out.global.i18n.t("createdAt")
+			},
+			{
+				id: "email",
+				type: "input",
+				modes: ["equals", "notEquals", "isLike", "notLike"],
+				label: out.global.i18n.t("email")
+			},
+			{
+				id: "status",
+				type: "select",
+				label: out.global.i18n.t("status"),
+				modes: ["oneOf", "noneOf"],
+				items: [
+					{
+						id: "active",
+						label: out.global.i18n.t("active")
+					},
+					{
+						id: "admin",
+						label: out.global.i18n.t("admin")
+					},
+				]
+			},
+			{
+				id: "groups",
+				type: "input",
+				modes: ["equals", "notEquals", "isLike", "notLike"],
+				label: out.global.i18n.t("group")
+			},
+		]
 		columns=[
 			{
 				id: "username",

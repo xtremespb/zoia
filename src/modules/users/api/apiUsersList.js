@@ -1,3 +1,4 @@
+import utils from "../../../shared/lib/utils";
 import usersListData from "./data/usersList.json";
 
 export default () => ({
@@ -38,6 +39,12 @@ export default () => ({
                     };
                     return sr;
                 });
+            }
+            if (req.body.filters && req.body.filters.length) {
+                query.$and = utils.buildFilterQuery(req.body.filters);
+                if (!query.$and.length) {
+                    delete query.$and;
+                }
             }
             const count = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).count();
             const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;

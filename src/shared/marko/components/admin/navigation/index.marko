@@ -40,23 +40,25 @@
 			</div> 
 		</div>
 		<div class="navbar-end">
-			<div class=`navbar-item has-dropdown${state.activeLangMenu ? " is-active" : ""}`>
-				<a
-					class="navbar-link z3-ap-navbar-link"
-					id="za_ap_lang_dropdown"
-					on-click("onLangMenuClick")>
-					Language
-				</a>
-				<div class="navbar-dropdown">
-					<for|lang| of=Object.keys(out.global.languages)>
-						<a
-							class="navbar-item"
-							href=out.global.i18n.getLocalizedURL(out.global.path, lang)>
-							${out.global.languages[lang]}
-						</a> 
-					</for> 
-				</div> 
-			</div>
+			<if(Object.keys(out.global.languages).length > 1)>
+				<div class=`navbar-item has-dropdown${state.activeLangMenu ? " is-active" : ""}`>
+					<a
+						class="navbar-link z3-ap-navbar-link"
+						id="za_ap_lang_dropdown"
+						on-click("onLangMenuClick")>
+						Language
+					</a>
+					<div class="navbar-dropdown">
+						<for|lang| of=Object.keys(out.global.languages)>
+							<a
+								class="navbar-item"
+								href=out.global.i18n.getLocalizedURL(out.global.path, lang)>
+								${out.global.languages[lang]}
+							</a> 
+						</for> 
+					</div>
+				</div>
+			</if>
 			<div
 				class=`navbar-item has-dropdown${state.activeUserMenu ? " is-active" : ""}`
 				style="margin-right:5px">

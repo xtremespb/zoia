@@ -146,7 +146,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							${out.global.i18n.t(`mTable.filter.${f.mode}Short`)}
 						</span>
 						<div class="tag is-link" on-click("onFilterTagClick")>
-							<span class="z3-mt-filter-tag-label" data-tippy-content=(f.value.label || out.global.i18n.t("mTable.filter.null"))>
+							<span
+								class="z3-mt-filter-tag-label"
+								data-tippy-content=(f.value.label || out.global.i18n.t("mTable.filter.null"))>
 								${f.value.label || out.global.i18n.t("mTable.filter.null")}
 							</span>
 							<if(f.value.plus > 0)>
