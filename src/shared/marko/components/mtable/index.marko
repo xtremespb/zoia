@@ -32,11 +32,11 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 											<div class="z3-mt-icon-wrap">
 												<span class="icon">
 													<i class=btn.icon/>
-												</span> 
-											</div> 
+												</span>
+											</div>
 										</if>
-										<if(btn.displayText && btn.text)>${btn.text}</if> 
-									</button> 
+										<if(btn.displayText && btn.text)>${btn.text}</if>
+									</button>
 								</div>
 								<if(btn.dropdown && btn.dropdown.length)>
 									<div class="dropdown-menu" role="menu">
@@ -44,13 +44,13 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 											<for|i| of=btn.dropdown>
 												<a href="" on-click("onDropdownItemClick") data-id=i.id class="dropdown-item">
 													${i.label}
-												</a> 
-											</for> 
-										</div> 
-									</div> 
-								</if> 
-							</div> 
-						</p> 
+												</a>
+											</for>
+										</div>
+									</div>
+								</if>
+							</div>
+						</p>
 					</for>
 					<if(input.filter && input.filter.length)>
 						<p class="z3-mt-top-control mt-1 mr-1">
@@ -68,11 +68,11 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 										<div class="z3-mt-icon-wrap">
 											<span class="icon">
 												<i class="mdi mdi-filter-outline"/>
-											</span> 
+											</span>
 										</div>
 										${out.global.i18n.t("mTable.filter")}
-									</button> 
-								</div> 
+									</button>
+								</div>
 								<div class="dropdown-menu" role="menu">
 									<div class="dropdown-content">
 										<a href="" on-click("onAddFilterClick") class="dropdown-item">
@@ -84,12 +84,12 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 										<if(state.filterCurrentId)>
 											<a href="" on-click("onSaveCurrentFilterSet") class="dropdown-item">
 												${out.global.i18n.t("mTable.saveCurrentFilterSet")}
-											</a> 
+											</a>
 										</if>
 										<if(state.filters.length)>
 											<a href="" on-click("onSaveCurrentFilterSetAs") class="dropdown-item">
 												${out.global.i18n.t("mTable.saveCurrentFilterSetAs")}
-											</a> 
+											</a>
 										</if>
 										<a href="" on-click("onManageFilters") class="dropdown-item">
 											${out.global.i18n.t("mTable.manageFilters")}
@@ -97,15 +97,15 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 										<if(state.filters.length)>
 											<a href="" on-click("onRemoveAllFilters") class="dropdown-item">
 												${out.global.i18n.t("mTable.removeAllFilters")}
-											</a> 
-										</if> 
-									</div> 
-								</div> 
-							</div> 
-						</p> 
-					</if> 
-				</div> 
-			</if> 
+											</a>
+										</if>
+									</div>
+								</div>
+							</div>
+						</p>
+					</if>
+				</div>
+			</if>
 		</div>
 		<div class="column">
 			<div class="control has-icons-right">
@@ -117,9 +117,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					id=`${input.id}_searchInput`/>
 				<span class="icon is-small is-right">
 					<i class="mdi mdi-magnify"/>
-				</span> 
-			</div> 
-		</div> 
+				</span>
+			</div>
+		</div>
 	</div>
 	<if(input.filter && input.filter.length && state.filters.length)>
 		<div class="field is-grouped is-grouped-multiline mb-2">
@@ -128,22 +128,21 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					<div class="tags">
 						<div class="tag is-success z3-mt-filter-meta">
 							${state.filterCurrentTitle}
-						</div> 
-					</div> 
-				</div> 
+						</div>
+					</div>
+				</div>
 			</if>
 			<for|f, i| of=state.filters>
 				<if(f.type === "raw")>
 					<div class="control">
 						<div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
 							<div class="tag is-info" on-click("onFilterTagClick")>
-								<div
-									class="z3-mt-filter-tag-label">
+								<div class="z3-mt-filter-tag-label">
 									${out.global.i18n.t("mTable.rawValue")}
-								</div> 
+								</div>
 							</div>
-							<a class="tag is-delete" on-click("onFilterTagDeleteClick")/> 
-						</div> 
+							<a class="tag is-delete" on-click("onFilterTagDeleteClick")/>
+						</div>
 					</div>
 				</if>
 				<else>
@@ -154,7 +153,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									class="z3-mt-filter-tag-label z3-mt-filter-tag-label-short"
 									data-tippy-content=`${f.label}`>
 									${f.label}
-								</div> 
+								</div>
 							</div>
 							<span
 								class="tag is-dark"
@@ -169,18 +168,18 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									${f.value.label || out.global.i18n.t("mTable.filter.null")}
 								</span>
 								<if(f.value.plus > 0)>
-									<span class="z3-mt-filter-tag-plus">+${f.value.plus}</span> 
-								</if> 
+									<span class="z3-mt-filter-tag-plus">+${f.value.plus}</span>
+								</if>
 							</div>
-							<a class="tag is-delete" on-click("onFilterTagDeleteClick")/> 
-						</div> 
+							<a class="tag is-delete" on-click("onFilterTagDeleteClick")/>
+						</div>
 					</div>
 				</else>
-			</for> 
-		</div> 
+			</for>
+		</div>
 	</if>
 	<if(state.error)>
-		<div class="notification is-danger">${state.error}</div> 
+		<div class="notification is-danger">${state.error}</div>
 	</if>
 	<else>
 		<div class="table-container">
@@ -192,10 +191,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								<div class="z3-pretty p-default">
 									<input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
 									<div class="state p-primary">
-										<label/> 
-									</div> 
-								</div> 
-							</th> 
+										<label/>
+									</div>
+								</div>
+							</th>
 						</if>
 						<for|column| of=input.columns>
 							<th
@@ -206,12 +205,12 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								${column.title}&nbsp;<i class=`mdi ${
 									state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"
 								}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
-							</th> 
+							</th>
 						</for>
 						<if(input.actions && input.actions.length)>
-							<th>${input.actionsTitle}</th> 
-						</if> 
-					</tr> 
+							<th>${input.actionsTitle}</th>
+						</if>
+					</tr>
 				</thead>
 				<tbody>
 					<if(state.data.length)>
@@ -227,10 +226,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 												on-change("setCheckbox")/>
 											<div class="state">
 												<i class="icon mdi mdi-check"/>
-												<label/> 
-											</div> 
-										</div> 
-									</td> 
+												<label/>
+											</div>
+										</div>
+									</td>
 								</if>
 								<for|column| of=input.columns.map(c => c.id)>
 									<td>
@@ -239,7 +238,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 											? input.processValue(row.id || row._id, row[column], column, row)
 											: row[column]
 										: ""}
-									</td> 
+									</td>
 								</for>
 								<if(input.actions && input.actions.length)>
 									<td class="z3-mt-actions-wrap">
@@ -257,30 +256,30 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 												<if(action.icon)>
 													<span class="icon">
 														<i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
-													</span> 
+													</span>
 												</if>
-												<if(action.displayText && action.text)>&nbsp;${action.text}</if> 
-											</button> 
-										</for> 
-									</td> 
-								</if> 
-							</tr> 
-						</for> 
+												<if(action.displayText && action.text)>&nbsp;${action.text}</if>
+											</button>
+										</for>
+									</td>
+								</if>
+							</tr>
+						</for>
 					</if>
 					<else>
 						<if(state.loading)>
 							<tr>
-								<td colspan="100%">${input.i18n.t("mTable.loading")}</td> 
-							</tr> 
+								<td colspan="100%">${input.i18n.t("mTable.loading")}</td>
+							</tr>
 						</if>
 						<else>
 							<tr>
-								<td colspan="100%">${input.i18n.t("mTable.noData")}</td> 
-							</tr> 
-						</else> 
-					</else> 
-				</tbody> 
-			</table> 
+								<td colspan="100%">${input.i18n.t("mTable.noData")}</td>
+							</tr>
+						</else>
+					</else>
+				</tbody>
+			</table>
 		</div>
 		<if(state.paginationData.length)>
 			<nav
@@ -296,25 +295,25 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									data-page=pi.page
 									on-click("onPageClick")>
 									${pi.page}
-								</a> 
-							</li> 
+								</a>
+							</li>
 						</if>
 						<if(pi.type === "dots")>
 							<li>
-								<span class="pagination-ellipsis">&hellip;</span> 
-							</li> 
-						</if> 
-					</for> 
-				</ul> 
-			</nav> 
-		</if> 
+								<span class="pagination-ellipsis">&hellip;</span>
+							</li>
+						</if>
+					</for>
+				</ul>
+			</nav>
+		</if>
 	</else>
 	<if(state.loading)>
 		<div class="z3-mt-loading">
 			<span class="button is-white is-loading is-large z3-mt-loading-spinner">
 				&nbsp;
-			</span> 
-		</div> 
+			</span>
+		</div>
 	</if>
 	<if(input.genericDelete)>
 		<div class=`modal${state.deleteDialogActive ? " is-active" : ""}`>
@@ -323,14 +322,14 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				<header class="modal-card-head">
 					<p class="modal-card-title">${input.i18n.t("mTable.deleteTitle")}</p>
 					<if(!state.deleteDialogProgress)>
-						<button class="delete" aria-label="close" on-click("onDeleteDialogClose")/> 
-					</if> 
+						<button class="delete" aria-label="close" on-click("onDeleteDialogClose")/>
+					</if>
 				</header>
 				<section class="modal-card-body">
 					<p>${input.i18n.t("mTable.deleteDesc")}:</p>
 					<div class="z3-margin-top">
 						${state.deleteDialogTitles.map(i => `"${i}"`).join(", ")}
-					</div> 
+					</div>
 				</section>
 				<footer class="modal-card-foot">
 					<fieldset disabled=state.deleteDialogProgress>
@@ -344,11 +343,11 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						</button>
 						<button class="button" on-click("onDeleteDialogClose")>
 							${input.i18n.t("mTable.cancel")}
-						</button> 
-					</fieldset> 
-				</footer> 
-			</div> 
-		</div> 
+						</button>
+					</fieldset>
+				</footer>
+			</div>
+		</div>
 	</if>
 	<if(input.filter && input.filter.length)>
 		<div class=`modal${state.filterDialogActive ? " is-active" : ""}`>
@@ -366,12 +365,12 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								class="delete"
 								type="button"
 								aria-label="close"
-								on-click("onFilterDialogClose")/> 
-						</if> 
+								on-click("onFilterDialogClose")/>
+						</if>
 					</header>
 					<section class="modal-card-body">
 						<if(state.filterError)>
-							<div class="notification is-danger">${state.filterError}</div> 
+							<div class="notification is-danger">${state.filterError}</div>
 						</if>
 						<div class="select is-fullwidth">
 							<select on-change("onFilterSelectChange")>
@@ -380,10 +379,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									<for|f| of=input.filter>
 										<option value=f.id selected=(state.filterSelected === f.id)>
 											${f.label}
-										</option> 
+										</option>
 									</for>
 								</if>
-							</select> 
+							</select>
 						</div>
 						<div class=`select is-fullwidth mt-2 mb-2${
 							state.filterSelected === "" ? " is-hidden" : ""
@@ -407,10 +406,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									)>
 										<option value=f selected=(state.filterMode === f)>
 											${input.i18n.t(`mTable.filter.${f}`)}
-										</option> 
-									</if> 
-								</for> 
-							</select> 
+										</option>
+									</if>
+								</for>
+							</select>
 						</div>
 						<mselect
 							key=`${input.id}_mselect`
@@ -421,13 +420,13 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								type="text"
 								value=state.filterValue
 								on-change("onFilterValueChange")
-								placeholder=input.i18n.t("mTable.filterValue")/> 
+								placeholder=input.i18n.t("mTable.filterValue")/>
 						</div>
 						<div class=(state.filterSelectedData.type !== "date" ? "is-hidden" : "")>
 							<mcalendar
 								id=`${input.id}_filterDate`
 								key=`${input.id}_filterDate`
-								on-value-change("onFilterCalendarValueChange")/> 
+								on-value-change("onFilterCalendarValueChange")/>
 						</div>
 					</section>
 					<footer class="modal-card-foot">
@@ -439,12 +438,12 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</button>
 							<button class="button" type="button" on-click("onFilterDialogClose")>
 								${input.i18n.t("mTable.cancel")}
-							</button> 
-						</fieldset> 
-					</footer> 
-				</div> 
-			</form> 
-		</div> 
+							</button>
+						</fieldset>
+					</footer>
+				</div>
+			</form>
+		</div>
 	</if>
 	<if(state.filterManageDialogActive)>
 		<div class="modal is-active">
@@ -454,8 +453,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					<if(state.filterManageDialogError)>
 						<div class="notification is-danger mb-2">
 							${state.filterManageDialogError}
-						</div> 
-					</if> 
+						</div>
+					</if>
 					<div
 						class="z3-mt-filter-spinner-wrap"
 						style=(state.filterManageDialogLoading ? "display:flex" : "display:none")>
@@ -463,8 +462,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							<div/>
 							<div/>
 							<div/>
-							<div/> 
-						</div> 
+							<div/>
+						</div>
 					</div>
 					<div
 						style=(state.filterManageDialogLoading ? "display:none" : "")
@@ -476,7 +475,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									disabled=(state.filterManageSelected.length !== 1)
 									on-click("onFilterSetLoadClick")>
 									${out.global.i18n.t("mTable.filter.loadSelected")}
-								</button> 
+								</button>
 							</div>
 							<div>
 								<button
@@ -484,7 +483,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									disabled=(state.filterManageSelected.length !== 1)
 									on-click("onFilterSetEditClick")>
 									${out.global.i18n.t("mTable.filter.editSelected")}
-								</button> 
+								</button>
 							</div>
 							<div>
 								<button
@@ -492,25 +491,25 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									disabled=(state.filterManageSelected.length === 0)
 									on-click("onFilterDeleteClick")>
 									${out.global.i18n.t("mTable.filter.deleteSelected")}
-								</button> 
+								</button>
 							</div>
 							<div>
 								<button class="button mt-5 is-fullwidth" on-click("onFilterManageDialogClose")>
 									${out.global.i18n.t("btnCloseGeneric")}
-								</button> 
-							</div> 
+								</button>
+							</div>
 						</div>
 						<div class="column">
 							<mselect
 								key=`${input.id}_mselect_filter`
 								active=true
 								css="z3-mt-filter-mselect"
-								on-value-change("onMSelectFilterChange")/> 
-						</div> 
-					</div> 
-				</div> 
-			</div> 
-		</div> 
+								on-value-change("onMSelectFilterChange")/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</if>
 	<div class=`modal${state.filterEditDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onFilterEditDialogClose")/>
@@ -577,8 +576,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					i18n=out.global.i18n
 					progressButtonId="btnSave"
 					on-button-click("onFilterEditFormButtonClick")/>
-			</div> 
-		</div> 
+			</div>
+		</div>
 	</div>
 	<div class=`modal${state.filterRawDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onFilterRawDialogClose")/>
@@ -587,7 +586,12 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				<div class="tags are-medium">
 					<if(input.filter && input.filter.length)>
 						<for|f| of=input.filter>
-							<span class="tag z3-mt-filter-raw-tag" data-id=f.id on-click("onfilterRawTagClick")>${f.label}</span>
+							<span
+								class="tag z3-mt-filter-raw-tag"
+								data-id=f.id
+								on-click("onfilterRawTagClick")>
+								${f.label}
+							</span>
 						</for>
 					</if>
 				</div>
@@ -595,18 +599,20 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					manual=true
 					key=`${input.id}_filterRawForm`
 					id=`${input.id}_filterRawForm`
-					fields=[{
-						id: "value",
-						type: "ace",
-						label: out.global.i18n.t("mTable.rawValue"),
-						helpText: out.global.i18n.t("mTable.rawValueHelpText"),
-						wysiwyg: false,
-						source: true,
-						autoFocus: true,
-						aceOptions: {
-							mode: "ace/mode/json"
-						}
-					}, {
+					fields=[
+						{
+							id: "value",
+							type: "ace",
+							label: out.global.i18n.t("mTable.rawValue"),
+							helpText: out.global.i18n.t("mTable.rawValueHelpText"),
+							wysiwyg: false,
+							source: true,
+							autoFocus: true,
+							aceOptions: {
+								mode: "ace/mode/json"
+							}
+						},
+						{
 							id: "div1",
 							type: "divider"
 						},
@@ -628,11 +634,12 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									label: out.global.i18n.t("mTable.cancel")
 								}
 							]
-						}]
+						}
+					]
 					i18n=out.global.i18n
 					on-button-click("onFilterRawFormButtonClick")/>
-			</div> 
-		</div> 
+			</div>
+		</div>
 	</div>
 	<mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
 	<mconfirm

@@ -11,14 +11,14 @@ style.scss {
 	<head>
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<title>${out.global.pageTitle} | ${out.global.siteMetadata.title}</title> 
+		<title>${out.global.pageTitle} | ${out.global.siteMetadata.title}</title>
 	</head>
 	<body class="z3-cr-images-body">
 		<i18n/>
 		<tippy/>
 		<div class="container z3-cr-images-container">
 			<if(out.global.accessAllowed)>
-				<browser/> 
+				<browser/>
 			</if>
 			<else>
 				<h1 class="z3-ap-head-thin">
@@ -26,8 +26,8 @@ style.scss {
 						<i class="mdi z3-ap-mdi-head mdi-dark mdi-cancel"/>
 					</span>&nbsp;${out.global.i18n.t("accessDenied")}
 				</h1>
-				<div class="mt-3">${out.global.i18n.t("accessDeniedDesc")}</div> 
-			</else> 
-		</div> 
+				<div class="mt-3">${out.global.i18n.t("accessDeniedDesc")}</div>
+			</else>
+		</div>
 	</body>
 </html>

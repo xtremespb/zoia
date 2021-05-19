@@ -21,17 +21,17 @@ style.scss {
 						on-click("onBurgerClick")>
 						<span aria-hidden="true"/>
 						<span aria-hidden="true"/>
-						<span aria-hidden="true"/> 
-					</a> 
+						<span aria-hidden="true"/>
+					</a>
 				</div>
 				<div class=`navbar-menu${state.burger ? " is-active" : ""}`>
 					$!{state.preview}
-				</div> 
-			</nav> 
-		</div> 
+				</div>
+			</nav>
+		</div>
 	</div>
 	<if(state.error)>
-		<div class="notification is-danger">${state.error}</div> 
+		<div class="notification is-danger">${state.error}</div>
 	</if>
 	<mtree
 		key="z3_ap_nav_tree"
@@ -52,7 +52,7 @@ style.scss {
 		</button>
 		<button class="button" on-click("loadTree") disabled=state.loading>
 			${out.global.i18n.t("reset")}
-		</button> 
+		</button>
 	</div>
 	<mnotify key="pagesList_mnotify"/>
 	<editFolderModal key="z3_ap_nav_editModal" on-folder-save("onFolderSave")/>

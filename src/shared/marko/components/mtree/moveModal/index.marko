@@ -5,7 +5,7 @@
 			<p class="modal-card-title">
 				${out.global.i18n.t("moveGeneric")} (${state.title})
 			</p>
-			<button class="delete" aria-label="close" on-click("onCloseClick")/> 
+			<button class="delete" aria-label="close" on-click("onCloseClick")/>
 		</header>
 		<section class="modal-card-body">
 			<if(state.root)>
@@ -15,7 +15,7 @@
 					key=state.root.uuid
 					on-open-close-click("onOpenCloseClick")
 					on-item-click("onItemClick")
-					selected=state.selected/> 
+					selected=state.selected/>
 			</if>
 			<for|item, order| of=state.data>
 				<mtreeItem
@@ -24,8 +24,8 @@
 					key=item.uuid
 					on-open-close-click("onOpenCloseClick")
 					on-item-click("onItemClick")
-					selected=state.selected/> 
-			</for> 
+					selected=state.selected/>
+			</for>
 		</section>
 		<footer class="modal-card-foot">
 			<button class="button is-primary" on-click("onConfirmClick")>
@@ -33,7 +33,7 @@
 			</button>
 			<button class="button" on-click("onCloseClick")>
 				${out.global.i18n.t("btnCancelGeneric")}
-			</button> 
-		</footer> 
+			</button>
+		</footer>
 	</div>
 </div>

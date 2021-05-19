@@ -40,8 +40,8 @@ $ langHTML += "</div></div>";
 		<link type="image/x-icon" rel="shortcut icon" href="/zoia/favicon.ico"/>
 		<title>${out.global.pageTitle} | ${out.global.siteMetadata.title}</title>
 		<if(out.global.extraCSS)>
-			<style type="text/css">$!{out.global.extraCSS}</style> 
-		</if> 
+			<style type="text/css">$!{out.global.extraCSS}</style>
+		</if>
 	</head>
 	<body class="z3-dt-body">
 		<section class="pt-4 pb-4 z3-dt-nav">
@@ -49,7 +49,7 @@ $ langHTML += "</div></div>";
 				<nav class="navbar z3-dt-navbar" role="navigation" aria-label="main navigation">
 					<div class="navbar-brand">
 						<a class="navbar-item mr-5" href=out.global.i18n.getLocalizedURL("/")>
-							<div class="z3-dt-logo"/> 
+							<div class="z3-dt-logo"/>
 						</a>
 						<a
 							role="button"
@@ -61,8 +61,8 @@ $ langHTML += "</div></div>";
 							onclick="document.getElementById('z3_dt_navbar_burger').classList.toggle('is-active');document.getElementById('z3_dt_navbar_menu').classList.toggle('is-active');">
 							<span aria-hidden="true"/>
 							<span aria-hidden="true"/>
-							<span aria-hidden="true"/> 
-						</a> 
+							<span aria-hidden="true"/>
+						</a>
 					</div>
 					<div id="z3_dt_navbar_menu" class=`navbar-menu z3-dt-navbarMenu`>
 						<div class="navbar-start">$!{navHTML}</div>
@@ -80,7 +80,7 @@ $ langHTML += "</div></div>";
 													out.global.language
 												)>
 												${out.global.i18n.t("adminPanel")}
-											</a> 
+											</a>
 										</if>
 										<a
 											class="navbar-item"
@@ -89,9 +89,9 @@ $ langHTML += "</div></div>";
 												out.global.language
 											)>
 											${out.global.i18n.t("logOut")}
-										</a> 
-									</div> 
-								</div> 
+										</a>
+									</div>
+								</div>
 							</if>
 							<else>
 								<a
@@ -100,25 +100,25 @@ $ langHTML += "</div></div>";
 										out.global.path
 									}`>
 									${out.global.i18n.t("signIn")}
-								</a> 
-							</else> 
-						</div> 
-					</div> 
-				</nav> 
-			</div> 
+								</a>
+							</else>
+						</div>
+					</div>
+				</nav>
+			</div>
 		</section>
 		<section class="section pt-5 pb-0 z3-dt-content">
 			<div class="container pt-3">
-				<${input.renderBody}/> 
-			</div> 
+				<${input.renderBody}/>
+			</div>
 		</section>
 		<section class="section pt-5 mt-5 pb-5 mb-0 z3-dt-footer-wrap is-size-7">
 			<div class="container mt-1 z3-dt-footer">
 				${out.global.i18n.t("sitePoweredByZoia")}. &copy; 2019-${new Date().getFullYear()} Michael Matveev.
-			</div> 
+			</div>
 		</section>
 		<if(out.global.extraJS)>
-			<script type="text/javascript">$!{out.global.extraJS}</script> 
-		</if> 
+			<script type="text/javascript">$!{out.global.extraJS}</script>
+		</if>
 	</body>
 </html>

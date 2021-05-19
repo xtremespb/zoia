@@ -4,15 +4,15 @@
 		<header class="modal-card-head">
 			<p class="modal-card-title">${out.global.i18n.t("folderSelectModalTitle")}</p>
 			<if(!state.loading)>
-				<button class="delete" aria-label="close" on-click("onCloseClick")/> 
-			</if> 
+				<button class="delete" aria-label="close" on-click("onCloseClick")/>
+			</if>
 		</header>
 		<section class="modal-card-body">
 			<if(state.error)>
 				<div class="notification is-danger">
 					<button class="delete" on-click("onErrorDeleteClick")/>
 					${state.error}
-				</div> 
+				</div>
 			</if>
 			<mtree
 				key="z3_ap_ps_tree"
@@ -22,7 +22,7 @@
 				on-data-change("onTreeDataChange")
 				controls=true
 				keepuuid=true
-				keepchecksum=true/> 
+				keepchecksum=true/>
 		</section>
 		<footer class="modal-card-foot">
 			<button
@@ -34,8 +34,8 @@
 				class=`button${state.loading ? " is-loading" : ""}`
 				on-click("onCloseClick")>
 				${out.global.i18n.t("btnCancelGeneric")}
-			</button> 
-		</footer> 
+			</button>
+		</footer>
 	</div>
 </div>
 <editFolderModal key="z3_ap_ps_editModal" on-folder-save("onFolderSave")/>

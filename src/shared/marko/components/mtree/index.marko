@@ -9,8 +9,8 @@ style.scss {
 				<button class="button" disabled=state.loading on-click("onAddClick")>
 					<span class="icon">
 						<i class="mdi mdi-18px mdi-folder-plus-outline"/>
-					</span> 
-				</button> 
+					</span>
+				</button>
 			</p>
 			<p class="control">
 				<button
@@ -19,8 +19,8 @@ style.scss {
 					on-click("onEditClick")>
 					<span class="icon">
 						<i class="mdi mdi-18px mdi-folder-edit-outline"/>
-					</span> 
-				</button> 
+					</span>
+				</button>
 			</p>
 			<p class="control">
 				<button
@@ -29,10 +29,10 @@ style.scss {
 					on-click("onDeleteClick")>
 					<span class="icon">
 						<i class="mdi mdi-18px mdi-trash-can-outline"/>
-					</span> 
-				</button> 
-			</p> 
-		</div> 
+					</span>
+				</button>
+			</p>
+		</div>
 	</if>
 	<if(state.root)>
 		<mtreeItem
@@ -43,7 +43,7 @@ style.scss {
 			on-item-click("onItemClick")
 			selected=state.selected
 			controls=input.controls
-			on-gap-drop("onGapDrop")/> 
+			on-gap-drop("onGapDrop")/>
 	</if>
 	<for|item, order| of=state.data>
 		<mtreeItem
@@ -61,14 +61,14 @@ style.scss {
 			on-item-drop("onItemDrop")
 			on-drag-start("onItemDragStart")
 			on-drag-end("onItemDragEnd")
-			dragging=state.dragging/> 
+			dragging=state.dragging/>
 	</for>
 	<if(state.loading)>
 		<div class="z3-mtr-loading">
 			<span class="button is-white is-loading is-large z3-mtr-loading-spinner">
 				&nbsp;
-			</span> 
-		</div> 
+			</span>
+		</div>
 	</if>
 </div>
 <deleteModal key="z3_ap_mt_deleteModal" on-delete-confirm("onDeleteConfirm")/>

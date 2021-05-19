@@ -12,28 +12,28 @@
 								<span class="icon">
 									<i class="mdi mdi-form-textbox"/>
 								</span>&nbsp;${out.global.i18n.t("rename")}
-							</a> 
+							</a>
 						</li>
 						<li>
 							<a on-click("onItemClick") href="" data-uid=state.uid data-cmd="cut">
 								<span class="icon">
 									<i class="mdi mdi-content-cut"/>
 								</span>&nbsp;${out.global.i18n.t("doCut")}
-							</a> 
+							</a>
 						</li>
 						<li>
 							<a on-click("onItemClick") href="" data-uid=state.uid data-cmd="copy">
 								<span class="icon">
 									<i class="mdi mdi-content-copy"/>
 								</span>&nbsp;${out.global.i18n.t("doCopy")}
-							</a> 
+							</a>
 						</li>
 						<li>
 							<a on-click("onItemClick") href="" data-uid=state.uid data-cmd="delete">
 								<span class="icon">
 									<i class="mdi mdi-trash-can-outline"/>
 								</span>&nbsp;${out.global.i18n.t("doDelete")}
-							</a> 
+							</a>
 						</li>
 						<if(!state.directory && !state.ro)>
 							<li>
@@ -41,8 +41,8 @@
 									<span class="icon">
 										<i class="mdi mdi-square-edit-outline"/>
 									</span>&nbsp;${out.global.i18n.t("edit")}
-								</a> 
-							</li> 
+								</a>
+							</li>
 						</if>
 						<if(state.zip)>
 							<li>
@@ -50,12 +50,12 @@
 									<span class="icon">
 										<i class="mdi mdi-archive-arrow-down-outline"/>
 									</span>&nbsp;${out.global.i18n.t("unzip")}
-								</a> 
-							</li> 
-						</if> 
-					</ul> 
-				</div> 
-			</div> 
-		</div> 
+								</a>
+							</li>
+						</if>
+					</ul>
+				</div>
+			</div>
+		</div>
 	</div>
 </if>

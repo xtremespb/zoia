@@ -20,26 +20,26 @@
 										<div class="z3-ap-menu-icon-wrap">
 											<span class="icon">
 												<i class=`mdi mdi-18px mdi-${module.icon}`/>
-											</span> 
+											</span>
 										</div>${module.title[out.global.language]}
-									</a> 
-								</li> 
-							</if> 
-						</for> 
-					</ul> 
-				</div> 
-			</nav> 
-		</div> 
+									</a>
+								</li>
+							</if>
+						</for>
+					</ul>
+				</div>
+			</nav>
+		</div>
 	</div>
 	<div class="column is-auto">
 		<div class="z3-ap-content-wrap">
 			<if(out.global.demoMode)>
 				<div class="notification is-warning z3-ap-demoMessage" id="z3_ap_demoMessage">
 					${out.global.i18n.t("demoMessage")}
-				</div> 
+				</div>
 			</if>
-			<${input.renderBody}/> 
-		</div> 
+			<${input.renderBody}/>
+		</div>
 	</div>
 </div>
 <div class="z3-ap-loading" style=`display:${process.browser ? "none" : "flex"}`>

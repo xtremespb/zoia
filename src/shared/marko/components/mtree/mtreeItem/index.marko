@@ -9,7 +9,7 @@ $ const level = parseInt(input.level, 10);
 			marginLeft=((level - 1) * 24)
 			id=input.data.uuid
 			on-gap-drop("onGapDrop")
-			isTop=true/> 
+			isTop=true/>
 	</if>
 	<div
 		style=`margin-left:${(level - 1) * 24}px;`
@@ -23,19 +23,19 @@ $ const level = parseInt(input.level, 10);
 				<if(input.data.isOpen)>
 					<span class="icon">
 						<i class="mdi mdi-minus-box-outline"/>
-					</span> 
+					</span>
 				</if>
 				<else>
 					<span class="icon">
 						<i class="mdi mdi-plus-box-outline"/>
-					</span> 
-				</else> 
-			</a> 
+					</span>
+				</else>
+			</a>
 		</if>
 		<else>
 			<span class="icon" style="opacity:0">
 				<i class="mdi mdi-checkbox-blank-outline"/>
-			</span> 
+			</span>
 		</else>
 		<a
 			href=""
@@ -54,8 +54,8 @@ $ const level = parseInt(input.level, 10);
 			</span>
 			<span class=`z3-mtr-label${
 				input.selected === input.data.uuid ? " z3-mtr-label-selected" : ""
-			}`>${input.data.t || input.data.id || ""}</span> 
-		</a> 
+			}`>${input.data.t || input.data.id || ""}</span>
+		</a>
 	</div>
 	<if(input.data.c && input.data.c.length)>
 		<for|item, index| of=input.data.c>
@@ -64,7 +64,7 @@ $ const level = parseInt(input.level, 10);
 					marginLeft=((level + 1) * 24)
 					id=item.uuid
 					on-gap-drop("onGapDrop")
-					isTop=true/> 
+					isTop=true/>
 			</if>
 			<mtreeItem
 				data=item
@@ -80,8 +80,8 @@ $ const level = parseInt(input.level, 10);
 				on-drag-start("onTreeItemComponentDragStart")
 				on-drag-end("onTreeItemComponentDragEnd")
 				dragging=input.dragging
-				len=input.len/> 
-		</for> 
+				len=input.len/>
+		</for>
 	</if>
 	<if(level > 0 && input.dragging)>
 		<div style=`margin-left:${(level - 1) * 24}px;` class="z3-mtr-tree-item">
@@ -89,7 +89,7 @@ $ const level = parseInt(input.level, 10);
 				marginLeft=((level - 1) * 24)
 				id=input.data.uuid
 				order=input.order
-				on-gap-drop("onGapDrop")/> 
-		</div> 
+				on-gap-drop("onGapDrop")/>
+		</div>
 	</if>
 </if>

@@ -22,8 +22,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				on-click("onAbortBackup")
 				disabled=state.loading>
 				${out.global.i18n.t("backupAbort")}
-			</button> 
-		</div> 
+			</button>
+		</div>
 	</if>
 	<else>
 		<mtable
@@ -116,7 +116,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				}
 			}
 			on-unauthorized("onUnauthorized")
-			autoItemsPerPage=true/> 
+			autoItemsPerPage=true/>
 	</else>
 </div>
 <backupModal key="z3_ap_backupModal" on-backup-finish("onBackupFinish")/>

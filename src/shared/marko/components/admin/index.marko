@@ -8,7 +8,7 @@ style.scss {
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<title>${out.global.pageTitle} | ${out.global.siteMetadata.title}</title>
-		<link type="image/x-icon" rel="shortcut icon" href="/zoia/favicon.ico"/> 
+		<link type="image/x-icon" rel="shortcut icon" href="/zoia/favicon.ico"/>
 	</head>
 	<body class="z3-ap-body">
 		<i18n/>
@@ -20,7 +20,11 @@ style.scss {
 			moduleId=input.moduleId
 			renderBody=input.renderBody/>
 		<div class="z3-ap-main-footer">
-			ZOIA &copy; 2019-${new Date().getFullYear()} Michael A. Matveev.&nbsp;<a href="https://opensource.org/licenses/MIT" target="_blank">${out.global.i18n.t("license.mit")}</a>.
-		</div> 
+			ZOIA &copy; 2019-${new Date().getFullYear()} Michael A. Matveev.&nbsp;<a
+				href="https://opensource.org/licenses/MIT"
+				target="_blank">
+				${out.global.i18n.t("license.mit")}
+			</a>.
+		</div>
 	</body>
 </html>

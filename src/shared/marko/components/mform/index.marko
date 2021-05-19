@@ -14,8 +14,8 @@ style.scss {
 			<ul>
 				<for|tab| of=state.tabs>
 					<li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
-						<a on-click("onTabClick") data-id=tab.id>${tab.label}</a> 
-					</li> 
+						<a on-click("onTabClick") data-id=tab.id>${tab.label}</a>
+					</li>
 				</for>
 				<if(input.tabsActive)>
 					<li>
@@ -23,17 +23,17 @@ style.scss {
 							<span class="icon">
 								<i class="mdi mdi-cog" aria-hidden="true"/>
 							</span>
-							<span>${input.i18n.t("mForm.settings")}</span> 
-						</a> 
-					</li> 
-				</if> 
-			</ul> 
-		</div> 
+							<span>${input.i18n.t("mForm.settings")}</span>
+						</a>
+					</li>
+				</if>
+			</ul>
+		</div>
 	</if>
 	<if(state.error)>
 		<div class="notification is-danger" key=`${input.id}_mForm_Error`>
 			${state.error}
-		</div> 
+		</div>
 	</if>
 	<form on-submit("onFormSubmit") key=`${input.id}_mForm_Wrap`>
 		<fieldset
@@ -56,7 +56,7 @@ style.scss {
 							$ areaBorder = !!tItem.border;
 							<div class=`z3-mf-area-start${areaBorder ? " z3-mf-area-border-s" : ""}`>
 								${tItem.label}
-							</div> 
+							</div>
 						</if>
 						<if(tItem.type === "areaEnd")>
 							<div class=`z3-mf-area-end${areaBorder ? " z3-mf-area-border-e" : ""}`/>
@@ -95,10 +95,10 @@ style.scss {
 										progressButtonId=input.progressButtonId
 										on-get-key-value("onGetKeyValue")
 										on-context-menu("onContextMenu")
-										on-settled("onFieldSettled")/> 
-								</div> 
-							</div> 
-						</div> 
+										on-settled("onFieldSettled")/>
+								</div>
+							</div>
+						</div>
 					</if>
 					<if(Array.isArray(tItem))>
 						<div class=(
@@ -137,16 +137,16 @@ style.scss {
 											progressButtonId=input.progressButtonId
 											on-get-key-value("onGetKeyValue")
 											on-context-menu("onContextMenu")
-											on-settled("onFieldSettled")/> 
-									</div> 
-								</for> 
-							</div> 
-						</div> 
-					</if> 
-				</for> 
-			</if> 
+											on-settled("onFieldSettled")/>
+									</div>
+								</for>
+							</div>
+						</div>
+					</if>
+				</for>
+			</if>
 		</fieldset>
-		<button type="submit" style="display:none"/> 
+		<button type="submit" style="display:none"/>
 	</form>
 	<if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
 		<div class=`modal${state.tabSettingsDialogActive ? " is-active" : ""}`>
@@ -157,7 +157,7 @@ style.scss {
 					<button
 						class="delete"
 						aria-label="close"
-						on-click("onTabSettingsDialogCloseClick")/> 
+						on-click("onTabSettingsDialogCloseClick")/>
 				</header>
 				<section class="modal-card-body">
 					<for|tab| of=state.tabsSelect>
@@ -170,11 +170,11 @@ style.scss {
 									on-change("onTabsSelectChange")/>
 								<div class="state">
 									<i class="icon mdi mdi-check"/>
-									<label>${tab.label}</label> 
-								</div> 
-							</div> 
-						</div> 
-					</for> 
+									<label>${tab.label}</label>
+								</div>
+							</div>
+						</div>
+					</for>
 				</section>
 				<footer class="modal-card-foot">
 					<button class="button is-primary" on-click("onTabSettingsDialogSaveClick")>
@@ -182,17 +182,17 @@ style.scss {
 					</button>
 					<button class="button" on-click("onTabSettingsDialogCloseClick")>
 						${input.i18n.t("mForm.cancel")}
-					</button> 
-				</footer> 
-			</div> 
-		</div> 
+					</button>
+				</footer>
+			</div>
+		</div>
 	</if>
 	<if(state.loading)>
 		<div class="z3-mf-loading">
 			<span class="button is-white is-loading is-large z3-mf-loading-spinner">
 				&nbsp;
-			</span> 
-		</div> 
+			</span>
+		</div>
 	</if>
 	<mnotify key=`${input.id}_mnotify`/>
 	<imageMenu key="z3_mf_image_menu" on-item-click("onMenuItemClick")/>
