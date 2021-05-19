@@ -13,9 +13,9 @@ import moduleConfig from "../../../module.json"
 	]
 	on-state-change("onStateChange")>
 	<if(state.route.name === moduleConfig.id)>
-		<dataList ...state.route.params/> 
+		<dataList ...state.route.params/>
 	</if>
 	<if(state.route.name === `${moduleConfig.id}.edit`)>
-		<dataEdit ...state.route.params/> 
+		<dataEdit ...state.route.params/>
 	</if>
 </router>

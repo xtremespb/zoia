@@ -169,6 +169,10 @@
     min-width: 180px;
 }
 
+.z3-mt-filter-raw-tag {
+    cursor: pointer;
+}
+
 @keyframes z3-mt-filter-spinner {
     0% {
         transform: rotate(0deg);

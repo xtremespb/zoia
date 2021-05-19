@@ -5,7 +5,7 @@
 	aria-label="main navigation">
 	<div class="navbar-brand">
 		<a class="navbar-item" href="/admin">
-			<div class="z3-ap-logo"/> 
+			<div class="z3-ap-logo"/>
 		</a>
 		<a
 			role="button"
@@ -15,8 +15,8 @@
 			on-click("onBurgerClick")>
 			<span aria-hidden="true"/>
 			<span aria-hidden="true"/>
-			<span aria-hidden="true"/> 
-		</a> 
+			<span aria-hidden="true"/>
+		</a>
 	</div>
 	<div class=`z3-ap-nav-menu navbar-menu${state.activeNavbarMenu ? " is-active" : ""}`>
 		<div class="navbar-start">
@@ -31,13 +31,13 @@
 								<div class="z3-ap-menu-icon-wrap">
 									<span class="icon">
 										<i class=`mdi mdi-18px mdi-${module.icon}`/>
-									</span> 
+									</span>
 								</div>${module.title[out.global.language]}
-							</a> 
-						</if> 
-					</for> 
-				</div> 
-			</div> 
+							</a>
+						</if>
+					</for>
+				</div>
+			</div>
 		</div>
 		<div class="navbar-end">
 			<if(Object.keys(out.global.languages).length > 1)>
@@ -54,8 +54,8 @@
 								class="navbar-item"
 								href=out.global.i18n.getLocalizedURL(out.global.path, lang)>
 								${out.global.languages[lang]}
-							</a> 
-						</for> 
+							</a>
+						</for>
 					</div>
 				</div>
 			</if>
@@ -76,9 +76,9 @@
 							out.global.language
 						)>
 						${out.global.i18n.t("logOut")}
-					</a> 
-				</div> 
-			</div> 
-		</div> 
+					</a>
+				</div>
+			</div>
+		</div>
 	</div>
 </nav>

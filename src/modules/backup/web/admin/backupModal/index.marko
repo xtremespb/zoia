@@ -4,20 +4,20 @@
 		<header class="modal-card-head">
 			<p class="modal-card-title">${out.global.i18n.t("add")}</p>
 			<if(!state.running)>
-				<button class="delete" aria-label="close" on-click("onCloseClick")/> 
-			</if> 
+				<button class="delete" aria-label="close" on-click("onCloseClick")/>
+			</if>
 		</header>
 		<section class="modal-card-body">
 			<if(state.error)>
-				<div class="notification is-danger">${state.error}</div> 
+				<div class="notification is-danger">${state.error}</div>
 			</if>
 			<if(!state.running)>
-				<div>${out.global.i18n.t("backupProcessDesc")}</div> 
+				<div>${out.global.i18n.t("backupProcessDesc")}</div>
 			</if>
 			<else>
 				<div>${out.global.i18n.t("backupRunning")}</div>
-				<progress class="progress is-small is-primary" max="100"/> 
-			</else> 
+				<progress class="progress is-small is-primary" max="100"/>
+			</else>
 		</section>
 		<footer class="modal-card-foot">
 			<if(!state.running)>
@@ -25,11 +25,11 @@
 					class=`button is-primary${state.loading ? " is-loading" : ""}`
 					on-click("onConfirmClick")>
 					${out.global.i18n.t("btnConfirmGeneric")}
-				</button> 
+				</button>
 			</if>
 			<button class="button" on-click("onCloseClick") disabled=state.running>
 				${out.global.i18n.t("btnCancelGeneric")}
-			</button> 
-		</footer> 
+			</button>
+		</footer>
 	</div>
 </div>

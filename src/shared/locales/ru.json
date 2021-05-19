@@ -149,5 +149,9 @@
 	"mTable.filter.lessThanShort": "<",
 	"mTable.filter.lessThanOrEqualsShort": "<=",
 	"mTable.filterValue": "Значение фильтра",
-	"mTable.filterError.invalidValue": "Неверное значение"
+	"mTable.filterError.invalidValue": "Неверное значение",
+	"mTable.rawFilterEdit": "Прямой запрос к БД",
+	"mTable.rawValue": "Запрос к БД",
+	"mTable.rawValueHelpText": "Валидный JSON-запрос к MongoDB",
+	"mTableErr.invalidJSON": "Ошибка валидации JSON"
 }

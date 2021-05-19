@@ -29,28 +29,28 @@ style.scss {
 					<a class="button is-ghost" on-click("onCalendarLeft")>
 						<span class="icon is-small">
 							<i class="mdi mdi-chevron-left"/>
-						</span> 
-					</a> 
+						</span>
+					</a>
 				</div>
 				<div class="column is-auto z3-mf-calendar-head-date">
 					<a data-mode="month" on-click("onCalendarModeChange")>
 						${out.global.i18n.t("global.monthsFull")[state.calendar.month]}
 					</a>&nbsp;<a data-mode="year" on-click("onCalendarModeChange")>
 						${state.calendar.year}
-					</a> 
+					</a>
 				</div>
 				<div class="column is-narrow">
 					<a class="button is-ghost" on-click("onCalendarRight")>
 						<span class="icon is-small">
 							<i class="mdi mdi-chevron-right"/>
-						</span> 
-					</a> 
-				</div> 
+						</span>
+					</a>
+				</div>
 			</div>
 			<div class="columns m-0 is-gapless is-size-7 z3-mf-calendar-dow is-mobile">
 				<for|d| of=out.global.i18n.t("global.weekDays")>
-					<div class="column z3-mf-calendar-cell">${d}</div> 
-				</for> 
+					<div class="column z3-mf-calendar-cell">${d}</div>
+				</for>
 			</div>
 			<for|r| of=state.calendar.data>
 				<div class="columns m-0 is-gapless is-mobile" on-click("onCalendarCellClick")>
@@ -76,10 +76,10 @@ style.scss {
 								data-m=i.m
 								data-y=i.y>
 								${i.d}
-							</div> 
-						</div> 
-					</for> 
-				</div> 
+							</div>
+						</div>
+					</for>
+				</div>
 			</for>
 			<div class="columns is-gapless is-mobile is-size-7">
 				<div
@@ -96,8 +96,8 @@ style.scss {
 					class="column is-one-third z3-mf-calendar-control has-text-grey"
 					on-click("hideCalendar")>
 					${out.global.i18n.t("calendar.cancel")}
-				</div> 
-			</div> 
+				</div>
+			</div>
 		</if>
 		<if(state.calendar.mode === "month")>
 			<div class="columns is-gapless is-mobile is-multiline is-size-7">
@@ -109,9 +109,9 @@ style.scss {
 						data-month=i
 						on-click("onCalendarMonthClick")>
 						${m}
-					</div> 
-				</for> 
-			</div> 
+					</div>
+				</for>
+			</div>
 		</if>
 		<if(state.calendar.mode === "year")>
 			<div class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year">
@@ -124,9 +124,9 @@ style.scss {
 						data-year=y
 						on-click("onCalendarYearClick")>
 						${y}
-					</div> 
-				</for> 
-			</div> 
-		</if> 
+					</div>
+				</for>
+			</div>
+		</if>
 	</div>
 </div>

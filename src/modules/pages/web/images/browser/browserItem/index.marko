@@ -16,18 +16,18 @@
 			class="z3-cr-images-item-img"
 			style=`background-image:url("${out.global.publicImages}${input.dir.join(
 				"/"
-			)}/${thumbFileName}");background-size:cover`/> 
+			)}/${thumbFileName}");background-size:cover`/>
 	</if>
 	<else>
 		<div class=`z3-cr-images-item-img ${
 			input.file.dir ? "z3-cr-images-item-img-dir" : "z3-cr-images-item-img-pic"
-		}`/> 
+		}`/>
 	</else>
 	<div class=`z3-cr-images-item-text${
 		input.selected.indexOf(input.file.name) > -1
 			? " z3-cr-images-item-text-selected"
 			: ""
 	}`>
-		<div class="z3-cr-images-item-text-label">${input.file.name}</div> 
+		<div class="z3-cr-images-item-text-label">${input.file.name}</div>
 	</div>
 </div>

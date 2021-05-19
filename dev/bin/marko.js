@@ -19,14 +19,15 @@ const processMarkoFiles = async dir => {
             let tagFound = false;
             let fileDataNew = "";
             for (const line of fileData) {
-                if (!tagFound && line.match(/^</)) {
+                const lineProcessed = String(line).trimRight();
+                if (!tagFound && lineProcessed.match(/^</)) {
                     tagFound = true;
                 }
-                if (tagFound && line.match(/^\n|\r\n$/)) {
+                if (tagFound && lineProcessed.match(/^\n|\r\n$/)) {
                     // Do something, we're not adding an empty line
                 } else {
                     // Add a new line, it's not empty
-                    fileDataNew += `${line}\n`;
+                    fileDataNew += `${lineProcessed}\n`;
                 }
             }
             fileDataNew = tagFound ? `${fileDataNew.trim()}\n` : `${fileData.join("\n")}\n`;

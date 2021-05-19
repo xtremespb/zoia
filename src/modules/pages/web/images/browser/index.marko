@@ -13,10 +13,10 @@
 						data-id="refresh">
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-reload"/>
-						</span> 
-					</button> 
-				</p> 
-			</div> 
+						</span>
+					</button>
+				</p>
+			</div>
 		</div>
 		<div class="column is-narrow">
 			<div class="field has-addons">
@@ -28,8 +28,8 @@
 						data-id="selectAll">
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-checkbox-marked-outline"/>
-						</span> 
-					</button> 
+						</span>
+					</button>
 				</p>
 				<p class="control">
 					<button
@@ -39,10 +39,10 @@
 						data-id="selectNone">
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-checkbox-blank-outline"/>
-						</span> 
-					</button> 
-				</p> 
-			</div> 
+						</span>
+					</button>
+				</p>
+			</div>
 		</div>
 		<div class="column is-narrow">
 			<div class="field has-addons">
@@ -55,8 +55,8 @@
 						disabled=(state.loading || !state.dir.length)>
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-folder-upload-outline"/>
-						</span> 
-					</button> 
+						</span>
+					</button>
 				</p>
 				<p class="control">
 					<button
@@ -67,10 +67,10 @@
 						disabled=state.loading>
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-folder-plus-outline"/>
-						</span> 
-					</button> 
-				</p> 
-			</div> 
+						</span>
+					</button>
+				</p>
+			</div>
 		</div>
 		<div class="column is-narrow">
 			<div class="field has-addons">
@@ -83,8 +83,8 @@
 						disabled=(state.loading || !state.selectedCount)>
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-content-copy"/>
-						</span> 
-					</button> 
+						</span>
+					</button>
 				</p>
 				<p class="control">
 					<button
@@ -95,8 +95,8 @@
 						disabled=(state.loading || !state.selectedCount)>
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-content-cut"/>
-						</span> 
-					</button> 
+						</span>
+					</button>
 				</p>
 				<p class="control">
 					<button
@@ -119,9 +119,9 @@
 						<if(state.clipboard.filesCount)>
 							<span class=`tag ${
 								state.clipboard.mode === "copy" ? "is-info" : "is-warning"
-							} z3-ap-f-paste-tag`>${state.clipboard.filesCount}</span> 
-						</if> 
-					</button> 
+							} z3-ap-f-paste-tag`>${state.clipboard.filesCount}</span>
+						</if>
+					</button>
 				</p>
 				<p class="control">
 					<button
@@ -132,8 +132,8 @@
 						disabled=(state.loading || !state.selectedCount)>
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-trash-can-outline"/>
-						</span> 
-					</button> 
+						</span>
+					</button>
 				</p>
 				<p class="control">
 					<button
@@ -144,11 +144,11 @@
 						disabled=state.loading>
 						<span class="icon">
 							<i class="mdi mdi-24px mdi-upload-outline"/>
-						</span> 
-					</button> 
-				</p> 
-			</div> 
-		</div> 
+						</span>
+					</button>
+				</p>
+			</div>
+		</div>
 	</div>
 	<article class="message message-body pt-2 pb-2 mb-3">
 		<strong>${state.dir.length ? `/${state.dir.join("/")}` : "/"}</strong>
@@ -157,7 +157,7 @@
 		<div class="notification is-danger mb-2 z3-cr-images-files-error">
 			<button class="delete" on-click("onErrorDeleteClick")/>
 			${state.error}
-		</div> 
+		</div>
 	</if>
 </header>
 <section class="z3-cr-images-content pt-3">
@@ -168,12 +168,12 @@
 			on-contextmenu("onContextMenu")
 			key="z3_cr_images_files_wrap">
 			<for|file| of=state.files>
-				<browserItem file=file dir=state.dir selected=state.selected on-chdir("onChDir")/> 
-			</for> 
-		</div> 
+				<browserItem file=file dir=state.dir selected=state.selected on-chdir("onChDir")/>
+			</for>
+		</div>
 	</if>
 	<else>
-		<div>${out.global.i18n.t("noFilesInDirectory")}</div> 
+		<div>${out.global.i18n.t("noFilesInDirectory")}</div>
 	</else>
 </section>
 <footer class="footer z3-cr-images-footer pb-3 pt-3 mt-5 mb-3">
@@ -186,14 +186,14 @@
 		</button>
 		<button class="button" on-click("onCancel")>
 			${out.global.i18n.t("btnCancel")}
-		</button> 
+		</button>
 	</div>
 </footer>
 <if(state.loading)>
 	<div class="z3-cr-images-loading">
 		<span class="button is-white is-loading is-large z3-cr-images-loading-spinner">
 			&nbsp;
-		</span> 
+		</span>
 	</div>
 </if>
 <uploadModal

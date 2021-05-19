@@ -36,17 +36,17 @@
                         },
                         "type": {
                             "type": "string",
-                            "enum": ["input", "date", "select"]
+                            "enum": ["input", "date", "select", "raw"]
                         },
                         "mode": {
                             "type": "string",
-                            "enum": ["equals", "notEquals", "isLike", "notLike", "oneOf", "noneOf", "greaterThan", "greaterThanOrEquals", "lessThan", "lessThanOrEquals"]
+                            "enum": ["equals", "notEquals", "isLike", "notLike", "oneOf", "noneOf", "greaterThan", "greaterThanOrEquals", "lessThan", "lessThanOrEquals", "raw"]
                         },
                         "value": {
                             "type": "object",
                             "properties": {
                                 "id": {
-                                    "type": ["string", "array"]
+                                    "type": ["string", "array", "null"]
                                 }
                             }
                         }

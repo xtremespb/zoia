@@ -29,7 +29,7 @@ export default () => ({
                 sort: {},
                 projection: usersListData.projection
             };
-            const query = {};
+            let query = {};
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = usersListData.search.map(c => {
                     const sr = {};
@@ -41,9 +41,12 @@ export default () => ({
                 });
             }
             if (req.body.filters && req.body.filters.length) {
-                query.$and = utils.buildFilterQuery(req.body.filters);
-                if (!query.$and.length) {
-                    delete query.$and;
+                const builtQuery = utils.buildFilterQuery(req.body.filters);
+                if (Object.keys(builtQuery).length) {
+                    query = {
+                        ...query,
+                        ...builtQuery
+                    };
                 }
             }
             const count = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).count();

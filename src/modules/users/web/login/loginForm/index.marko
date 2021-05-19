@@ -45,13 +45,13 @@ import userLogin from "../../../api/data/userLogin.json"
 			}
 			validation=userLogin
 			progressButtonId="btnLogin"
-			on-post-success("onFormPostSuccess")/> 
+			on-post-success("onFormPostSuccess")/>
 	</if>
 	<else>
 		<p>
 			<button
 				class="button is-loading"
 				style="padding:0;margin:-8px 17px 0 0;border:0"/>${out.global.i18n.t("authorized")}
-		</p> 
+		</p>
 	</else>
 </div>

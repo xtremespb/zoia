@@ -70,6 +70,8 @@ module.exports = class {
             setItemData: this.setItemData.bind(this),
             emitFieldsUpdate: this.emitFieldsUpdate.bind(this),
             setAceValue: this.setAceValue.bind(this),
+            getAceInstance: this.getAceInstance.bind(this),
+            focus: this.focus.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -103,6 +105,13 @@ module.exports = class {
         const autoFocusField = this.fieldsFlat.find(i => i.autoFocus);
         if (autoFocusField && this.getComponent(`mf_cmp_${autoFocusField.id}`)) {
             this.getComponent(`mf_cmp_${autoFocusField.id}`).func.setFocus();
+        }
+    }
+
+    focus(id) {
+        const component = this.getComponent(`mf_cmp_${id}`);
+        if (component) {
+            component.func.setFocus();
         }
     }
 
@@ -159,6 +168,9 @@ module.exports = class {
         this.setState("error", null);
         this.state.tabs.map(tab => {
             this.state.errors[tab.id] = {};
+        });
+        this.fieldsFlat.map(field => {
+            setTimeout(() => this.setAceValue(field.id, ""), 10);
         });
     }
 
@@ -326,6 +338,13 @@ module.exports = class {
         const component = this.getComponent(`mf_cmp_${id}`);
         if (component && component.func.setAceValue) {
             component.func.setAceValue(value);
+        }
+    }
+
+    getAceInstance(id) {
+        const component = this.getComponent(`mf_cmp_${id}`);
+        if (component && component.func.getAceInstance) {
+            return component.func.getAceInstance();
         }
     }
 
@@ -869,7 +888,7 @@ module.exports = class {
     }
 
     setError(error) {
-        this.state.error = error;
+        setTimeout(() => this.setState("error", error), 1);
     }
 
     onContextMenu(data) {

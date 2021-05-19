@@ -19,7 +19,7 @@ import icons from "../../../data/mime.json"
 	class="columns is-variable is-1 z3-ap-noselect"
 	style=(state.currentMode === "list" ? "" : "display:none")>
 	<div class="column is-narrow z3-ap-f-tree-wrap">
-		<mtree key="z3_ap_f_tree" id="z3_ap_f_tree" on-item-click("onTreeItemClick")/> 
+		<mtree key="z3_ap_f_tree" id="z3_ap_f_tree" on-item-click("onTreeItemClick")/>
 	</div>
 	<div class="column">
 		<div class="columns is-mobile is-multiline mb-0 z3-ap-f-toolbar-wrap">
@@ -33,10 +33,10 @@ import icons from "../../../data/mime.json"
 							disabled=state.loading>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-reload"/>
-							</span> 
-						</button> 
-					</p> 
-				</div> 
+							</span>
+						</button>
+					</p>
+				</div>
 			</div>
 			<div class="column is-narrow">
 				<div class="field has-addons">
@@ -48,8 +48,8 @@ import icons from "../../../data/mime.json"
 							disabled=state.loading>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-checkbox-marked-outline"/>
-							</span> 
-						</button> 
+							</span>
+						</button>
 					</p>
 					<p class="control">
 						<button
@@ -59,10 +59,10 @@ import icons from "../../../data/mime.json"
 							disabled=state.loading>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-checkbox-blank-outline"/>
-							</span> 
-						</button> 
-					</p> 
-				</div> 
+							</span>
+						</button>
+					</p>
+				</div>
 			</div>
 			<div class="column is-narrow">
 				<div class="field has-addons">
@@ -74,8 +74,8 @@ import icons from "../../../data/mime.json"
 							on-click("onLevelUpClick")>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-folder-upload-outline"/>
-							</span> 
-						</button> 
+							</span>
+						</button>
 					</p>
 					<p class="control">
 						<button
@@ -85,10 +85,10 @@ import icons from "../../../data/mime.json"
 							on-click("onCreateDir")>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-folder-plus-outline"/>
-							</span> 
-						</button> 
-					</p> 
-				</div> 
+							</span>
+						</button>
+					</p>
+				</div>
 			</div>
 			<div class="column is-narrow">
 				<div class="field has-addons">
@@ -100,8 +100,8 @@ import icons from "../../../data/mime.json"
 							on-click("onCreateFile")>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-file-plus-outline"/>
-							</span> 
-						</button> 
+							</span>
+						</button>
 					</p>
 					<p class="control">
 						<button
@@ -111,8 +111,8 @@ import icons from "../../../data/mime.json"
 							on-click("onCopyClick")>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-content-copy"/>
-							</span> 
-						</button> 
+							</span>
+						</button>
 					</p>
 					<p class="control">
 						<button
@@ -122,8 +122,8 @@ import icons from "../../../data/mime.json"
 							on-click("onCutClick")>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-content-cut"/>
-							</span> 
-						</button> 
+							</span>
+						</button>
 					</p>
 					<p class="control">
 						<button
@@ -145,9 +145,9 @@ import icons from "../../../data/mime.json"
 							<if(state.clipboard.filesCount)>
 								<span class=`tag ${
 									state.clipboard.mode === "copy" ? "is-info" : "is-warning"
-								} z3-ap-f-paste-tag`>${state.clipboard.filesCount}</span> 
-							</if> 
-						</button> 
+								} z3-ap-f-paste-tag`>${state.clipboard.filesCount}</span>
+							</if>
+						</button>
 					</p>
 					<p class="control">
 						<button
@@ -157,8 +157,8 @@ import icons from "../../../data/mime.json"
 							on-click("onDeleteClick")>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-trash-can-outline"/>
-							</span> 
-						</button> 
+							</span>
+						</button>
 					</p>
 					<p class="control">
 						<button
@@ -168,10 +168,10 @@ import icons from "../../../data/mime.json"
 							on-click("onZIPClick")>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-package-variant-closed"/>
-							</span> 
-						</button> 
-					</p> 
-				</div> 
+							</span>
+						</button>
+					</p>
+				</div>
 			</div>
 			<div class="column is-narrow">
 				<div class="field has-addons">
@@ -183,25 +183,25 @@ import icons from "../../../data/mime.json"
 							disabled=state.loading>
 							<span class="icon">
 								<i class="mdi mdi-24px mdi-upload-outline"/>
-							</span> 
-						</button> 
-					</p> 
-				</div> 
-			</div> 
+							</span>
+						</button>
+					</p>
+				</div>
+			</div>
 		</div>
 		<if(state.dir !== "/")>
 			<nav class="breadcrumb mb-2" aria-label="breadcrumbs">
 				<ul>
 					<li>
-						<span/> 
+						<span/>
 					</li>
 					<for|item, i| of=state.dir.split("/").filter(i => i)>
 						<li>
-							<span>${item}</span> 
-						</li> 
-					</for> 
-				</ul> 
-			</nav> 
+							<span>${item}</span>
+						</li>
+					</for>
+				</ul>
+			</nav>
 		</if>
 		<div class="z3-ap-f-files-wrap">
 			<div class="z3-ap-f-files columns is-multiline">
@@ -212,9 +212,9 @@ import icons from "../../../data/mime.json"
 							file=file
 							on-file-click("onFileClick")
 							on-checkbox-change("onCheckboxChange")
-							checked=state.checked[file.name]/> 
-					</if> 
-				</for> 
+							checked=state.checked[file.name]/>
+					</if>
+				</for>
 			</div>
 			<div class="z3-ap-f-files columns is-multiline">
 				<for|file| of=state.files>
@@ -224,23 +224,23 @@ import icons from "../../../data/mime.json"
 							file=file
 							on-file-click("onFileClick")
 							on-checkbox-change("onCheckboxChange")
-							checked=state.checked[file.name]/> 
-					</if> 
-				</for> 
+							checked=state.checked[file.name]/>
+					</if>
+				</for>
 			</div>
 			<if(!state.files.length && !state.loading)>
 				<div class="has-text-weight-light mt-3">
 					${out.global.i18n.t("noFilesInDirectory")}
-				</div> 
+				</div>
 			</if>
 			<if(state.loading)>
 				<div class="z3-ap-f-loading">
 					<span class="button is-white is-loading is-large z3-ap-f-loading-spinner">
 						&nbsp;
-					</span> 
-				</div> 
-			</if> 
-		</div> 
+					</span>
+				</div>
+			</if>
+		</div>
 	</div>
 </div>
 <fileMenu key="z3_ap_f_fileMenu" on-item-click("onMenuItemClick")/>
@@ -255,23 +255,23 @@ import icons from "../../../data/mime.json"
 		<div class="notification is-danger">
 			<button class="delete" on-click("onFileErrorDeleteClick")/>
 			${state.errorFile}
-		</div> 
+		</div>
 	</if>
 	<if(state.currentMode === "edit")>
-		<div>${state.dir === "/" ? "" : state.dir}/${state.currentFile}</div> 
+		<div>${state.dir === "/" ? "" : state.dir}/${state.currentFile}</div>
 	</if>
 	<div
 		class="z3-ap-f-textEditorWrap"
 		key="z3_ap_f_textEditorWrap"
 		style=(state.currentMode === "edit" ? "" : "display:none")>
-		<div class="z3-ap-f-ace" no-update/> 
+		<div class="z3-ap-f-ace" no-update/>
 	</div>
 	<if(state.loadingFile)>
 		<div class="z3-ap-f-loading">
 			<span class="button is-white is-loading is-large z3-ap-f-loading-spinner">
 				&nbsp;
-			</span> 
-		</div> 
+			</span>
+		</div>
 	</if>
 	<if(state.currentMode === "edit")>
 		<div class="mt-4">
@@ -282,15 +282,15 @@ import icons from "../../../data/mime.json"
 						disabled=state.loadingFile
 						on-click("onFileSave")>
 						${out.global.i18n.t("btnSave")}
-					</button> 
+					</button>
 				</p>
 				<p class="control">
 					<button class="button" on-click("returnToListMode")>
 						${out.global.i18n.t("btnCancel")}
-					</button> 
-				</p> 
-			</div> 
-		</div> 
+					</button>
+				</p>
+			</div>
+		</div>
 	</if>
 </div>
 <mnotify key="files_mnotify"/>
