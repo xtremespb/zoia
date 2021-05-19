@@ -78,6 +78,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 										<a href="" on-click("onAddFilterClick") class="dropdown-item">
 											${out.global.i18n.t("mTable.addFilter")}
 										</a>
+										<a href="" on-click("onAddRawFilterClick") class="dropdown-item">
+											${out.global.i18n.t("mTable.rawFilterEdit")}
+										</a>
 										<if(state.filterCurrentId)>
 											<a href="" on-click("onSaveCurrentFilterSet") class="dropdown-item">
 												${out.global.i18n.t("mTable.saveCurrentFilterSet")}
@@ -130,34 +133,49 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				</div> 
 			</if>
 			<for|f, i| of=state.filters>
-				<div class="control">
-					<div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
-						<div class="tag is-info" on-click("onFilterTagClick")>
-							<div
-								class="z3-mt-filter-tag-label z3-mt-filter-tag-label-short"
-								data-tippy-content=`${f.label}`>
-								${f.label}
-							</div> 
-						</div>
-						<span
-							class="tag is-dark"
-							on-click("onFilterTagClick")
-							data-tippy-content=out.global.i18n.t(`mTable.filter.${f.mode}`)>
-							${out.global.i18n.t(`mTable.filter.${f.mode}Short`)}
-						</span>
-						<div class="tag is-link" on-click("onFilterTagClick")>
+				<if(f.type === "raw")>
+					<div class="control">
+						<div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
+							<div class="tag is-info" on-click("onFilterTagClick")>
+								<div
+									class="z3-mt-filter-tag-label">
+									${out.global.i18n.t("mTable.rawValue")}
+								</div> 
+							</div>
+							<a class="tag is-delete" on-click("onFilterTagDeleteClick")/> 
+						</div> 
+					</div>
+				</if>
+				<else>
+					<div class="control">
+						<div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
+							<div class="tag is-info" on-click("onFilterTagClick")>
+								<div
+									class="z3-mt-filter-tag-label z3-mt-filter-tag-label-short"
+									data-tippy-content=`${f.label}`>
+									${f.label}
+								</div> 
+							</div>
 							<span
-								class="z3-mt-filter-tag-label"
-								data-tippy-content=(f.value.label || out.global.i18n.t("mTable.filter.null"))>
-								${f.value.label || out.global.i18n.t("mTable.filter.null")}
+								class="tag is-dark"
+								on-click("onFilterTagClick")
+								data-tippy-content=out.global.i18n.t(`mTable.filter.${f.mode}`)>
+								${out.global.i18n.t(`mTable.filter.${f.mode}Short`)}
 							</span>
-							<if(f.value.plus > 0)>
-								<span class="z3-mt-filter-tag-plus">+${f.value.plus}</span> 
-							</if> 
-						</div>
-						<a class="tag is-delete" on-click("onFilterTagDeleteClick")/> 
-					</div> 
-				</div> 
+							<div class="tag is-link" on-click("onFilterTagClick")>
+								<span
+									class="z3-mt-filter-tag-label"
+									data-tippy-content=(f.value.label || out.global.i18n.t("mTable.filter.null"))>
+									${f.value.label || out.global.i18n.t("mTable.filter.null")}
+								</span>
+								<if(f.value.plus > 0)>
+									<span class="z3-mt-filter-tag-plus">+${f.value.plus}</span> 
+								</if> 
+							</div>
+							<a class="tag is-delete" on-click("onFilterTagDeleteClick")/> 
+						</div> 
+					</div>
+				</else>
 			</for> 
 		</div> 
 	</if>
@@ -358,11 +376,13 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<div class="select is-fullwidth">
 							<select on-change("onFilterSelectChange")>
 								<option value="" selected=(state.filterSelected === "")>&ndash;</option>
-								<for|f| of=input.filter>
-									<option value=f.id selected=(state.filterSelected === f.id)>
-										${f.label}
-									</option> 
-								</for> 
+								<if(input.filter && input.filter.length)>
+									<for|f| of=input.filter>
+										<option value=f.id selected=(state.filterSelected === f.id)>
+											${f.label}
+										</option> 
+									</for>
+								</if>
 							</select> 
 						</div>
 						<div class=`select is-fullwidth mt-2 mb-2${
@@ -408,7 +428,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								id=`${input.id}_filterDate`
 								key=`${input.id}_filterDate`
 								on-value-change("onFilterCalendarValueChange")/> 
-						</div> 
+						</div>
 					</section>
 					<footer class="modal-card-foot">
 						<fieldset>
@@ -556,7 +576,61 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					validation=filterSave
 					i18n=out.global.i18n
 					progressButtonId="btnSave"
-					on-button-click("onFilterEditFormButtonClick")/> 
+					on-button-click("onFilterEditFormButtonClick")/>
+			</div> 
+		</div> 
+	</div>
+	<div class=`modal${state.filterRawDialogActive ? " is-active" : ""}`>
+		<div class="modal-background" on-click("onFilterRawDialogClose")/>
+		<div class="modal-content z3-mt-filter-save-dialog">
+			<div class="z3-mt-filter-save-dialog-form-wrap">
+				<div class="tags are-medium">
+					<if(input.filter && input.filter.length)>
+						<for|f| of=input.filter>
+							<span class="tag z3-mt-filter-raw-tag" data-id=f.id on-click("onfilterRawTagClick")>${f.label}</span>
+						</for>
+					</if>
+				</div>
+				<mform
+					manual=true
+					key=`${input.id}_filterRawForm`
+					id=`${input.id}_filterRawForm`
+					fields=[{
+						id: "value",
+						type: "ace",
+						label: out.global.i18n.t("mTable.rawValue"),
+						helpText: out.global.i18n.t("mTable.rawValueHelpText"),
+						wysiwyg: false,
+						source: true,
+						autoFocus: true,
+						aceOptions: {
+							mode: "ace/mode/json"
+						}
+					}, {
+							id: "div1",
+							type: "divider"
+						},
+						{
+							id: "bg1",
+							type: "buttons",
+							data: [
+								{
+									id: "btnSave",
+									type: "button",
+									buttonType: "submit",
+									label: out.global.i18n.t("mTable.save"),
+									css: "is-primary"
+								},
+								{
+									id: "btnCancel",
+									type: "button",
+									buttonType: "button",
+									label: out.global.i18n.t("mTable.cancel")
+								}
+							]
+						}]
+					i18n=out.global.i18n
+					on-button-click("onFilterRawFormButtonClick")/>
 			</div> 
 		</div> 
 	</div>

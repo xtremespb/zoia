@@ -149,5 +149,9 @@
 	"calendar.clear": "Clear",
 	"calendar.cancel": "Cancel",
 	"license": "Licensed under terms of MIT License",
-	"license.mit": "MIT License"
+	"license.mit": "MIT License",
+	"mTable.rawFilterEdit": "Add Raw Database Query",
+	"mTable.rawValue": "Raw Query",
+	"mTable.rawValueHelpText": "Should be a valid MongoDB Query (JSON)",
+	"mTableErr.invalidJSON": "Invalid JSON Value"
 }

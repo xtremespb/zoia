@@ -105,6 +105,7 @@ module.exports = class {
             setData: this.setData.bind(this),
             getData: this.getData.bind(this),
             setAceValue: this.setAceValue.bind(this),
+            getAceInstance: this.getAceInstance.bind(this),
         };
         this.beautifyOptions = {
             indent_size: "2",
@@ -160,6 +161,13 @@ module.exports = class {
             return;
         }
         this.aceEditor.getSession().setValue(value);
+    }
+
+    getAceInstance() {
+        if (!this.aceEditor) {
+            return;
+        }
+        return this.aceEditor;
     }
 
     updateAce() {
@@ -321,6 +329,9 @@ module.exports = class {
         }
         if (field) {
             field.focus();
+            if (this.getAceInstance()) {
+                this.getAceInstance().focus();
+            }
         }
     }
 

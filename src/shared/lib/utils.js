@@ -320,7 +320,9 @@ export default {
         return Math.floor(Math.random() * (high - low) + low);
     },
     buildFilterQuery(filters) {
-        const query = [];
+        let query = {
+            $and: []
+        };
         const convertSpecialVariables = variable => {
             switch (variable) {
             case "z3:convert:null":
@@ -335,9 +337,11 @@ export default {
         };
         filters.map(f => {
             const filter = {};
-            f.value.id = Array.isArray(f.value.id) ? f.value.id.map(i => convertSpecialVariables(i)) : convertSpecialVariables(f.value.id);
-            if (f.type === "date" && f.value.id) {
-                f.value.id = parse(f.value.id, "yyyyMMdd", new Date());
+            if (f.value.id && f.mode !== "raw") {
+                f.value.id = Array.isArray(f.value.id) ? f.value.id.map(i => convertSpecialVariables(i)) : convertSpecialVariables(f.value.id);
+                if (f.type === "date" && f.value.id) {
+                    f.value.id = parse(f.value.id, "yyyyMMdd", new Date());
+                }
             }
             switch (f.mode) {
             case "equals":
@@ -346,12 +350,12 @@ export default {
                     filter1[f.id] = {
                         $gte: startOfDay(f.value.id)
                     };
-                    query.push(filter1);
+                    query.$and.push(filter1);
                     const filter2 = {};
                     filter2[f.id] = {
                         $lte: endOfDay(f.value.id)
                     };
-                    query.push(filter2);
+                    query.$and.push(filter2);
                 } else {
                     if (f.value.id) {
                         filter[f.id] = {
@@ -370,7 +374,7 @@ export default {
                         };
                         filter.$or.push(filter2);
                     }
-                    query.push(filter);
+                    query.$and.push(filter);
                 }
                 break;
             case "notEquals":
@@ -386,12 +390,12 @@ export default {
                         $gt: endOfDay(f.value.id)
                     };
                     filter.$or.push(filter2);
-                    query.push(filter);
+                    query.$and.push(filter);
                 } else {
                     if (f.value.id) {
-                    filter[f.id] = {
-                        $ne: f.value.id
-                    };
+                        filter[f.id] = {
+                            $ne: f.value.id
+                        };
                     } else {
                         filter.$and = [];
                         const filter1 = {};
@@ -405,7 +409,7 @@ export default {
                         };
                         filter.$and.push(filter2);
                     }
-                    query.push(filter);
+                    query.$and.push(filter);
                 }
                 break;
             case "isLike":
@@ -413,7 +417,7 @@ export default {
                     $regex: f.value.id,
                     $options: "i"
                 };
-                query.push(filter);
+                query.$and.push(filter);
                 break;
             case "notLike":
                 filter[f.id] = {
@@ -422,7 +426,7 @@ export default {
                         $options: "i"
                     }
                 };
-                query.push(filter);
+                query.$and.push(filter);
                 break;
             case "oneOf":
                 filter.$or = [];
@@ -435,14 +439,14 @@ export default {
                         filter.$or.push(oneOfFilter);
                     }
                 });
-                query.push(filter);
+                query.$and.push(filter);
                 break;
             case "noneOf":
                 f.value.id.map(i => {
                     filter[f.id] = {
                         $ne: i
                     };
-                    query.push(filter);
+                    query.$and.push(filter);
                 });
                 break;
             case "greaterThan":
@@ -455,7 +459,7 @@ export default {
                         $gt: parseFloat(f.value.id)
                     };
                 }
-                query.push(filter);
+                query.$and.push(filter);
                 break;
             case "greaterThanOrEquals":
                 if (f.type === "date") {
@@ -467,7 +471,7 @@ export default {
                         $gte: parseFloat(f.value.id)
                     };
                 }
-                query.push(filter);
+                query.$and.push(filter);
                 break;
             case "lessThan":
                 if (f.type === "date") {
@@ -479,7 +483,7 @@ export default {
                         $lt: parseFloat(f.value.id)
                     };
                 }
-                query.push(filter);
+                query.$and.push(filter);
                 break;
             case "lessThanOrEquals":
                 if (f.type === "date") {
@@ -491,10 +495,19 @@ export default {
                         $lte: parseFloat(f.value.id)
                     };
                 }
-                query.push(filter);
+                query.$and.push(filter);
+                break;
+            case "raw":
+                query = {
+                    ...query,
+                    ...f.value
+                };
                 break;
             }
         });
+        if (!query.$and.length) {
+            delete query.$and;
+        }
         return query;
     }
 };

@@ -5,6 +5,9 @@ const cloneDeep = require("lodash.clonedeep");
 const {
     format,
 } = require("date-fns");
+const {
+    v4: uuidv4
+} = require("uuid");
 const Cookies = require("../../../lib/cookies").default;
 
 module.exports = class {
@@ -40,6 +43,7 @@ module.exports = class {
             filterError: null,
             filters: [],
             filterEditDialogActive: false,
+            filterRawDialogActive: false,
             dropdownVisible: {},
             filterManageDialogActive: false,
             filterManageDialogLoading: false,
@@ -487,24 +491,30 @@ module.exports = class {
         this.setState("filterDialogEdit", filterIndex);
         const data = this.state.filters[filterIndex];
         this.setState("filterSelected", data.id);
-        this.setState("filterMode", data.mode);
-        const filterData = this.input.filter.find(f => f.id === data.id) || {};
-        this.setState("filterSelectedData", filterData);
-        let filterValue = null;
-        switch (this.state.filterSelectedData.type) {
-        case "select":
-            this.selectField.func.setValue(data.value.id);
-            this.selectField.func.setItems(filterData.items);
-            break;
-        case "date":
-            this.calendarField.func.setDate(data.value.id);
-            break;
-        default:
-            filterValue = data.value.id;
+        if (data.type === "raw") {
+            this.getComponent(`${this.input.id}_filterRawForm`).func.setAceValue("value", JSON.stringify(data.value, null, "\t"));
+            this.setState("filterRawDialogActive", true);
+            setTimeout(() => this.getComponent(`${this.input.id}_filterRawForm`).func.autoFocus(), 50);
+        } else {
+            const filterData = this.input.filter.find(f => f.id === data.id) || {};
+            this.setState("filterSelectedData", filterData);
+            this.setState("filterMode", data.mode);
+            let filterValue = null;
+            switch (this.state.filterSelectedData.type) {
+            case "select":
+                this.selectField.func.setValue(data.value.id);
+                this.selectField.func.setItems(filterData.items);
+                break;
+            case "date":
+                this.calendarField.func.setDate(data.value.id);
+                break;
+            default:
+                filterValue = data.value.id;
+            }
+            this.setState("filterValue", filterValue);
+            this.setState("filterError", null);
+            this.setState("filterDialogActive", true);
         }
-        this.setState("filterValue", filterValue);
-        this.setState("filterError", null);
-        this.setState("filterDialogActive", true);
     }
 
     onFilterTagDeleteClick(e) {
@@ -531,6 +541,14 @@ module.exports = class {
         this.setState("filterEditDialogActive", true);
         this.getComponent(`${this.input.id}_filterEditForm`).func.resetData();
         setTimeout(() => this.getComponent(`${this.input.id}_filterEditForm`).func.autoFocus(), 50);
+    }
+
+    onAddRawFilterClick(e) {
+        e.preventDefault();
+        this.setState("dropdownVisible", {});
+        this.setState("filterRawDialogActive", true);
+        this.getComponent(`${this.input.id}_filterRawForm`).func.setAceValue("value", "");
+        setTimeout(() => this.getComponent(`${this.input.id}_filterRawForm`).func.autoFocus(), 50);
     }
 
     async onSaveCurrentFilterSet(e) {
@@ -651,6 +669,10 @@ module.exports = class {
         this.setState("filterManageDialogActive", false);
     }
 
+    onFilterRawDialogClose() {
+        this.setState("filterRawDialogActive", false);
+    }
+
     async onManageFilters(e) {
         e.preventDefault();
         this.setState("dropdownVisible", {});
@@ -757,5 +779,54 @@ module.exports = class {
             this.setState("filterManageDialogLoading", false);
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTableErr.filterSave`), "is-danger");
         }
+    }
+
+    async onFilterRawFormButtonClick(obj) {
+        switch (obj.id) {
+        case "btnCancel":
+            this.onFilterRawDialogClose();
+            break;
+        case "btnSave":
+            const valueText = this.getComponent(`${this.input.id}_filterRawForm`).func.getValue("value");
+            let valueJson;
+            try {
+                valueJson = JSON.parse(valueText);
+                if (valueJson === null) {
+                    throw new Error();
+                }
+            } catch (e) {
+                this.getComponent(`${this.input.id}_filterRawForm`).func.setError(this.i18n.t("mTableErr.invalidJSON"));
+                break;
+            }
+            this.onFilterRawDialogClose();
+            const filter = {
+                id: uuidv4(),
+                label: "",
+                type: "raw",
+                mode: "raw",
+                value: valueJson,
+            };
+            const filters = cloneDeep(this.state.filters);
+            if (this.state.filterDialogEdit !== null) {
+                filters[this.state.filterDialogEdit] = filter;
+            } else {
+                filters.push(filter);
+            }
+            this.setState("filters", filters);
+            window.__zoiaTippyJs.reset();
+            this.setState("page", 1);
+            this.dataRequest();
+            break;
+        }
+    }
+
+    onfilterRawTagClick(e) {
+        e.preventDefault();
+        const {
+            id
+        } = e.target.dataset;
+        const ace = this.getComponent(`${this.input.id}_filterRawForm`).func.getAceInstance("value");
+        ace.focus();
+        ace.session.insert(ace.getCursorPosition(), `"${id}"`);
     }
 };
