@@ -17,8 +17,6 @@
     height: 60px;
     width: 60px;
     margin: 0px auto;
-    -webkit-animation: z3-spinner-rotation .6s infinite linear;
-    -moz-animation: z3-spinner-rotation .6s infinite linear;
     animation: z3-spinner-rotation .6s infinite linear;
     border-left: 6px solid rgba(255, 255, 255, .70);
     border-right: 6px solid rgba(255, 255, 255, .60);
@@ -26,26 +24,6 @@
     border-top: 6px solid rgba(255, 255, 255, .40);
     border-radius: 100%;
     z-index: 11001;
-}
-
-@-webkit-keyframes z3-spinner-rotation {
-    from {
-        -webkit-transform: rotate(0deg);
-    }
-
-    to {
-        -webkit-transform: rotate(359deg);
-    }
-}
-
-@-moz-keyframes z3-spinner-rotation {
-    from {
-        -moz-transform: rotate(0deg);
-    }
-
-    to {
-        -moz-transform: rotate(359deg);
-    }
 }
 
 @keyframes z3-spinner-rotation {

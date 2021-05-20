@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const CSSExtractPlugin = require("mini-css-extract-plugin");
-const MinifyCSSPlugin = require("css-minimizer-webpack-plugin");
+
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const babelConfig = require("./babel.config");
@@ -10,19 +10,31 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
     context: path.resolve(`${__dirname}/src/shared/marko`),
     name: "frontend",
     target: ["web", "es5"],
-    devtool: argv.mode === "production" ? false : "eval",
+    devtool: argv.mode === "production" ? false : "inline-source-map",
     module: {
         rules: [{
                 test: /\.s?css$/,
                 use: [{
                         loader: MiniCssExtractPlugin.loader
                     }, {
-                        loader: "css-loader"
+                        loader: "css-loader",
+                        options: {
+                            importLoaders: 1,
+                            sourceMap: false
+                        }
                     },
+                    argv.mode === "production" ? {
+                        loader: "postcss-loader",
+                        options: {
+                            postcssOptions: {
+                                config: path.resolve(`${__dirname}/postcss.config.js`),
+                            },
+                        },
+                    } : null,
                     {
                         loader: "sass-loader"
-                    }
-                ]
+                    },
+                ].filter(i => i !== null)
             }, {
                 test: /\.(woff(2)?|ttf|eot|otf|png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [{
@@ -98,7 +110,6 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
         new CSSExtractPlugin({
             filename: "[contenthash:8].css"
         }),
-        argv.mode === "production" ? new MinifyCSSPlugin() : () => {},
         markoPlugin.browser
     ]
 });
