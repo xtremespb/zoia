@@ -1,3 +1,5 @@
+@use "sass:math"
+
 $switch-background: $grey-light !default
 $switch-border: .1rem solid transparent !default
 $switch-background-active: $primary !default
@@ -44,7 +46,7 @@ $switch-focus: 1px dotted $grey-light !default
 		&:after
 			display: block
 			position: absolute
-			top: ($switch-height / 2) - ($paddle-height / 2)
+			top: math.div($switch-height, 2) - math.div($paddle-height, 2)
 			left: $switch-paddle-offset
 			width: $paddle-width
 			height: $paddle-height
@@ -104,8 +106,8 @@ $switch-focus: 1px dotted $grey-light !default
 		+ label
 			&::before,
 			&:before
-				top: $switch-height / 2.75
-				height: $switch-height / 4
+				top: math.div($switch-height, 2.75)
+				height: math.div($switch-height, 4)
 			&::after,
 			&:after
 				box-shadow: 0px 0px 3px $grey
@@ -118,7 +120,6 @@ $switch-focus: 1px dotted $grey-light !default
 			&::after,
 			&:after
 				border-radius: 50%
-
 
 .switch[type="checkbox"]
 	outline: 0
@@ -198,5 +199,5 @@ $switch-focus: 1px dotted $grey-light !default
 
 .field-body
 	.switch[type="checkbox"]
-		+ label
-			margin-top: .375em
+	+ label
+		margin-top: .375em

@@ -5,6 +5,9 @@ export default class {
     constructor(config, username, password) {
         this.config = cloneDeep(config);
         this.username = username;
+        this.config.activeDirectory = this.config.activeDirectory || {
+            config: {}
+        };
         this.config.activeDirectory.config.username = `${username}${this.config.activeDirectory.usernameSuffix}`;
         this.config.activeDirectory.config.password = password;
         this.ad = this.config.activeDirectory.enabled ? new ActiveDirectory(this.config.activeDirectory.config) : null;

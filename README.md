@@ -8,3 +8,4 @@ ZOIA is the content management system based on Fastify, Marko, Bulma and MongoDB
 * UX powered by Bulma
 * Multi-language support out of the box
   
+Demo version: https://demo.zoiajs.org/ (use admin/password to log in)

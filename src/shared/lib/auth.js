@@ -131,7 +131,7 @@ export default class {
                 // Ignore
             }
             const passwordHash = crypto.createHmac("sha256", this.zoiaConfig.secret).update(password).digest("hex");
-            if (adUser && !user && this.zoiaConfig.activeDirectory.createMissingAccounts) {
+            if (adUser && !user && this.zoiaConfig.activeDirectory && this.zoiaConfig.activeDirectory.createMissingAccounts) {
                 await this.db.collection(this.collectionUsers).insertOne({
                     username,
                     password: passwordHash,

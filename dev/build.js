@@ -63,7 +63,7 @@ const loadingAnimation = () => {
     let i = 0;
     return setInterval(() => {
         i = (i > 3) ? 0 : i;
-        const msg = `Building ZOIA, this may take ${options.production ? "a VERY long" : "some"} time (depending on the performance of the system)... ${h[i]}`;
+        const msg = `Building ZOIA, this may take ${options.production ? "LONG" : "some"} time... ${h[i]}`;
         process.stdout.write(`\r${msg}`);
         i += 1;
     }, 100);
@@ -107,5 +107,5 @@ const loadingAnimation = () => {
         console.log(e);
         process.exit(1);
     }
-    console.log(`\rAll done, ${command} version of ZOIA has been built successfully in ${parseInt(new Date().getTime() / 1000 - timestampStart, 10)} second(s).              \n`);
+    console.log(`\rAll done, ${command} version of ZOIA has been built successfully in ${parseInt(new Date().getTime() / 1000 - timestampStart, 10)} second(s).\n`);
 })();

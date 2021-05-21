@@ -8,7 +8,7 @@ import fastifyFormbody from "fastify-formbody";
 import fastifyCookie from "fastify-cookie";
 import fastifyStatic from "fastify-static";
 import Pino from "pino";
-import Telegraf from "telegraf";
+import { Telegraf } from "telegraf";
 import Redis from "ioredis";
 import Fastify from "fastify";
 import {
@@ -251,7 +251,6 @@ import Env from "../../lib/env";
         if (config.telegram && config.telegram.enabled) {
             const bot = new Telegraf(config.telegram.token);
             fastify.decorate("telegramBot", bot);
-            fastify.decorateRequest("telegramBot", bot);
             pino.info(`Launching Telegram bot`);
             // Load all Telegram Modules
             await Promise.all(modules.map(async m => {
