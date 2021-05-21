@@ -1,3 +1,5 @@
+@use "sass:math"
+
 $switch-background: $grey-light !default
 $switch-border: .1rem solid transparent !default
 $switch-background-active: $primary !default
@@ -119,7 +121,6 @@ $switch-focus: 1px dotted $grey-light !default
 			&:after
 				border-radius: 50%
 
-
 .switch[type="checkbox"]
 	outline: 0
 	user-select: none
@@ -198,5 +199,5 @@ $switch-focus: 1px dotted $grey-light !default
 
 .field-body
 	.switch[type="checkbox"]
-		+ label
-			margin-top: .375em
+	+ label
+		margin-top: .375em
