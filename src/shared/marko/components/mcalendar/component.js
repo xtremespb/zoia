@@ -4,9 +4,7 @@ const {
     format,
     parse,
 } = require("date-fns");
-const {
-    cloneDeep
-} = require("lodash");
+const cloneDeep = require("lodash.clonedeep");
 
 module.exports = class {
     onCreate(input, out) {

@@ -11,6 +11,11 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
     name: "frontend",
     target: ["web", "es5"],
     devtool: argv.mode === "production" ? false : "inline-source-map",
+    stats: {
+        warningsFilter: [
+            "./~/css-loader!./~/postcss-loader!"
+        ]
+    },
     module: {
         rules: [{
                 test: /\.s?css$/,

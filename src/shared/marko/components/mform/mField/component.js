@@ -14,9 +14,7 @@ const {
     parseISO,
 } = require("date-fns");
 const axios = require("axios");
-const {
-    cloneDeep
-} = require("lodash");
+const cloneDeep = require("lodash.clonedeep");
 const CKEditorImageUploadAdapter = require("./CKEditorImageUploadAdapter");
 
 // Polyfill for Object.fromEntries (missing in CKEditor)
