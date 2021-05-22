@@ -16,7 +16,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					id=`${input.id}_top_buttons`>
 					<for|btn| of=input.buttons>
 						<p class="z3-mt-top-control mt-1 mr-1">
-							<div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}`>
+							<div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}${btn.dropdownRight ? " is-right" : ""}`>
 								<div class="dropdown-trigger">
 									<button
 										disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected)
@@ -54,7 +54,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					</for>
 					<if(input.filter && input.filter.length)>
 						<p class="z3-mt-top-control mt-1 mr-1">
-							<div class=`dropdown${
+							<div class=`dropdown is-right${
 								state.dropdownVisible["filterGeneric"] ? " is-active" : ""
 							}`>
 								<div class="dropdown-trigger">
@@ -351,9 +351,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	</if>
 	<if(input.filter && input.filter.length)>
 		<div class=`modal${state.filterDialogActive ? " is-active" : ""}`>
-			<form on-submit("onFilterFormSubmit")>
 				<div class="modal-background" on-click("onFilterDialogClose")/>
 				<div class="modal-card">
+					<form on-submit("onFilterFormSubmit")>
 					<header class="modal-card-head">
 						<p class="modal-card-title">
 							${state.filterDialogEdit !== null
@@ -441,15 +441,15 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</button>
 						</fieldset>
 					</footer>
+					</form>
 				</div>
-			</form>
-		</div>
+			</div>
 	</if>
 	<if(state.filterManageDialogActive)>
 		<div class="modal is-active">
 			<div class="modal-background" on-click("onFilterManageDialogClose")/>
-			<div class="modal-content z3-mt-filter-manage-dialog">
-				<div class="z3-mt-filter-manage-dialog-content-wrap">
+			<div class="modal-card">
+				<div class="modal-card-body">
 					<if(state.filterManageDialogError)>
 						<div class="notification is-danger mb-2">
 							${state.filterManageDialogError}
@@ -513,8 +513,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	</if>
 	<div class=`modal${state.filterEditDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onFilterEditDialogClose")/>
-		<div class="modal-content z3-mt-filter-save-dialog">
-			<div class="z3-mt-filter-save-dialog-form-wrap">
+		<div class="modal-card">
+			<div class="modal-card-body">
 				<mform
 					manual=true
 					key=`${input.id}_filterEditForm`
@@ -581,8 +581,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	</div>
 	<div class=`modal${state.filterRawDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onFilterRawDialogClose")/>
-		<div class="modal-content z3-mt-filter-save-dialog">
-			<div class="z3-mt-filter-save-dialog-form-wrap">
+		<div class="modal-card">
+			<div class="modal-card-body">
 				<div class="tags are-medium">
 					<if(input.filter && input.filter.length)>
 						<for|f| of=input.filter>

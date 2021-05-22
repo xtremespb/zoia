@@ -149,6 +149,10 @@
     .z3-ap-nav-menu {
         z-index: 999 !important;
     }
+
+    .z3-ap-main-footer {
+        justify-content: center;
+    }
 }
 
 @import '~pretty-checkbox/src/pretty-checkbox.scss';
