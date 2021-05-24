@@ -35,8 +35,8 @@ try {
 const command = Object.keys(options)[0];
 const params = {
     dev: "--mode development --config ./dev/config.js",
-    maps: "--progress --mode development --config ./dev/config.js --maps true",
-    update: `--progress --mode ${buildMode} --config ./dev/config.js --type update`,
+    maps: "--progress --mode development --config ./dev/config.js --env=maps=true",
+    update: `--progress --mode ${buildMode} --config ./dev/config.js --env=update=true`,
     production: "--progress --mode production --config ./dev/config.js",
 };
 

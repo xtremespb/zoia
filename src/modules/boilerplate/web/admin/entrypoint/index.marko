@@ -4,7 +4,7 @@ import moduleConfig from "../../../module.json"
 	routes=[
 		{
 			name: moduleConfig.id,
-			path: out.global.i18n.getLocalizedURL(out.global.routes.boilerplate)
+			path: out.global.i18n.getLocalizedURL(out.global.routes[moduleConfig.id])
 		},
 		{
 			name: `${moduleConfig.id}.edit`,

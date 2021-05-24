@@ -15,8 +15,10 @@ const webpackConfig = [];
 const markoPlugin = new MarkoPlugin();
 
 module.exports = (env, argv) => {
-    console.log(`Building ZOIA, mode: ${argv.mode}${argv.type === "update" ? " (update)" : ""}`);
-    const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/modules`)).filter(d => !d.match(/^\./));
+    argv.maps = env.maps || null;
+    argv.update = env.update || null;
+    console.log(`Building ZOIA, mode: ${argv.mode}${argv.update ? " (update)" : ""}`);
+    const moduleDirs = fs.readdirSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules`)).filter(d => !d.match(/^\./));
     const configWebClient = require("./client")(moduleDirs, markoPlugin, argv);
     const configWebServer = require("./server")(markoPlugin, argv);
     const configTest = require("./test")(argv);
