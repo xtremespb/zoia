@@ -25,4 +25,6 @@ typings/
 /logs
 /data
 /backup
+/update
+package.json.bak
 /src/shared/marko/zoia/index.marko

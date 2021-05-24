@@ -1,4 +1,4 @@
-<if(out.global.updateTag)>
+<if(out.global.updateTag && out.global.updateTag.name !== `v${out.global.packageJson.version}`)>
 	<if(state.error)>
 		<div class="notification is-danger">${state.error}</div>
 	</if>
@@ -7,7 +7,7 @@
 			<progress class="progress is-danger" max="100"/>
 		</if>
 		<else>
-			<if(out.global.updateTag.name !== `v{out.global.packageJson.version}`)>
+			<if(out.global.updateTag.name !== `v${out.global.packageJson.version}`)>
 				<button class="button" on-click("onUpdateClick")>
 					${out.global.i18n.t("update")}
 				</button>

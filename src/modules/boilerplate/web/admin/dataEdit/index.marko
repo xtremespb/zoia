@@ -2,18 +2,8 @@ import cloneDeep from "lodash/cloneDeep"
 import editConfigData from "../../../api/data/edit.json"
 import Cookies from "../../../../../shared/lib/cookies"
 import moduleConfig from "../../../module.json"
+import moduleConfigAdmin from "../../../admin.json"
 
-style.scss {
-}
-
-$ input.editData = cloneDeep(editConfigData);
-$ if (input.id === "new") {
-	input.editData.root.required = [
-		...input.editData.root.required,
-		"password",
-		"passwordRepeat"
-	];
-}
 $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 	id: k,
 	label: out.global.languages[k]
@@ -23,7 +13,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 <div>
 	<h1 class="z3-ap-head-thin">
 		<span class="icon">
-			<i class="mdi z3-ap-mdi-head mdi-dark mdi-test-tube"/>
+			<i class=`mdi z3-ap-mdi-head mdi-dark mdi-${moduleConfigAdmin[0].icon}`/>
 		</span>&nbsp;${input.id === "new" ? out.global.i18n.t("add") : out.global.i18n.t("edit")}
 	</h1>
 	<mform
@@ -70,29 +60,6 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					shared: false
 				}
 			],
-			[
-				{
-					id: "password",
-					type: "text",
-					label: out.global.i18n.t("password"),
-					helpText: out.global.i18n.t("passwordHelpText"),
-					wrapCSS: "z3-is-small",
-					mandatory: input.id === "new",
-					textType: "password",
-					shouldMatch: "passwordRepeat",
-					shared: true
-				},
-				{
-					id: "passwordRepeat",
-					type: "text",
-					label: out.global.i18n.t("passwordRepeat"),
-					wrapCSS: "z3-is-small",
-					textType: "password",
-					mandatory: input.id === "new",
-					shouldMatch: "password",
-					shared: true
-				}
-			],
 			{
 				id: "attachments",
 				type: "file",
@@ -132,7 +99,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				]
 			}
 		]
-		validation=input.editData
+		validation=editConfigData
 		progressButtonId="btnSave"
 		i18n=out.global.i18n
 		on-post-success("onFormPostSuccess")

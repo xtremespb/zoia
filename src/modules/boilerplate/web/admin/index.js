@@ -13,7 +13,7 @@ export default routeId => ({
             response.setSite(site);
             if (!auth.statusAdmin()) {
                 auth.clearAuthCookie();
-                return response.redirectToLogin(req.zoiaModulesConfig[moduleData.id].routes.boilerplate);
+                return response.redirectToLogin(req.zoiaModulesConfig[moduleData.id].routes[moduleData.id]);
             }
             site.setAuth(auth);
             const render = await template.stream({

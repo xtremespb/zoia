@@ -11,6 +11,7 @@ import user from "./user";
 import demo from "./demo";
 import acl from "./acl";
 import patch from "./patch";
+import defaults from "./defaults";
 import packageJson from "../../../../package.json";
 
 const options = commandLineArgs([{
@@ -41,6 +42,10 @@ const options = commandLineArgs([{
     name: "patch",
     alias: "c",
     type: String
+}, {
+    name: "defaults",
+    alias: "s",
+    type: Boolean
 }]);
 
 (async () => {
@@ -75,6 +80,12 @@ const options = commandLineArgs([{
                 // Ignore
             }
         });
+        let defaultsData = {};
+        try {
+            defaultsData = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/defaults.json`));
+        } catch {
+            // Ignore
+        }
         // Connect to Mongo
         const mongoClient = new MongoClient(config.mongo.url, config.mongo.options || {
             useUnifiedTopology: true,
@@ -103,6 +114,10 @@ const options = commandLineArgs([{
         // ACL
         if (options.patch) {
             await patch(config, options, modulesConfig, db);
+        }
+        // Defaults
+        if (options.defaults) {
+            await defaults(config, options, modulesConfig, db, defaultsData);
         }
         // Shut down Mongo connection
         await mongoClient.close();

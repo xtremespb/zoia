@@ -1,0 +1,36 @@
+{
+    "registry": [{
+        "_id": "nav_data",
+        "tree": [{
+                "id": "home",
+                "uuid": "24644372-0b7e-4884-8ef4-545176428a2c",
+                "data": {
+                    "en": {
+                        "title": "Home",
+                        "url": "/"
+                    },
+                    "ru": {
+                        "title": "Главная",
+                        "url": "/ru"
+                    }
+                },
+                "checksum": "4b68a72c34ceb3c222ec0a59cd7b909f"
+            },
+            {
+                "id": "license",
+                "uuid": "681bb8a8-f494-4ce8-b2e8-cb6cf5fbd16e",
+                "data": {
+                    "en": {
+                        "title": "License",
+                        "url": "/license"
+                    },
+                    "ru": {
+                        "title": "Лицензия",
+                        "url": "/ru/license"
+                    }
+                },
+                "checksum": "c701fce9c2e41f2972a7b45dba71f552"
+            }
+        ]
+    }]
+}

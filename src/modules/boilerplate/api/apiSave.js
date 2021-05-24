@@ -1,7 +1,6 @@
 import {
     ObjectId
 } from "mongodb";
-import cloneDeep from "lodash/cloneDeep";
 import crypto from "crypto";
 import editData from "./data/edit.json";
 import moduleConfig from "../module.json";
@@ -27,14 +26,8 @@ export default () => ({
         // Get Form Data
         const formData = await req.processMultipart();
         const id = utils.getFormDataId(formData);
-        // Clone root validation schema
-        const editRoot = cloneDeep(editData.root);
-        if (!id) {
-            // If it's a new record, password is mandatory
-            editRoot.required = [...editRoot.required, "password"];
-        }
         // Initialize validator
-        const extendedValidation = new req.ExtendedValidation(formData, editRoot, editData.part, editData.files, languages);
+        const extendedValidation = new req.ExtendedValidation(formData, editData.root, editData.part, editData.files, languages);
         // Perform validation
         const extendedValidationResult = await extendedValidation.validate();
         // Check if there are any validation errors

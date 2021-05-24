@@ -5,7 +5,7 @@ const babelConfig = require("./babel.config");
 
 module.exports = (argv) => ({
     name: "Test Part",
-    context: path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/test`),
+    context: path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/shared/test`),
     resolve: {
         extensions: [".js", ".json"]
     },
@@ -31,7 +31,7 @@ module.exports = (argv) => ({
     output: {
         libraryTarget: "commonjs2",
         path: path.resolve(`${__dirname}/../build/bin`),
-        filename: argv.type === "update" ? "test_update.js" : "test.js",
+        filename: argv.update ? "test_update.js" : "test.js",
         publicPath: `/zoia/`,
     },
     node: {

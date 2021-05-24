@@ -5,7 +5,7 @@ const babelConfig = require("./babel.config");
 
 module.exports = (argv) => ({
     name: "CLI Part",
-    context: path.resolve(`${__dirname}/../${argv.type === "update" ? "update" : "src"}/shared/cli`),
+    context: path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/shared/cli`),
     resolve: {
         extensions: [".js", ".json"]
     },
@@ -31,7 +31,7 @@ module.exports = (argv) => ({
     output: {
         libraryTarget: "commonjs2",
         path: path.resolve(`${__dirname}/../build/bin`),
-        filename: argv.type === "update" ? "cli_update.js" : "cli.js",
+        filename: argv.update ? "cli_update.js" : "cli.js",
     },
     node: {
         __dirname: false

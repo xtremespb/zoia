@@ -107,6 +107,10 @@ export default () => ({
                         overwrite: true,
                         errorOnExist: false
                     });
+                    await fs.copy(path.resolve(tempDir, tempDirContents[0], "package-core.json"), path.resolve(`${__dirname}/../../package-core.json`), {
+                        overwrite: true,
+                        errorOnExist: false
+                    });
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_SUCCESS);
                     const currentModules = (await fs.readdir(path.resolve(`${__dirname}/../../src/modules`))).filter(d => !d.match(/^\./));
                     const updateModules = (await fs.readdir(path.resolve(`${__dirname}/../../update/modules`))).filter(d => !d.match(/^\./));
