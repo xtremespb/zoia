@@ -10,7 +10,6 @@ const {
 const minify = require("@node-minify/core");
 const htmlMinifier = require("@node-minify/html-minifier");
 const packageJson = require("../package.json");
-const packageLock = require("../package-lock.json");
 
 const cleanUpWeb = argv => {
     [argv.update ? "build/public/update_" : "build/public/zoia_", "build/scripts"].map(d => {
@@ -175,7 +174,13 @@ const installRequiredPackages = async (moduleDirs, argv) => {
             continue;
         }
         const cmd = Object.keys(npmData).map(m => {
-            if (!packageLock.dependencies[m] || packageLock.dependencies[m].version !== npmData[m].replace(/\^/gm, "")) {
+            if (!packageJsonCore.dependencies[m] || packageJsonCore.dependencies[m] !== npmData[m] || !packageJsonCore.devDependencies[m] || packageJsonCore.devDependencies[m] !== npmData[m]) {
+                try {
+                    require(m);
+                    return null;
+                } catch (e) {
+                    console.log(e.message);
+                }
                 return `${m}@${npmData[m]}`;
             }
         }).filter(i => i).join(" ");
@@ -183,7 +188,7 @@ const installRequiredPackages = async (moduleDirs, argv) => {
             try {
                 console.log(`Installing NPM packages for module "${dir}"...`);
                 // eslint-disable-next-line no-await-in-loop
-                execSync(`npm i ${cmd} --loglevel=error --save`);
+                execSync(`npm i ${cmd} --loglevel=error`);
             } catch (e) {
                 console.error(e);
                 process.exit(1);
