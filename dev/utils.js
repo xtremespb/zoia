@@ -159,9 +159,14 @@ const installRequiredPackages = async (moduleDirs, argv) => {
     const packageJsonCore = require(path.resolve(`${__dirname}/../package-core.json`));
     packageJsonMain.dependencies = packageJsonCore.dependencies;
     packageJsonMain.devDependencies = packageJsonCore.devDependencies;
-    await fs.writeJSON(path.resolve(`${__dirname}/../package.json`), packageJsonMain, {
+    await fs.writeJSON(path.resolve(`${__dirname}/../package-update.json`), packageJsonMain, {
         spaces: "\t"
     });
+    await fs.copy(path.resolve(`${__dirname}/../package-update.json`), path.resolve(`${__dirname}/../package.json`), {
+        overwrite: true,
+        errorOnExist: false
+    });
+    await fs.remove(path.resolve(`${__dirname}/../package-update.json`));
     for (const dir of moduleDirs) {
         let npmData;
         try {
@@ -177,9 +182,12 @@ const installRequiredPackages = async (moduleDirs, argv) => {
             if (!packageJsonCore.dependencies[m] || packageJsonCore.dependencies[m] !== npmData[m] || !packageJsonCore.devDependencies[m] || packageJsonCore.devDependencies[m] !== npmData[m]) {
                 try {
                     require(m);
-                    return null;
-                } catch (e) {
-                    console.log(e.message);
+                    const modulePackageJson = require(`${__dirname}/../node_modules/${m}/package.json`);
+                    if (modulePackageJson.version === npmData[m].replace(/[^0-9.]/gm, "")) {
+                        return null;
+                    }
+                } catch {
+                    // Ignore
                 }
                 return `${m}@${npmData[m]}`;
             }

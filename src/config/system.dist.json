@@ -105,10 +105,16 @@
     "activeDirectory": {
         "enabled": false,
         "createMissingAccounts": false,
-        "usernameSuffix": "@example.com",
-        "config": {
-            "url": "ldap://example.com",
-            "baseDN": "dc=example,dc=com"
-        }
+        "directories": [{
+            "usernamePrefix": "",
+            "usernameSuffix": "@example.com",
+            "config": {
+                "url": "ldap://example.com",
+                "baseDN": "dc=example,dc=com",
+                "tlsOptions": {
+                    "rejectUnauthorized": true
+                }
+            }
+        }]
     }
 }

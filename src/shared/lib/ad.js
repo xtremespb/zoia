@@ -3,31 +3,44 @@ import cloneDeep from "lodash/cloneDeep";
 
 export default class {
     constructor(config, username, password) {
-        this.config = cloneDeep(config);
         this.username = username;
-        this.config.activeDirectory = this.config.activeDirectory || {
-            config: {}
-        };
-        this.config.activeDirectory.config.username = `${username}${this.config.activeDirectory.usernameSuffix}`;
-        this.config.activeDirectory.config.password = password;
-        this.ad = this.config.activeDirectory.enabled ? new ActiveDirectory(this.config.activeDirectory.config) : null;
+        const activeDirectory = config.activeDirectory ? cloneDeep(config.activeDirectory) : {};
+        if (activeDirectory.enabled) {
+            this.ad = [];
+            config.activeDirectory.directories.map(adItem => {
+                adItem.config.username = `${adItem.usernamePrefix || ""}${username}${adItem.usernameSuffix || ""}`.replace(/\\\\/g, "\\");
+                adItem.config.password = password;
+                const adInst = activeDirectory.enabled ? new ActiveDirectory(adItem.config) : null;
+                this.ad.push(adInst);
+            });
+        }
     }
 
-    getUserData() {
+    findUser(ad) {
         return new Promise((resolve, reject) => {
-            if (!this.ad) {
-                reject(new Error("No AD configuration"));
-            }
-            this.ad.findUser(this.username, (err, user) => {
-                if (err) {
-                    reject(new Error(JSON.stringify(err)));
-                    return;
+            ad.findUser(this.username, (err, user) => {
+                if (!err && user) {
+                    resolve(user);
                 }
-                if (!user) {
-                    reject(new Error("User not found"));
-                }
-                resolve(user);
+                reject(new Error("User not found"));
             });
         });
+    }
+
+    async getUserData() {
+        if (!this.ad || !this.ad.length) {
+            throw new Error("No AD configuration");
+        }
+        for (const ad of this.ad) {
+            try {
+                const userData = await this.findUser(ad);
+                if (userData) {
+                    return userData;
+                }
+            } catch (e) {
+                // Ignore
+            }
+        }
+        throw new Error("User not found");
     }
 }
