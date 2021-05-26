@@ -27,4 +27,5 @@ typings/
 /backup
 /update
 package.json.bak
+package-update.json
 /src/shared/marko/zoia/index.marko
