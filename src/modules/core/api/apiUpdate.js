@@ -51,20 +51,20 @@ export default () => ({
                 return;
             }
             setTimeout(async () => {
-                let updateTag;
+                let updateData;
                 try {
-                    [updateTag] = (await axios({
+                    updateData = (await axios({
                         method: "get",
                         url: req.zoiaConfig.update,
                     })).data;
                 } catch (e) {
                     log.error(e);
                 }
-                if (!updateTag) {
+                if (!updateData) {
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_ERROR, "Could not download update tags");
                     return;
                 }
-                if (this.zoiaPackageJson.version === updateTag.name.replace(/^v/, "")) {
+                if (this.zoiaPackageJson.version === updateData.tag_name) {
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_ERROR, "Current version is up-to-date");
                     return;
                 }
@@ -87,7 +87,7 @@ export default () => ({
                     await fs.ensureDir(tempDir);
                     const updateFile = await axios({
                         method: "get",
-                        url: updateTag.zipball_url,
+                        url: updateData.zipball_url,
                         responseType: "arraybuffer"
                     });
                     const archivePath = path.resolve(tempDir, tempFile);

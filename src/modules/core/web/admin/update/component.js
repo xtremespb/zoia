@@ -11,7 +11,7 @@ module.exports = class {
         this.siteId = out.global.siteId;
         this.updateStatus = out.global.updateStatus;
         this.currentVersion = out.global.packageJson.version;
-        this.updateVersion = out.global.updateTag ? out.global.updateTag.name : "";
+        this.updateVersion = out.global.updateData ? out.global.updateData.tag_name : "";
     }
 
     onMount() {
@@ -28,7 +28,7 @@ module.exports = class {
     }
 
     onUpdateClick() {
-        this.updateConfirm.func.setActive(true, `${this.i18n.t("update")}: ${this.currentVersion} → ${this.updateVersion.replace(/^v/, "")}`, this.i18n.t("warnUpdateText"));
+        this.updateConfirm.func.setActive(true, `${this.i18n.t("update")}: ${this.currentVersion} → ${this.updateVersion}`, this.i18n.t("warnUpdateText"));
     }
 
     getStatus(code) {

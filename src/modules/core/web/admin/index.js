@@ -27,9 +27,9 @@ export default () => ({
             };
             const maintenanceStatus = maintenanceDb ? maintenanceDb.status : false;
             const updateStatus = updateDb ? updateDb.status : null;
-            let updateTag = null;
+            let updateData = null;
             try {
-                [updateTag] = (await axios({
+                updateData = (await axios({
                     method: "get",
                     url: req.zoiaConfig.update,
                 })).data;
@@ -46,7 +46,7 @@ export default () => ({
                         updateStatus: true,
                         buildJson: true,
                         pid: true,
-                        updateTag: true,
+                        updateData: true,
                         packageJson: true,
                         ...site.getSerializedGlobals()
                     },
@@ -57,7 +57,7 @@ export default () => ({
                     updateStatus,
                     buildJson: req.zoiaBuildJson,
                     pid: process.pid,
-                    updateTag,
+                    updateData,
                     packageJson: this.zoiaPackageJson,
                     ...await site.getGlobals(),
                 },

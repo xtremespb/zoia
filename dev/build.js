@@ -71,7 +71,7 @@ const loadingAnimation = () => {
 
 (async () => {
     const packageJson = require(path.resolve(`${__dirname}/../package.json`));
-    console.log(`ZOIA Build Script, mode: ${buildMode}, version: ${packageJson.version}\nStart date: ${new Date()}\n`);
+    console.log(`ZOIA Build Script, mode: ${buildMode}, version: ${packageJson.version}\nStart time: ${new Date()}\n`);
     const timestampStart = new Date().getTime() / 1000;
     const loading = loadingAnimation();
     const dir = command === "update" ? "update" : "zoia";

@@ -337,6 +337,12 @@ export default {
         };
         filters.map(f => {
             const filter = {};
+            if (f.convert === "integer") {
+                f.value.id = Array.isArray(f.value.id) ? f.value.id.map(i => parseInt(i, 10)) : parseInt(f.value.id, 10);
+            }
+            if (f.convert === "float") {
+                f.value.id = Array.isArray(f.value.id) ? f.value.id.map(i => parseFloat(i)) : parseFloat(f.value.id);
+            }
             if (f.value.id && f.mode !== "raw") {
                 f.value.id = Array.isArray(f.value.id) ? f.value.id.map(i => convertSpecialVariables(i)) : convertSpecialVariables(f.value.id);
                 if (f.type === "date" && f.value.id) {
