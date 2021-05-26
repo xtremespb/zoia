@@ -429,6 +429,7 @@ module.exports = class {
             label: this.state.filterSelectedData.label,
             type: this.state.filterSelectedData.type,
             mode: this.state.filterMode,
+            convert: this.state.filterSelectedData.convert || null,
             value: {},
         };
         switch (this.state.filterSelectedData.type) {
