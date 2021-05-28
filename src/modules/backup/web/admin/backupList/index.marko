@@ -27,7 +27,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	</if>
 	<else>
 		<mtable
-			css="table is-striped is-hoverable is-fullwidth"
+			css="table is-bordered is-striped is-hoverable is-fullwidth"
 			dataSource={
 				method: "post",
 				url: "/api/backup/list",
