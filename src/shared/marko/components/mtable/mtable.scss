@@ -10,6 +10,7 @@
 
 .z3-mt-hidden {
     opacity: 0;
+    margin-right: -16px !important;
 }
 
 .z3-mt-sortable {
@@ -63,6 +64,7 @@
     white-space: nowrap;
     text-align: center !important;
     width: 10px;
+    max-width: 150px;
 }
 
 .z3-mt-pagination {
@@ -158,6 +160,49 @@
 
 .z3-mt-filter-raw-tag {
     cursor: pointer;
+}
+
+.z3-mt-pretty-checkbox-id {
+    margin-right: 0 !important;
+}
+
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 2px;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 2px;
+}
+
+.z3-mt-table-wrap {
+    border-style: hidden;
+}
+
+.z3-mt-table-container {
+    border: 1px solid $grey-lighter;
+    border-radius: 2px;
+}
+
+.z3-mt-table-head {
+    background: $grey-lightest !important;
+}
+
+.z3-mt-th,
+.z3-mt-td {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 250px;
+}
+
+.z3-mt-sort {
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.z3-mt-loading-spinner {
+    background-color: transparent !important;
+    background: transparent !important;
 }
 
 @keyframes z3-mt-filter-spinner {

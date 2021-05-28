@@ -13,7 +13,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</span>&nbsp;${out.global.i18n.t("moduleTitle.users")}
 	</h1>
 	<mtable
-		css="table is-striped is-hoverable is-fullwidth"
+		css="table is-bordered is-striped is-hoverable is-fullwidth"
 		dataSource={
 			method: "post",
 			url: "/api/users/list",
@@ -29,7 +29,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				id: "username",
 				type: "input",
 				modes: ["equals", "notEquals", "isLike", "notLike"],
-				label: out.global.i18n.t("username")
+				label: out.global.i18n.t("username"),
 			},
 			{
 				id: "createdAt",
@@ -78,7 +78,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				id: "username",
 				title: out.global.i18n.t("username"),
 				css: "z3-ap-users-list-username",
-				sortable: true
+				sortable: true,
 			},
 			{
 				id: "email",

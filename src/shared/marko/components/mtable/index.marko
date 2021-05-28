@@ -182,13 +182,13 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		<div class="notification is-danger">${state.error}</div>
 	</if>
 	<else>
-		<div class="table-container">
-			<table class=input.css id=`${input.id}_tableWrap`>
-				<thead class="z3-mt-noselect">
+		<div class="table-container z3-mt-table-container">
+			<table class=`${input.css} z3-mt-table-wrap` id=`${input.id}_tableWrap`>
+				<thead class="z3-mt-noselect z3-mt-table-head">
 					<tr>
 						<if(input.checkboxColumn)>
 							<th style="width:10px">
-								<div class="z3-pretty p-default">
+								<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
 									<input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
 									<div class="state p-primary">
 										<label/>
@@ -200,15 +200,15 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							<th
 								data-id=column.id
 								data-sortable=column.sortable
-								class=`${column.css || ""}${column.sortable ? " z3-mt-sortable" : ""}`
+								class=`z3-mt-th ${column.css || ""}${column.sortable ? " z3-mt-sortable" : ""}`
 								on-click("onColumnClick")>
-								${column.title}&nbsp;<i class=`mdi ${
+								<div class=`z3-mt-sort mdi ${
 									state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"
-								}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
+								}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>${column.title}
 							</th>
 						</for>
 						<if(input.actions && input.actions.length)>
-							<th>${input.actionsTitle}</th>
+							<th class="z3-mt-actions-wrap">${input.actionsTitle}</th>
 						</if>
 					</tr>
 				</thead>
@@ -218,7 +218,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							<tr>
 								<if(input.checkboxColumn)>
 									<td style="width:10px">
-										<div class="z3-pretty p-icon">
+										<div class="z3-pretty p-icon z3-mt-pretty-checkbox-id">
 											<input
 												data-id=(row.id || row._id)
 												type="checkbox"
@@ -232,7 +232,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									</td>
 								</if>
 								<for|column| of=input.columns.map(c => c.id)>
-									<td>
+									$ const columnData = input.columns.find(c => c.id === column);
+									<td class=`${columnData.multiline ? "" : "z3-mt-td"}`>
 										$!{row[column]
 										? input.processValue
 											? input.processValue(row.id || row._id, row[column], column, row)
