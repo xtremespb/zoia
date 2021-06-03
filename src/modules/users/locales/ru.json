@@ -48,5 +48,7 @@
 	"whitelist": "Белый список",
 	"blacklist": "Черный список",
 	"coreFunctions": "Ядро",
-	"createdAt": "Дата регистрации"
+	"createdAt": "Дата регистрации",
+	"displayName": "Отображаемое имя",
+	"displayNameHelpText": "Отображать вместо логина"
 }

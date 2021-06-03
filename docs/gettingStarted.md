@@ -1,6 +1,6 @@
 # Getting Started
 
-ZOIA requires a dedicated server or VDS for an installation which means that you cannot set it up on a shared hosting. ZOIA works on every system where Node.js and MongoDB run, but the best and most well-tested system for production is Linux (it's well-tested it on Debian/Ubuntu).
+ZOIA requires a dedicated server or VDS for an installation which means that you cannot set it up on a shared hosting. ZOIA works on every system where Node.js and MongoDB run, but the best and most well-tested system for production is Linux (tested on Debian/Ubuntu).
 
 For example, when running on Debian Linux 10 you will need to install the required packages (redis-server is optional):
 
@@ -55,7 +55,7 @@ npm run setup-all
 Finally, you need to create a default administrator to access your control panel. To do this, you need to run the following command:
 
 ```sh
-npm run cli -- --user admin --email admin@zoiajs.org
+npm run cli -- --user admin
 ```
 
 You may change the username and e-mail address to your desired ones. The requested user will be granted all administrator permissions and will be accessible using "password" as password which shall be changed to a strong one after the first sign up to ensure an account security.
@@ -102,4 +102,16 @@ At the end of the execution, the following message shall appear if the execution
 
 ```
 Total test(s): XXX, success: XXX, verdict: OK
+```
+
+**Troubleshooting**: sometimes you may get the following error when running tests:
+
+```
+Could not find expected browser (chrome) locally. Run `npm install` to download the correct Chromium revision (869685).
+```
+
+To fix that, you may wish to run the following command to download the required Chromium binary (from ZOIA root):
+
+```
+node node_modules/puppeteer/install
 ```

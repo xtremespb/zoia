@@ -37,6 +37,7 @@ module.exports = class {
             disabled: false,
             progress: false,
             loading: false,
+            allSettled: false,
             validation: input.validation,
             visible: {}
         };
@@ -161,6 +162,7 @@ module.exports = class {
         window.__zoiaCoreImagesBrowser = {
             insertImageURL: this.insertImageURL.bind(this)
         };
+        this.setState("allSettled", true);
     }
 
     resetData() {

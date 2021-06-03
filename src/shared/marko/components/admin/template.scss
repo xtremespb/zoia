@@ -1,4 +1,4 @@
-@import "../../zoia/variables/admin.scss";
+@import "../../../../design/variables/admin.scss";
 @import "~@mdi/font/scss/materialdesignicons.scss";
 @import "../../../fonts/source-sans-pro/source-sans-pro.css";
 @import "~bulma/bulma";
@@ -29,6 +29,7 @@
 .z3-ap-side-menu {
     width: 250px;
     background-color: $white;
+    padding-bottom: 5px;
 }
 
 .z3-ap-side-menu-head {
@@ -36,17 +37,22 @@
     text-transform: uppercase;
     font-size: 12px;
     background-color: $grey-lighter;
+    margin-bottom: 5px;
 }
 
 .z3-ap-side-menu-list {
     min-width: 100%;
 }
 
+.z3-ap-side-menu-list>li>a {
+    border-radius: 6px;
+}
+
 .z3-ap-navbar {
     position: fixed;
     min-width: 100%;
     transition: top 0.3s;
-    z-index: 8000;
+    z-index: 30;
 }
 
 .z3-ap-navbar-link {

@@ -4,7 +4,7 @@
             "dir": "",
             "filename": "",
             "createdAt": "ISODate(now)",
-            "en": {
+            "en-us": {
                 "title": "Home",
                 "content": "<h1 class=\"title is-2\">Home</h1>\n<p>Installation is complete. You may wish to log in to <a href=\"/admin\">Admin panel</a> using your username and password.</p>",
                 "date": null,
@@ -18,12 +18,12 @@
             "modifiedAt": null,
             "ru": {
                 "title": "Главная",
-                "content": "<h1 class=\"title is-2\">Главная</h1>\n<p>Установка успешно выполнена. Возможно, вам потребуется вход в <a href=\"/admin\">панель администратора</a> (используйте ваш логин и пароль).</p>",
+                "content": "<h1 class=\"title is-2\">Главная</h1>\n<p>Установка успешно выполнена. Возможно, вам потребуется вход в <a href=\"/ru/admin\">панель администратора</a> (используйте ваш логин и пароль).</p>",
                 "date": null,
                 "css": null,
                 "js": null,
                 "attachments": [],
-                "contentMin": "<h1 class=\"title is-2\">Главная</h1><p>Установка успешно выполнена. Возможно, вам потребуется вход в <a href=/admin>панель администратора</a> (используйте ваш логин и пароль).",
+                "contentMin": "<h1 class=\"title is-2\">Главная</h1><p>Установка успешно выполнена. Возможно, вам потребуется вход в <a href=/ru/admin>панель администратора</a> (используйте ваш логин и пароль).",
                 "cssMin": null,
                 "jsMin": null
             }
@@ -33,7 +33,7 @@
             "dir": "",
             "filename": "license",
             "createdAt": "ISODate(now)",
-            "en": {
+            "en-us": {
                 "title": "License",
                 "content": "<p class=\"title is-2\">MIT License</p>\n\n<p>Copyright © 2019-2021 Michael Matveev</p>\n\n<p>Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:</p>\n\n<p>The above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.</p>\n\n<p>THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.</p>",
                 "date": null,

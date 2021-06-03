@@ -124,9 +124,11 @@ export default class {
                 username
             });
             let adUser = null;
+            let displayName = null;
             const ad = new Ad(this.zoiaConfig, username, password);
             try {
                 adUser = await ad.getUserData();
+                displayName = (adUser.sn && adUser.givenName) ? `${adUser.givenName} ${adUser.sn}` : adUser.displayName ? adUser.displayName : null;
             } catch {
                 // Ignore
             }
@@ -134,6 +136,7 @@ export default class {
             if (adUser && !user && this.zoiaConfig.activeDirectory && this.zoiaConfig.activeDirectory.createMissingAccounts) {
                 await this.db.collection(this.collectionUsers).insertOne({
                     username,
+                    displayName,
                     password: passwordHash,
                     createdAt: new Date(),
                     email: adUser.mail,

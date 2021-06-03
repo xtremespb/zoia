@@ -5,7 +5,7 @@
                 "id": "home",
                 "uuid": "24644372-0b7e-4884-8ef4-545176428a2c",
                 "data": {
-                    "en": {
+                    "en-us": {
                         "title": "Home",
                         "url": "/"
                     },
@@ -20,7 +20,7 @@
                 "id": "license",
                 "uuid": "681bb8a8-f494-4ce8-b2e8-cb6cf5fbd16e",
                 "data": {
-                    "en": {
+                    "en-us": {
                         "title": "License",
                         "url": "/license"
                     },

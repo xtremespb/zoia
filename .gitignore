@@ -28,4 +28,4 @@ typings/
 /update
 package.json.bak
 package-update.json
-/src/shared/marko/zoia/index.marko
+/src/design/index.marko

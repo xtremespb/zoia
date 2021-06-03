@@ -57,8 +57,8 @@ const options = commandLineArgs([{
    \\/_____/   \\/_____/   \\/_/   \\/_/\\/_/
 `);
     console.log(colors.brightWhite(` Console client, version: ${packageJson.version}`));
-    if (Object.keys(options).length < 1 || (options.maintenance && !options.maintenance.match(/on|off/)) || (options.user && !options.email) || (options.demo && !options.demo.match(/on|off/)) || options.acl === null) {
-        console.error(`\n ${colors.brightCyan("npm run cli")} -- ${colors.yellow("--maintenance")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn maintenance mode on or off")}\n                ${colors.yellow("--user")} ${colors.green("username")} ${colors.yellow("--email")} ${colors.green("user@domain.com")} - ${colors.grey("create an user or reset password")}\n                ${colors.yellow("--demo")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn demo mode on or off")}\n                ${colors.yellow("--acl")} ${colors.green("group")} ${colors.yellow("--permissions")} ${colors.green("crud")} - ${colors.grey("set ACL for group (create, read, update, delete)")}`);
+    if (Object.keys(options).length < 1 || (options.maintenance && !options.maintenance.match(/on|off/)) || (options.demo && !options.demo.match(/on|off/)) || options.acl === null) {
+        console.error(`\n ${colors.brightCyan("npm run cli")} -- ${colors.yellow("--maintenance")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn maintenance mode on or off")}\n                ${colors.yellow("--user")} ${colors.green("username")} - ${colors.grey("create an user or reset password")}\n                ${colors.yellow("--demo")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn demo mode on or off")}\n                ${colors.yellow("--acl")} ${colors.green("group")} ${colors.yellow("--permissions")} ${colors.green("crud")} - ${colors.grey("set ACL for group (create, read, update, delete)")}`);
     }
     try {
         const config = {
@@ -68,8 +68,9 @@ const options = commandLineArgs([{
         const modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
         const modulesConfig = {};
         modules.map(m => {
+            const moduleDir = m.parentModule ? `${m.parentModule}/${m.id}` : m.id;
             try {
-                modulesConfig[m.id] = require(`../../../modules/${m.id}/config.dist.json`);
+                modulesConfig[m.id] = require(`../../../modules/${moduleDir}/config.dist.json`);
             } catch (e) {
                 console.error(`Fatal: unable to load default config for module: "${m.id}"`);
                 process.exit(1);

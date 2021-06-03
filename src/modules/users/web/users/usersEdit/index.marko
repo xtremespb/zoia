@@ -54,12 +54,18 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					mandatory: true
 				},
 				{
+					id: "displayName",
+					type: "text",
+					label: out.global.i18n.t("displayName"),
+					helpText: out.global.i18n.t("displayNameHelpText"),
+					wrapCSS: "z3-is-medium",
+				},
+				{
 					id: "email",
 					type: "text",
 					label: out.global.i18n.t("email"),
 					helpText: out.global.i18n.t("emailHelpText"),
 					wrapCSS: "z3-is-large",
-					mandatory: true
 				},
 				{
 					id: "groups",

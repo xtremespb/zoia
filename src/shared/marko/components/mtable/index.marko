@@ -183,7 +183,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	</if>
 	<else>
 		<div class="table-container z3-mt-table-container">
-			<table class=`${input.css} z3-mt-table-wrap` id=`${input.id}_tableWrap`>
+			<table class=`${input.css} z3-mt-table-wrap z3-mt-grip-resizable` id=`${input.id}_tableWrap`>
 				<thead class="z3-mt-noselect z3-mt-table-head">
 					<tr>
 						<if(input.checkboxColumn)>
@@ -197,14 +197,20 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</th>
 						</if>
 						<for|column| of=input.columns>
-							<th
-								data-id=column.id
-								data-sortable=column.sortable
-								class=`z3-mt-th ${column.css || ""}${column.sortable ? " z3-mt-sortable" : ""}`
-								on-click("onColumnClick")>
-								<div class=`z3-mt-sort mdi ${
-									state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"
-								}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>${column.title}
+							<th class=`z3-mt-th ${column.css || ""}` data-id=column.id id=`${input.id}_th_${column.id}`>
+									<div class="z3-mt-th-wrap">
+										<div class=`z3-mt-th-data${column.sortable ? " z3-mt-sortable" : ""}` on-click("onColumnClick") data-id=column.id data-sortable=column.sortable>
+											<div class=`z3-mt-sort mdi ${
+												state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"
+											}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
+											<span>
+												${column.title}
+											</span>
+										</div>
+										<if(column.resize)>
+											<div class="z3-mt-th-resize" on-mousedown("onColumnResizeMouseDown")>&nbsp;</div>
+										</if>
+									</div>
 							</th>
 						</for>
 						<if(input.actions && input.actions.length)>
@@ -590,7 +596,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							<span
 								class="tag z3-mt-filter-raw-tag"
 								data-id=f.id
-								on-click("onfilterRawTagClick")>
+								on-click("onFilterRawTagClick")>
 								${f.label}
 							</span>
 						</for>

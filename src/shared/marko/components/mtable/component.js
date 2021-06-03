@@ -114,8 +114,14 @@ module.exports = class {
                 this.setState("dropdownVisible", {});
             }
         });
+        document.addEventListener("mousemove", this.onColumnMoveEventHandler.bind(this));
+        document.addEventListener("mouseup", this.onColumnUpEventHandler.bind(this));
+        document.addEventListener("touchmove", this.onColumnMoveEventHandler.bind(this));
+        document.addEventListener("touchend", this.onColumnUpEventHandler.bind(this));
+        window.addEventListener("resize", throttle(this.onColumnWindowResizeHandler.bind(this), 1000));
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
+        this.setupColumnResize();
     }
 
     onWindowResize(reload) {
@@ -821,7 +827,7 @@ module.exports = class {
         }
     }
 
-    onfilterRawTagClick(e) {
+    onFilterRawTagClick(e) {
         e.preventDefault();
         const {
             id
@@ -829,5 +835,68 @@ module.exports = class {
         const ace = this.getComponent(`${this.input.id}_filterRawForm`).func.getAceInstance("value");
         ace.focus();
         ace.session.insert(ace.getCursorPosition(), `"${id}"`);
+    }
+
+    setupColumnResize() {
+        this.resizeTable = document.getElementById(`${this.input.id}_tableWrap`);
+        this.resizeTableOriginWidth = this.resizeTable.style.width;
+        this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_tableWrap>thead>tr:nth-of-type(1)>th`));
+        this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => Number(window.getComputedStyle(c).width.replace(/px/, "")).valueOf());
+        this.resizeTableColumnOriginWidths = this.resizeTableHeaders.map(c => c.style.width);
+        this.resizeTable.style.width = window.getComputedStyle(this.resizeTable).width;
+        this.resizeTableHeaders.map((c, i) => c.style.width = `${this.resizeTableColumnWidths[i]}px`);
+    }
+
+    onColumnStartResizeEventHandler(e) {
+        e.preventDefault();
+        const columnId = e.target.parentNode.parentNode.dataset.id;
+        const oe = e.touches;
+        this.resizeTableOX = oe ? oe[0].pageX : e.pageX;
+        this.resizeColumnIndex = this.input.columns.findIndex(c => c.id === columnId) + 1;
+        this.resizeTableActive = true;
+        this.resizeTableCurrentGrip = e.target;
+    }
+
+    onColumnMoveEventHandler(e) {
+        if (!this.resizeTableActive) {
+            return;
+        }
+        const ox = e.touches ? e.touches[0].pageX : e.pageX;
+        const x = ox - this.resizeTableOX;
+        if (this.resizeColumnIndex < this.resizeTableColumnWidths.length - 1) {
+            const oldColumnWidths = cloneDeep(this.resizeTableColumnWidths);
+            this.resizeTableColumnWidths[this.resizeColumnIndex] += x;
+            this.resizeTableColumnWidths[this.resizeColumnIndex + 1] -= x;
+            this.resizeTableHeaders.map((c, i) => c.style.width = `${this.resizeTableColumnWidths[i]}px`);
+            this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => Number(window.getComputedStyle(c).width.replace(/px/, "")).valueOf());
+            this.resizeTable.style.width = window.getComputedStyle(this.resizeTable).width;
+            this.resizeTableOX = this.resizeTableCurrentGrip.getBoundingClientRect().right + 2;
+            if (this.resizeColumnIndex > 1) {
+                if (this.resizeTableColumnWidths[this.resizeColumnIndex - 2] !== oldColumnWidths[this.resizeColumnIndex - 2] || this.resizeTableColumnWidths[this.resizeColumnIndex - 1] !== oldColumnWidths[this.resizeColumnIndex - 1]) {
+                    this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
+                    this.resizeTableHeaders.map((c, ix) => c.style.width = `${this.resizeTableColumnWidths[ix]}px`);
+                }
+            }
+            if (this.resizeColumnIndex < this.resizeTableHeaders.length - 2) {
+                if (this.resizeTableColumnWidths[this.resizeColumnIndex + 2] !== oldColumnWidths[this.resizeColumnIndex + 2]) {
+                    this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
+                    this.resizeTableHeaders.map((c, ix) => c.style.width = `${this.resizeTableColumnWidths[ix]}px`);
+                }
+            }
+        }
+    }
+
+    onColumnUpEventHandler() {
+        this.resizeTableActive = false;
+    }
+
+    onColumnResizeMouseDown(e) {
+        this.onColumnStartResizeEventHandler(e);
+    }
+
+    onColumnWindowResizeHandler() {
+        this.resizeTableHeaders.map((c, i) => c.style.width = this.resizeTableColumnOriginWidths[i]);
+        this.resizeTable.style.width = this.resizeTableOriginWidth;
+        this.setupColumnResize();
     }
 };

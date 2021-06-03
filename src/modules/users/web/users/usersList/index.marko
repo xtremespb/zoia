@@ -79,16 +79,18 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				title: out.global.i18n.t("username"),
 				css: "z3-ap-users-list-username",
 				sortable: true,
+				resize: true,
 			},
 			{
 				id: "email",
 				sortable: true,
-				title: out.global.i18n.t("email")
+				title: out.global.i18n.t("email"),
+				resize: true,
 			},
 			{
 				id: "status",
 				css: "z3-ap-users-list-status",
-				title: out.global.i18n.t("status")
+				title: out.global.i18n.t("status"),
 			}
 		]
 		actions=[
