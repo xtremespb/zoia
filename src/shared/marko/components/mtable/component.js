@@ -118,7 +118,7 @@ module.exports = class {
         document.addEventListener("mouseup", this.onColumnUpEventHandler.bind(this));
         document.addEventListener("touchmove", this.onColumnMoveEventHandler.bind(this));
         document.addEventListener("touchend", this.onColumnUpEventHandler.bind(this));
-        window.addEventListener("resize", throttle(this.onColumnWindowResizeHandler.bind(this), 1000));
+        window.addEventListener("resize", throttle(this.setupColumnResize.bind(this), 100));
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
         this.setupColumnResize();
@@ -839,12 +839,46 @@ module.exports = class {
 
     setupColumnResize() {
         this.resizeTable = document.getElementById(`${this.input.id}_tableWrap`);
-        this.resizeTableOriginWidth = this.resizeTable.style.width;
         this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_tableWrap>thead>tr:nth-of-type(1)>th`));
-        this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => Number(window.getComputedStyle(c).width.replace(/px/, "")).valueOf());
-        this.resizeTableColumnOriginWidths = this.resizeTableHeaders.map(c => c.style.width);
-        this.resizeTable.style.width = window.getComputedStyle(this.resizeTable).width;
-        this.resizeTableHeaders.map((c, i) => c.style.width = `${this.resizeTableColumnWidths[i]}px`);
+        this.resizeTable.style.maxWidth = "";
+        this.resizeTableHeaders.map(c => c.style.minWidth = "");
+        this.resizeTableColumnRatios = this.resizeTableColumnRatios ? this.resizeTableColumnRatios : {};
+        this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseInt(window.getComputedStyle(c).width.replace(/px/, ""), 10));
+        this.resizeTable.style.maxWidth = window.getComputedStyle(this.resizeTable).width;
+        // this.resizeTableColumnWidths = this.columnsResizeToRatios();
+        console.log(this.resizeTableColumnWidths.reduce((sum, x) => sum + x));
+        this.resizeTableOriginComputedWidth = null;
+        this.resizeTableInitialComputedWidth = parseInt(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+        this.columnsResizeToValues();
+        this.resizeTable.style.maxWidth = window.getComputedStyle(this.resizeTable).width;
+        console.log(this.resizeTableColumnWidths);
+        console.log(this.resizeTable.style.maxWidth);
+    }
+
+    columnsResizeToRatios() {
+        const resizeTableWidth = parseInt(this.resizeTable.style.maxWidth.replace(/px/, ""), 10);
+        let latestColumn;
+        const newWidthArr = this.resizeTableHeaders.map((c, i) => {
+            let columnWidth = parseInt(window.getComputedStyle(c).width.replace(/px/, ""), 10);
+            if (this.resizeTableColumnRatios[i] && (this.input.actions && i !== this.resizeTableHeaders.length - 1)) {
+                columnWidth = parseInt(resizeTableWidth * this.resizeTableColumnRatios[i], 10);
+                if (c.resize) {
+                    latestColumn = i;
+                }
+            }
+            return columnWidth;
+        });
+        if (latestColumn) {
+            const widthSum = newWidthArr.reduce((sum, x) => sum + x);
+            if (widthSum < resizeTableWidth) {
+                newWidthArr[latestColumn] += resizeTableWidth - widthSum;
+            }
+        }
+        return newWidthArr;
+    }
+
+    columnsResizeToValues() {
+        this.resizeTableHeaders.map((c, i) => c.style.minWidth = `${this.resizeTableColumnWidths[i]}px`);
     }
 
     onColumnStartResizeEventHandler(e) {
@@ -861,28 +895,29 @@ module.exports = class {
         if (!this.resizeTableActive) {
             return;
         }
+        if (!this.resizeTableColumnWidths) {
+            this.setupColumnResize();
+            return;
+        }
         const ox = e.touches ? e.touches[0].pageX : e.pageX;
         const x = ox - this.resizeTableOX;
         if (this.resizeColumnIndex < this.resizeTableColumnWidths.length - 1) {
             const oldColumnWidths = cloneDeep(this.resizeTableColumnWidths);
+            if (!this.resizeTableOriginComputedWidth) {
+                this.resizeTableOriginComputedWidth = parseInt(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+            }
             this.resizeTableColumnWidths[this.resizeColumnIndex] += x;
             this.resizeTableColumnWidths[this.resizeColumnIndex + 1] -= x;
-            this.resizeTableHeaders.map((c, i) => c.style.width = `${this.resizeTableColumnWidths[i]}px`);
-            this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => Number(window.getComputedStyle(c).width.replace(/px/, "")).valueOf());
-            this.resizeTable.style.width = window.getComputedStyle(this.resizeTable).width;
+            this.columnsResizeToValues();
+            this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseInt(window.getComputedStyle(c).width.replace(/px/, ""), 10));
             this.resizeTableOX = this.resizeTableCurrentGrip.getBoundingClientRect().right + 2;
-            if (this.resizeColumnIndex > 1) {
-                if (this.resizeTableColumnWidths[this.resizeColumnIndex - 2] !== oldColumnWidths[this.resizeColumnIndex - 2] || this.resizeTableColumnWidths[this.resizeColumnIndex - 1] !== oldColumnWidths[this.resizeColumnIndex - 1]) {
-                    this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
-                    this.resizeTableHeaders.map((c, ix) => c.style.width = `${this.resizeTableColumnWidths[ix]}px`);
-                }
+            if (parseInt(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10) !== this.resizeTableOriginComputedWidth) {
+                this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
+                this.columnsResizeToValues();
+                this.resizeTable.style.maxWidth = `${this.resizeTableOriginComputedWidth}px`;
+                this.resizeTableOriginComputedWidth = parseInt(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
             }
-            if (this.resizeColumnIndex < this.resizeTableHeaders.length - 2) {
-                if (this.resizeTableColumnWidths[this.resizeColumnIndex + 2] !== oldColumnWidths[this.resizeColumnIndex + 2]) {
-                    this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
-                    this.resizeTableHeaders.map((c, ix) => c.style.width = `${this.resizeTableColumnWidths[ix]}px`);
-                }
-            }
+            this.calculateColumnRatios();
         }
     }
 
@@ -894,9 +929,10 @@ module.exports = class {
         this.onColumnStartResizeEventHandler(e);
     }
 
-    onColumnWindowResizeHandler() {
-        this.resizeTableHeaders.map((c, i) => c.style.width = this.resizeTableColumnOriginWidths[i]);
-        this.resizeTable.style.width = this.resizeTableOriginWidth;
-        this.setupColumnResize();
+    calculateColumnRatios() {
+        const widths = this.input.checkboxColumn ? this.resizeTableColumnWidths.slice(1) : cloneDeep(this.resizeTableColumnWidths);
+        this.input.columns.map((c, i) => {
+            this.resizeTableColumnRatios[this.input.checkboxColumn ? i + 1 : i] = parseFloat((widths[i] / this.resizeTableOriginComputedWidth).toFixed(4));
+        });
     }
 };

@@ -187,7 +187,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				<thead class="z3-mt-noselect z3-mt-table-head">
 					<tr>
 						<if(input.checkboxColumn)>
-							<th style="width:10px">
+							<th style="width:42px">
 								<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
 									<input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
 									<div class="state p-primary">
@@ -223,7 +223,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<for|row| of=state.data>
 							<tr>
 								<if(input.checkboxColumn)>
-									<td style="width:10px">
+									<td style="width:42px">
 										<div class="z3-pretty p-icon z3-mt-pretty-checkbox-id">
 											<input
 												data-id=(row.id || row._id)
