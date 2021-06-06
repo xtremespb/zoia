@@ -8,7 +8,7 @@ style.scss {
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 <div class="z3-mt-wrap" id=`${input.id}_wrap`>
-	<div class="columns">
+	<div class="columns z3-ap-noselect">
 		<div class="column is-four-fifths">
 			<if(input.buttons && input.buttons.length)>
 				<div
@@ -122,7 +122,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</div>
 	</div>
 	<if(input.filter && input.filter.length && state.filters.length)>
-		<div class="field is-grouped is-grouped-multiline mb-2">
+		<div class="field is-grouped is-grouped-multiline mb-2 z3-ap-noselect">
 			<if(state.filterCurrentId)>
 				<div class="control">
 					<div class="tags">
@@ -179,7 +179,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</div>
 	</if>
 	<if(state.error)>
-		<div class="notification is-danger">${state.error}</div>
+		<div class="notification is-danger z3-ap-noselect">${state.error}</div>
 	</if>
 	<else>
 		<div class="table-container z3-mt-table-container">
@@ -187,7 +187,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				<thead class="z3-mt-noselect z3-mt-table-head">
 					<tr>
 						<if(input.checkboxColumn)>
-							<th style="width:42px">
+							<th style="width:43px">
 								<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
 									<input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
 									<div class="state p-primary">
@@ -223,7 +223,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<for|row| of=state.data>
 							<tr>
 								<if(input.checkboxColumn)>
-									<td style="width:42px">
+									<td style="width:43px">
 										<div class="z3-pretty p-icon z3-mt-pretty-checkbox-id">
 											<input
 												data-id=(row.id || row._id)
