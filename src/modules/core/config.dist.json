@@ -1,5 +1,6 @@
 {
     "collectionFilters": "filters",
+    "collectionColumns": "columns",
     "database": {
         "collections": {
             "captcha": {
@@ -31,6 +32,10 @@
             },
             "filters": {
                 "indexesAsc": ["type", "userId"],
+                "indexesDesc": []
+            },
+            "columns": {
+                "indexesAsc": [],
                 "indexesDesc": []
             }
         }

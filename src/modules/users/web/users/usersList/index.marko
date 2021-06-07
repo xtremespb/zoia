@@ -82,8 +82,17 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				resize: true,
 			},
 			{
+				id: "displayName",
+				title: out.global.i18n.t("displayName"),
+				css: "z3-ap-users-list-displayName",
+				sortable: true,
+				resize: true,
+				hidden: true,
+			},
+			{
 				id: "email",
 				sortable: true,
+				resize: true,
 				title: out.global.i18n.t("email"),
 			},
 			{

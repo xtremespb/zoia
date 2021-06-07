@@ -57,6 +57,7 @@ export default () => ({
             const data = (await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).toArray()).map(i => ({
                 ...i,
                 username: !acl.checkPermission("users", "read", i.username) ? "***" : i.username,
+                displayName: !acl.checkPermission("users", "read", i.displayName) ? "***" : i.displayName,
                 email: !acl.checkPermission("users", "read", i.username) ? "***" : i.email,
             }));
             // Send response

@@ -9,7 +9,7 @@
             },
             "sortId": {
                 "type": "string",
-                "enum": ["username", "email"]
+                "enum": ["username", "email", "displayName"]
             },
             "sortDirection": {
                 "type": "string",
@@ -60,6 +60,7 @@
     "projection": {
         "_id": 1,
         "username": 1,
+        "displayName": 1,
         "email": 1,
         "status": 1
     },

@@ -52,6 +52,21 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</div>
 						</p>
 					</for>
+					<p class="z3-mt-top-control mt-1 mr-1">
+						<button
+							class="button"
+							type="button"
+							on-click("onConfigureClick")
+							data-tippy-content=out.global.i18n.t("mTable.configure")
+							aria-haspopup="true">
+							<div class="z3-mt-icon-wrap">
+								<span class="icon">
+									<i class="mdi mdi-table-edit"/>
+								</span>
+							</div>
+							${out.global.i18n.t("mTable.configure")}
+						</button>
+					</p>
 					<if(input.filter && input.filter.length)>
 						<p class="z3-mt-top-control mt-1 mr-1">
 							<div class=`dropdown is-right${
@@ -187,7 +202,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				<thead class="z3-mt-noselect z3-mt-table-head">
 					<tr>
 						<if(input.checkboxColumn)>
-							<th style="width:43px">
+							<th style="width:43px;min-width:43px;max-width:43px">
 								<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
 									<input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
 									<div class="state p-primary">
@@ -196,8 +211,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								</div>
 							</th>
 						</if>
+						$ let columnIndex = 1;
 						<for|column| of=input.columns>
-							<th class=`z3-mt-th ${column.css || ""}` data-id=column.id id=`${input.id}_th_${column.id}`>
+							<if(state.columnVisibility[column.id])>
+								<th class=`z3-mt-th ${column.css || ""}` data-id=column.id data-index=columnIndex id=`${input.id}_th_${column.id}`>
 									<div class="z3-mt-th-wrap">
 										<div class=`z3-mt-th-data${column.sortable ? " z3-mt-sortable" : ""}` on-click("onColumnClick") data-id=column.id data-sortable=column.sortable>
 											<div class=`z3-mt-sort mdi ${
@@ -211,7 +228,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 											<div class="z3-mt-th-resize" on-mousedown("onColumnResizeMouseDown")>&nbsp;</div>
 										</if>
 									</div>
-							</th>
+								</th>
+								$ columnIndex += 1;
+							</if>
 						</for>
 						<if(input.actions && input.actions.length)>
 							<th class="z3-mt-actions-wrap">${input.actionsTitle}</th>
@@ -223,7 +242,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<for|row| of=state.data>
 							<tr>
 								<if(input.checkboxColumn)>
-									<td style="width:43px">
+									<td style="width:43px;min-width:43px;max-width:43px">
 										<div class="z3-pretty p-icon z3-mt-pretty-checkbox-id">
 											<input
 												data-id=(row.id || row._id)
@@ -239,13 +258,15 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								</if>
 								<for|column| of=input.columns.map(c => c.id)>
 									$ const columnData = input.columns.find(c => c.id === column);
-									<td class=`${columnData.multiline ? "" : "z3-mt-td"}`>
-										$!{row[column]
-										? input.processValue
-											? input.processValue(row.id || row._id, row[column], column, row)
-											: row[column]
-										: ""}
-									</td>
+									<if(state.columnVisibility[columnData.id])>
+										<td class=`${columnData.multiline ? "" : "z3-mt-td"}`>
+											$!{row[column]
+											? input.processValue
+												? input.processValue(row.id || row._id, row[column], column, row)
+												: row[column]
+											: ""}
+										</td>
+									</if>
 								</for>
 								<if(input.actions && input.actions.length)>
 									<td class="z3-mt-actions-wrap">
@@ -645,6 +666,20 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					]
 					i18n=out.global.i18n
 					on-button-click("onFilterRawFormButtonClick")/>
+			</div>
+		</div>
+	</div>
+	<div class=`modal${state.configDialogActive ? " is-active" : ""}`>
+		<div class="modal-background" on-click("onConfigDialogClose")/>
+		<div class="modal-card">
+			<div class="modal-card-body">
+				<mselect
+					key=`${input.id}_config_columns`
+					active=true/>
+				<div class="buttons mt-4">
+					<button type="button" class="button is-primary" on-click("onConfigDialogSave")>${out.global.i18n.t("mTable.save")}</button>
+					<button type="button" class="button" on-click("onConfigDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
+				</div>
 			</div>
 		</div>
 	</div>

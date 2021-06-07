@@ -81,6 +81,7 @@ export default () => ({
             }, {
                 $set: {
                     username: data.username,
+                    displayName: data.displayName,
                     email: data.email,
                     status: data.status,
                     groups: data.groups,

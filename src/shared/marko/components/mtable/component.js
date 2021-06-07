@@ -51,7 +51,11 @@ module.exports = class {
             filterManageSelected: [],
             filterCurrentId: null,
             filterCurrentTitle: "",
+            configDialogActive: false,
+            columnRatios: {},
+            columnVisibility: {},
         };
+        input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
         this.mounted = false;
         this.func = {
@@ -79,6 +83,7 @@ module.exports = class {
         // On mobile device, we shall not
         this.selectField = this.getComponent(`${this.input.id}_mselect`);
         this.calendarField = this.getComponent(`${this.input.id}_filterDate`);
+        this.configColumnsField = this.getComponent(`${this.input.id}_config_columns`);
         this.filterDeleteConfirm = this.getComponent(`${this.input.id}_filterDeleteConfirm`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
@@ -121,6 +126,7 @@ module.exports = class {
         window.addEventListener("resize", throttle(this.setupColumnResize.bind(this), 100));
         const cookies = new Cookies(this.cookieOptions);
         this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
+        this.saveColumnsStateDebounced = debounce(this.saveColumnsState, 1000);
     }
 
     onWindowResize(reload) {
@@ -842,29 +848,19 @@ module.exports = class {
         this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_tableWrap>thead>tr:nth-of-type(1)>th`));
         this.resizeTable.style.maxWidth = "";
         this.resizeTableHeaders.map(c => c.style.minWidth = "");
-        this.resizeTableColumnRatios = this.resizeTableColumnRatios ? this.resizeTableColumnRatios : {};
-        this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseInt(window.getComputedStyle(c).width.replace(/px/, ""), 10));
+        this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseFloat(window.getComputedStyle(c).width.replace(/px/, ""), 10));
         this.resizeTable.style.maxWidth = window.getComputedStyle(this.resizeTable).width;
-        this.resizeTableColumnWidths = this.columnsResizeToRatios();
-        this.resizeTableOriginComputedWidth = null;
-        this.resizeTableInitialComputedWidth = parseInt(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+        this.resizeTableOriginComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+        this.resizeTableInitialComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+        const oldColumnWidths = cloneDeep(this.resizeTableColumnWidths);
+        this.resizeTableColumnWidths = this.columnRatiosToWidths();
         this.columnsResizeToValues();
+        const currentTableComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+        if (currentTableComputedWidth !== this.resizeTableOriginComputedWidth) {
+            this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
+            this.columnsResizeToValues();
+        }
         this.resizeTable.style.maxWidth = window.getComputedStyle(this.resizeTable).width;
-    }
-
-    columnsResizeToRatios() {
-        console.log(this.resizeTableColumnWidths);
-        const resizeTableWidth = parseInt(this.resizeTable.style.maxWidth.replace(/px/, ""), 10);
-        const newWidthArr = this.resizeTableHeaders.map((c, i) => {
-            let columnWidth = parseInt(window.getComputedStyle(c).width.replace(/px/, ""), 10);
-            if (this.resizeTableColumnRatios[i] && (this.input.actions && i !== this.resizeTableHeaders.length - 1)) {
-                columnWidth = parseInt(resizeTableWidth * this.resizeTableColumnRatios[i], 10);
-            }
-            return columnWidth;
-        });
-        console.log(this.resizeTableColumnRatios);
-        console.log(newWidthArr);
-        return newWidthArr;
     }
 
     columnsResizeToValues() {
@@ -873,10 +869,9 @@ module.exports = class {
 
     onColumnStartResizeEventHandler(e) {
         e.preventDefault();
-        const columnId = e.target.parentNode.parentNode.dataset.id;
         const oe = e.touches;
         this.resizeTableOX = oe ? oe[0].pageX : e.pageX;
-        this.resizeColumnIndex = this.input.columns.findIndex(c => c.id === columnId) + 1;
+        this.resizeColumnIndex = parseInt(e.target.parentNode.parentNode.dataset.index, 10);
         this.resizeTableActive = true;
         this.resizeTableCurrentGrip = e.target;
     }
@@ -894,22 +889,26 @@ module.exports = class {
         if (this.resizeColumnIndex < this.resizeTableColumnWidths.length - 1) {
             const oldColumnWidths = cloneDeep(this.resizeTableColumnWidths);
             if (!this.resizeTableOriginComputedWidth) {
-                this.resizeTableOriginComputedWidth = parseInt(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+                this.resizeTableOriginComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
             }
+            console.log(`${this.resizeColumnIndex} += ${x}, ${this.resizeColumnIndex + 1} -= ${x}`);
+            console.log(JSON.stringify(this.resizeTableColumnWidths));
             this.resizeTableColumnWidths[this.resizeColumnIndex] += x;
             this.resizeTableColumnWidths[this.resizeColumnIndex + 1] -= x;
+            console.log(JSON.stringify(this.resizeTableColumnWidths));
             this.columnsResizeToValues();
-            this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseInt(window.getComputedStyle(c).width.replace(/px/, ""), 10));
+            this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseFloat(window.getComputedStyle(c).width.replace(/px/, ""), 10));
             this.resizeTableOX = this.resizeTableCurrentGrip.getBoundingClientRect().right + 2;
-            let currentTableComputedWidth = parseInt(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+            let currentTableComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
             if (currentTableComputedWidth !== this.resizeTableOriginComputedWidth) {
                 this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
                 this.columnsResizeToValues();
                 this.resizeTable.style.maxWidth = `${this.resizeTableOriginComputedWidth}px`;
-                this.resizeTableOriginComputedWidth = parseInt(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+                this.resizeTableOriginComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
             }
-            currentTableComputedWidth = parseInt(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
-            this.calculateColumnRatios();
+            currentTableComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+            this.calculateColumnRatios(this.resizeColumnIndex, this.resizeColumnIndex + 1);
+            this.saveColumnsStateDebounced();
         }
     }
 
@@ -921,17 +920,76 @@ module.exports = class {
         this.onColumnStartResizeEventHandler(e);
     }
 
-    calculateColumnRatios() {
-        let tableWidth = this.resizeTableOriginComputedWidth;
-        if (this.input.checkboxColumn) {
-            tableWidth += this.resizeTableColumnWidths[0];
+    calculateColumnRatios(ix1, ix2) {
+        if (!this.resizeTableOriginComputedWidth) {
+            return;
         }
-        if (this.input.actions) {
-            tableWidth += this.resizeTableColumnWidths[this.resizeTableColumnWidths.length - 1];
-        }
-        const widths = this.input.checkboxColumn ? this.resizeTableColumnWidths.slice(1) : cloneDeep(this.resizeTableColumnWidths);
-        this.input.columns.map((c, i) => {
-            this.resizeTableColumnRatios[this.input.checkboxColumn ? i + 1 : i] = parseFloat((widths[i] / tableWidth).toFixed(4));
+        this.state.columnRatios[ix1] = true;
+        this.state.columnRatios[ix2] = true;
+        const widths = cloneDeep(this.resizeTableColumnWidths);
+        const columnsWidth = Object.keys(this.state.columnRatios).map(k => widths[k]).reduce((a, b) => a + b);
+        Object.keys(this.state.columnRatios).map(k => {
+            this.state.columnRatios[k] = parseFloat((widths[k] / columnsWidth));
         });
+    }
+
+    columnRatiosToWidths() {
+        const widths = cloneDeep(this.resizeTableColumnWidths);
+        if (!this.resizeTableOriginComputedWidth || !Object.keys(this.state.columnRatios).length) {
+            return widths;
+        }
+        const columnsWidth = Object.keys(this.state.columnRatios).map(k => widths[k]).reduce((a, b) => a + b);
+        Object.keys(this.state.columnRatios).map(k => widths[k] = parseFloat(this.state.columnRatios[k] * columnsWidth, 10));
+        return widths;
+    }
+
+    onConfigureClick() {
+        this.setState("dropdownVisible", {});
+        this.configColumnsField.func.setItems(this.input.columns.map(c => ({
+            id: c.id,
+            label: c.title
+        })));
+        this.configColumnsField.func.setValue(Object.keys(this.state.columnVisibility).filter(v => this.state.columnVisibility[v]).map(v => v));
+        this.setState("configDialogActive", true);
+    }
+
+    onConfigDialogClose() {
+        this.setState("configDialogActive", false);
+    }
+
+    onConfigDialogSave() {
+        const columns = this.configColumnsField.func.getValue();
+        const visibility = cloneDeep(this.state.columnVisibility);
+        Object.keys(visibility).map(v => {
+            visibility[v] = false;
+            visibility[v] = !!columns.find(c => c.id === v);
+        });
+        this.setState("columnVisibility", visibility);
+        this.setState("configDialogActive", false);
+        this.setState("columnRatios", {});
+        setTimeout(() => this.setupColumnResize(), 10);
+        this.saveColumnsState();
+    }
+
+    async saveColumnsState() {
+        // this.setLoading(true);
+        try {
+            await axios({
+                method: "post",
+                url: "/api/core/columns/save",
+                data: {
+                    table: this.input.id,
+                    ratios: this.state.columnRatios,
+                    columns: Object.keys(this.state.columnVisibility).filter(c => this.state.columnVisibility[c]),
+                },
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            });
+            // this.setLoading(false);
+        } catch {
+            // this.setLoading(false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.columnsSave"), "is-danger");
+        }
     }
 };

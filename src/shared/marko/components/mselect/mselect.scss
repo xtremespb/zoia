@@ -17,7 +17,7 @@
 }
 
 .z3-ms-checkbox-row-checked {
-    background: $yellow;
+    border-right: 7px solid $yellow;
 }
 
 .z3-ms-checkbox-row:hover:not(.z3-ms-checkbox-row-checked) {
