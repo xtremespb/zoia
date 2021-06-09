@@ -51,7 +51,7 @@ module.exports = class {
             filterManageSelected: [],
             filterCurrentId: null,
             filterCurrentTitle: "",
-            configDialogActive: false,
+            columnsConfigDialogActive: false,
             columnRatios: {},
             columnVisibility: {},
         };
@@ -83,7 +83,7 @@ module.exports = class {
         // On mobile device, we shall not
         this.selectField = this.getComponent(`${this.input.id}_mselect`);
         this.calendarField = this.getComponent(`${this.input.id}_filterDate`);
-        this.configColumnsField = this.getComponent(`${this.input.id}_config_columns`);
+        this.columnsConfigField = this.getComponent(`${this.input.id}_config_columns`);
         this.filterDeleteConfirm = this.getComponent(`${this.input.id}_filterDeleteConfirm`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
@@ -130,8 +130,8 @@ module.exports = class {
     }
 
     onWindowResize(reload) {
-        if (this.input.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches && document.getElementById(`${this.input.id}_tableWrap`)) {
-            const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_tableWrap`).getBoundingClientRect().top - 113) / 49, 10);
+        if (this.input.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches && document.getElementById(`${this.input.id}_table`)) {
+            const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_table`).getBoundingClientRect().top - 113) / 49, 10);
             if (itemsCount && this.state.itemsPerPage !== itemsCount) {
                 this.state.itemsPerPage = itemsCount > 0 ? itemsCount : 1;
             }
@@ -181,6 +181,15 @@ module.exports = class {
                 this.setState("limit", response.data.limit || 1);
                 this.setState("pagesCount", response.data.pagesCount || 1);
                 this.setState("paginationData", this.generatePagination());
+                if (response.data.columns && Object.keys(response.data.columns).length && !Object.keys(this.state.columnRatios).length) {
+                    this.setState("columnRatios", response.data.columns.ratios || {});
+                    if (response.data.columns.columns) {
+                        const visibility = {};
+                        response.data.columns.columns.map(c => visibility[c] = true);
+                        this.setState("columnVisibility", visibility);
+                    }
+                }
+                setTimeout(() => this.setupColumnResize(), 10);
             } else {
                 this.setState("error", this.i18n.t("mTableErr.general"));
             }
@@ -203,7 +212,6 @@ module.exports = class {
         });
         if (this.state.dataSource) {
             await this.loadData(extras);
-            setTimeout(() => this.setupColumnResize(), 10);
         }
     }
 
@@ -843,13 +851,26 @@ module.exports = class {
         ace.session.insert(ace.getCursorPosition(), `"${id}"`);
     }
 
+    setTableWidth(w) {
+        this.resizeTable.style.maxWidth = w;
+        // this.resizeTableContainer.style.maxWidth = w;
+    }
+
     setupColumnResize() {
-        this.resizeTable = document.getElementById(`${this.input.id}_tableWrap`);
-        this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_tableWrap>thead>tr:nth-of-type(1)>th`));
-        this.resizeTable.style.maxWidth = "";
+        this.resizeTableMeter = document.getElementById(`${this.input.id}_tableMeter`);
+        this.resizeTableMeter.style.display = "block";
+        this.resizeTableContainer = document.getElementById(`${this.input.id}_tableContainer`);
+        this.resizeTable = document.getElementById(`${this.input.id}_table`);
+        this.resizeTable.style.display = "none";
+        this.resizeTableContainer.style.maxWidth = window.getComputedStyle(this.resizeTableMeter).width;
+        this.resizeTable.style.display = "table";
+        this.resizeTableMeter.style.display = "none";
+        this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th`));
+        this.resizeTableGrips = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th>div>.z3-mt-th-resize`));
+        this.setTableWidth("");
         this.resizeTableHeaders.map(c => c.style.minWidth = "");
         this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseFloat(window.getComputedStyle(c).width.replace(/px/, ""), 10));
-        this.resizeTable.style.maxWidth = window.getComputedStyle(this.resizeTable).width;
+        this.setTableWidth(window.getComputedStyle(this.resizeTable).width);
         this.resizeTableOriginComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
         this.resizeTableInitialComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
         const oldColumnWidths = cloneDeep(this.resizeTableColumnWidths);
@@ -860,7 +881,8 @@ module.exports = class {
             this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
             this.columnsResizeToValues();
         }
-        this.resizeTable.style.maxWidth = window.getComputedStyle(this.resizeTable).width;
+        this.setTableWidth(window.getComputedStyle(this.resizeTable).width);
+        this.resizeTableGrips.map(g => g.style.left = `${this.resizeTableColumnWidths[g.dataset.index] - 5}px`);
     }
 
     columnsResizeToValues() {
@@ -891,11 +913,9 @@ module.exports = class {
             if (!this.resizeTableOriginComputedWidth) {
                 this.resizeTableOriginComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
             }
-            console.log(`${this.resizeColumnIndex} += ${x}, ${this.resizeColumnIndex + 1} -= ${x}`);
-            console.log(JSON.stringify(this.resizeTableColumnWidths));
             this.resizeTableColumnWidths[this.resizeColumnIndex] += x;
             this.resizeTableColumnWidths[this.resizeColumnIndex + 1] -= x;
-            console.log(JSON.stringify(this.resizeTableColumnWidths));
+            this.resizeTableGrips.map(g => g.style.left = `${this.resizeTableColumnWidths[this.resizeColumnIndex]}px`);
             this.columnsResizeToValues();
             this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseFloat(window.getComputedStyle(c).width.replace(/px/, ""), 10));
             this.resizeTableOX = this.resizeTableCurrentGrip.getBoundingClientRect().right + 2;
@@ -903,7 +923,7 @@ module.exports = class {
             if (currentTableComputedWidth !== this.resizeTableOriginComputedWidth) {
                 this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
                 this.columnsResizeToValues();
-                this.resizeTable.style.maxWidth = `${this.resizeTableOriginComputedWidth}px`;
+                this.setTableWidth(`${this.resizeTableOriginComputedWidth}px`);
                 this.resizeTableOriginComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
             }
             currentTableComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
@@ -913,6 +933,7 @@ module.exports = class {
     }
 
     onColumnUpEventHandler() {
+        this.resizeTableGrips.map(g => g.style.left = `${this.resizeTableColumnWidths[g.dataset.index] - 5}px`);
         this.resizeTableActive = false;
     }
 
@@ -943,36 +964,35 @@ module.exports = class {
         return widths;
     }
 
-    onConfigureClick() {
+    onColumnsConfigClick() {
         this.setState("dropdownVisible", {});
-        this.configColumnsField.func.setItems(this.input.columns.map(c => ({
+        this.columnsConfigField.func.setItems(this.input.columns.map(c => ({
             id: c.id,
             label: c.title
         })));
-        this.configColumnsField.func.setValue(Object.keys(this.state.columnVisibility).filter(v => this.state.columnVisibility[v]).map(v => v));
-        this.setState("configDialogActive", true);
+        this.columnsConfigField.func.setValue(Object.keys(this.state.columnVisibility).filter(v => this.state.columnVisibility[v]).map(v => v));
+        this.setState("columnsConfigDialogActive", true);
     }
 
-    onConfigDialogClose() {
-        this.setState("configDialogActive", false);
+    onColumnsConfigDialogClose() {
+        this.setState("columnsConfigDialogActive", false);
     }
 
-    onConfigDialogSave() {
-        const columns = this.configColumnsField.func.getValue();
+    onColumnsConfigDialogSave() {
+        const columns = this.columnsConfigField.func.getValue();
         const visibility = cloneDeep(this.state.columnVisibility);
-        Object.keys(visibility).map(v => {
-            visibility[v] = false;
-            visibility[v] = !!columns.find(c => c.id === v);
+        this.input.columns.map(c => {
+            visibility[c.id] = false;
+            visibility[c.id] = !!columns.find(col => col.id === c.id);
         });
         this.setState("columnVisibility", visibility);
-        this.setState("configDialogActive", false);
+        this.setState("columnsConfigDialogActive", false);
         this.setState("columnRatios", {});
         setTimeout(() => this.setupColumnResize(), 10);
         this.saveColumnsState();
     }
 
     async saveColumnsState() {
-        // this.setLoading(true);
         try {
             await axios({
                 method: "post",
@@ -986,9 +1006,7 @@ module.exports = class {
                     Authorization: `Bearer ${this.token}`
                 }
             });
-            // this.setLoading(false);
         } catch {
-            // this.setLoading(false);
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.columnsSave"), "is-danger");
         }
     }

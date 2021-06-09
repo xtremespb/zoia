@@ -181,6 +181,7 @@ table tr:last-child td:last-child {
 .z3-mt-table-container {
     border: 1px solid $grey-lighter;
     border-radius: 2px;
+    overflow-x: auto;
 }
 
 .z3-mt-table-head {
@@ -193,6 +194,7 @@ table tr:last-child td:last-child {
     white-space: nowrap;
     text-overflow: ellipsis;
     max-width: 250px;
+    position: relative;
 }
 
 .z3-mt-th {
@@ -205,18 +207,21 @@ table tr:last-child td:last-child {
     justify-content: left;
     align-items: center;
     height: 100%;
+    position: relative;
 }
 
 .z3-mt-th-data {
     flex: 1;
     padding: 8px 12px !important;
     height: 100%;
+    position: relative;
 }
 
 .z3-mt-th-resize {
     width: 5px;
     cursor: ew-resize;
     height: 100%;
+    position: absolute;
 }
 
 .z3-mt-th-resize:hover {
@@ -240,6 +245,11 @@ table tr:last-child td:last-child {
 .z3-mt-grip-resizable>tbody>tr>td,
 .z3-mt-grip-resizable>tbody>tr>th {
     overflow: hidden;
+}
+
+.z3-mt-table-meter {
+    height: 1px;
+    width: 100%;
 }
 
 @keyframes z3-mt-filter-spinner {

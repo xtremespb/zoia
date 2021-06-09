@@ -1,3 +1,4 @@
+import utils from "../../../shared/lib/utils";
 import backupList from "./data/backupList.json";
 
 export default () => ({
@@ -48,13 +49,15 @@ export default () => ({
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
+            const columns = await utils.getColumnsConfig(req, this.mongo.db, auth, "backup");
             const data = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).find(query, options).toArray();
             // Send response
             response.successJSON({
                 data,
                 count,
                 limit,
-                pagesCount: Math.ceil(count / limit)
+                pagesCount: Math.ceil(count / limit),
+                columns,
             });
             return;
         } catch (e) {
