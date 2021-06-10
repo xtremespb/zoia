@@ -8,7 +8,7 @@ style.scss {
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 <div class="z3-mt-wrap" id=`${input.id}_wrap`>
-	<div class="columns">
+	<div class="columns z3-ap-noselect">
 		<div class="column is-four-fifths">
 			<if(input.buttons && input.buttons.length)>
 				<div
@@ -52,6 +52,21 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</div>
 						</p>
 					</for>
+					<p class="z3-mt-top-control mt-1 mr-1">
+						<button
+							class="button"
+							type="button"
+							on-click("onColumnsConfigClick")
+							data-tippy-content=out.global.i18n.t("mTable.columns")
+							aria-haspopup="true">
+							<div class="z3-mt-icon-wrap">
+								<span class="icon">
+									<i class="mdi mdi-table-edit"/>
+								</span>
+							</div>
+							${out.global.i18n.t("mTable.columns")}
+						</button>
+					</p>
 					<if(input.filter && input.filter.length)>
 						<p class="z3-mt-top-control mt-1 mr-1">
 							<div class=`dropdown is-right${
@@ -122,7 +137,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</div>
 	</div>
 	<if(input.filter && input.filter.length && state.filters.length)>
-		<div class="field is-grouped is-grouped-multiline mb-2">
+		<div class="field is-grouped is-grouped-multiline mb-2 z3-ap-noselect">
 			<if(state.filterCurrentId)>
 				<div class="control">
 					<div class="tags">
@@ -179,15 +194,15 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</div>
 	</if>
 	<if(state.error)>
-		<div class="notification is-danger">${state.error}</div>
+		<div class="notification is-danger z3-ap-noselect">${state.error}</div>
 	</if>
 	<else>
-		<div class="table-container z3-mt-table-container">
-			<table class=`${input.css} z3-mt-table-wrap` id=`${input.id}_tableWrap`>
+		<div class="z3-mt-table-container" id=`${input.id}_tableContainer`>
+			<table class=`${input.css} z3-mt-table-wrap z3-mt-grip-resizable` id=`${input.id}_table`>
 				<thead class="z3-mt-noselect z3-mt-table-head">
 					<tr>
 						<if(input.checkboxColumn)>
-							<th style="width:10px">
+							<th style="width:43px;min-width:43px;max-width:43px">
 								<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
 									<input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
 									<div class="state p-primary">
@@ -196,16 +211,26 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								</div>
 							</th>
 						</if>
+						$ let columnIndex = 1;
 						<for|column| of=input.columns>
-							<th
-								data-id=column.id
-								data-sortable=column.sortable
-								class=`z3-mt-th ${column.css || ""}${column.sortable ? " z3-mt-sortable" : ""}`
-								on-click("onColumnClick")>
-								<div class=`z3-mt-sort mdi ${
-									state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"
-								}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>${column.title}
-							</th>
+							<if(state.columnVisibility[column.id])>
+								<th class=`z3-mt-th ${column.css || ""}` data-id=column.id data-index=columnIndex id=`${input.id}_th_${column.id}`>
+									<div class="z3-mt-th-wrap">
+										<div class=`z3-mt-th-data${column.sortable ? " z3-mt-sortable" : ""}` on-click("onColumnClick") data-id=column.id data-sortable=column.sortable>
+											<div class=`z3-mt-sort mdi ${
+												state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"
+											}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
+											<span>
+												${column.title}
+											</span>
+										</div>
+										<if(column.resize)>
+											<div class="z3-mt-th-resize" data-index=columnIndex on-mousedown("onColumnResizeMouseDown")>&nbsp;</div>
+										</if>
+									</div>
+								</th>
+								$ columnIndex += 1;
+							</if>
 						</for>
 						<if(input.actions && input.actions.length)>
 							<th class="z3-mt-actions-wrap">${input.actionsTitle}</th>
@@ -217,7 +242,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<for|row| of=state.data>
 							<tr>
 								<if(input.checkboxColumn)>
-									<td style="width:10px">
+									<td style="width:43px;min-width:43px;max-width:43px">
 										<div class="z3-pretty p-icon z3-mt-pretty-checkbox-id">
 											<input
 												data-id=(row.id || row._id)
@@ -233,13 +258,15 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								</if>
 								<for|column| of=input.columns.map(c => c.id)>
 									$ const columnData = input.columns.find(c => c.id === column);
-									<td class=`${columnData.multiline ? "" : "z3-mt-td"}`>
-										$!{row[column]
-										? input.processValue
-											? input.processValue(row.id || row._id, row[column], column, row)
-											: row[column]
-										: ""}
-									</td>
+									<if(state.columnVisibility[columnData.id])>
+										<td class=`${columnData.multiline ? "" : "z3-mt-td"}`>
+											$!{row[column] !== null && row[column] !== undefined
+											? input.processValue
+												? input.processValue(row.id || row._id, row[column], column, row)
+												: row[column]
+											: ""}
+										</td>
+									</if>
 								</for>
 								<if(input.actions && input.actions.length)>
 									<td class="z3-mt-actions-wrap">
@@ -282,6 +309,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				</tbody>
 			</table>
 		</div>
+		<div class="z3-mt-table-meter" id=`${input.id}_tableMeter`/>
 		<if(state.paginationData.length)>
 			<nav
 				class="pagination is-small z3-mt-pagination"
@@ -590,7 +618,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							<span
 								class="tag z3-mt-filter-raw-tag"
 								data-id=f.id
-								on-click("onfilterRawTagClick")>
+								on-click("onFilterRawTagClick")>
 								${f.label}
 							</span>
 						</for>
@@ -639,6 +667,20 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					]
 					i18n=out.global.i18n
 					on-button-click("onFilterRawFormButtonClick")/>
+			</div>
+		</div>
+	</div>
+	<div class=`modal${state.columnsConfigDialogActive ? " is-active" : ""}`>
+		<div class="modal-background" on-click("onColumnsConfigDialogClose")/>
+		<div class="modal-card">
+			<div class="modal-card-body">
+				<mselect
+					key=`${input.id}_config_columns`
+					active=true/>
+				<div class="buttons mt-4">
+					<button type="button" class="button is-primary" on-click("onColumnsConfigDialogSave")>${out.global.i18n.t("mTable.save")}</button>
+					<button type="button" class="button" on-click("onColumnsConfigDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
+				</div>
 			</div>
 		</div>
 	</div>

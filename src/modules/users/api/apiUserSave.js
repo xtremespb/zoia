@@ -39,7 +39,8 @@ export default () => ({
         try {
             // Process case for username and e-mail
             data.username = data.username.trim().toLowerCase();
-            data.email = data.email.trim().toLowerCase();
+            data.email = data.email ? String(data.email).trim().toLowerCase() : null;
+            data.displayName = data.displayName ? String(data.displayName).trim() : null;
             // Check permission
             if ((!req.body.id && !acl.checkPermission("users", "create")) || !acl.checkPermission("users", "update", data.username)) {
                 response.requestAccessDeniedError();
@@ -55,7 +56,7 @@ export default () => ({
                 return;
             }
             // Check for email duplicates
-            if (await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["users"].collectionUsers, {
+            if (data.email && await rep.checkDatabaseDuplicates(rep, this.mongo.db, req.zoiaModulesConfig["users"].collectionUsers, {
                     email: data.email,
                     _id: {
                         $ne: req.body.id ? new ObjectId(req.body.id) : null
@@ -80,6 +81,7 @@ export default () => ({
             }, {
                 $set: {
                     username: data.username,
+                    displayName: data.displayName,
                     email: data.email,
                     status: data.status,
                     groups: data.groups,

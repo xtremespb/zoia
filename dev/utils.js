@@ -31,13 +31,13 @@ const copyMailTemplates = argv => {
 };
 
 const generateTemplatesJSON = argv => {
-    const available = fs.readdirSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/shared/marko/zoia/templates`));
+    const available = fs.readdirSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/design/templates`));
     const templatesJSON = available.filter(i => !i.match(/^\./) && !i.match(/-shared$/));
     available.map(t => {
-        if (fs.existsSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/shared/marko/zoia/templates/${t}/minify.json`))) {
-            const files = fs.readJSONSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/shared/marko/zoia/templates/${t}/minify.json`));
+        if (fs.existsSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/design/templates/${t}/minify.json`))) {
+            const files = fs.readJSONSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/design/templates/${t}/minify.json`));
             files.map(f => {
-                const htmlRaw = fs.readFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/shared/marko/zoia/templates/${t}/${f.src}`), "utf8");
+                const htmlRaw = fs.readFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/design/templates/${t}/${f.src}`), "utf8");
                 minify({
                     compressor: htmlMinifier,
                     options: {
@@ -46,7 +46,7 @@ const generateTemplatesJSON = argv => {
                         html5: true
                     },
                     content: htmlRaw
-                }).then(htmlMin => fs.writeFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/shared/marko/zoia/templates/${t}/${f.dest}`), htmlMin));
+                }).then(htmlMin => fs.writeFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/design/templates/${t}/${f.dest}`), htmlMin));
             });
         }
     });
@@ -55,7 +55,7 @@ const generateTemplatesJSON = argv => {
 
 const generateVariablesSCSS = async argv => {
     const variablesSrcDir = `${__dirname}/../${argv.update ? "update" : "src"}/shared/marko/src/bulma`;
-    const variablesDestDir = `${__dirname}/../${argv.update ? "update" : "src"}/shared/marko/zoia/variables`;
+    const variablesDestDir = `${__dirname}/../${argv.update ? "update" : "src"}/design/variables`;
     await fs.ensureDir(variablesDestDir);
     await Promise.allSettled(["frontend", "admin", "components"].map(async s => {
         if (!fs.existsSync(path.resolve(`${variablesDestDir}/${s}.scss`))) {
@@ -68,7 +68,7 @@ const rebuildMarkoTemplates = argv => {
     const templates = require(`${__dirname}/../build/etc/templates.json`);
     console.log("Re-building Marko templates macro...");
     const root = `<!-- This file is auto-generated, do not modify -->\n${templates.map(t => `<if(out.global.template === "${t}")><${t}><i18n/><socketIO/><\${input.renderBody}/></${t}></if>\n`).join("")}\n`;
-    fs.writeFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/shared/marko/zoia/index.marko`), root);
+    fs.writeFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/design/index.marko`), root);
 };
 
 const generateModulesConfig = (moduleDirs, languages, argv) => {
@@ -76,69 +76,93 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
     const admin = [];
     const backup = {};
     const defaults = {};
+    const meta = {};
     fs.ensureDirSync(path.resolve(`${__dirname}/../logs`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../etc/modules`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../build/scripts`));
     fs.ensureDirSync(path.resolve(`${__dirname}/../build/mail/modules`));
-    moduleDirs.map(dir => {
-        // In production / non-update mode, copy the configs of each module to etc/modules
-        if (argv.mode === "production" && argv.type !== "update" && !fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) && fs.existsSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/config.dist.json`))) {
-            fs.copyFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/config.dist.json`), path.resolve(`${__dirname}/../etc/modules/${dir}.json`));
-        }
-        if (fs.existsSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/mail`)) && !fs.existsSync(path.resolve(`${__dirname}/../build/mail/modules/${dir}`))) {
-            fs.copy(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/mail`), path.resolve(`${__dirname}/../build/mail/modules/${dir}`));
-        }
+    moduleDirs.map(moduleDir => {
         let moduleData;
         try {
-            moduleData = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/module.json`));
+            moduleData = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDir}/module.json`));
         } catch {
             // Ignore
         }
         if (!moduleData) {
             return;
         }
-        try {
-            defaults[dir] = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/defaults.json`));
-        } catch {
-            // Ignore
+        const dirs = moduleData.meta ? moduleData.dirs : [moduleDir];
+        if (moduleData.meta) {
+            meta[moduleData.id] = moduleData.dirs;
         }
-        const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) : require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/config.dist.json`));
-        modules.push(moduleData);
-        if (moduleData.admin) {
+        for (const dir of dirs) {
+            let moduleDirPath = dir;
+            let moduleDataCurrent;
+            if (moduleData.meta) {
+                moduleDirPath = moduleData.meta ? `${moduleData.id}/${dir}` : dir;
+                try {
+                    moduleDataCurrent = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/module.json`));
+                    moduleDataCurrent.parentModule = moduleData.id;
+                } catch {
+                    console.log(`Could not read module data for meta-module: ${moduleDirPath}`);
+                    process.exit(1);
+                }
+            } else {
+                moduleDataCurrent = moduleData;
+            }
+            // In production / non-update mode, copy the configs of each module to etc/modules
+            if (argv.mode === "production" && argv.type !== "update" && !fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${moduleDataCurrent.id}.json`)) && fs.existsSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/config.dist.json`))) {
+                fs.copyFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/config.dist.json`), path.resolve(`${__dirname}/../etc/modules/${moduleDataCurrent.id}.json`));
+            }
+            if (fs.existsSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/mail`)) && !fs.existsSync(path.resolve(`${__dirname}/../build/mail/modules/${moduleDataCurrent.id}`))) {
+                fs.copy(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/mail`), path.resolve(`${__dirname}/../build/mail/modules/${moduleDataCurrent.id}`));
+            }
+            // Load defaults
             try {
-                const adminConfig = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/admin.json`));
-                const trans = {};
-                languages.map(language => {
-                    const catalog = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/locales/${language}.json`));
-                    trans[language] = catalog;
-                });
-                adminConfig.map(ac => {
-                    const data = {
-                        priority: ac.priority || 10000,
-                        id: ac.id,
-                        icon: ac.icon,
-                        link: moduleConfig.routes[ac.id],
-                        title: {}
-                    };
-                    languages.map(language => data.title[language] = trans[language].moduleTitle || trans[language][`moduleTitle.${ac.id}`] || ac.id);
-                    admin.push(data);
-                });
+                defaults[dir] = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/defaults.json`));
+            } catch {
+                // Ignore
+            }
+            const moduleConfig = fs.existsSync(path.resolve(`${__dirname}/../etc/modules/${moduleDirPath}.json`)) ? require(path.resolve(`${__dirname}/../etc/modules/${dir}.json`)) : require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/config.dist.json`));
+            if (moduleConfig.setup && fs.existsSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/setup.js`))) {
+                fs.copyFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/setup.js`), path.resolve(`${__dirname}/../build/scripts/${moduleDirPath}.js`));
+            }
+            modules.push(moduleDataCurrent);
+            if (moduleDataCurrent.admin) {
+                try {
+                    const adminConfig = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/admin.json`));
+                    const trans = {};
+                    languages.map(language => {
+                        const catalog = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/locales/${language}.json`));
+                        trans[language] = catalog;
+                    });
+                    adminConfig.map(ac => {
+                        const data = {
+                            priority: ac.priority || 10000,
+                            id: ac.id,
+                            icon: ac.icon,
+                            link: moduleConfig.routes[ac.id],
+                            title: {}
+                        };
+                        languages.map(language => data.title[language] = trans[language].moduleTitle || trans[language][`moduleTitle.${ac.id}`] || ac.id);
+                        admin.push(data);
+                    });
+                } catch {
+                    // Ignore
+                }
+            }
+            try {
+                const backupConfig = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/backup.json`));
+                backup[dir] = backupConfig;
             } catch {
                 // Ignore
             }
         }
-        if (moduleConfig.setup && fs.existsSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/setup.js`))) {
-            fs.copyFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/setup.js`), path.resolve(`${__dirname}/../build/scripts/${dir}.js`));
-        }
-        try {
-            const backupConfig = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/backup.json`));
-            backup[dir] = backupConfig;
-        } catch {
-            // Ignore
-        }
     });
     console.log("Writing modules.json...");
     fs.writeJSONSync(`${__dirname}/../build/etc/modules.json`, modules);
+    console.log("Writing meta.json...");
+    fs.writeJSONSync(`${__dirname}/../build/etc/meta.json`, meta);
     console.log("Writing defaults.json...");
     fs.writeJSONSync(`${__dirname}/../build/etc/defaults.json`, defaults);
     console.log("Writing admin.json...");

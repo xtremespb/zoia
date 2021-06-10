@@ -53,8 +53,9 @@ import Utils from "./utils";
         zoia.utils = new Utils(zoia.config, zoia.modulesConfig, zoia.db, zoia.redis);
         // Load Modules
         zoia.modules.map(m => {
+            const moduleDir = m.parentModule ? `${m.parentModule}/${m.id}` : m.id;
             try {
-                zoia.modulesConfig[m.id] = require(`../../../modules/${m.id}/config.dist.json`);
+                zoia.modulesConfig[m.id] = require(`../../../modules/${moduleDir}/config.dist.json`);
             } catch (e) {
                 zoia.log.error(`Fatal: unable to load default config for module: "${m.id}"`);
                 process.exit(1);

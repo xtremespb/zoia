@@ -48,5 +48,7 @@
 	"whitelist": "White List",
 	"blacklist": "Black List",
 	"coreFunctions": "Core",
-	"createdAt": "Created At"
+	"createdAt": "Created At",
+	"displayName": "Display Name",
+	"displayNameHelpText": "Display instead of username"
 }

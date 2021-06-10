@@ -153,5 +153,8 @@
 	"mTable.rawFilterEdit": "Add Raw Database Query",
 	"mTable.rawValue": "Raw Query",
 	"mTable.rawValueHelpText": "Should be a valid MongoDB Query (JSON)",
-	"mTableErr.invalidJSON": "Invalid JSON Value"
+	"mTableErr.invalidJSON": "Invalid JSON Value",
+	"mTable.columns": "Columns",
+	"mTableErr.columnsSave": "Could not save column data",
+	"mSelect.search": "Search"
 }

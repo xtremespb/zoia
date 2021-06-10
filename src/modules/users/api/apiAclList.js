@@ -1,3 +1,4 @@
+import utils from "../../../shared/lib/utils";
 import aclListData from "./data/aclList.json";
 
 export default () => ({
@@ -59,6 +60,7 @@ export default () => ({
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
+            const columns = await utils.getColumnsConfig(req, this.mongo.db, auth, "acl");
             const data = (await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).find(query, options).toArray()).map(i => ({
                 _id: i._id,
                 group: !acl.checkPermission("users", "read", i.group) ? "***" : i.group,
@@ -70,6 +72,7 @@ export default () => ({
                 count,
                 limit,
                 pagesCount: Math.ceil(count / limit),
+                columns,
             });
             return;
         } catch (e) {

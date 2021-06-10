@@ -25,7 +25,8 @@ modules.map(m => {
     catalogs[m.id] = {};
     languages.map(language => {
         try {
-            const catalog = require(`../../modules/${m.id}/locales/${language}.json`);
+            const moduleDir = m.parentModule ? `${m.parentModule}/${m.id}` : m.id;
+            const catalog = require(`../../modules/${moduleDir}/locales/${language}.json`);
             Object.keys(catalog).map(k => catalog[k] = catalog[k] || k);
             catalogs[m.id][language] = {
                 ...generic[language],

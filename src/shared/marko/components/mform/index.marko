@@ -187,9 +187,9 @@ style.scss {
 			</div>
 		</div>
 	</if>
-	<if(state.loading)>
+	<if(state.loading || !state.allSettled)>
 		<div class="z3-mf-loading">
-			<span class="button is-white is-loading is-large z3-mf-loading-spinner">
+			<span class="button is-white is-loading is-large">
 				&nbsp;
 			</span>
 		</div>

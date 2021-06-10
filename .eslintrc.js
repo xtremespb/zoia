@@ -1,26 +1,29 @@
-{
-    "parser": "babel-eslint",
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module",
-        "ecmaFeatures": {
-            "jsx": true
-        }
+module.exports = {
+    parser: "@babel/eslint-parser",
+    parserOptions: {
+        ecmaVersion: 2018,
+        sourceType: "module",
+        ecmaFeatures: {
+            jsx: true
+        },
+        babelOptions: {
+            configFile: "./dev/babel.config.js",
+        },
     },
-    "extends": "airbnb-base",
-    "env": {
-        "es6": true,
-        "browser": true,
-        "node": true
+    extends: "airbnb-base",
+    env: {
+        es6: true,
+        browser: true,
+        node: true
     },
-    "rules": {
-        "quotes": ["error", "double",
+    rules: {
+        quotes: ["error", "double",
             {
-                "allowTemplateLiterals": true
+                allowTemplateLiterals: true
             }
         ],
         "template-curly-spacing": "off",
-        "indent": "off",
+        indent: "off",
         "arrow-parens": "off",
         "comma-dangle": "off",
         "array-callback-return": "off",
@@ -47,5 +50,5 @@
         "consistent-return": "off",
         "no-restricted-syntax": "off",
         "no-await-in-loop": "off"
-    }
-}
+    },
+};

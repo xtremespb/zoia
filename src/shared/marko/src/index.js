@@ -39,6 +39,7 @@ import Env from "../../lib/env";
     let templates;
     let pino;
     let modules;
+    let modulesMeta;
     let admin;
     let packageJson;
     let env;
@@ -64,6 +65,12 @@ import Env from "../../lib/env";
         packageJson = fs.readJSONSync(path.resolve(`${__dirname}/../../package.json`));
         templates = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/templates.json`)).filter(t => config.templates.indexOf(t) > -1);
         modules = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/modules.json`));
+        modulesMeta = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/meta.json`));
+        Object.keys(modulesMeta).map(m => {
+            if (config.modules.indexOf(m) > -1) {
+                config.modules = [...config.modules, ...modulesMeta[m]];
+            }
+        });
         admin = fs.readJSONSync(path.resolve(`${__dirname}/../../build/etc/admin.json`));
         pino.info(`Compiled module(s): ${modules.map(m => m.id).join(", ")}`);
         const defaultConfigs = [];
@@ -86,8 +93,9 @@ import Env from "../../lib/env";
             mailTemplateComponentsText[c] = template(mailTemplateComponentFileText);
         });
         modules.map(m => {
+            const moduleDir = m.parentModule ? `${m.parentModule}/${m.id}` : m.id;
             try {
-                modulesConfig[m.id] = require(`../../../modules/${m.id}/config.dist.json`);
+                modulesConfig[m.id] = require(`../../../modules/${moduleDir}/config.dist.json`);
             } catch (e) {
                 pino.error(`Fatal: unable to load default config for module: "${m.id}"`);
                 process.exit(1);
@@ -218,7 +226,8 @@ import Env from "../../lib/env";
         // Load all web server modules
         await Promise.all(modules.map(async m => {
             try {
-                const moduleWeb = await import(`../../../modules/${m.id}/web/index.js`);
+                const moduleDir = m.parentModule ? `${m.parentModule}/${m.id}` : m.id;
+                const moduleWeb = await import(`../../../modules/${moduleDir}/web/index.js`);
                 if (config.modules.indexOf(m.id) === -1) {
                     return;
                 }
@@ -235,7 +244,8 @@ import Env from "../../lib/env";
         // Load all API modules
         await Promise.all(modules.map(async m => {
             try {
-                const moduleAPI = await import(`../../../modules/${m.id}/api/index.js`);
+                const moduleDir = m.parentModule ? `${m.parentModule}/${m.id}` : m.id;
+                const moduleAPI = await import(`../../../modules/${moduleDir}/api/index.js`);
                 if (config.modules.indexOf(m.id) === -1) {
                     return;
                 }
@@ -255,7 +265,8 @@ import Env from "../../lib/env";
             // Load all Telegram Modules
             await Promise.all(modules.map(async m => {
                 try {
-                    const moduleTelegram = await import(`../../../modules/${m.id}/telegram/index.js`);
+                    const moduleDir = m.parentModule ? `${m.parentModule}/${m.id}` : m.id;
+                    const moduleTelegram = await import(`../../../modules/${moduleDir}/telegram/index.js`);
                     if (config.modules.indexOf(m.id) === -1) {
                         return;
                     }
@@ -272,7 +283,8 @@ import Env from "../../lib/env";
         const socketIoModules = [];
         await Promise.all(modules.map(async m => {
             try {
-                const moduleSocket = await import(`../../../modules/${m.id}/socket.io/index.js`);
+                const moduleDir = m.parentModule ? `${m.parentModule}/${m.id}` : m.id;
+                const moduleSocket = await import(`../../../modules/${moduleDir}/socket.io/index.js`);
                 if (config.modules.indexOf(m.id) === -1) {
                     return;
                 }

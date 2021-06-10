@@ -1,6 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import I18n from "./i18n";
-import i18nCatalogs from "./i18nCatalogsNode";
+
+let i18nCatalogs;
+if (!process.browser) {
+    i18nCatalogs = require("./i18nCatalogs").default;
+}
 // eslint-disable-next-line import/no-unresolved
 
 export default class {

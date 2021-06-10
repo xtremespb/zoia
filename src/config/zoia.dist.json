@@ -1,10 +1,10 @@
 {
     "languages": {
-        "en": "English",
+        "en-us": "English",
         "ru": "Русский"
     },
     "siteMetadata": {
-        "en": {
+        "en-us": {
             "title": "ZOIA Website",
             "titleShort": "ZOIA Website",
             "descShort": "Example Website powered by ZOIA",

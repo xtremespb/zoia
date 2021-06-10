@@ -27,9 +27,9 @@
             },
             "language": {
                 "type": "string",
-                "pattern": "^[a-z]{2}$",
+                "pattern": "^[a-z]{2}(-[a-z]{2})?$",
                 "minLength": 2,
-                "maxLength": 2
+                "maxLength": 5
             },
             "dir": {
                 "type": "string",

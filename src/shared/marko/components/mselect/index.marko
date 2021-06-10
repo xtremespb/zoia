@@ -3,6 +3,25 @@ style.scss {
 }
 
 <if(input.active)>
+	<div class="columns is-mobile is-variable is-1 mb-0">
+		<div class="column control">
+			<input class="input" type="text" placeholder=out.global.i18n.t("mSelect.search") on-input("onSearchInput") value=state.searchValue>
+		</div>
+		<div class="column is-narrow">
+			<div class="buttons">
+				<button class="button" type="button" on-click("onSelectAllClick")>
+					<span class="icon is-small">
+						<i class="mdi mdi-checkbox-marked-outline"></i>
+					</span>
+				</button>
+				<button class="button" type="button" on-click("onSelectNoneClick")>
+					<span class="icon is-small">
+						<i class="mdi mdi-checkbox-blank-outline"></i>
+					</span>
+				</button>  
+			</div>
+		</div>
+	</div>
 	<div class=`z3-ms-wrap ${input.css || ""}`>
 		<for|i| of=state.items>
 			<div

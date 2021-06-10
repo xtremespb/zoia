@@ -18,7 +18,7 @@ export default async (config, options, modulesConfig, db) => {
         $set: {
             username: options.user,
             password,
-            email: options.email,
+            email: null,
             status: ["active", "admin"],
             groups: ["admin"],
             createdAt: new Date()

@@ -515,5 +515,11 @@ export default {
             delete query.$and;
         }
         return query;
+    },
+    async getColumnsConfig(req, db, auth, table) {
+        return (await db.collection(req.zoiaModulesConfig["core"].collectionColumns || "columns").findOne({
+            table,
+            userId: String(auth.getUser()._id),
+        })) || {};
     }
 };
