@@ -4,7 +4,8 @@ module.exports = class {
     onCreate() {
         const state = {
             items: [],
-            value: []
+            value: [],
+            searchValue: "",
         };
         this.state = state;
         this.func = {
@@ -22,6 +23,7 @@ module.exports = class {
 
     setItems(items) {
         this.state.items = items;
+        this.itemsSave = items;
     }
 
     setValue(value) {
@@ -58,5 +60,28 @@ module.exports = class {
         }
         this.state.value = data;
         this.emit("value-change", this.getValue());
+    }
+
+    onSelectAllClick() {
+        const value = [];
+        this.state.items.map(i => value.push(i.id));
+        this.setState("value", value);
+    }
+
+    onSelectNoneClick() {
+        this.setState("value", []);
+    }
+
+    onSearchInput(e) {
+        const searchValue = e.target.value.trim();
+        this.setState("searchValue", searchValue);
+        if (searchValue.length) {
+            const searchRex = new RegExp(`${searchValue}`, "igm");
+            console.log(searchRex);
+            const items = this.itemsSave.filter(i => searchRex.test(i.label));
+            this.setState("items", items);
+        } else {
+            this.setState("items", this.itemsSave);
+        }
     }
 };

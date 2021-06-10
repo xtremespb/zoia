@@ -1,6 +1,6 @@
 {
 	"name": "zoia3",
-	"version": "3.1.57",
+	"version": "3.1.58",
 	"description": "ZOIA Content Management System",
 	"scripts": {
 		"config": "node ./dev/bin/config.js",
@@ -93,7 +93,6 @@
 		"chai": "^4.3.4",
 		"core-js": "^3.13.1",
 		"css-loader": "^5.2.6",
-		"css-minimizer-webpack-plugin": "^3.0.0",
 		"eslint": "^7.27.0",
 		"eslint-config-airbnb-base": "^14.2.1",
 		"eslint-plugin-import": "^2.23.4",

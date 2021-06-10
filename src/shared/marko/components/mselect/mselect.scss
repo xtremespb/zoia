@@ -2,22 +2,23 @@
 
 .z3-ms-wrap {
     border: 1px solid #eee;
-    padding: 10px;
     overflow-y: auto;
     overflow-x: hidden;
+    min-height: 200px;
     max-height: 200px;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    border-radius: 4px;
 }
 
 .z3-ms-checkbox-row {
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
 }
 
 .z3-ms-checkbox-row-checked {
-    border-right: 7px solid $yellow;
+    background: $z3-yellow-light;
 }
 
 .z3-ms-checkbox-row:hover:not(.z3-ms-checkbox-row-checked) {
