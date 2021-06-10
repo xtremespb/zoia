@@ -148,6 +148,12 @@
     background: $white-bis;
 }
 
+.button,
+.button:hover {
+    border-bottom: 2px solid $grey-lighter !important;
+}
+
+
 @media (max-width: 768px) {
     .z3-ap-logo {
         margin-left: 10px;

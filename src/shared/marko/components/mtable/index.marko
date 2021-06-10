@@ -54,7 +54,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					</for>
 					<p class="z3-mt-top-control mt-1 mr-1">
 						<button
-							class="button"
+							class="button is-light"
 							type="button"
 							on-click("onColumnsConfigClick")
 							data-tippy-content=out.global.i18n.t("mTable.columns")
@@ -74,7 +74,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							}`>
 								<div class="dropdown-trigger">
 									<button
-										class="button"
+										class="button is-light"
 										type="button"
 										data-dropdown="true"
 										on-click("onTopButtonClick")
@@ -370,7 +370,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							on-click("onDeleteDialogSubmit")>
 							${input.i18n.t("mTable.delete")}
 						</button>
-						<button class="button" on-click("onDeleteDialogClose")>
+						<button class="button is-light" on-click("onDeleteDialogClose")>
 							${input.i18n.t("mTable.cancel")}
 						</button>
 					</fieldset>
@@ -465,7 +465,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								? input.i18n.t("mTable.save")
 								: input.i18n.t("mTable.add")}
 							</button>
-							<button class="button" type="button" on-click("onFilterDialogClose")>
+							<button class="button is-light" type="button" on-click("onFilterDialogClose")>
 								${input.i18n.t("mTable.cancel")}
 							</button>
 						</fieldset>
@@ -500,7 +500,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<div class="column is-narrow z3-mt-filter-manage-buttons">
 							<div>
 								<button
-									class="button is-fullwidth"
+									class="button is-light is-fullwidth"
 									disabled=(state.filterManageSelected.length !== 1)
 									on-click("onFilterSetLoadClick")>
 									${out.global.i18n.t("mTable.filter.loadSelected")}
@@ -508,7 +508,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</div>
 							<div>
 								<button
-									class="button mt-2 is-fullwidth"
+									class="button is-light mt-2 is-fullwidth"
 									disabled=(state.filterManageSelected.length !== 1)
 									on-click("onFilterSetEditClick")>
 									${out.global.i18n.t("mTable.filter.editSelected")}
@@ -516,14 +516,14 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</div>
 							<div>
 								<button
-									class="button mt-2 is-danger is-fullwidth"
+									class="button is-light mt-2 is-danger is-fullwidth"
 									disabled=(state.filterManageSelected.length === 0)
 									on-click("onFilterDeleteClick")>
 									${out.global.i18n.t("mTable.filter.deleteSelected")}
 								</button>
 							</div>
 							<div>
-								<button class="button mt-5 is-fullwidth" on-click("onFilterManageDialogClose")>
+								<button class="button is-light mt-5 is-fullwidth" on-click("onFilterManageDialogClose")>
 									${out.global.i18n.t("btnCloseGeneric")}
 								</button>
 							</div>
@@ -596,7 +596,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									id: "btnCancel",
 									type: "button",
 									buttonType: "button",
-									label: out.global.i18n.t("mTable.cancel")
+									label: out.global.i18n.t("mTable.cancel"),
+									css: "is-light",
 								}
 							]
 						}
@@ -660,7 +661,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									id: "btnCancel",
 									type: "button",
 									buttonType: "button",
-									label: out.global.i18n.t("mTable.cancel")
+									label: out.global.i18n.t("mTable.cancel"),
+									css: "is-light",
 								}
 							]
 						}
@@ -679,7 +681,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					active=true/>
 				<div class="buttons mt-4">
 					<button type="button" class="button is-primary" on-click("onColumnsConfigDialogSave")>${out.global.i18n.t("mTable.save")}</button>
-					<button type="button" class="button" on-click("onColumnsConfigDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
+					<button type="button" class="button is-light" on-click("onColumnsConfigDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
 				</div>
 			</div>
 		</div>

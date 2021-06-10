@@ -8,7 +8,7 @@
 		</if>
 		<else>
 			<if(out.global.updateData.tag_name !== out.global.packageJson.version)>
-				<button class="button" on-click("onUpdateClick")>
+				<button class="button is-light" on-click("onUpdateClick")>
 					${out.global.i18n.t("update")}
 				</button>
 			</if>
