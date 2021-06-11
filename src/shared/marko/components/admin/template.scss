@@ -148,11 +148,31 @@
     background: $white-bis;
 }
 
-.button,
-.button:hover {
+.button.is-light,
+.button.is-light:hover {
+    border: 1px solid $grey-lightest !important;
+    background: $white-lightest !important;
     border-bottom: 2px solid $grey-lighter !important;
 }
 
+.button.is-light:hover {
+    background: $white-ter !important;
+}
+
+.button.is-danger,
+.button.is-danger:hover {
+    border: 1px solid $red-dark !important;
+    border-bottom: 2px solid $red-darker !important;
+}
+
+.button.is-primary,
+.button.is-primary:hover {
+    border-bottom: 2px solid $primary-dark !important;
+}
+
+.z3-ap-side-menu-list>li>a.is-active {
+    background-color: $primary;
+}
 
 @media (max-width: 768px) {
     .z3-ap-logo {
