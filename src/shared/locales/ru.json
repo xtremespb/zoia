@@ -154,7 +154,9 @@
 	"mTable.rawValue": "Запрос к БД",
 	"mTable.rawValueHelpText": "Валидный JSON-запрос к MongoDB",
 	"mTableErr.invalidJSON": "Ошибка валидации JSON",
-	"mTable.columns": "Столбцы",
-	"mTableErr.columnsSave": "Ошибка во время сохранения конфигурации",
-	"mSelect.search": "Поиск"
+	"mTable.tableSettings": "Настройки",
+	"mTableErr.tableSettingsSave": "Ошибка во время сохранения конфигурации",
+	"mSelect.search": "Поиск",
+	"mTable.settingsColumns": "Столбцы",
+	"mTable.settingsPages": "Страницы"
 }

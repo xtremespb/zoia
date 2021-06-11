@@ -154,7 +154,9 @@
 	"mTable.rawValue": "Raw Query",
 	"mTable.rawValueHelpText": "Should be a valid MongoDB Query (JSON)",
 	"mTableErr.invalidJSON": "Invalid JSON Value",
-	"mTable.columns": "Columns",
-	"mTableErr.columnsSave": "Could not save column data",
-	"mSelect.search": "Search"
+	"mTable.tableSettings": "Settings",
+	"mTableErr.tableSettingsSave": "Could not save table settings",
+	"mSelect.search": "Search",
+	"mTable.settingsColumns": "Columns",
+	"mTable.settingsPages": "Pages"
 }

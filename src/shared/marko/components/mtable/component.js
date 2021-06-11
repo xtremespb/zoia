@@ -51,9 +51,10 @@ module.exports = class {
             filterManageSelected: [],
             filterCurrentId: null,
             filterCurrentTitle: "",
-            columnsConfigDialogActive: false,
+            tableSettingsDialogActive: false,
             columnRatios: {},
             columnVisibility: {},
+            tableSettingsDialogTab: "columns",
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -83,7 +84,7 @@ module.exports = class {
         // On mobile device, we shall not
         this.selectField = this.getComponent(`${this.input.id}_mselect`);
         this.calendarField = this.getComponent(`${this.input.id}_filterDate`);
-        this.columnsConfigField = this.getComponent(`${this.input.id}_config_columns`);
+        this.tableSettingsField = this.getComponent(`${this.input.id}_config_columns`);
         this.filterDeleteConfirm = this.getComponent(`${this.input.id}_filterDeleteConfirm`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
@@ -959,29 +960,29 @@ module.exports = class {
         return widths;
     }
 
-    onColumnsConfigClick() {
+    onTableSettingsClick() {
         this.setState("dropdownVisible", {});
-        this.columnsConfigField.func.setItems(this.input.columns.map(c => ({
+        this.tableSettingsField.func.setItems(this.input.columns.map(c => ({
             id: c.id,
             label: c.title
         })));
-        this.columnsConfigField.func.setValue(Object.keys(this.state.columnVisibility).filter(v => this.state.columnVisibility[v]).map(v => v));
-        this.setState("columnsConfigDialogActive", true);
+        this.tableSettingsField.func.setValue(Object.keys(this.state.columnVisibility).filter(v => this.state.columnVisibility[v]).map(v => v));
+        this.setState("tableSettingsDialogActive", true);
     }
 
-    onColumnsConfigDialogClose() {
-        this.setState("columnsConfigDialogActive", false);
+    onTableSettingsDialogClose() {
+        this.setState("tableSettingsDialogActive", false);
     }
 
-    onColumnsConfigDialogSave() {
-        const columns = this.columnsConfigField.func.getValue();
+    onTableSettingsDialogSave() {
+        const columns = this.tableSettingsField.func.getValue();
         const visibility = cloneDeep(this.state.columnVisibility);
         this.input.columns.map(c => {
             visibility[c.id] = false;
             visibility[c.id] = !!columns.find(col => col.id === c.id);
         });
         this.setState("columnVisibility", visibility);
-        this.setState("columnsConfigDialogActive", false);
+        this.setState("tableSettingsDialogActive", false);
         this.setState("columnRatios", {});
         setTimeout(() => this.setupColumnResize(), 10);
         this.saveColumnsState();
@@ -1002,7 +1003,13 @@ module.exports = class {
                 }
             });
         } catch {
-            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.columnsSave"), "is-danger");
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.tableSettingsSave"), "is-danger");
         }
+    }
+
+    onSettingsDialogTabClick(e) {
+        e.preventDefault();
+        const tab = e.target.dataset.id;
+        this.setState("tableSettingsDialogTab", tab);
     }
 };

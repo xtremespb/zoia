@@ -55,14 +55,14 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<button
 							class="button is-light"
 							type="button"
-							on-click("onColumnsConfigClick")
+							on-click("onTableSettingsClick")
 							aria-haspopup="true">
 							<div class="z3-mt-icon-wrap">
 								<span class="icon">
 									<i class="mdi mdi-table-edit"/>
 								</span>
 							</div>
-							${out.global.i18n.t("mTable.columns")}
+							${out.global.i18n.t("mTable.tableSettings")}
 						</button>
 					</p>
 					<if(input.filter && input.filter.length)>
@@ -659,22 +659,33 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</footer>
 		</div>
 	</div>
-	<div class=`modal${state.columnsConfigDialogActive ? " is-active" : ""}`>
-		<div class="modal-background" on-click("onColumnsConfigDialogClose")/>
+	<div class=`modal${state.tableSettingsDialogActive ? " is-active" : ""}`>
+		<div class="modal-background" on-click("onTableSettingsDialogClose")/>
 		<div class="modal-card">
 			<header class="modal-card-head">
-				<p class="modal-card-title">${input.i18n.t("mTable.columns")}</p>
-				<button class="delete" aria-label="close" on-click("onColumnsConfigDialogClose")/>
+				<p class="modal-card-title">${input.i18n.t("mTable.tableSettings")}</p>
+				<button class="delete" aria-label="close" on-click("onTableSettingsDialogClose")/>
 			</header>
 			<div class="modal-card-body">
-				<mselect
-					key=`${input.id}_config_columns`
-					active=true/>
+				<div class="tabs">
+					<ul>
+					  <li class=(state.tableSettingsDialogTab === "columns" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="columns">${input.i18n.t("mTable.settingsColumns")}</a></li>
+					  <li class=(state.tableSettingsDialogTab === "pages" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="pages">${input.i18n.t("mTable.settingsPages")}</a></li>
+					</ul>
+				</div>
+				<if((state.tableSettingsDialogTab === "columns"))>
+					<mselect
+						key=`${input.id}_config_columns`
+						active=true/>
+				</if>	
+				<if(state.tableSettingsDialogTab === "pages")>
+					<!-- Pages -->
+				</if>	
 			</div>
 			<footer class="modal-card-foot">
 				<div class="buttons">
-					<button type="button" class="button is-primary" on-click("onColumnsConfigDialogSave")>${out.global.i18n.t("mTable.save")}</button>
-					<button type="button" class="button is-dialog-secondary" on-click("onColumnsConfigDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
+					<button type="button" class="button is-primary" on-click("onTableSettingsDialogSave")>${out.global.i18n.t("mTable.save")}</button>
+					<button type="button" class="button is-dialog-secondary" on-click("onTableSettingsDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
 				</div>
 			</footer>
 		</div>

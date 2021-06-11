@@ -516,7 +516,7 @@ export default {
         }
         return query;
     },
-    async getColumnsConfig(req, db, auth, table) {
+    async getTableSettings(req, db, auth, table) {
         return (await db.collection(req.zoiaModulesConfig["core"].collectionColumns || "columns").findOne({
             table,
             userId: String(auth.getUser()._id),
