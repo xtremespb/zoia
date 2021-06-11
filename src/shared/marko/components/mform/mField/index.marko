@@ -584,7 +584,7 @@ Image Input
 			</a>
 		</label>
 		<button
-			class="button"
+			class="button is-light"
 			type="button"
 			on-click("onSingleImageRemove")
 			data-id=state.item.id>
@@ -687,7 +687,7 @@ Date Picker
 			<if(state.calendar.mode === "date")>
 				<div class="columns m-0 is-gapless is-mobile">
 					<div class="column is-narrow">
-						<a class="button is-ghost" on-click("onCalendarLeft")>
+						<a class="button is-dialog-secondary" on-click("onCalendarLeft")>
 							<span class="icon is-small">
 								<i class="mdi mdi-chevron-left"/>
 							</span>
@@ -701,7 +701,7 @@ Date Picker
 						</a>
 					</div>
 					<div class="column is-narrow">
-						<a class="button is-ghost" on-click("onCalendarRight")>
+						<a class="button is-dialog-secondary" on-click("onCalendarRight")>
 							<span class="icon is-small">
 								<i class="mdi mdi-chevron-right"/>
 							</span>

@@ -6,7 +6,7 @@ style.scss {
 	<if(input.controls)>
 		<div class="field has-addons">
 			<p class="control">
-				<button class="button" disabled=state.loading on-click("onAddClick")>
+				<button class="button is-light" disabled=state.loading on-click("onAddClick")>
 					<span class="icon">
 						<i class="mdi mdi-18px mdi-folder-plus-outline"/>
 					</span>
@@ -14,7 +14,7 @@ style.scss {
 			</p>
 			<p class="control">
 				<button
-					class="button"
+					class="button is-light"
 					disabled=(state.loading || (state.root && state.root.uuid === state.selected))
 					on-click("onEditClick")>
 					<span class="icon">

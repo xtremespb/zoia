@@ -56,7 +56,7 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 			<button type="submit" class="button is-primary" on-click("onConfirmClick")>
 				${out.global.i18n.t("btnConfirm")}
 			</button>
-			<button type="button" class="button" on-click("onCloseClick")>
+			<button type="button" class="button is-dialog-secondary" on-click("onCloseClick")>
 				${out.global.i18n.t("btnCancel")}
 			</button>
 		</footer>

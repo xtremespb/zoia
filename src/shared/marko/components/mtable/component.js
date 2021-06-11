@@ -514,6 +514,7 @@ module.exports = class {
         this.setState("filterSelected", data.id);
         if (data.type === "raw") {
             this.getComponent(`${this.input.id}_filterRawForm`).func.setAceValue("value", JSON.stringify(data.value, null, "\t"));
+            this.getComponent(`${this.input.id}_filterRawForm`).func.setError(null);
             this.setState("filterRawDialogActive", true);
             setTimeout(() => this.getComponent(`${this.input.id}_filterRawForm`).func.autoFocus(), 50);
         } else {
@@ -568,6 +569,7 @@ module.exports = class {
         e.preventDefault();
         this.setState("dropdownVisible", {});
         this.setState("filterRawDialogActive", true);
+        this.getComponent(`${this.input.id}_filterRawForm`).func.setError(null);
         this.getComponent(`${this.input.id}_filterRawForm`).func.setAceValue("value", "");
         setTimeout(() => this.getComponent(`${this.input.id}_filterRawForm`).func.autoFocus(), 50);
     }
@@ -802,43 +804,36 @@ module.exports = class {
         }
     }
 
-    async onFilterRawFormButtonClick(obj) {
-        switch (obj.id) {
-        case "btnCancel":
-            this.onFilterRawDialogClose();
-            break;
-        case "btnSave":
-            const valueText = this.getComponent(`${this.input.id}_filterRawForm`).func.getValue("value");
-            let valueJson;
-            try {
-                valueJson = JSON.parse(valueText);
-                if (valueJson === null) {
-                    throw new Error();
-                }
-            } catch (e) {
-                this.getComponent(`${this.input.id}_filterRawForm`).func.setError(this.i18n.t("mTableErr.invalidJSON"));
-                break;
+    async onFilterRawSaveClick() {
+        const valueText = this.getComponent(`${this.input.id}_filterRawForm`).func.getValue("value");
+        let valueJson;
+        try {
+            valueJson = JSON.parse(valueText);
+            if (valueJson === null) {
+                throw new Error();
             }
-            this.onFilterRawDialogClose();
-            const filter = {
-                id: uuidv4(),
-                label: "",
-                type: "raw",
-                mode: "raw",
-                value: valueJson,
-            };
-            const filters = cloneDeep(this.state.filters);
-            if (this.state.filterDialogEdit !== null) {
-                filters[this.state.filterDialogEdit] = filter;
-            } else {
-                filters.push(filter);
-            }
-            this.setState("filters", filters);
-            window.__zoiaTippyJs.reset();
-            this.setState("page", 1);
-            this.dataRequest();
-            break;
+        } catch (e) {
+            this.getComponent(`${this.input.id}_filterRawForm`).func.setError(this.i18n.t("mTableErr.invalidJSON"));
+            return;
         }
+        this.onFilterRawDialogClose();
+        const filter = {
+            id: uuidv4(),
+            label: "",
+            type: "raw",
+            mode: "raw",
+            value: valueJson,
+        };
+        const filters = cloneDeep(this.state.filters);
+        if (this.state.filterDialogEdit !== null) {
+            filters[this.state.filterDialogEdit] = filter;
+        } else {
+            filters.push(filter);
+        }
+        this.setState("filters", filters);
+        window.__zoiaTippyJs.reset();
+        this.setState("page", 1);
+        this.dataRequest();
     }
 
     onFilterRawTagClick(e) {

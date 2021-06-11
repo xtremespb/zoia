@@ -148,6 +148,78 @@
     background: $white-bis;
 }
 
+.button.is-light,
+.button.is-light:hover {
+    border: 1px solid $grey-lightest !important;
+    background: $white-lightest !important;
+    border-bottom: 2px solid $grey-lighter !important;
+}
+
+.button.is-light,
+.button.is-light:hover {
+    border: 1px solid $grey-lightest !important;
+    background: $white-lightest !important;
+    border-bottom: 2px solid $grey-lighter !important;
+}
+
+.button.is-light:hover {
+    background: $white-ter !important;
+}
+
+.button.is-danger,
+.button.is-danger:hover {
+    border: 1px solid $red-dark !important;
+    border-bottom: 2px solid $red-darker !important;
+}
+
+.button.is-primary,
+.button.is-primary:hover {
+    border-bottom: 2px solid $primary-dark !important;
+}
+
+.button.is-dialog-secondary {
+    border: 1px solid $grey-lightest !important;
+    background-color: $white !important;
+    border-bottom: 2px solid $grey-lighter !important;
+}
+
+.button.is-dialog-secondary:hover {
+    background-color: $white-lightest !important;
+}
+
+.button,
+.button:active,
+.button:focus {
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+
+.z3-ap-side-menu-list>li>a.is-active {
+    background-color: $primary;
+}
+
+.modal-card-head,
+.modal-card-foot {
+    background-color: $white-lightest !important;
+    padding-bottom: 15px !important;
+}
+
+.modal-card-head {
+    padding-top: 18px !important;
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+}
+
+.modal-card-foot {
+    padding-top: 15px !important;
+    border-bottom-left-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+}
+
+.modal-card-title {
+    font-weight: 100;
+}
+
 @media (max-width: 768px) {
     .z3-ap-logo {
         margin-left: 10px;

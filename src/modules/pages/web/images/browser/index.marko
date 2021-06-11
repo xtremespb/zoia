@@ -22,7 +22,7 @@
 			<div class="field has-addons">
 				<p class="control">
 					<button
-						class="button tooltip"
+						class="button is-light tooltip"
 						data-tippy-content=out.global.i18n.t("selectAll")
 						on-click("onToolbarButtonClick")
 						data-id="selectAll">
@@ -33,7 +33,7 @@
 				</p>
 				<p class="control">
 					<button
-						class="button tooltip"
+						class="button is-light tooltip"
 						data-tippy-content=out.global.i18n.t("selectNone")
 						on-click("onToolbarButtonClick")
 						data-id="selectNone">
@@ -48,7 +48,7 @@
 			<div class="field has-addons">
 				<p class="control">
 					<button
-						class="button tooltip"
+						class="button is-light tooltip"
 						data-tippy-content=out.global.i18n.t("levelUp")
 						on-click("onToolbarButtonClick")
 						data-id="levelUp"
@@ -60,7 +60,7 @@
 				</p>
 				<p class="control">
 					<button
-						class="button tooltip"
+						class="button is-light tooltip"
 						data-tippy-content=out.global.i18n.t("createDir")
 						on-click("onToolbarButtonClick")
 						data-id="createDir"
@@ -76,7 +76,7 @@
 			<div class="field has-addons">
 				<p class="control">
 					<button
-						class="button tooltip"
+						class="button is-light tooltip"
 						data-tippy-content=out.global.i18n.t("copy")
 						on-click("onToolbarButtonClick")
 						data-id="copy"
@@ -88,7 +88,7 @@
 				</p>
 				<p class="control">
 					<button
-						class="button tooltip"
+						class="button is-light tooltip"
 						data-tippy-content=out.global.i18n.t("cut")
 						on-click("onToolbarButtonClick")
 						data-id="cut"
@@ -100,7 +100,7 @@
 				</p>
 				<p class="control">
 					<button
-						class="button tooltip"
+						class="button is-light tooltip"
 						data-tippy-content=`${
 							state.clipboard.mode === "cut"
 								? out.global.i18n.t("cut")
@@ -125,7 +125,7 @@
 				</p>
 				<p class="control">
 					<button
-						class="button tooltip"
+						class="button is-light tooltip"
 						data-tippy-content=out.global.i18n.t("delete")
 						on-click("onToolbarButtonClick")
 						data-id="delete"
@@ -137,7 +137,7 @@
 				</p>
 				<p class="control">
 					<button
-						class="button tooltip"
+						class="button is-light tooltip"
 						data-tippy-content=out.global.i18n.t("upload")
 						on-click("onToolbarButtonClick")
 						data-id="upload"
@@ -184,7 +184,7 @@
 			on-click("onSelect")>
 			${out.global.i18n.t("btnSelect")}
 		</button>
-		<button class="button" on-click("onCancel")>
+		<button class="button is-dialog-secondary" on-click("onCancel")>
 			${out.global.i18n.t("btnCancel")}
 		</button>
 	</div>

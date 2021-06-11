@@ -27,7 +27,7 @@ import icons from "../../../data/mime.json"
 				<div class="field has-addons">
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light is-light tooltip"
 							data-tippy-content=out.global.i18n.t("refresh")
 							on-click("onRefreshClick")
 							disabled=state.loading>
@@ -42,7 +42,7 @@ import icons from "../../../data/mime.json"
 				<div class="field has-addons">
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light tooltip"
 							data-tippy-content=out.global.i18n.t("selectAll")
 							on-click("onSelectAllClick")
 							disabled=state.loading>
@@ -53,7 +53,7 @@ import icons from "../../../data/mime.json"
 					</p>
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light tooltip"
 							data-tippy-content=out.global.i18n.t("selectNone")
 							on-click("onSelectNoneClick")
 							disabled=state.loading>
@@ -68,7 +68,7 @@ import icons from "../../../data/mime.json"
 				<div class="field has-addons">
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light tooltip"
 							data-tippy-content=out.global.i18n.t("levelUp")
 							disabled=(state.loading || state.dir === "/")
 							on-click("onLevelUpClick")>
@@ -79,7 +79,7 @@ import icons from "../../../data/mime.json"
 					</p>
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light tooltip"
 							data-tippy-content=out.global.i18n.t("createDir")
 							disabled=state.loading
 							on-click("onCreateDir")>
@@ -94,7 +94,7 @@ import icons from "../../../data/mime.json"
 				<div class="field has-addons">
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light tooltip"
 							data-tippy-content=out.global.i18n.t("doCreateFile")
 							disabled=state.loading
 							on-click("onCreateFile")>
@@ -105,7 +105,7 @@ import icons from "../../../data/mime.json"
 					</p>
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light tooltip"
 							data-tippy-content=out.global.i18n.t("doCopy")
 							disabled=(state.loading || !state.checkedCount)
 							on-click("onCopyClick")>
@@ -116,7 +116,7 @@ import icons from "../../../data/mime.json"
 					</p>
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light tooltip"
 							data-tippy-content=out.global.i18n.t("doCut")
 							disabled=(state.loading || !state.checkedCount)
 							on-click("onCutClick")>
@@ -127,7 +127,7 @@ import icons from "../../../data/mime.json"
 					</p>
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light tooltip"
 							data-tippy-content=`${
 								state.clipboard.mode === "cut"
 									? out.global.i18n.t("doCut")
@@ -151,7 +151,7 @@ import icons from "../../../data/mime.json"
 					</p>
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light tooltip"
 							data-tippy-content=out.global.i18n.t("doDelete")
 							disabled=(state.loading || !state.checkedCount)
 							on-click("onDeleteClick")>
@@ -162,7 +162,7 @@ import icons from "../../../data/mime.json"
 					</p>
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light is-light tooltip"
 							data-tippy-content=out.global.i18n.t("doZIP")
 							disabled=(state.loading || !state.checkedCount)
 							on-click("onZIPClick")>
@@ -177,7 +177,7 @@ import icons from "../../../data/mime.json"
 				<div class="field has-addons">
 					<p class="control">
 						<button
-							class="button tooltip"
+							class="button is-light is-light tooltip"
 							data-tippy-content=out.global.i18n.t("upload")
 							on-click("onUploadClick")
 							disabled=state.loading>
@@ -285,7 +285,7 @@ import icons from "../../../data/mime.json"
 					</button>
 				</p>
 				<p class="control">
-					<button class="button" on-click("returnToListMode")>
+					<button class="button is-dialog-secondary" on-click("returnToListMode")>
 						${out.global.i18n.t("btnCancel")}
 					</button>
 				</p>

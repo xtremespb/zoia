@@ -26,7 +26,6 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 										id=`${input.id}_${btn.id}`
 										type="button"
 										on-click("onTopButtonClick")
-										data-tippy-content=btn.text
 										aria-haspopup="true">
 										<if(btn.icon)>
 											<div class="z3-mt-icon-wrap">
@@ -54,10 +53,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					</for>
 					<p class="z3-mt-top-control mt-1 mr-1">
 						<button
-							class="button"
+							class="button is-light"
 							type="button"
 							on-click("onColumnsConfigClick")
-							data-tippy-content=out.global.i18n.t("mTable.columns")
 							aria-haspopup="true">
 							<div class="z3-mt-icon-wrap">
 								<span class="icon">
@@ -74,11 +72,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							}`>
 								<div class="dropdown-trigger">
 									<button
-										class="button"
+										class="button is-light"
 										type="button"
 										data-dropdown="true"
 										on-click("onTopButtonClick")
-										data-tippy-content=`${out.global.i18n.t("mTable.filter")}`
 										data-button="filterGeneric">
 										<div class="z3-mt-icon-wrap">
 											<span class="icon">
@@ -370,7 +367,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							on-click("onDeleteDialogSubmit")>
 							${input.i18n.t("mTable.delete")}
 						</button>
-						<button class="button" on-click("onDeleteDialogClose")>
+						<button class="button is-light" on-click("onDeleteDialogClose")>
 							${input.i18n.t("mTable.cancel")}
 						</button>
 					</fieldset>
@@ -465,7 +462,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								? input.i18n.t("mTable.save")
 								: input.i18n.t("mTable.add")}
 							</button>
-							<button class="button" type="button" on-click("onFilterDialogClose")>
+							<button class="button is-dialog-secondary" type="button" on-click("onFilterDialogClose")>
 								${input.i18n.t("mTable.cancel")}
 							</button>
 						</fieldset>
@@ -478,6 +475,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		<div class="modal is-active">
 			<div class="modal-background" on-click("onFilterManageDialogClose")/>
 			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">${input.i18n.t("mTable.manageFilters")}</p>
+					<button class="delete" aria-label="close" on-click("onFilterManageDialogClose")/>
+				</header>
 				<div class="modal-card-body">
 					<if(state.filterManageDialogError)>
 						<div class="notification is-danger mb-2">
@@ -500,7 +501,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<div class="column is-narrow z3-mt-filter-manage-buttons">
 							<div>
 								<button
-									class="button is-fullwidth"
+									class="button is-light is-fullwidth"
 									disabled=(state.filterManageSelected.length !== 1)
 									on-click("onFilterSetLoadClick")>
 									${out.global.i18n.t("mTable.filter.loadSelected")}
@@ -508,7 +509,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</div>
 							<div>
 								<button
-									class="button mt-2 is-fullwidth"
+									class="button is-light mt-2 is-fullwidth"
 									disabled=(state.filterManageSelected.length !== 1)
 									on-click("onFilterSetEditClick")>
 									${out.global.i18n.t("mTable.filter.editSelected")}
@@ -522,11 +523,6 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									${out.global.i18n.t("mTable.filter.deleteSelected")}
 								</button>
 							</div>
-							<div>
-								<button class="button mt-5 is-fullwidth" on-click("onFilterManageDialogClose")>
-									${out.global.i18n.t("btnCloseGeneric")}
-								</button>
-							</div>
 						</div>
 						<div class="column">
 							<mselect
@@ -537,6 +533,11 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						</div>
 					</div>
 				</div>
+				<footer class="modal-card-foot">
+					<button class="button is-dialog-secondary" on-click("onFilterManageDialogClose")>
+						${out.global.i18n.t("btnCloseGeneric")}
+					</button>
+				</footer>
 			</div>
 		</div>
 	</if>
@@ -596,7 +597,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									id: "btnCancel",
 									type: "button",
 									buttonType: "button",
-									label: out.global.i18n.t("mTable.cancel")
+									label: out.global.i18n.t("mTable.cancel"),
+									css: "is-light",
 								}
 							]
 						}
@@ -611,6 +613,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	<div class=`modal${state.filterRawDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onFilterRawDialogClose")/>
 		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">${input.i18n.t("mTable.rawValue")}</p>
+				<button class="delete" aria-label="close" on-click("onFilterRawDialogClose")/>
+			</header>
 			<div class="modal-card-body">
 				<div class="tags are-medium">
 					<if(input.filter && input.filter.length)>
@@ -640,48 +646,37 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							aceOptions: {
 								mode: "ace/mode/json"
 							}
-						},
-						{
-							id: "div1",
-							type: "divider"
-						},
-						{
-							id: "bg1",
-							type: "buttons",
-							data: [
-								{
-									id: "btnSave",
-									type: "button",
-									buttonType: "submit",
-									label: out.global.i18n.t("mTable.save"),
-									css: "is-primary"
-								},
-								{
-									id: "btnCancel",
-									type: "button",
-									buttonType: "button",
-									label: out.global.i18n.t("mTable.cancel")
-								}
-							]
 						}
 					]
 					i18n=out.global.i18n
 					on-button-click("onFilterRawFormButtonClick")/>
 			</div>
+			<footer class="modal-card-foot">
+				<div class="buttons">
+					<button type="button" class="button is-primary" on-click("onFilterRawSaveClick")>${out.global.i18n.t("mTable.save")}</button>
+					<button type="button" class="button is-dialog-secondary" on-click("onFilterRawDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
+				</div>
+			</footer>
 		</div>
 	</div>
 	<div class=`modal${state.columnsConfigDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onColumnsConfigDialogClose")/>
 		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">${input.i18n.t("mTable.columns")}</p>
+				<button class="delete" aria-label="close" on-click("onColumnsConfigDialogClose")/>
+			</header>
 			<div class="modal-card-body">
 				<mselect
 					key=`${input.id}_config_columns`
 					active=true/>
-				<div class="buttons mt-4">
-					<button type="button" class="button is-primary" on-click("onColumnsConfigDialogSave")>${out.global.i18n.t("mTable.save")}</button>
-					<button type="button" class="button" on-click("onColumnsConfigDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
-				</div>
 			</div>
+			<footer class="modal-card-foot">
+				<div class="buttons">
+					<button type="button" class="button is-primary" on-click("onColumnsConfigDialogSave")>${out.global.i18n.t("mTable.save")}</button>
+					<button type="button" class="button is-dialog-secondary" on-click("onColumnsConfigDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
+				</div>
+			</footer>
 		</div>
 	</div>
 	<mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
