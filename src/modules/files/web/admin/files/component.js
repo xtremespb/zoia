@@ -357,6 +357,7 @@ module.exports = class {
 
     onUploadClick() {
         this.uploadModal.func.setDir(this.state.dir);
+        window.__zoiaTippyJs.hide();
         this.uploadModal.func.setActive(true);
     }
 

@@ -30,6 +30,9 @@ module.exports = class {
     }
 
     onNavbarToggle() {
+        if (window.matchMedia("only screen and (max-width: 760px)").matches) {
+            return;
+        }
         this.getEl("z3_ap_navbar").style.top = this.scrollPosition < window.pageYOffset && window.pageYOffset > 36 ? "-52px" : "0";
         if (document.getElementById("z3_ap_demoMessage")) {
             document.getElementById("z3_ap_demoMessage").style.display = this.scrollPosition < window.pageYOffset && window.pageYOffset > 36 ? "none" : "block";
