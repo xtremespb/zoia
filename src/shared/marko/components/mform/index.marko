@@ -50,6 +50,7 @@ style.scss {
 				$ let areaBorder = false;
 				<for|tItem, tIndex| of=input.fields>
 					<if(typeof tItem === "object" && tItem.type)>
+						<!-- Area-related code start -->
 						<if(tItem.type === "areaStart")>
 							$ isArea = true;
 							$ areaClass = tItem.css || "";
@@ -69,6 +70,7 @@ style.scss {
 								  }`
 								: ""
 						)>
+						<!-- Area-related code end -->
 							<div
 								class="field columns is-multiline z3-mf-field-columns"
 								key=`mf_cmp_${tItem.id}_wrap`
