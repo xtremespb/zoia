@@ -77,11 +77,10 @@ module.exports = class {
         this.setState("searchValue", searchValue);
         if (searchValue.length) {
             const searchRex = new RegExp(`${searchValue}`, "igm");
-            console.log(searchRex);
-            const items = this.itemsSave.filter(i => searchRex.test(i.label));
-            this.setState("items", items);
+            const items = (this.itemsSave || []).filter(i => searchRex.test(i.label));
+            this.setState("items", items || []);
         } else {
-            this.setState("items", this.itemsSave);
+            this.setState("items", this.itemsSave || []);
         }
     }
 };

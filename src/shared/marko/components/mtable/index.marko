@@ -670,7 +670,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				<div class="tabs">
 					<ul>
 					  <li class=(state.tableSettingsDialogTab === "columns" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="columns">${input.i18n.t("mTable.settingsColumns")}</a></li>
-					  <li class=(state.tableSettingsDialogTab === "pages" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="pages">${input.i18n.t("mTable.settingsPages")}</a></li>
+					  <!-- <li class=(state.tableSettingsDialogTab === "pages" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="pages">${input.i18n.t("mTable.settingsPages")}</a></li> -->
 					</ul>
 				</div>
 				<if((state.tableSettingsDialogTab === "columns"))>
