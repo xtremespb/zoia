@@ -54,7 +54,7 @@ const generateTemplatesJSON = argv => {
 };
 
 const generateVariablesSCSS = async argv => {
-    const variablesSrcDir = `${__dirname}/../${argv.update ? "update" : "src"}/shared/marko/src/bulma`;
+    const variablesSrcDir = `${__dirname}/../${argv.update ? "update" : "src"}/shared/scss`;
     const variablesDestDir = `${__dirname}/../${argv.update ? "update" : "src"}/design/variables`;
     await fs.ensureDir(variablesDestDir);
     await Promise.allSettled(["frontend", "admin", "components"].map(async s => {

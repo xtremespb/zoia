@@ -108,7 +108,7 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
             "process.browser": true
         }),
         new CSSExtractPlugin({
-            filename: "[contenthash:8].css"
+            filename: "[contenthash:8].css",
         }),
         markoPlugin.browser
     ]

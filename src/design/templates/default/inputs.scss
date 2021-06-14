@@ -126,13 +126,3 @@ input[type=range]:focus::-ms-fill-upper {
 .datetimepicker-dummy:active .datetimepicker-dummy-wrapper:active {
     border: 1px solid $border-hover !important;
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Checkbox & Radio
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-$pretty--class-name: z3-pretty;
-$pretty--color-primary: $primary;
-@import '~pretty-checkbox/src/pretty-checkbox.scss';

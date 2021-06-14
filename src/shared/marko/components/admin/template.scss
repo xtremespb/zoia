@@ -3,6 +3,7 @@
 @import "../../../fonts/source-sans-pro/source-sans-pro.css";
 @import "~bulma/bulma";
 @import "../../../widgets/bulma-switch/index.sass";
+@import '~pretty-checkbox/src/pretty-checkbox.scss';
 
 .z3-ap-html,
 .z3-ap-body {
@@ -64,6 +65,8 @@
     margin: -10px -20px 10px -20px !important;
     padding: 10px;
     padding-left: 20px;
+    padding-right: 20px;
+    font-size: 80%;
 }
 
 .z3-ap-logo {
@@ -221,6 +224,11 @@
     font-weight: 100;
 }
 
+.z3-pretty>.state>label:before,
+.z3-pretty>.state>label:after {
+    top: calc((0.0001% - (100% - 1em)) - 8%) !important;
+}
+
 @media (max-width: 768px) {
     .z3-ap-logo {
         margin-left: 10px;
@@ -234,5 +242,3 @@
         justify-content: center;
     }
 }
-
-@import '~pretty-checkbox/src/pretty-checkbox.scss';

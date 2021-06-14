@@ -6,6 +6,8 @@ module.exports = {
             browsers: "last 2 versions",
             stage: 0,
         },
-        cssnano: {},
+        "postcss-csso": {
+            restructure: true
+        }
     },
 };

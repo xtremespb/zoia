@@ -34,6 +34,63 @@ $mdi-font-path: "~@mdi/font/fonts";
     background: transparent !important;
 }
 
+// Styling for pretty-checkbox
+
+.z3-pretty>.state>label:before,
+.z3-pretty>.state>label:after {
+    top: calc((0.0001% - (100% - 1em)) - 8%) !important;
+}
+
+// Styling for buttons
+
+.button.is-light,
+.button.is-light:hover {
+    border: 1px solid $grey-lightest !important;
+    background: $white-lightest !important;
+    border-bottom: 2px solid $grey-lighter !important;
+}
+
+.button.is-light,
+.button.is-light:hover {
+    border: 1px solid $grey-lightest !important;
+    background: $white-lightest !important;
+    border-bottom: 2px solid $grey-lighter !important;
+}
+
+.button.is-light:hover {
+    background: $white-ter !important;
+}
+
+.button.is-danger,
+.button.is-danger:hover {
+    border: 1px solid $red-dark !important;
+    border-bottom: 2px solid $red-darker !important;
+}
+
+.button.is-primary,
+.button.is-primary:hover {
+    border-bottom: 2px solid $primary-dark !important;
+}
+
+.button.is-dialog-secondary {
+    border: 1px solid $grey-lightest !important;
+    background-color: $white !important;
+    border-bottom: 2px solid $grey-lighter !important;
+}
+
+.button.is-dialog-secondary:hover {
+    background-color: $white-lightest !important;
+}
+
+.button,
+.button:active,
+.button:focus {
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+
+// Media queries
+
 @media (max-width: 768px) {
 
     .z3-dt-navbarMenu {
