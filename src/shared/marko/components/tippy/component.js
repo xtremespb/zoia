@@ -3,7 +3,6 @@ const tippy = require("tippy.js").default;
 module.exports = class {
     onMount() {
         this.tippyInstances = tippy("[data-tippy-content]", {
-            delay: [100, 200],
             hideOnClick: true,
         });
         window.__zoiaTippyJs = {
@@ -18,6 +17,6 @@ module.exports = class {
     }
 
     hide() {
-        this.tippyInstances.map(i => i.hide());
+        Array.from(document.querySelectorAll("[data-tippy-root]")).map(i => i.style.visibility = "hidden");
     }
 };
