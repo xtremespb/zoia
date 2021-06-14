@@ -48,6 +48,7 @@ export default () => ({
                         pid: true,
                         updateData: true,
                         packageJson: true,
+                        updateAllowed: true,
                         ...site.getSerializedGlobals()
                     },
                     template: "admin",
@@ -59,6 +60,7 @@ export default () => ({
                     pid: process.pid,
                     updateData,
                     packageJson: this.zoiaPackageJson,
+                    updateAllowed: acl.checkPermission("core", "update"),
                     ...await site.getGlobals(),
                 },
                 modules: req.zoiaAdmin.map(m => ({
