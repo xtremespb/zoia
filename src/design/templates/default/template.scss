@@ -89,6 +89,10 @@ $mdi-font-path: "~@mdi/font/fonts";
     box-shadow: none !important;
 }
 
+.button:not(.is-white) {
+    box-shadow: 0px 2px 3px rgb(0 0 0 / 4%) !important;
+}
+
 // Media queries
 
 @media (max-width: 768px) {
