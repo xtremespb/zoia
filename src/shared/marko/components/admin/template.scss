@@ -198,6 +198,10 @@
     box-shadow: none !important;
 }
 
+.button {
+    box-shadow: 0px 2px 3px rgb(0 0 0 / 4%) !important;
+}
+
 .z3-ap-side-menu-list>li>a.is-active {
     background-color: $primary;
 }

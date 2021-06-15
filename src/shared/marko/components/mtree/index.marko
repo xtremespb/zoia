@@ -6,7 +6,7 @@ style.scss {
 	<if(input.controls)>
 		<div class="field has-addons">
 			<p class="control">
-				<button class="button is-light" disabled=state.loading on-click("onAddClick")>
+				<button class="button is-light" disabled=state.loading on-click("onAddClick") data-tippy-content=out.global.i18n.t("addFolder")>
 					<span class="icon">
 						<i class="mdi mdi-18px mdi-folder-plus-outline"/>
 					</span>
@@ -15,6 +15,7 @@ style.scss {
 			<p class="control">
 				<button
 					class="button is-light"
+					data-tippy-content=out.global.i18n.t("editFolder")
 					disabled=(state.loading || (state.root && state.root.uuid === state.selected))
 					on-click("onEditClick")>
 					<span class="icon">
@@ -25,6 +26,7 @@ style.scss {
 			<p class="control">
 				<button
 					class="button is-danger"
+					data-tippy-content=out.global.i18n.t("delete")
 					disabled=(state.loading || (state.root && state.root.uuid === state.selected))
 					on-click("onDeleteClick")>
 					<span class="icon">
