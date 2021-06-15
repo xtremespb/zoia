@@ -1,0 +1,20 @@
+{
+    "schema": {},
+    "root": {
+        "type": "object",
+        "properties": {
+            "paginationMode": {
+                "type": "string",
+                "enum": ["dynamic", "fixed"]
+            },
+            "itemsPerPage": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9999
+            }
+        },
+        "required": ["itemsPerPage", "paginationMode"]
+    },
+    "part": {},
+    "files": {}
+}

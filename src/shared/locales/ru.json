@@ -158,5 +158,10 @@
 	"mTableErr.tableSettingsSave": "Ошибка во время сохранения конфигурации",
 	"mSelect.search": "Поиск",
 	"mTable.settingsColumns": "Столбцы",
-	"mTable.settingsPages": "Страницы"
+	"mTable.settingsPages": "Страницы",
+	"mTable.itemsPerPage": "Количество записей",
+	"mTable.itemsPerPageHelpText": "Количество записей на одной странице",
+	"mTable.paginationMode": "Режим разбивки",
+	"mTable.paginationMode.dynamic": "Динамический",
+	"mTable.paginationMode.fixed": "Фиксированный"
 }

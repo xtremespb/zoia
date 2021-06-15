@@ -40,6 +40,7 @@ export default class {
             publicFiles: true,
             publicImages: true,
             demoMode: true,
+            commonTableItemsLimit: true,
         };
         this.i18n.setLanguage(this.language);
     }
@@ -96,7 +97,8 @@ export default class {
             navData: navData ? navData.tree : [],
             publicFiles: this.config.routes.publicFiles,
             publicImages: this.config.routes.publicImages,
-            demoMode: demoData && demoData.status
+            demoMode: demoData && demoData.status,
+            commonTableItemsLimit: this.config.commonTableItemsLimit,
         };
     }
 }

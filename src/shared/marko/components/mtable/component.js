@@ -33,6 +33,7 @@ module.exports = class {
             deleteDialogProgress: false,
             anyCheckboxSelected: false,
             itemsPerPage: null,
+            autoItemsPerPage: !!input.autoItemsPerPage,
             filterDialogActive: false,
             filterDialogEdit: null,
             filterSelected: "",
@@ -69,6 +70,7 @@ module.exports = class {
         this.i18n = input.i18n;
         this.cookieOptions = out.global.cookieOptions;
         this.siteId = out.global.siteId;
+        this.commonTableItemsLimit = out.global.commonTableItemsLimit;
     }
 
     setError(err) {
@@ -131,7 +133,7 @@ module.exports = class {
     }
 
     onWindowResize(reload) {
-        if (this.input.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches && document.getElementById(`${this.input.id}_table`)) {
+        if (this.state.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches && document.getElementById(`${this.input.id}_table`)) {
             const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_table`).getBoundingClientRect().top - 113) / 49, 10);
             if (itemsCount && this.state.itemsPerPage !== itemsCount) {
                 this.state.itemsPerPage = itemsCount > 0 ? itemsCount : 1;
@@ -967,7 +969,16 @@ module.exports = class {
             label: c.title
         })));
         this.tableSettingsField.func.setValue(Object.keys(this.state.columnVisibility).filter(v => this.state.columnVisibility[v]).map(v => v));
+        this.setState("tableSettingsDialogTab", "columns");
         this.setState("tableSettingsDialogActive", true);
+        this.getComponent(`${this.input.id}_tableSettingsPagesForm`).func.setValue("itemsPerPage", this.state.itemsPerPage || this.commonTableItemsLimit);
+        if (!this.settingsDialogHeight) {
+            setTimeout(() => {
+                const settingsDialog = document.getElementById(`${this.input.id}_settingsDialogModalCard`);
+                this.settingsDialogHeight = settingsDialog.getBoundingClientRect().height;
+                settingsDialog.style.minHeight = `${this.settingsDialogHeight}px`;
+            }, 100);
+        }
     }
 
     onTableSettingsDialogClose() {
@@ -1011,5 +1022,9 @@ module.exports = class {
         e.preventDefault();
         const tab = e.target.dataset.id;
         this.setState("tableSettingsDialogTab", tab);
+    }
+
+    onTableSettingsPagesFormSubmit() {
+        console.log("onTableSettingsPagesFormSubmit");
     }
 };

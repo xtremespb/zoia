@@ -1,5 +1,6 @@
 import Cookies from "../../../../shared/lib/cookies"
 import filterSave from "../../../../modules/core/api/data/filterSave.json"
+import tableSettingsPagesFormData from "./data/tableSettingsPagesFormData.json"
 
 style.scss {
 	@import "./mtable.scss";
@@ -309,7 +310,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		<div class="z3-mt-table-meter" id=`${input.id}_tableMeter`/>
 		<if(state.paginationData.length)>
 			<nav
-				class="pagination is-small z3-mt-paginatio mt-4"
+				class="pagination is-small mb-0 mt-4"
 				role="navigation"
 				aria-label="pagination">
 				<ul class="pagination-list">
@@ -380,93 +381,93 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				<div class="modal-background" on-click("onFilterDialogClose")/>
 				<div class="modal-card">
 					<form on-submit("onFilterFormSubmit")>
-					<header class="modal-card-head">
-						<p class="modal-card-title">
-							${state.filterDialogEdit !== null
-							? input.i18n.t("mTable.editFilter")
-							: input.i18n.t("mTable.addFilter")}
-						</p>
-						<if(!state.deleteDialogProgress)>
-							<button
-								class="delete"
-								type="button"
-								aria-label="close"
-								on-click("onFilterDialogClose")/>
-						</if>
-					</header>
-					<section class="modal-card-body">
-						<if(state.filterError)>
-							<div class="notification is-danger">${state.filterError}</div>
-						</if>
-						<div class="select is-fullwidth">
-							<select on-change("onFilterSelectChange")>
-								<option value="" selected=(state.filterSelected === "")>&ndash;</option>
-								<if(input.filter && input.filter.length)>
-									<for|f| of=input.filter>
-										<option value=f.id selected=(state.filterSelected === f.id)>
-											${f.label}
-										</option>
-									</for>
-								</if>
-							</select>
-						</div>
-						<div class=`select is-fullwidth mt-2 mb-2${
-							state.filterSelected === "" ? " is-hidden" : ""
-						}`>
-							<select on-change("onFilterModeSelectChange")>
-								<for|f| of=(state.filterSelectedData.modes || [
-									"equals",
-									"notEquals",
-									"isLike",
-									"notLike",
-									"oneOf",
-									"noneOf",
-									"greaterThan",
-									"greaterThanOrEquals",
-									"lessThan",
-									"lessThanOrEquals"
-								])>
-									<if(
-										(!f.match(/^larger/) && !f.match(/^smaller/)) ||
-										state.filterSelectedData.isNumber
-									)>
-										<option value=f selected=(state.filterMode === f)>
-											${input.i18n.t(`mTable.filter.${f}`)}
-										</option>
-									</if>
-								</for>
-							</select>
-						</div>
-						<mselect
-							key=`${input.id}_mselect`
-							active=(state.filterSelectedData.type === "select")/>
-						<div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")>
-							<input
-								class="input"
-								type="text"
-								value=state.filterValue
-								on-change("onFilterValueChange")
-								placeholder=input.i18n.t("mTable.filterValue")/>
-						</div>
-						<div class=(state.filterSelectedData.type !== "date" ? "is-hidden" : "")>
-							<mcalendar
-								id=`${input.id}_filterDate`
-								key=`${input.id}_filterDate`
-								on-value-change("onFilterCalendarValueChange")/>
-						</div>
-					</section>
-					<footer class="modal-card-foot">
-						<fieldset>
-							<button class="button is-primary" type="submit">
+						<header class="modal-card-head">
+							<p class="modal-card-title">
 								${state.filterDialogEdit !== null
-								? input.i18n.t("mTable.save")
-								: input.i18n.t("mTable.add")}
-							</button>
-							<button class="button is-dialog-secondary" type="button" on-click("onFilterDialogClose")>
-								${input.i18n.t("mTable.cancel")}
-							</button>
-						</fieldset>
-					</footer>
+								? input.i18n.t("mTable.editFilter")
+								: input.i18n.t("mTable.addFilter")}
+							</p>
+							<if(!state.deleteDialogProgress)>
+								<button
+									class="delete"
+									type="button"
+									aria-label="close"
+									on-click("onFilterDialogClose")/>
+							</if>
+						</header>
+						<section class="modal-card-body">
+							<if(state.filterError)>
+								<div class="notification is-danger">${state.filterError}</div>
+							</if>
+							<div class="select is-fullwidth">
+								<select on-change("onFilterSelectChange")>
+									<option value="" selected=(state.filterSelected === "")>&ndash;</option>
+									<if(input.filter && input.filter.length)>
+										<for|f| of=input.filter>
+											<option value=f.id selected=(state.filterSelected === f.id)>
+												${f.label}
+											</option>
+										</for>
+									</if>
+								</select>
+							</div>
+							<div class=`select is-fullwidth mt-2 mb-2${
+								state.filterSelected === "" ? " is-hidden" : ""
+							}`>
+								<select on-change("onFilterModeSelectChange")>
+									<for|f| of=(state.filterSelectedData.modes || [
+										"equals",
+										"notEquals",
+										"isLike",
+										"notLike",
+										"oneOf",
+										"noneOf",
+										"greaterThan",
+										"greaterThanOrEquals",
+										"lessThan",
+										"lessThanOrEquals"
+									])>
+										<if(
+											(!f.match(/^larger/) && !f.match(/^smaller/)) ||
+											state.filterSelectedData.isNumber
+										)>
+											<option value=f selected=(state.filterMode === f)>
+												${input.i18n.t(`mTable.filter.${f}`)}
+											</option>
+										</if>
+									</for>
+								</select>
+							</div>
+							<mselect
+								key=`${input.id}_mselect`
+								active=(state.filterSelectedData.type === "select")/>
+							<div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")>
+								<input
+									class="input"
+									type="text"
+									value=state.filterValue
+									on-change("onFilterValueChange")
+									placeholder=input.i18n.t("mTable.filterValue")/>
+							</div>
+							<div class=(state.filterSelectedData.type !== "date" ? "is-hidden" : "")>
+								<mcalendar
+									id=`${input.id}_filterDate`
+									key=`${input.id}_filterDate`
+									on-value-change("onFilterCalendarValueChange")/>
+							</div>
+						</section>
+						<footer class="modal-card-foot">
+							<fieldset>
+								<button class="button is-primary" type="submit">
+									${state.filterDialogEdit !== null
+									? input.i18n.t("mTable.save")
+									: input.i18n.t("mTable.add")}
+								</button>
+								<button class="button is-dialog-secondary" type="button" on-click("onFilterDialogClose")>
+									${input.i18n.t("mTable.cancel")}
+								</button>
+							</fieldset>
+						</footer>
 					</form>
 				</div>
 			</div>
@@ -661,7 +662,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	</div>
 	<div class=`modal${state.tableSettingsDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onTableSettingsDialogClose")/>
-		<div class="modal-card">
+		<div class="modal-card" id=`${input.id}_settingsDialogModalCard`>
 			<header class="modal-card-head">
 				<p class="modal-card-title">${input.i18n.t("mTable.tableSettings")}</p>
 				<button class="delete" aria-label="close" on-click("onTableSettingsDialogClose")/>
@@ -670,17 +671,52 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				<div class="tabs">
 					<ul>
 					  <li class=(state.tableSettingsDialogTab === "columns" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="columns">${input.i18n.t("mTable.settingsColumns")}</a></li>
-					  <!-- <li class=(state.tableSettingsDialogTab === "pages" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="pages">${input.i18n.t("mTable.settingsPages")}</a></li> -->
+					  <li class=(state.tableSettingsDialogTab === "pages" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="pages">${input.i18n.t("mTable.settingsPages")}</a></li>
 					</ul>
 				</div>
-				<if((state.tableSettingsDialogTab === "columns"))>
+				<div style=(state.tableSettingsDialogTab === "columns" ? {} : {display: "none"})>
 					<mselect
 						key=`${input.id}_config_columns`
 						active=true/>
-				</if>	
-				<if(state.tableSettingsDialogTab === "pages")>
-					<!-- Pages -->
-				</if>	
+				</div>	
+				<div style=(state.tableSettingsDialogTab === "pages" ? {} : {display: "none"})>
+					<mform
+						manual=true
+						key=`${input.id}_tableSettingsPagesForm`
+						id=`${input.id}_tableSettingsPagesForm`
+						fields=[
+							[{
+								id: "paginationMode",
+								type: "select",
+								label: out.global.i18n.t("mTable.paginationMode"),
+								options: [
+									{
+										value: "dynamic",
+										label: out.global.i18n.t("mTable.paginationMode.dynamic")
+									},
+									{
+										value: "fixed",
+										label: out.global.i18n.t("mTable.paginationMode.fixed")
+									}
+								],
+								mandatory: true,
+								css: "is-fullwidth",
+								wrapCSS: "z3-is-medium",
+							},
+							{
+								id: "itemsPerPage",
+								type: "text",
+								label: out.global.i18n.t("mTable.itemsPerPage"),
+								helpText: out.global.i18n.t("mTable.itemsPerPageHelpText"),
+								convert: "integer",
+								wrapCSS: "z3-is-small",
+								mandatory: true
+							}]
+						]
+						validation=tableSettingsPagesFormData
+						on-form-submit("onTableSettingsPagesFormSubmit")
+						i18n=out.global.i18n/>
+				</div>	
 			</div>
 			<footer class="modal-card-foot">
 				<div class="buttons">
