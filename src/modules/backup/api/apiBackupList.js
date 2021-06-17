@@ -44,12 +44,12 @@ export default () => ({
                     return sr;
                 });
             }
+            const columns = await utils.getTableSettings(req, this.mongo.db, auth, "backup");
             const count = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).find(query, options).count();
-            const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const columns = await utils.getTableSettings(req, this.mongo.db, auth, "backup");
             const data = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).find(query, options).toArray();
             // Send response
             response.successJSON({

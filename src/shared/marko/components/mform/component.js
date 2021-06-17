@@ -720,7 +720,7 @@ module.exports = class {
         if (e !== true) {
             this.emit("form-submit", data);
         }
-        if (this.input.manual && e !== true) {
+        if (this.input.manual && (e !== true || !this.input.save)) {
             return true;
         }
         await this.upload(data);

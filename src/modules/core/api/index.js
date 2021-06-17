@@ -12,6 +12,7 @@ import apiFiltersList from "./apiFiltersList";
 import apiFiltersEdit from "./apiFiltersEdit";
 import apiFiltersDelete from "./apiFiltersDelete";
 import apiColumnsSave from "./apiColumnsSave";
+import apiColumnsLoad from "./apiColumnsLoad";
 
 export default fastify => {
     fastify.post("/api/core/captcha", apiCaptcha());
@@ -30,4 +31,5 @@ export default fastify => {
     fastify.post("/api/core/filters/edit", apiFiltersEdit());
     fastify.post("/api/core/filters/delete", apiFiltersDelete());
     fastify.post("/api/core/columns/save", apiColumnsSave());
+    fastify.post("/api/core/columns/load", apiColumnsLoad());
 };

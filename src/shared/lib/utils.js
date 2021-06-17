@@ -517,9 +517,13 @@ export default {
         return query;
     },
     async getTableSettings(req, db, auth, table) {
-        return (await db.collection(req.zoiaModulesConfig["core"].collectionColumns || "columns").findOne({
+        const data = (await db.collection(req.zoiaModulesConfig["core"].collectionColumns || "columns").findOne({
             table,
             userId: String(auth.getUser()._id),
         })) || {};
+        if (data.autoItemsPerPage) {
+            data.itemsPerPage = null;
+        }
+        return data;
     }
 };

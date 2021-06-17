@@ -94,11 +94,11 @@ export default () => ({
                 });
             }
             const count = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).count();
-            const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            const columns = await utils.getTableSettings(req, this.mongo.db, auth, "pages");
+            const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const columns = await utils.getTableSettings(req, this.mongo.db, auth, "pages");
             const data = (await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).toArray()).map(i => ({
                 _id: i._id,
                 dir: !acl.checkPermission("pages", "read", i.filename) ? "***" : treeData ? getLabel(i.dir, req.body.language, treeData.tree) || "/" : "/",

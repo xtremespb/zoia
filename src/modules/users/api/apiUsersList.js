@@ -49,12 +49,12 @@ export default () => ({
                     };
                 }
             }
+            const columns = await utils.getTableSettings(req, this.mongo.db, auth, "users");
             const count = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).count();
-            const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const columns = await utils.getTableSettings(req, this.mongo.db, auth, "users");
             const data = (await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).toArray()).map(i => ({
                 ...i,
                 username: !acl.checkPermission("users", "read", i.username) ? "***" : i.username,

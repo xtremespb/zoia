@@ -1,3 +1,4 @@
+import utils from "../../../shared/lib/utils";
 import listData from "./data/list.json";
 import moduleConfig from "../module.json";
 
@@ -69,7 +70,8 @@ export default () => ({
                 });
             }
             const count = await this.mongo.db.collection(collectionName).find(query, options).count();
-            const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            const columns = await utils.getTableSettings(req, this.mongo.db, auth, moduleConfig.id);
+            const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;

@@ -156,6 +156,7 @@
 	"mTableErr.invalidJSON": "Ошибка валидации JSON",
 	"mTable.tableSettings": "Настройки",
 	"mTableErr.tableSettingsSave": "Ошибка во время сохранения конфигурации",
+	"mTableErr.tableSettingsLoad": "Ошибка во время загрузки конфигурации",
 	"mSelect.search": "Поиск",
 	"mTable.settingsColumns": "Столбцы",
 	"mTable.settingsPages": "Страницы",
