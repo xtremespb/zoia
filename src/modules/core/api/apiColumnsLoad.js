@@ -1,4 +1,5 @@
-import columnsSaveData from "./data/columnsSave.json";
+import utils from "../../../shared/lib/utils";
+import columnsSaveData from "./data/columnsLoad.json";
 
 export default () => ({
     schema: {
@@ -23,22 +24,10 @@ export default () => ({
             return;
         }
         try {
-            await this.mongo.db.collection(req.zoiaModulesConfig["core"].collectionColumns || "columns").updateOne({
-                userId: String(auth.getUser()._id),
-                table: req.body.table,
-            }, {
-                $set: {
-                    userId: String(auth.getUser()._id),
-                    table: req.body.table,
-                    ratios: req.body.ratios,
-                    columns: req.body.columns,
-                    itemsPerPage: req.body.itemsPerPage,
-                    autoItemsPerPage: req.body.autoItemsPerPage,
-                }
-            }, {
-                upsert: true,
+            const columns = await utils.getTableSettings(req, this.mongo.db, auth, req.body.table);
+            response.successJSON({
+                columns
             });
-            response.successJSON({});
             return;
         } catch (e) {
             log.error(e);

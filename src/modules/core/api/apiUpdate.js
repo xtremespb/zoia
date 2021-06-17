@@ -82,47 +82,74 @@ export default () => ({
                 const updatePublicDir = path.resolve(`${__dirname}/../../build/public/update`);
                 try {
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_COPY_SRC_DIR);
+                    // Clean up update directory
                     await fs.remove(updateDir);
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_DOWNLOAD);
+                    // Create update directory
                     await fs.ensureDir(tempDir);
+                    // Download update file from remote repository
                     const updateFile = await axios({
                         method: "get",
                         url: updateData.zipball_url,
                         responseType: "arraybuffer"
                     });
+                    // Save update file to the temporary directory
                     const archivePath = path.resolve(tempDir, tempFile);
                     await fs.writeFile(archivePath, updateFile.data);
+                    // Extract update archive to the temporary directory
                     await extract(archivePath, {
                         dir: tempDir
                     });
+                    // Remove update archive
                     await fs.remove(archivePath);
+                    // Get update contents
                     const tempDirContents = await fs.readdir(tempDir);
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_COPY_SRC_DIR);
+                    // Copy "src" directory to the update directory
                     await fs.copy(path.resolve(tempDir, tempDirContents[0], "src"), updateDir);
+                    // Create backup of the "package.json" file
                     await fs.copy(path.resolve(`${__dirname}/../../package.json`), path.resolve(`${__dirname}/../../package.json.bak`), {
                         overwrite: true,
                         errorOnExist: false
                     });
+                    // Create backup of the "package-lock.json" file
+                    await fs.copy(path.resolve(`${__dirname}/../../package-lock.json`), path.resolve(`${__dirname}/../../package-lock.json.bak`), {
+                        overwrite: true,
+                        errorOnExist: false
+                    });
+                    // Create backup of the "package-core.json" file
+                    await fs.copy(path.resolve(`${__dirname}/../../package-core.json`), path.resolve(`${__dirname}/../../package-core.json.bak`), {
+                        overwrite: true,
+                        errorOnExist: false
+                    });
+                    // Copy "package.json" file to the root directory
                     await fs.copy(path.resolve(tempDir, tempDirContents[0], "package.json"), path.resolve(`${__dirname}/../../package.json`), {
                         overwrite: true,
                         errorOnExist: false
                     });
+                    // Copy "package-lock.json" file to the root directory
+                    await fs.copy(path.resolve(tempDir, tempDirContents[0], "package-lock.json"), path.resolve(`${__dirname}/../../package-lock.json`), {
+                        overwrite: true,
+                        errorOnExist: false
+                    });
+                    // Copy "package-core.json" file to the root directory
                     await fs.copy(path.resolve(tempDir, tempDirContents[0], "package-core.json"), path.resolve(`${__dirname}/../../package-core.json`), {
                         overwrite: true,
                         errorOnExist: false
                     });
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_SUCCESS);
+                    // Copy missing modules from "src/modules" to "update/modules"
                     const currentModules = (await fs.readdir(path.resolve(`${__dirname}/../../src/modules`))).filter(d => !d.match(/^\./));
                     const updateModules = (await fs.readdir(path.resolve(`${__dirname}/../../update/modules`))).filter(d => !d.match(/^\./));
                     await Promise.all(currentModules.filter(m => updateModules.indexOf(m) === -1).map(async m => {
                         await fs.copy(path.resolve(`${__dirname}/../../src/modules/${m}`), path.resolve(`${__dirname}/../../update/modules/${m}`));
                     }));
-                    // Execute "npm run build-update" to build the update package
-                    await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_NPM_BUILD_UPDATE);
-                    await utils.execShellCommand("npm run build-update", workingDir);
                     // Execute "npm install" to install the latest versions of NPM modules
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_NPM_INSTALL);
                     await utils.execShellCommand("npm install", workingDir);
+                    // Execute "npm run build-update" to build the update package
+                    await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_NPM_BUILD_UPDATE);
+                    await utils.execShellCommand("npm run build-update", workingDir);
                     // Check if update files are generated
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_NPM_UPDATE_COPY);
                     try {
@@ -141,6 +168,8 @@ export default () => ({
                     await fs.remove(currentPublicDir);
                     await fs.rename(updatePublicDir, currentPublicDir);
                     await fs.remove(path.resolve(`${__dirname}/../../package.json.bak`));
+                    await fs.remove(path.resolve(`${__dirname}/../../package-lock.json.bak`));
+                    await fs.remove(path.resolve(`${__dirname}/../../package-core.json.bak`));
                     // Running "setup all" script
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_SETUP_ALL);
                     await utils.execShellCommand("npm run setup-all", workingDir);

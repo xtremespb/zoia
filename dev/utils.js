@@ -219,7 +219,6 @@ const installRequiredPackages = async (moduleDirs, argv) => {
         if (cmd && cmd.length) {
             try {
                 console.log(`Installing NPM packages for module "${dir}"...`);
-                // eslint-disable-next-line no-await-in-loop
                 execSync(`npm i ${cmd} --loglevel=error`);
             } catch (e) {
                 console.error(e);

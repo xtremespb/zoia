@@ -1,6 +1,6 @@
 {
 	"name": "zoia3",
-	"version": "3.1.63",
+	"version": "3.1.65",
 	"description": "ZOIA Content Management System",
 	"scripts": {
 		"config": "node ./dev/bin/config.js",
@@ -41,7 +41,7 @@
 		"command-line-args": "^5.1.1",
 		"date-fns": "^2.22.1",
 		"extract-zip": "^2.0.1",
-		"fastify": "^3.17.0",
+		"fastify": "^3.18.0",
 		"fastify-cookie": "^5.3.1",
 		"fastify-cors": "^6.0.1",
 		"fastify-formbody": "^5.0.0",
@@ -52,10 +52,9 @@
 		"fastify-url-data": "^3.0.3",
 		"fs-extra": "^10.0.0",
 		"html-to-text": "^8.0.0",
-		"inquirer": "^8.1.0",
+		"inquirer": "^8.1.1",
 		"ioredis": "^4.27.6",
 		"jimp": "^0.16.1",
-		"jira-client": "^6.21.1",
 		"js-beautify": "^1.14.0",
 		"lodash.clonedeep": "^4.5.0",
 		"lodash.debounce": "^4.0.8",
@@ -72,9 +71,7 @@
 		"socket.io-redis": "^6.1.1",
 		"telegraf": "^4.3.0",
 		"tippy.js": "^6.3.1",
-		"uuid": "^8.3.2",
-		"xlsx": "^0.17.0",
-		"xlsx-template": "^1.3.0"
+		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
 		"@babel/code-frame": "^7.14.5",
@@ -105,7 +102,7 @@
 		"file-loader": "^6.2.0",
 		"imask": "^6.0.7",
 		"mini-css-extract-plugin": "^1.6.0",
-		"postcss": "^8.3.4",
+		"postcss": "^8.3.5",
 		"postcss-loader": "^6.1.0",
 		"postcss-preset-env": "^5.3.0",
 		"postcss-url": "^10.1.3",
@@ -113,11 +110,11 @@
 		"puppeteer": "^10.0.0",
 		"router5": "^8.0.1",
 		"router5-plugin-browser": "^8.0.1",
-		"sass": "^1.35.0",
+		"sass": "^1.35.1",
 		"sass-loader": "^12.1.0",
-		"semantic-release": "^17.4.3",
+		"semantic-release": "^17.4.4",
 		"svg-url-loader": "^7.1.1",
-		"webpack": "^5.39.0",
+		"webpack": "^5.39.1",
 		"webpack-cli": "^4.7.2",
 		"webpack-fix-style-only-entries": "^0.6.1"
 	},

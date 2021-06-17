@@ -156,7 +156,13 @@
 	"mTableErr.invalidJSON": "Invalid JSON Value",
 	"mTable.tableSettings": "Settings",
 	"mTableErr.tableSettingsSave": "Could not save table settings",
+	"mTableErr.tableSettingsLoad": "Could not load table settings",
 	"mSelect.search": "Search",
 	"mTable.settingsColumns": "Columns",
-	"mTable.settingsPages": "Pages"
+	"mTable.settingsPages": "Pages",
+	"mTable.itemsPerPage": "Records Per Page",
+	"mTable.itemsPerPageHelpText": "Number of records per page",
+	"mTable.paginationMode": "Pagination Mode",
+	"mTable.paginationMode.dynamic": "Dynamic",
+	"mTable.paginationMode.fixed": "Fixed"
 }

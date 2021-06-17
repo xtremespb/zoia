@@ -33,6 +33,7 @@ module.exports = class {
             deleteDialogProgress: false,
             anyCheckboxSelected: false,
             itemsPerPage: null,
+            autoItemsPerPage: !!input.autoItemsPerPage,
             filterDialogActive: false,
             filterDialogEdit: null,
             filterSelected: "",
@@ -69,6 +70,7 @@ module.exports = class {
         this.i18n = input.i18n;
         this.cookieOptions = out.global.cookieOptions;
         this.siteId = out.global.siteId;
+        this.commonTableItemsLimit = out.global.commonTableItemsLimit;
     }
 
     setError(err) {
@@ -86,6 +88,7 @@ module.exports = class {
         this.calendarField = this.getComponent(`${this.input.id}_filterDate`);
         this.tableSettingsField = this.getComponent(`${this.input.id}_config_columns`);
         this.filterDeleteConfirm = this.getComponent(`${this.input.id}_filterDeleteConfirm`);
+        this.tableSettingsPagesForm = this.getComponent(`${this.input.id}_tableSettingsPagesForm`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
             window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
@@ -126,18 +129,28 @@ module.exports = class {
         document.addEventListener("touchend", this.onColumnUpEventHandler.bind(this));
         window.addEventListener("resize", throttle(this.setupColumnResize.bind(this), 100));
         const cookies = new Cookies(this.cookieOptions);
-        this.token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
-        this.saveColumnsStateDebounced = debounce(this.saveColumnsState, 1000);
+        const token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
+        this.setState("token", token);
+        this.commitTableSettingsDebounced = debounce(this.commitTableSettings, 1000);
+        this.calculateTableMaxWidth();
     }
 
-    onWindowResize(reload) {
-        if (this.input.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches && document.getElementById(`${this.input.id}_table`)) {
-            const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_table`).getBoundingClientRect().top - 113) / 49, 10);
-            if (itemsCount && this.state.itemsPerPage !== itemsCount) {
-                this.state.itemsPerPage = itemsCount > 0 ? itemsCount : 1;
-            }
+    calculateItemsPerPage() {
+        const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_table`).getBoundingClientRect().top - 113) / 49, 10);
+        if (itemsCount && this.state.itemsPerPage !== itemsCount) {
+            this.setState("itemsPerPage", itemsCount > 0 ? itemsCount : 1);
+        }
+    }
+
+    isAutoItemsPerPage() {
+        return this.state.autoItemsPerPage && !window.matchMedia("only screen and (max-width: 760px)").matches && document.getElementById(`${this.input.id}_table`);
+    }
+
+    async onWindowResize(reload) {
+        if (this.isAutoItemsPerPage()) {
+            this.calculateItemsPerPage();
             if (reload) {
-                this.loadData();
+                await this.loadData();
             }
         }
     }
@@ -182,12 +195,20 @@ module.exports = class {
                 this.setState("limit", response.data.limit || 1);
                 this.setState("pagesCount", response.data.pagesCount || 1);
                 this.setState("paginationData", this.generatePagination());
-                if (response.data.columns && Object.keys(response.data.columns).length && !Object.keys(this.state.columnRatios).length) {
-                    this.setState("columnRatios", response.data.columns.ratios || {});
-                    if (response.data.columns.columns) {
-                        const visibility = {};
-                        response.data.columns.columns.map(c => visibility[c] = true);
-                        this.setState("columnVisibility", visibility);
+                if (response.data.columns && Object.keys(response.data.columns).length) {
+                    if (!Object.keys(this.state.columnRatios).length) {
+                        this.setState("columnRatios", response.data.columns.ratios || {});
+                        if (response.data.columns.columns) {
+                            const visibility = {};
+                            response.data.columns.columns.map(c => visibility[c] = true);
+                            this.setState("columnVisibility", visibility);
+                        }
+                    }
+                    if (response.data.columns.itemsPerPage) {
+                        this.setState("itemsPerPage", parseInt(response.data.columns.itemsPerPage, 10));
+                    }
+                    if (typeof response.data.columns.autoItemsPerPage === "boolean") {
+                        this.setState("autoItemsPerPage", response.data.columns.autoItemsPerPage);
                     }
                 }
                 setTimeout(() => this.setupColumnResize(), 10);
@@ -591,7 +612,7 @@ module.exports = class {
                     filters: this.state.filters,
                 },
                 headers: {
-                    Authorization: `Bearer ${this.token}`
+                    Authorization: `Bearer ${this.state.token}`
                 }
             });
             this.setLoading(false);
@@ -634,7 +655,7 @@ module.exports = class {
                             type
                         },
                         headers: {
-                            Authorization: `Bearer ${this.token}`
+                            Authorization: `Bearer ${this.state.token}`
                         }
                     });
                     this.setState("filterManageDialogLoading", false);
@@ -668,7 +689,7 @@ module.exports = class {
                             filters: this.state.filters,
                         },
                         headers: {
-                            Authorization: `Bearer ${this.token}`
+                            Authorization: `Bearer ${this.state.token}`
                         }
                     });
                     this.getComponent(`${this.input.id}_filterEditForm`).func.setProgress(false);
@@ -712,7 +733,7 @@ module.exports = class {
                     table: this.input.id
                 },
                 headers: {
-                    Authorization: `Bearer ${this.token}`
+                    Authorization: `Bearer ${this.state.token}`
                 }
             });
             this.setState("filterManageDialogLoading", false);
@@ -787,7 +808,7 @@ module.exports = class {
                     ids: this.state.filterManageSelected.map(i => i.id),
                 },
                 headers: {
-                    Authorization: `Bearer ${this.token}`
+                    Authorization: `Bearer ${this.state.token}`
                 }
             });
             this.setState("filterManageDialogLoading", false);
@@ -852,15 +873,19 @@ module.exports = class {
         // this.resizeTableContainer.style.maxWidth = w;
     }
 
-    setupColumnResize() {
+    calculateTableMaxWidth() {
+        this.resizeTable = document.getElementById(`${this.input.id}_table`);
         this.resizeTableMeter = document.getElementById(`${this.input.id}_tableMeter`);
         this.resizeTableMeter.style.display = "block";
         this.resizeTableContainer = document.getElementById(`${this.input.id}_tableContainer`);
-        this.resizeTable = document.getElementById(`${this.input.id}_table`);
         this.resizeTable.style.display = "none";
         this.resizeTableContainer.style.maxWidth = window.getComputedStyle(this.resizeTableMeter).width;
         this.resizeTable.style.display = "table";
         this.resizeTableMeter.style.display = "none";
+    }
+
+    setupColumnResize() {
+        this.calculateTableMaxWidth();
         this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th`));
         this.resizeTableGrips = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th>div>.z3-mt-th-resize`));
         this.setTableWidth("");
@@ -924,7 +949,7 @@ module.exports = class {
             }
             currentTableComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
             this.calculateColumnRatios(this.resizeColumnIndex, this.resizeColumnIndex + 1);
-            this.saveColumnsStateDebounced();
+            this.commitTableSettingsDebounced();
         }
     }
 
@@ -967,14 +992,30 @@ module.exports = class {
             label: c.title
         })));
         this.tableSettingsField.func.setValue(Object.keys(this.state.columnVisibility).filter(v => this.state.columnVisibility[v]).map(v => v));
+        this.setState("tableSettingsDialogTab", "columns");
+        this.tableSettingsPagesForm.func.resetData();
         this.setState("tableSettingsDialogActive", true);
+        this.tableSettingsPagesForm.func.setValue("itemsPerPage", this.state.itemsPerPage || this.commonTableItemsLimit);
+        this.tableSettingsPagesForm.func.setValue("paginationMode", this.state.autoItemsPerPage ? "dynamic" : "fixed");
+        if (!this.settingsDialogHeight) {
+            setTimeout(() => {
+                const settingsDialog = document.getElementById(`${this.input.id}_settingsDialogModalCard`);
+                this.settingsDialogHeight = settingsDialog.getBoundingClientRect().height;
+                settingsDialog.style.minHeight = `${this.settingsDialogHeight}px`;
+            }, 100);
+        }
     }
 
     onTableSettingsDialogClose() {
         this.setState("tableSettingsDialogActive", false);
     }
 
-    onTableSettingsDialogSave() {
+    async saveTableSettings() {
+        const settingsPagesResult = await this.tableSettingsPagesForm.func.submitForm(true);
+        if (!settingsPagesResult) {
+            this.setState("tableSettingsDialogTab", "pages");
+            return;
+        }
         const columns = this.tableSettingsField.func.getValue();
         const visibility = cloneDeep(this.state.columnVisibility);
         this.input.columns.map(c => {
@@ -985,10 +1026,22 @@ module.exports = class {
         this.setState("tableSettingsDialogActive", false);
         this.setState("columnRatios", {});
         setTimeout(() => this.setupColumnResize(), 10);
-        this.saveColumnsState();
+        this.setState("itemsPerPage", parseInt(this.tableSettingsPagesForm.func.getValue("itemsPerPage"), 10));
+        this.setState("autoItemsPerPage", this.tableSettingsPagesForm.func.getValue("paginationMode") === "dynamic");
+        await this.commitTableSettings();
+        setTimeout(() => {
+            if (this.isAutoItemsPerPage()) {
+                this.calculateItemsPerPage();
+            }
+            this.dataRequest();
+        }, 10);
     }
 
-    async saveColumnsState() {
+    onTableSettingsDialogSave() {
+        this.saveTableSettings();
+    }
+
+    async commitTableSettings() {
         try {
             await axios({
                 method: "post",
@@ -997,13 +1050,17 @@ module.exports = class {
                     table: this.input.id,
                     ratios: this.state.columnRatios,
                     columns: Object.keys(this.state.columnVisibility).filter(c => this.state.columnVisibility[c]),
+                    itemsPerPage: this.state.itemsPerPage,
+                    autoItemsPerPage: this.state.autoItemsPerPage,
                 },
                 headers: {
-                    Authorization: `Bearer ${this.token}`
+                    Authorization: `Bearer ${this.state.token}`
                 }
             });
+            return true;
         } catch {
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.tableSettingsSave"), "is-danger");
+            return false;
         }
     }
 
@@ -1011,5 +1068,9 @@ module.exports = class {
         e.preventDefault();
         const tab = e.target.dataset.id;
         this.setState("tableSettingsDialogTab", tab);
+    }
+
+    onTableSettingsPagesFormSubmit() {
+        this.saveTableSettings();
     }
 };

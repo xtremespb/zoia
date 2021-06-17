@@ -156,7 +156,13 @@
 	"mTableErr.invalidJSON": "Ошибка валидации JSON",
 	"mTable.tableSettings": "Настройки",
 	"mTableErr.tableSettingsSave": "Ошибка во время сохранения конфигурации",
+	"mTableErr.tableSettingsLoad": "Ошибка во время загрузки конфигурации",
 	"mSelect.search": "Поиск",
 	"mTable.settingsColumns": "Столбцы",
-	"mTable.settingsPages": "Страницы"
+	"mTable.settingsPages": "Страницы",
+	"mTable.itemsPerPage": "Количество записей",
+	"mTable.itemsPerPageHelpText": "Количество записей на одной странице",
+	"mTable.paginationMode": "Режим разбивки",
+	"mTable.paginationMode.dynamic": "Динамический",
+	"mTable.paginationMode.fixed": "Фиксированный"
 }

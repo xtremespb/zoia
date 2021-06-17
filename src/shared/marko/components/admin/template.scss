@@ -85,7 +85,7 @@
 .z3-ap-content-wrap {
     padding: 10px 20px;
     min-height: 100%;
-    margin-bottom: 8px;
+    padding-bottom: 15px;
 }
 
 .z3-ap-head-thin {
@@ -152,39 +152,38 @@
     background: $white;
 }
 
-.button.is-light,
-.button.is-light:hover {
+.button.is-light {
     border: 1px solid $grey-lightest !important;
-    background: $white-lightest !important;
+    background-color: $white !important;
     border-bottom: 2px solid $grey-lighter !important;
+    transition: 0.09s;
 }
 
-.button.is-light,
-.button.is-light:hover {
-    border: 1px solid $grey-lightest !important;
+.button.is-light:not(.is-action-button):hover {
     background: $white-lightest !important;
-    border-bottom: 2px solid $grey-lighter !important;
+    border-bottom: 2px solid $grey-light !important;
 }
 
-.button.is-light:hover {
-    background: $white-ter !important;
+.is-action-button:hover {
+    background: $white-lightest !important;
 }
 
-.button.is-danger,
-.button.is-danger:hover {
+.button.is-danger {
     border: 1px solid $red-dark !important;
     border-bottom: 2px solid $red-darker !important;
+    transition: 0.09s;
 }
 
-.button.is-primary,
-.button.is-primary:hover {
+.button.is-primary {
     border-bottom: 2px solid $primary-dark !important;
+    transition: 0.09s;
 }
 
 .button.is-dialog-secondary {
     border: 1px solid $grey-lightest !important;
     background-color: $white !important;
     border-bottom: 2px solid $grey-lighter !important;
+    transition: 0.09s;
 }
 
 .button.is-dialog-secondary:hover {
@@ -200,6 +199,10 @@
 
 .button:not(.is-white) {
     box-shadow: 0px 2px 3px rgb(0 0 0 / 4%) !important;
+}
+
+.button:not(.is-white):hover {
+    box-shadow: 0px 2px 3px rgb(0 0 0 / 6%) !important;
 }
 
 .z3-ap-side-menu-list>li>a.is-active {

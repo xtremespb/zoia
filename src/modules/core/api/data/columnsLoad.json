@@ -1,0 +1,14 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "table": {
+                "type": "string",
+                "maxLength": 64
+            }
+        },
+        "required": ["table"]
+    },
+    "projection": {},
+    "search": []
+}
