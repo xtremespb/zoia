@@ -1,6 +1,6 @@
 {
 	"name": "zoia3",
-	"version": "3.1.65",
+	"version": "3.1.66",
 	"description": "ZOIA Content Management System",
 	"scripts": {
 		"config": "node ./dev/bin/config.js",
@@ -62,7 +62,7 @@
 		"marko": "^5.10.6",
 		"mime-types": "^2.1.31",
 		"mongodb": "^3.6.9",
-		"nodemailer": "^6.6.1",
+		"nodemailer": "^6.6.2",
 		"pino": "^6.11.3",
 		"pm2": "^5.1.0",
 		"postcss-csso": "^5.0.1",

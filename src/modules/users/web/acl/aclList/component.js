@@ -31,6 +31,9 @@ module.exports = class {
             this.getComponent(`aclList_mnotify`).func.show(this.i18n.t("dataSaveSuccess"), "is-success");
         }
         await this.table.func.dataRequest();
+        if (window.__zoiaTippyJs) {
+            window.__zoiaTippyJs.reset();
+        }
     }
 
     // eslint-disable-next-line class-methods-use-this

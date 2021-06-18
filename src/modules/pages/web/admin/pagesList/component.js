@@ -40,6 +40,9 @@ module.exports = class {
         await this.table.func.dataRequest({
             dir: this.state.dir
         });
+        if (window.__zoiaTippyJs) {
+            window.__zoiaTippyJs.reset();
+        }
     }
 
     setLoadingTree(state) {

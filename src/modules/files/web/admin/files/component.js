@@ -78,6 +78,9 @@ module.exports = class {
                 this.aceEditor.getSession().setAnnotations(annotationsFiltered);
             }
         });
+        if (window.__zoiaTippyJs) {
+            window.__zoiaTippyJs.reset();
+        }
     }
 
     setLoadingList(state) {

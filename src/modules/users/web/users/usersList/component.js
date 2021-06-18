@@ -28,6 +28,9 @@ module.exports = class {
         if (this.input.successNotification && this.notify && this.notify.func) {
             this.notify.func.show(this.i18n.t("dataSaveSuccess"), "is-success");
         }
+        if (window.__zoiaTippyJs) {
+            window.__zoiaTippyJs.reset();
+        }
     }
 
     onActionClick(data) {
