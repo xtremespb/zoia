@@ -27,6 +27,9 @@ module.exports = class {
         if (this.input.successNotification) {
             this.getComponent(`dataList_mnotify`).func.show(this.i18n.t("dataSaveSuccess"), "is-success");
         }
+        if (window.__zoiaTippyJs) {
+            window.__zoiaTippyJs.reset();
+        }
     }
 
     onActionClick(data) {

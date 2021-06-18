@@ -15,7 +15,7 @@ module.exports = class {
             arrow: true,
             zIndex: 30,
         });
-        setTimeout(() => this.initTippy(), 100);
+        setTimeout(() => this.initTippy(), 200);
         window.__zoiaTippyJs = {
             reset: this.reset.bind(this),
             hide: this.hide.bind(this),
@@ -24,7 +24,7 @@ module.exports = class {
 
     reset() {
         this.tippyInstances.map(i => i.destroy());
-        setTimeout(() => this.initTippy(), 100);
+        setTimeout(() => this.initTippy(), 200);
     }
 
     hide() {

@@ -49,6 +49,10 @@
     border-radius: 6px;
 }
 
+.z3-ap-side-menu-list>li>a:hover {
+    background-color: $grey-lightest;
+}
+
 .z3-ap-navbar {
     position: fixed;
     min-width: 100%;

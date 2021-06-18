@@ -34,6 +34,9 @@ module.exports = class {
         if (this.state.backupDb.running) {
             setTimeout(this.checkStatus.bind(this), 1000);
         }
+        if (window.__zoiaTippyJs) {
+            window.__zoiaTippyJs.reset();
+        }
     }
 
     async checkStatus() {

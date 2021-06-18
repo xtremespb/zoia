@@ -25,6 +25,9 @@ module.exports = class {
         this.tree = this.getComponent("z3_ap_nav_tree");
         this.editModal = this.getComponent("z3_ap_nav_editModal");
         await this.loadTree();
+        if (window.__zoiaTippyJs) {
+            window.__zoiaTippyJs.reset();
+        }
     }
 
     setLoadingTree(state) {
