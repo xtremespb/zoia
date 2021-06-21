@@ -14,6 +14,7 @@ module.exports = class {
         tippy.setDefaultProps({
             arrow: true,
             zIndex: 30,
+            animation: "fade",
         });
         setTimeout(() => this.initTippy(), 200);
         window.__zoiaTippyJs = {
@@ -23,8 +24,10 @@ module.exports = class {
     }
 
     reset() {
-        this.tippyInstances.map(i => i.destroy());
-        setTimeout(() => this.initTippy(), 200);
+        if (this.tippyInstances && this.tippyInstances.length) {
+            this.tippyInstances.map(i => i.destroy());
+            setTimeout(() => this.initTippy(), 200);
+        }
     }
 
     hide() {
