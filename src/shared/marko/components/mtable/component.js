@@ -954,8 +954,10 @@ module.exports = class {
     }
 
     onColumnUpEventHandler() {
-        this.resizeTableGrips.map(g => g.style.left = `${this.resizeTableColumnWidths[g.dataset.index] - 5}px`);
-        this.resizeTableActive = false;
+        if (this.resizeTableGrips) {
+            this.resizeTableGrips.map(g => g.style.left = `${this.resizeTableColumnWidths[g.dataset.index] - 5}px`);
+            this.resizeTableActive = false;
+        }
     }
 
     onColumnResizeMouseDown(e) {

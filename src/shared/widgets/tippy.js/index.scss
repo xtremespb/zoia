@@ -2,90 +2,94 @@
 @import './animations/fade.scss';
 @import '../../../design/variables/components.scss';
 
-$color: $grey-darker;
+$color: $grey-dark;
 
 [data-#{$namespace-prefix}-root] {
-  max-width: calc(100vw - 10px);
+    max-width: calc(100vw - 10px);
 }
 
 .#{$namespace-prefix}-box {
-  position: relative;
-  background-color: $color;
-  color: $white-lightest;
-  border-radius: 4px;
-  font-size: 12px;
-  line-height: 1.4;
-  outline: 0;
-  transition-property: transform, visibility, opacity;
+    position: relative;
+    background-color: $color;
+    color: $white-lightest;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.4;
+    outline: 0;
+    transition-property: transform, visibility, opacity;
 
-  &[data-placement^='top'] > .#{$namespace-prefix}-arrow {
-    bottom: 0;
+    &[data-placement^='top']>.#{$namespace-prefix}-arrow {
+        bottom: 0;
 
-    &::before {
-      bottom: -7px;
-      left: 0;
-      border-width: 8px 8px 0;
-      border-top-color: initial;
-      transform-origin: center top;
+        &::before {
+            bottom: -7px;
+            left: 0;
+            border-width: 8px 8px 0;
+            border-top-color: initial;
+            transform-origin: center top;
+        }
     }
-  }
 
-  &[data-placement^='bottom'] > .#{$namespace-prefix}-arrow {
-    top: 0;
+    &[data-placement^='bottom']>.#{$namespace-prefix}-arrow {
+        top: 0;
 
-    &::before {
-      top: -7px;
-      left: 0;
-      border-width: 0 8px 8px;
-      border-bottom-color: initial;
-      transform-origin: center bottom;
+        &::before {
+            top: -7px;
+            left: 0;
+            border-width: 0 8px 8px;
+            border-bottom-color: initial;
+            transform-origin: center bottom;
+        }
     }
-  }
 
-  &[data-placement^='left'] > .#{$namespace-prefix}-arrow {
-    right: 0;
+    &[data-placement^='left']>.#{$namespace-prefix}-arrow {
+        right: 0;
 
-    &::before {
-      border-width: 8px 0 8px 8px;
-      border-left-color: initial;
-      right: -7px;
-      transform-origin: center left;
+        &::before {
+            border-width: 8px 0 8px 8px;
+            border-left-color: initial;
+            right: -7px;
+            transform-origin: center left;
+        }
     }
-  }
 
-  &[data-placement^='right'] > .#{$namespace-prefix}-arrow {
-    left: 0;
+    &[data-placement^='right']>.#{$namespace-prefix}-arrow {
+        left: 0;
 
-    &::before {
-      left: -7px;
-      border-width: 8px 8px 8px 0;
-      border-right-color: initial;
-      transform-origin: center right;
+        &::before {
+            left: -7px;
+            border-width: 8px 8px 8px 0;
+            border-right-color: initial;
+            transform-origin: center right;
+        }
     }
-  }
 
-  &[data-inertia][data-state='visible'] {
-    transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
-  }
+    &[data-inertia][data-state='visible'] {
+        transition-timing-function: cubic-bezier(0.54, 1.5, 0.38, 1.11);
+    }
+
+    &[data-animation='fade'][data-state='hidden'] {
+        opacity: 0;
+    }
 }
 
 .#{$namespace-prefix}-arrow {
-  & {
-    width: $arrow-size;
-    height: $arrow-size;
-    color: $color;
-  }
+    & {
+        width: $arrow-size;
+        height: $arrow-size;
+        color: $color;
+    }
 
-  &::before {
-    content: '';
-    position: absolute;
-    border-color: transparent;
-    border-style: solid;
-  }
+    &::before {
+        content: '';
+        position: absolute;
+        border-color: transparent;
+        border-style: solid;
+    }
 }
 
 .#{$namespace-prefix}-content {
-  position: relative;
-  padding: 5px 9px;
-  z-index: 1;
+    position: relative;
+    padding: 5px 9px;
+    z-index: 1;
 }

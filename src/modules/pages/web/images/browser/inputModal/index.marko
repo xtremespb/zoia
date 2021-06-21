@@ -1,29 +1,29 @@
 <div class=`z3-ap-noselect modal${state.active ? " is-active" : ""}`>
 	<div class="modal-background" on-click("onCloseClick")/>
-	<form on-submit("onFormSubmit")>
 		<div class="modal-card">
-			<header class="modal-card-head">
-				<p class="modal-card-title">${state.title}</p>
-			</header>
-			<section class="modal-card-body">
-				<div>
-					<input
-						class=`input${state.error ? " is-danger" : ""}`
-						type="text"
-						placeholder=state.filenameSrc
-						value=state.filenameDest
-						on-change("onFilenameChange")
-						key="z3_ap_f_inputModal_filename"/>
-				</div>
-			</section>
-			<footer class="modal-card-foot">
-				<button type="submit" class="button is-primary" on-click("onConfirmClick")>
-					${out.global.i18n.t("btnConfirm")}
-				</button>
-				<button type="button is-dialog-secondary" class="button" on-click("onCloseClick")>
-					${out.global.i18n.t("btnCancel")}
-				</button>
-			</footer>
+			<form on-submit("onFormSubmit")>
+				<header class="modal-card-head">
+					<p class="modal-card-title">${state.title}</p>
+				</header>
+				<section class="modal-card-body">
+					<div>
+						<input
+							class=`input${state.error ? " is-danger" : ""}`
+							type="text"
+							placeholder=state.filenameSrc
+							value=state.filenameDest
+							on-change("onFilenameChange")
+							key="z3_ap_f_inputModal_filename"/>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button type="submit" class="button is-primary" on-click("onConfirmClick")>
+						${out.global.i18n.t("btnConfirm")}
+					</button>
+					<button type="button is-dialog-secondary" class="button" on-click("onCloseClick")>
+						${out.global.i18n.t("btnCancel")}
+					</button>
+				</footer>
+			</form>
 		</div>
-	</form>
 </div>
