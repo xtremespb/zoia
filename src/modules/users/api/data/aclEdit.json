@@ -21,6 +21,15 @@
                 "type": ["string", "null"],
                 "minLength": 0,
                 "maxLength": 128
+            },
+            "corePermissions": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "enum": ["upload", "tableSettings"]
+                },
+                "minItems": 0,
+                "uniqueItems": true
             }
         },
         "required": ["group"]

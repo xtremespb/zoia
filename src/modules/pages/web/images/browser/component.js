@@ -37,6 +37,7 @@ module.exports = class {
     }
 
     async loadFiles(dir = this.state.dir) {
+        this.setError(null);
         this.state.loading = true;
         try {
             const res = await axios({
@@ -139,6 +140,7 @@ module.exports = class {
 
     async onToolbarButtonClick(e) {
         e.preventDefault();
+        this.setError(null);
         const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
         switch (dataset.id) {
         case "refresh":

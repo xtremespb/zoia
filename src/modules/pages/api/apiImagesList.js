@@ -21,7 +21,7 @@ export default () => ({
             response.unauthorizedError();
             return;
         }
-        if (!acl.checkPermission("core", "read")) {
+        if (!acl.checkPermission("imagesBrowser", "read")) {
             response.requestAccessDeniedError();
             return;
         }

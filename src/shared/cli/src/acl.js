@@ -7,8 +7,9 @@
 //
 
 import colors from "colors/safe";
+import cloneDeep from "lodash.clonedeep";
 
-export default async (config, options, modulesConfig, db) => {
+export default async (config, options, modulesConfigData, db) => {
     console.log(`\n${colors.cyan(" Operation:")} create or update an ACL group`);
     if (!options.permissions || !options.permissions.match(/[crud]+/gi)) {
         console.error(`${colors.red(" Error:")} missing or invalid permissions`);
@@ -17,6 +18,10 @@ export default async (config, options, modulesConfig, db) => {
     const update = {
         group: options.acl,
     };
+    const modulesConfig = cloneDeep(modulesConfigData);
+    modulesConfig.push({
+        id: "imagesBrowser"
+    });
     Object.keys(modulesConfig).map(m => {
         update[`${m}_access`] = [options.permissions.match(/c/gi) ? "create" : null, options.permissions.match(/r/gi) ? "read" : null, options.permissions.match(/u/gi) ? "update" : null, options.permissions.match(/d/gi) ? "delete" : null].filter(i => i);
         update[`${m}_blacklist`] = [];

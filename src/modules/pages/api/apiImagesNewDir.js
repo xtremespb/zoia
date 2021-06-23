@@ -19,7 +19,7 @@ export default () => ({
             response.unauthorizedError();
             return;
         }
-        if (!acl.checkPermission("core", "create")) {
+        if (!acl.checkPermission("imagesBrowser", "create")) {
             response.requestAccessDeniedError();
             return;
         }

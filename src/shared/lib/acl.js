@@ -1,11 +1,20 @@
+import cloneDeep from "lodash/cloneDeep";
+
 export default class {
     constructor(fastify) {
         this.fastify = fastify;
+        this.corePermissionsList = ["upload", "tableSettings"];
         this.groups = [];
         this.permissions = {};
+        this.corePermissions = {};
+        this.corePermissionsList.map(p => this.corePermissions[p] = false);
         this.whitelist = {};
         this.blacklist = {};
-        this.fastify.zoiaModules.map(m => {
+        this.zoiaModules = cloneDeep(fastify.zoiaModules);
+        this.zoiaModules.push({
+            id: "imagesBrowser"
+        });
+        this.zoiaModules.map(m => {
             this.permissions[m.id] = {
                 create: false,
                 read: false,
@@ -33,7 +42,7 @@ export default class {
                 }))
             }).toArray();
             if (groupsDb.length) {
-                this.fastify.zoiaModules.map(m => {
+                this.zoiaModules.map(m => {
                     groupsDb.map(group => {
                         if (group[`${m.id}_access`]) {
                             this.permissions[m.id].create = group[`${m.id}_access`].indexOf("create") > -1 || this.permissions[m.id].create;
@@ -49,6 +58,9 @@ export default class {
                         }
                     });
                 });
+                groupsDb.map(group => {
+                    (group.corePermissions || []).map(p => this.corePermissions[p] = true);
+                });
             } else {
                 this.allowEverything();
             }
@@ -61,7 +73,7 @@ export default class {
     }
 
     allowEverything() {
-        this.fastify.zoiaModules.map(m => {
+        this.zoiaModules.map(m => {
             // Everything is allowed by default
             this.permissions[m.id] = {
                 create: true,
@@ -72,6 +84,7 @@ export default class {
             this.whitelist[m.id] = [];
             this.blacklist[m.id] = [];
         });
+        this.corePermissionsList.map(p => this.corePermissions[p] = true);
     }
 
     checkPermission(module, mode, id) {
@@ -88,5 +101,9 @@ export default class {
             return true;
         }
         return false;
+    }
+
+    checkCorePermission(permission) {
+        return this.corePermissions[permission] || false;
     }
 }

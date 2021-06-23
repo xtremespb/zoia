@@ -98,9 +98,64 @@ $ out.global.modules.map(m => {
 					wrapCSS: "z3-is-large"
 				}
 			],
-			...moduleFormData,
 			{
 				id: "div1",
+				type: "divider"
+			},
+			{
+				id: `corePermissions`,
+				type: "checkboxes",
+				label: out.global.i18n.t("corePermissions"),
+				options: [
+					{
+						id: "upload",
+						value: "upload",
+						label: out.global.i18n.t("corePermissionUpload")
+					},
+					{
+						id: "tableSettings",
+						value: "tableSettings",
+						label: out.global.i18n.t("corePermissionTableSettings")
+					}
+				],
+				defaultValue: ["upload", "tableSettings"],
+			},
+			{
+				id: "div2",
+				type: "divider"
+			},
+			{
+				id: `imagesBrowser_access`,
+				type: "checkboxes",
+				label: out.global.i18n.t("imagesBrowser"),
+				options: [
+					{
+						id: "create",
+						value: "create",
+						label: out.global.i18n.t("create")
+					},
+					{
+						id: "read",
+						value: "read",
+						label: out.global.i18n.t("read")
+					},
+					{
+						id: "update",
+						value: "update",
+						label: out.global.i18n.t("update")
+					},
+					{
+						id: "delete",
+						value: "delete",
+						label: out.global.i18n.t("delete")
+					}
+				],
+				wrapCSS: "mb-4",
+				defaultValue: ["create", "read", "update", "delete"],
+			},
+			...moduleFormData,
+			{
+				id: "div3",
 				type: "divider"
 			},
 			{

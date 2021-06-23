@@ -23,7 +23,8 @@ export default () => ({
         const root = cloneDeep(aclEdit.root);
         // Extend validation with modules
         const moduleProperties = {};
-        this.zoiaModules.map(m => {
+        const zoiaModules = cloneDeep(this.zoiaModules);
+        zoiaModules.map(m => {
             moduleProperties[`${m.id}_access`] = {
                 type: "array",
                 items: {
@@ -54,6 +55,15 @@ export default () => ({
                 uniqueItems: true
             };
         });
+        moduleProperties[`imagesBrowser_access`] = {
+            type: "array",
+            items: {
+                type: "string",
+                enum: ["create", "read", "update", "delete"]
+            },
+            minItems: 0,
+            uniqueItems: true
+        };
         root.properties = {
             ...root.properties,
             ...moduleProperties

@@ -1,6 +1,7 @@
 import {
     ObjectId
 } from "mongodb";
+import cloneDeep from "lodash/cloneDeep";
 import aclLoad from "./data/aclLoad.json";
 
 export default () => ({
@@ -44,9 +45,12 @@ export default () => ({
             const dataProcessed = {
                 _id: data._id,
                 group: data.group,
-                comment: data.comment
+                comment: data.comment,
+                corePermissions: data.corePermissions,
             };
-            this.zoiaConfig.modules.map(m => {
+            const zoiaModules = cloneDeep(this.zoiaConfig.modules);
+            zoiaModules.push("imagesBrowser");
+            zoiaModules.map(m => {
                 dataProcessed[`${m}_access`] = data[`${m}_access`] || [];
                 dataProcessed[`${m}_whitelist`] = data[`${m}_whitelist`] ? data[`${m}_whitelist`].join(", ") : "";
                 dataProcessed[`${m}_blacklist`] = data[`${m}_blacklist`] ? data[`${m}_blacklist`].join(", ") : "";
