@@ -1,5 +1,6 @@
 import Cookies from "../../../../shared/lib/cookies"
 import filterSave from "../../../../modules/core/api/data/filterSave.json"
+import widgetsSave from "./data/widgetsEdit.json"
 import tableSettingsPagesFormData from "./data/tableSettingsPagesFormData.json"
 
 style.scss {
@@ -56,14 +57,14 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<button
 							class="button is-light"
 							type="button"
-							on-click("onTableSettingsClick")
-							aria-haspopup="true">
+							on-click("onTableWidgetsClick")
+							aria-haspopup="false">
 							<div class="z3-mt-icon-wrap">
 								<span class="icon">
-									<i class="mdi mdi-table-edit"/>
+									<i class="mdi mdi-widgets-outline"/>
 								</span>
 							</div>
-							${out.global.i18n.t("mTable.tableSettings")}
+							${out.global.i18n.t("mTable.tableWidgets")}
 						</button>
 					</p>
 					<if(input.filter && input.filter.length)>
@@ -117,11 +118,25 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</div>
 						</p>
 					</if>
+					<p class="z3-mt-top-control mt-1 mr-1">
+						<button
+							class="button is-light"
+							type="button"
+							on-click("onTableSettingsClick")
+							aria-haspopup="false">
+							<div class="z3-mt-icon-wrap">
+								<span class="icon">
+									<i class="mdi mdi-table-edit"/>
+								</span>
+							</div>
+							${out.global.i18n.t("mTable.tableSettings")}
+						</button>
+					</p>
 				</div>
 			</if>
 		</div>
 		<div class="column">
-			<div class="control has-icons-right">
+			<div class="control has-icons-right mt-1">
 				<input
 					class="input"
 					type="text"
@@ -376,6 +391,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</div>
 		</div>
 	</if>
+	<!-- Add/Edit Filter modal: start -->
 	<if(input.filter && input.filter.length)>
 		<div class=`modal${state.filterDialogActive ? " is-active" : ""}`>
 				<div class="modal-background" on-click("onFilterDialogClose")/>
@@ -472,6 +488,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				</div>
 			</div>
 	</if>
+	<!-- Add/Edit Filter modal: end -->
+	<!-- Manage Filter modal: start -->
 	<if(state.filterManageDialogActive)>
 		<div class="modal is-active">
 			<div class="modal-background" on-click("onFilterManageDialogClose")/>
@@ -542,6 +560,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</div>
 		</div>
 	</if>
+	<!-- Manage Filter modal: end -->
+	<!-- Edit Filter modal: start -->
 	<div class=`modal${state.filterEditDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onFilterEditDialogClose")/>
 		<div class="modal-card">
@@ -611,6 +631,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</div>
 		</div>
 	</div>
+	<!-- Edit Filter modal: end -->
+	<!-- Raw Filter modal: start -->
 	<div class=`modal${state.filterRawDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onFilterRawDialogClose")/>
 		<div class="modal-card">
@@ -660,6 +682,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</footer>
 		</div>
 	</div>
+	<!-- Raw Filter modal: end -->
+	<!-- Settings modal: start -->
 	<div class=`modal${state.tableSettingsDialogActive ? " is-active" : ""}`>
 		<div class="modal-background" on-click("onTableSettingsDialogClose")/>
 		<div class="modal-card" id=`${input.id}_settingsDialogModalCard`>
@@ -726,6 +750,148 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</footer>
 		</div>
 	</div>
+	<!-- Settings modal: end -->
+	<!-- Manage Widgets modal: start -->
+	<div class=`modal${state.widgetsManageDialogActive ? " is-active" : ""}`>
+		<div class="modal-background" on-click("onWidgetsManageDialogClose")/>
+		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">${input.i18n.t("mTable.manageWidgets")}</p>
+				<button class="delete" aria-label="close" on-click("onWidgetsManageDialogClose")/>
+			</header>
+			<div class="modal-card-body">
+				<if(state.widgetsManageDialogError)>
+					<div class="notification is-danger mb-2">
+						${state.widgetsManageDialogError}
+					</div>
+				</if>
+				<div
+					class="z3-mt-widgets-spinner-wrap"
+					style=(state.widgetsManageDialogLoading ? "display:flex" : "display:none")>
+					<div class="z3-mt-widgets-spinner">
+						<div/>
+						<div/>
+						<div/>
+						<div/>
+					</div>
+				</div>
+				<div
+					style=(state.widgetsManageDialogLoading ? "display:none" : "")
+					class="columns is-variable is-1">
+					<div class="column is-narrow z3-mt-widgets-manage-buttons">
+						<div>
+							<button
+								class="button is-light is-fullwidth"
+								on-click("onAddWidgetClick")>
+								${out.global.i18n.t("mTable.widgets.add")}
+							</button>
+						</div>
+						<div>
+							<button
+								class="button is-light mt-2 is-fullwidth"
+								disabled=(state.widgetsManageSelected.length !== 1)
+								on-click("")>
+								${out.global.i18n.t("mTable.widgets.editSelected")}
+							</button>
+						</div>
+						<div>
+							<button
+								class="button mt-2 is-danger is-fullwidth"
+								disabled=(state.widgetsManageSelected.length === 0)
+								on-click("")>
+								${out.global.i18n.t("mTable.widgets.deleteSelected")}
+							</button>
+						</div>
+					</div>
+					<div class="column">
+						<mselect
+							key=`${input.id}_mselect_widgets`
+							active=true
+							css="z3-mt-widgets-mselect"
+							on-value-change("onMSelectWidgetsChange")/>
+					</div>
+				</div>
+			</div>
+			<footer class="modal-card-foot">
+				<div class="buttons">
+				<button class="button is-primary" on-click("onWidgetsManageDialogSubmit")>
+					${out.global.i18n.t("mTable.widgets.save")}
+				</button>
+				<button class="button is-dialog-secondary" on-click("onWidgetsManageDialogClose")>
+					${out.global.i18n.t("btnCloseGeneric")}
+				</button>
+				</div>
+			</footer>
+		</div>
+	</div>
+	<!-- Manage Widgets modal: end -->
+	<!-- Edit Filter modal: start -->
+	<div class=`modal${state.widgetsEditDialogActive ? " is-active" : ""}`>
+		<div class="modal-background" on-click("onWidgetsEditDialogClose")/>
+		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">${input.i18n.t(state.widgetEdit !== null ? "mTable.widgetEdit" : "mTable.widgetAdd")}</p>
+				<button class="delete" aria-label="close" on-click("onWidgetsEditDialogClose")/>
+			</header>
+			<div class="modal-card-body">
+				<mform
+					manual=true
+					key=`${input.id}_widgetsEditForm`
+					id=`${input.id}_widgetsEditForm`
+					fields=[
+						{
+							id: "title",
+							type: "text",
+							label: out.global.i18n.t("mTable.widgetTitle"),
+							helpText: out.global.i18n.t("mTable.widgetTitleHelpText"),
+							autoFocus: true,
+							mandatory: true
+						},
+						{
+							id: "type",
+							type: "select",
+							label: out.global.i18n.t("mTable.widgetType"),
+							options: [
+								{
+									value: "static",
+									label: out.global.i18n.t("mTable.widgetType.static")
+								},
+								{
+									value: "query",
+									label: out.global.i18n.t("mTable.widgetType.query")
+								}
+							],
+							wrapCSS: "z3-is-large",
+							css: "is-fullwidth",
+							defaultValue: "static",
+							mandatory: true
+						},
+						{
+							id: "value",
+							type: "ace",
+							label: out.global.i18n.t("mTable.widgetValue"),
+							helpText: out.global.i18n.t("mTable.widgetValueHelpText"),
+							wysiwyg: false,
+							source: true,
+						}
+					]
+					validation=widgetsSave
+					i18n=out.global.i18n
+					on-form-submit("onWidgetEditFormSubmit")/>
+			</div>
+			<footer class="modal-card-foot">
+				<div class="buttons">
+				<button class="button is-primary" on-click("onWidgetsEditDialogSave")>
+					${out.global.i18n.t("mTable.widgets.save")}
+				</button>
+				<button class="button is-dialog-secondary" on-click("onWidgetsEditDialogClose")>
+					${out.global.i18n.t("btnCloseGeneric")}
+				</button>
+				</div>
+			</footer>
+		</div>
+	</div>
+	<!-- Edit Filter modal: end -->
 	<mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
 	<mconfirm
 		key=`${input.id}_filterDeleteConfirm`

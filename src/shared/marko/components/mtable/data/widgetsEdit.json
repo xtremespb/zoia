@@ -1,0 +1,25 @@
+{
+    "schema": {},
+    "root": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "type": {
+                "type": "string",
+                "enum": ["static", "query"]
+            },
+            "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+            }
+        },
+        "required": ["title", "type", "value"]
+    },
+    "part": {},
+    "files": {}
+}

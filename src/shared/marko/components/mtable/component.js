@@ -56,6 +56,12 @@ module.exports = class {
             columnRatios: {},
             columnVisibility: {},
             tableSettingsDialogTab: "columns",
+            widgetsManageDialogActive: false,
+            widgetsManageDialogError: null,
+            widgetsManageDialogLoading: false,
+            widgetsManageSelected: [],
+            widgetsEditDialogActive: false,
+            widgetEdit: null,
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -85,10 +91,12 @@ module.exports = class {
         // Do we need to auto-set itemsPerPage?
         // On mobile device, we shall not
         this.selectField = this.getComponent(`${this.input.id}_mselect`);
+        this.widgetsSelectField = this.getComponent(`${this.input.id}_mselect_widgets`);
         this.calendarField = this.getComponent(`${this.input.id}_filterDate`);
         this.tableSettingsField = this.getComponent(`${this.input.id}_config_columns`);
         this.filterDeleteConfirm = this.getComponent(`${this.input.id}_filterDeleteConfirm`);
         this.tableSettingsPagesForm = this.getComponent(`${this.input.id}_tableSettingsPagesForm`);
+        this.widgetEditForm = this.getComponent(`${this.input.id}_widgetsEditForm`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
             window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
@@ -755,6 +763,10 @@ module.exports = class {
         this.setState("filterManageSelected", value);
     }
 
+    onMSelectWidgetsChange(value) {
+        this.setState("widgetsManageSelected", value);
+    }
+
     onFilterSetEditClick(e) {
         e.preventDefault();
         const selectedFilterId = this.state.filterManageSelected[0].id;
@@ -1074,5 +1086,67 @@ module.exports = class {
 
     onTableSettingsPagesFormSubmit() {
         this.saveTableSettings();
+    }
+
+    onWidgetsManageDialogClose(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        this.setState("widgetsManageDialogActive", false);
+    }
+
+    async onTableWidgetsClick(e) {
+        e.preventDefault();
+        this.setState("dropdownVisible", {});
+        this.setState("widgetsManageSelected", []);
+        this.setState("widgetsManageDialogActive", true);
+        this.setState("widgetsManageDialogLoading", false);
+        this.setState("widgetsManageDialogError", false);
+    }
+
+    async onAddWidgetClick() {
+        await this.widgetEditForm.func.resetData();
+        this.setState("widgetsEditDialogActive", true);
+        this.widgetEditForm.func.setProgress(false);
+        setTimeout(() => this.widgetEditForm.func.autoFocus(), 100);
+    }
+
+    onWidgetsEditDialogClose(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        this.setState("widgetsEditDialogActive", false);
+    }
+
+    onWidgetEditFormSubmit() {
+        this.onWidgetsEditDialogSave();
+    }
+
+    async onWidgetsEditDialogSave(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        const submitResult = await this.widgetEditForm.func.submitForm(true);
+        if (!submitResult) {
+            return;
+        }
+        this.widgetEditForm.func.setError(null);
+        const title = this.widgetEditForm.func.getValue("title");
+        const type = this.widgetEditForm.func.getValue("type");
+        const value = this.widgetEditForm.func.getValue("value");
+        if (type === "query") {
+            try {
+                JSON.parse(value);
+            } catch {
+                this.widgetEditForm.func.setError(this.i18n.t("mTableErr.invalidJSON"));
+                return;
+            }
+        }
+        if (this.state.widgetEdit) {
+
+        } else {
+            this.selectField.func.setValue([]);
+            this.selectField.func.setItems(filterData.items);
+        }
     }
 };

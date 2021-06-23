@@ -107,25 +107,29 @@
     max-width: 50px !important;
 }
 
-.z3-mt-filter-spinner-wrap {
+.z3-mt-filter-spinner-wrap,
+.z3-mt-widgets-spinner-wrap {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 230px;
 }
 
-.z3-mt-filter-spinner {
+.z3-mt-filter-spinner,
+.z3-mt-widgets-spinner {
     display: inline-block;
     position: relative;
     width: 80px;
     height: 80px;
 }
 
-.z3-mt-filter-mselect {
+.z3-mt-filter-mselect,
+.z3-mt-widgets-mselect {
     min-height: 200px;
 }
 
-.z3-mt-filter-spinner div {
+.z3-mt-filter-spinner div,
+.z3-mt-widgets-spinner div {
     box-sizing: border-box;
     display: block;
     position: absolute;
@@ -138,19 +142,23 @@
     border-color: $grey-lighter transparent transparent transparent;
 }
 
-.z3-mt-filter-spinner div:nth-child(1) {
+.z3-mt-filter-spinner div:nth-child(1),
+.z3-mt-widgets-spinner div:nth-child(1) {
     animation-delay: -0.45s;
 }
 
-.z3-mt-filter-spinner div:nth-child(2) {
+.z3-mt-filter-spinner div:nth-child(2),
+.z3-mt-widgets-spinner div:nth-child(2){
     animation-delay: -0.3s;
 }
 
-.z3-mt-filter-spinner div:nth-child(3) {
+.z3-mt-filter-spinner div:nth-child(3),
+.z3-mt-widgets-spinner div:nth-child(3) {
     animation-delay: -0.15s;
 }
 
-.z3-mt-filter-manage-buttons {
+.z3-mt-filter-manage-buttons,
+.z3-mt-widgets-manage-buttons {
     min-width: 180px;
 }
 
