@@ -24,6 +24,9 @@ export default () => ({
             response.validationError(req.validationError);
             return;
         }
+        const {
+            collectionUsers
+        } = req.zoiaModulesConfig["users"];
         try {
             const options = {
                 sort: {},
@@ -40,7 +43,7 @@ export default () => ({
                     return sr;
                 });
             }
-            if (req.body.filters && req.body.filters.length) {
+            if (req.body.filters && Array.isArray(req.body.filters) && req.body.filters.length) {
                 const builtQuery = utils.buildFilterQuery(req.body.filters);
                 if (Object.keys(builtQuery).length) {
                     query = {
@@ -49,13 +52,25 @@ export default () => ({
                     };
                 }
             }
+            // if (req.body.widgets && Array.isArray(req.body.widgets) && req.body.widgets.length) {
+            //     for (const w of req.body.widgets) {
+            //         if (w.type === "query") {
+            //             try {
+            //                 const res = await this.mongo.db.collection(collectionUsers).aggregate(w.value).toArray();
+            //                 console.log(res);
+            //             } catch (e) {
+            //                 console.log(e);
+            //             }
+            //         }
+            //     }
+            // }
             const columns = await utils.getTableSettings(req, this.mongo.db, auth, "users");
-            const count = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).count();
+            const count = await this.mongo.db.collection(collectionUsers).find(query, options).count();
             const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const data = (await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionUsers).find(query, options).toArray()).map(i => ({
+            const data = (await this.mongo.db.collection(collectionUsers).find(query, options).toArray()).map(i => ({
                 ...i,
                 username: !acl.checkPermission("users", "read", i.username) ? "***" : i.username,
                 displayName: !acl.checkPermission("users", "read", i.displayName) ? "***" : i.displayName,

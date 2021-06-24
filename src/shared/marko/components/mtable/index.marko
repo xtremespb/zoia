@@ -790,7 +790,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							<button
 								class="button is-light mt-2 is-fullwidth"
 								disabled=(state.widgetsManageSelected.length !== 1)
-								on-click("")>
+								on-click("onEditWidgetClick")>
 								${out.global.i18n.t("mTable.widgets.editSelected")}
 							</button>
 						</div>
@@ -798,7 +798,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							<button
 								class="button mt-2 is-danger is-fullwidth"
 								disabled=(state.widgetsManageSelected.length === 0)
-								on-click("")>
+								on-click("onWidgetsDeleteClick")>
 								${out.global.i18n.t("mTable.widgets.deleteSelected")}
 							</button>
 						</div>
@@ -814,10 +814,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</div>
 			<footer class="modal-card-foot">
 				<div class="buttons">
-				<button class="button is-primary" on-click("onWidgetsManageDialogSubmit")>
+				<button class="button is-primary" on-click("onWidgetsManageDialogSubmit") disabled=state.widgetsManageDialogLoading>
 					${out.global.i18n.t("mTable.widgets.save")}
 				</button>
-				<button class="button is-dialog-secondary" on-click("onWidgetsManageDialogClose")>
+				<button class="button is-dialog-secondary" on-click("onWidgetsManageDialogClose") disabled=state.widgetsManageDialogLoading>
 					${out.global.i18n.t("btnCloseGeneric")}
 				</button>
 				</div>
@@ -896,4 +896,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	<mconfirm
 		key=`${input.id}_filterDeleteConfirm`
 		on-confirm("onFilterDeleteConfirm")/>
+	<mconfirm
+		key=`${input.id}_widgetsDeleteConfirm`
+		on-confirm("onWidgetsDeleteConfirm")/>	
 </div>

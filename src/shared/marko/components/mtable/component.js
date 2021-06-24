@@ -62,6 +62,8 @@ module.exports = class {
             widgetsManageSelected: [],
             widgetsEditDialogActive: false,
             widgetEdit: null,
+            widgets: [],
+            currentWidgetsData: []
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -95,6 +97,7 @@ module.exports = class {
         this.calendarField = this.getComponent(`${this.input.id}_filterDate`);
         this.tableSettingsField = this.getComponent(`${this.input.id}_config_columns`);
         this.filterDeleteConfirm = this.getComponent(`${this.input.id}_filterDeleteConfirm`);
+        this.widgetsDeleteConfirm = this.getComponent(`${this.input.id}_widgetsDeleteConfirm`);
         this.tableSettingsPagesForm = this.getComponent(`${this.input.id}_tableSettingsPagesForm`);
         this.widgetEditForm = this.getComponent(`${this.input.id}_widgetsEditForm`);
         this.onWindowResize();
@@ -192,6 +195,7 @@ module.exports = class {
             searchText: this.state.searchText,
             itemsPerPage: this.state.itemsPerPage,
             filters: this.state.filters,
+            widgets: this.state.widgets,
             ...extras
         };
         try {
@@ -1092,13 +1096,27 @@ module.exports = class {
         if (e) {
             e.preventDefault();
         }
+        if (this.state.widgetsManageDialogLoading) {
+            return;
+        }
         this.setState("widgetsManageDialogActive", false);
+    }
+
+    setWidgetsListFieldData(widgets) {
+        this.widgetsSelectField.func.setItems(widgets.map(i => ({
+            id: i.id,
+            label: i.title,
+            labelSecondary: this.i18n.t(`mTable.widgetType.${i.type}`)
+        })));
     }
 
     async onTableWidgetsClick(e) {
         e.preventDefault();
         this.setState("dropdownVisible", {});
         this.setState("widgetsManageSelected", []);
+        this.setState("currentWidgetsData", this.state.widgets);
+        this.setWidgetsListFieldData(this.state.widgets);
+        this.widgetsSelectField.func.setValue([]);
         this.setState("widgetsManageDialogActive", true);
         this.setState("widgetsManageDialogLoading", false);
         this.setState("widgetsManageDialogError", false);
@@ -1107,6 +1125,7 @@ module.exports = class {
     async onAddWidgetClick() {
         await this.widgetEditForm.func.resetData();
         this.setState("widgetsEditDialogActive", true);
+        this.setState("widgetEdit", null);
         this.widgetEditForm.func.setProgress(false);
         setTimeout(() => this.widgetEditForm.func.autoFocus(), 100);
     }
@@ -1133,20 +1152,85 @@ module.exports = class {
         this.widgetEditForm.func.setError(null);
         const title = this.widgetEditForm.func.getValue("title");
         const type = this.widgetEditForm.func.getValue("type");
-        const value = this.widgetEditForm.func.getValue("value");
+        let value = this.widgetEditForm.func.getValue("value");
         if (type === "query") {
             try {
-                JSON.parse(value);
+                value = JSON.stringify(JSON.parse(value), null, "\t");
             } catch {
                 this.widgetEditForm.func.setError(this.i18n.t("mTableErr.invalidJSON"));
                 return;
             }
-        }
-        if (this.state.widgetEdit) {
-
         } else {
-            this.selectField.func.setValue([]);
-            this.selectField.func.setItems(filterData.items);
+            value = value.trim();
         }
+        const widgetsData = cloneDeep(this.state.currentWidgetsData);
+        if (this.state.widgetEdit) {
+            const item = widgetsData.find(i => i.id === this.state.widgetEdit);
+            item.title = title;
+            item.type = type;
+            item.value = value;
+        } else {
+            const item = {
+                id: uuidv4(),
+                title,
+                type,
+                value,
+            };
+            widgetsData.push(item);
+        }
+        this.setState("currentWidgetsData", widgetsData);
+        this.setWidgetsListFieldData(widgetsData);
+        this.setState("widgetsEditDialogActive", false);
+    }
+
+    async onEditWidgetClick(e) {
+        e.preventDefault();
+        const selectValue = this.widgetsSelectField.func.getValue();
+        const widgetData = this.state.currentWidgetsData.find(i => i.id === selectValue[0].id);
+        this.widgetEditForm.func.setValue("title", widgetData.title);
+        this.widgetEditForm.func.setValue("type", widgetData.type);
+        this.widgetEditForm.func.setAceValue("value", widgetData.value);
+        this.setState("widgetEdit", selectValue[0].id);
+        this.setState("widgetsEditDialogActive", true);
+        setTimeout(() => this.widgetEditForm.func.autoFocus(), 100);
+    }
+
+    onWidgetsDeleteClick(e) {
+        e.preventDefault();
+        this.widgetsDeleteConfirm.func.setActive(true, this.i18n.t("mTable.widgets.widgetsDeleteConfirmTitle"), `${this.i18n.t("mTable.widgets.widgetsDeleteConfirmText")}: ${this.state.widgetsManageSelected.map(f => `"${f.label}"`).join(", ")}`);
+    }
+
+    async onWidgetsDeleteConfirm() {
+        const widgetsData = cloneDeep(this.state.currentWidgetsData).filter(i => !this.state.widgetsManageSelected.find(w => w.id === i.id));
+        this.setState("currentWidgetsData", widgetsData);
+        this.setWidgetsListFieldData(widgetsData);
+        this.widgetsSelectField.func.setValue([]);
+        this.setState("widgetsManageSelected", []);
+        this.filterDeleteConfirm.func.setActive(false);
+    }
+
+    async onWidgetsManageDialogSubmit() {
+        this.setState("widgets", this.state.currentWidgetsData);
+        this.setState("widgetsManageDialogLoading", true);
+        try {
+            await axios({
+                method: "post",
+                url: "/api/core/widgets/save",
+                data: {
+                    table: this.input.id,
+                    widgets: this.state.currentWidgetsData,
+                },
+                headers: {
+                    Authorization: `Bearer ${this.state.token}`
+                }
+            });
+        } catch {
+            this.setState("widgetsManageDialogLoading", false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTable.widgets.saveError"), "is-danger");
+            return;
+        }
+        this.setState("widgetsManageDialogActive", false);
+        this.setState("widgetsManageDialogLoading", false);
+        this.loadData();
     }
 };
