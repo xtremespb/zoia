@@ -55,7 +55,10 @@ export default () => ({
             const widgets = await utils.getWidgets(req, this.mongo.db, "users", collectionUsers);
             const columns = await utils.getTableSettings(req, this.mongo.db, auth, "users");
             const count = await this.mongo.db.collection(collectionUsers).find(query, options).count();
-            const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            let limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            if (req.body.autoItemsPerPage && widgets.config.length) {
+                limit -= 2;
+            }
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;

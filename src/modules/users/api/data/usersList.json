@@ -25,6 +25,12 @@
                 "minimum": 0,
                 "maximum": 1000
             },
+            "autoItemsPerPage": {
+                "type": "boolean"
+            },
+            "widgets": {
+                "type": "boolean"
+            },
             "filters": {
                 "type": "array",
                 "items": {

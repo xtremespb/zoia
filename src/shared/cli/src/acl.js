@@ -19,14 +19,15 @@ export default async (config, options, modulesConfigData, db) => {
         group: options.acl,
     };
     const modulesConfig = cloneDeep(modulesConfigData);
-    modulesConfig.push({
-        id: "imagesBrowser"
-    });
+    modulesConfig.imagesBrowser = {};
     Object.keys(modulesConfig).map(m => {
         update[`${m}_access`] = [options.permissions.match(/c/gi) ? "create" : null, options.permissions.match(/r/gi) ? "read" : null, options.permissions.match(/u/gi) ? "update" : null, options.permissions.match(/d/gi) ? "delete" : null].filter(i => i);
         update[`${m}_blacklist`] = [];
         update[`${m}_whitelist`] = [];
     });
+    if (options.permissions === "r") {
+        update.corePermissions = [];
+    }
     await db.collection(modulesConfig["users"].collectionAcl).updateOne({
         group: options.acl
     }, {
