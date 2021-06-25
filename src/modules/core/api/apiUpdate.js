@@ -72,6 +72,7 @@ export default () => ({
                 const tempFile = `${uuid()}.zip`;
                 const workingDir = path.resolve(`${__dirname}/../..`);
                 const updateDir = path.resolve(`${__dirname}/../../update`);
+                const srcDir = path.resolve(`${__dirname}/../../src/`);
                 const currentServerScript = path.resolve(`${__dirname}/../../build/bin/zoia.js`);
                 const currentTestScript = path.resolve(`${__dirname}/../../build/bin/test.js`);
                 const currentCliScript = path.resolve(`${__dirname}/../../build/bin/cli.js`);
@@ -161,7 +162,8 @@ export default () => ({
                         return;
                     }
                     // Remove old files and directories
-                    await fs.remove(updateDir);
+                    await fs.remove(srcDir);
+                    await fs.rename(updateDir, srcDir);
                     await fs.rename(updateServerScript, currentServerScript);
                     await fs.rename(updateTestScript, currentTestScript);
                     await fs.rename(updateCliScript, currentCliScript);
