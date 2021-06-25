@@ -53,20 +53,22 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</div>
 						</p>
 					</for>
-					<p class="z3-mt-top-control mt-1 mr-1">
-						<button
-							class="button is-light"
-							type="button"
-							on-click("onTableWidgetsClick")
-							aria-haspopup="false">
-							<div class="z3-mt-icon-wrap">
-								<span class="icon">
-									<i class="mdi mdi-widgets-outline"/>
-								</span>
-							</div>
-							${out.global.i18n.t("mTable.tableWidgets")}
-						</button>
-					</p>
+					<if(input.widgets)>
+						<p class="z3-mt-top-control mt-1 mr-1">
+							<button
+								class="button is-light"
+								type="button"
+								on-click("onTableWidgetsClick")
+								aria-haspopup="false">
+								<div class="z3-mt-icon-wrap">
+									<span class="icon">
+										<i class="mdi mdi-widgets-outline"/>
+									</span>
+								</div>
+								${out.global.i18n.t("mTable.tableWidgets")}
+							</button>
+						</p>
+					</if>
 					<if(input.filter && input.filter.length)>
 						<p class="z3-mt-top-control mt-1 mr-1">
 							<div class=`dropdown is-right${
@@ -203,6 +205,24 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						</div>
 					</div>
 				</else>
+			</for>
+		</div>
+	</if>
+	<if(input.widgets && state.widgetsView.length)>
+		<div class="columns is-multiline is-variable is-1">
+			<for|w| of=state.widgetsView>
+				<div class="column is-narrow mb-0">
+					<div class="message">
+						<div class="message-body p-2">
+							<div class="menu-label m-0">
+								${w.title}
+							</div>
+							<div>
+								${w.value}
+							</div>
+						</div>
+					</div>
+				</div>
 			</for>
 		</div>
 	</if>

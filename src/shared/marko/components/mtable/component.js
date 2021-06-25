@@ -63,6 +63,7 @@ module.exports = class {
             widgetsEditDialogActive: false,
             widgetEdit: null,
             widgets: [],
+            widgetsView: [],
             currentWidgetsData: []
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
@@ -195,7 +196,6 @@ module.exports = class {
             searchText: this.state.searchText,
             itemsPerPage: this.state.itemsPerPage,
             filters: this.state.filters,
-            widgets: this.state.widgets,
             ...extras
         };
         try {
@@ -222,6 +222,10 @@ module.exports = class {
                     if (typeof response.data.columns.autoItemsPerPage === "boolean") {
                         this.setState("autoItemsPerPage", response.data.columns.autoItemsPerPage);
                     }
+                }
+                if (response.data.widgets) {
+                    this.setState("widgets", response.data.widgets.config || []);
+                    this.setState("widgetsView", response.data.widgets.view || []);
                 }
                 setTimeout(() => this.setupColumnResize(), 10);
             } else {

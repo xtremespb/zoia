@@ -52,18 +52,7 @@ export default () => ({
                     };
                 }
             }
-            // if (req.body.widgets && Array.isArray(req.body.widgets) && req.body.widgets.length) {
-            //     for (const w of req.body.widgets) {
-            //         if (w.type === "query") {
-            //             try {
-            //                 const res = await this.mongo.db.collection(collectionUsers).aggregate(w.value).toArray();
-            //                 console.log(res);
-            //             } catch (e) {
-            //                 console.log(e);
-            //             }
-            //         }
-            //     }
-            // }
+            const widgets = await utils.getWidgets(req, this.mongo.db, "users", collectionUsers);
             const columns = await utils.getTableSettings(req, this.mongo.db, auth, "users");
             const count = await this.mongo.db.collection(collectionUsers).find(query, options).count();
             const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
@@ -83,6 +72,7 @@ export default () => ({
                 limit,
                 pagesCount: Math.ceil(count / limit),
                 columns,
+                widgets,
             });
             return;
         } catch (e) {

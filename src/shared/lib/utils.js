@@ -525,5 +525,36 @@ export default {
             data.itemsPerPage = null;
         }
         return data;
-    }
+    },
+    async getWidgets(req, db, table, collection) {
+        const data = (await db.collection(req.zoiaModulesConfig["core"].collectionWidgets || "widgets").findOne({
+            table,
+        })) || {
+            widgets: []
+        };
+        const widgets = {
+            config: data.widgets,
+            view: []
+        };
+        for (const w of data.widgets) {
+            const widget = {
+                title: w.title,
+                value: null,
+            };
+            switch (w.type) {
+            case "query":
+                try {
+                    const res = await db.collection(collection).aggregate(JSON.parse(w.value)).toArray();
+                    widget.value = res[0].value || null;
+                } catch (e) {
+                    // Ignore
+                }
+                break;
+            default:
+                widget.value = w.value;
+            }
+            widgets.view.push(widget);
+        }
+        return widgets;
+    },
 };
