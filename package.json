@@ -1,6 +1,6 @@
 {
 	"name": "zoia3",
-	"version": "3.1.69",
+	"version": "3.1.70",
 	"description": "ZOIA Content Management System",
 	"scripts": {
 		"config": "node ./dev/bin/config.js",
@@ -101,7 +101,7 @@
 		"eslint-plugin-import": "^2.23.4",
 		"file-loader": "^6.2.0",
 		"imask": "^6.0.7",
-		"mini-css-extract-plugin": "^1.6.0",
+		"mini-css-extract-plugin": "^1.6.1",
 		"postcss": "^8.3.5",
 		"postcss-loader": "^6.1.0",
 		"postcss-preset-env": "^5.3.0",

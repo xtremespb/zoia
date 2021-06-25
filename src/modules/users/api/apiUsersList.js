@@ -43,6 +43,7 @@ export default () => ({
                     return sr;
                 });
             }
+            let anyFiltersSet = false;
             if (req.body.filters && Array.isArray(req.body.filters) && req.body.filters.length) {
                 const builtQuery = utils.buildFilterQuery(req.body.filters);
                 if (Object.keys(builtQuery).length) {
@@ -50,12 +51,19 @@ export default () => ({
                         ...query,
                         ...builtQuery
                     };
+                    anyFiltersSet = true;
                 }
             }
             const widgets = await utils.getWidgets(req, this.mongo.db, "users", collectionUsers);
             const columns = await utils.getTableSettings(req, this.mongo.db, auth, "users");
             const count = await this.mongo.db.collection(collectionUsers).find(query, options).count();
-            const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            let limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            if (req.body.autoItemsPerPage && widgets.config.length) {
+                limit -= 2;
+            }
+            if (anyFiltersSet) {
+                limit -= 1;
+            }
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;

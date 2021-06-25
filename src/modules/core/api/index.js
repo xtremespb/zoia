@@ -14,6 +14,7 @@ import apiFiltersDelete from "./apiFiltersDelete";
 import apiColumnsSave from "./apiColumnsSave";
 import apiColumnsLoad from "./apiColumnsLoad";
 import apiWidgetsSave from "./apiWidgetsSave";
+import apiWidgetsConfig from "./apiWidgetsConfig";
 
 export default fastify => {
     fastify.post("/api/core/captcha", apiCaptcha());
@@ -34,4 +35,5 @@ export default fastify => {
     fastify.post("/api/core/columns/save", apiColumnsSave());
     fastify.post("/api/core/columns/load", apiColumnsLoad());
     fastify.post("/api/core/widgets/save", apiWidgetsSave());
+    fastify.post("/api/core/widgets/config", apiWidgetsConfig());
 };

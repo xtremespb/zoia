@@ -64,6 +64,7 @@ module.exports = class {
             widgetEdit: null,
             widgets: [],
             widgetsView: [],
+            anyWidgets: false,
             currentWidgetsData: []
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
@@ -148,7 +149,9 @@ module.exports = class {
     }
 
     calculateItemsPerPage() {
-        const itemsCount = parseInt((window.innerHeight - document.getElementById(`${this.input.id}_table`).getBoundingClientRect().top - 113) / 49, 10);
+        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+        const tt = document.getElementById(`${this.input.id}_table`).getBoundingClientRect().top;
+        const itemsCount = parseInt((vh - tt - 130) / 49, 10);
         if (itemsCount && this.state.itemsPerPage !== itemsCount) {
             this.setState("itemsPerPage", itemsCount > 0 ? itemsCount : 1);
         }
@@ -195,7 +198,9 @@ module.exports = class {
             sortDirection: this.state.sortDirection,
             searchText: this.state.searchText,
             itemsPerPage: this.state.itemsPerPage,
+            autoItemsPerPage: this.state.autoItemsPerPage,
             filters: this.state.filters,
+            widgets: this.state.anyWidgets,
             ...extras
         };
         try {
@@ -416,7 +421,7 @@ module.exports = class {
             this.setState("deleteDialogProgress", false);
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTable.deleteSuccess`), "is-success");
             this.setState("page", 1);
-            this.loadData();
+            this.dataRequest();
         } catch (e) {
             if (e && e.response && e.response.status === 401) {
                 this.emit("unauthorized", {});
@@ -542,7 +547,7 @@ module.exports = class {
         this.setState("filters", filters);
         window.__zoiaTippyJs.reset();
         this.setState("page", 1);
-        this.dataRequest();
+        setTimeout(() => this.dataRequest(), 100);
     }
 
     onFilterTagClick(e) {
@@ -583,7 +588,7 @@ module.exports = class {
         filters.splice(filterIndex, 1);
         this.setState("filters", filters);
         this.setState("page", 1);
-        this.dataRequest();
+        setTimeout(() => this.dataRequest(), 100);
         if (filters.length === 0) {
             this.setState("filterCurrentId", null);
             this.setState("filterCurrentTitle", null);
@@ -798,7 +803,7 @@ module.exports = class {
         this.setState("filterCurrentTitle", currentFilter.title);
         window.__zoiaTippyJs.reset();
         this.setState("page", 1);
-        this.dataRequest();
+        setTimeout(() => this.dataRequest(), 100);
     }
 
     onRemoveAllFilters(e) {
@@ -809,7 +814,7 @@ module.exports = class {
         this.setState("filterCurrentTitle", null);
         window.__zoiaTippyJs.reset();
         this.setState("page", 1);
-        this.dataRequest();
+        setTimeout(() => this.dataRequest(), 100);
     }
 
     onFilterDeleteClick(e) {
@@ -875,7 +880,7 @@ module.exports = class {
         this.setState("filters", filters);
         window.__zoiaTippyJs.reset();
         this.setState("page", 1);
-        this.dataRequest();
+        setTimeout(() => this.dataRequest(), 100);
     }
 
     onFilterRawTagClick(e) {
@@ -1056,7 +1061,7 @@ module.exports = class {
                 this.calculateItemsPerPage();
             }
             this.dataRequest();
-        }, 10);
+        }, 100);
     }
 
     onTableSettingsDialogSave() {
@@ -1233,8 +1238,11 @@ module.exports = class {
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTable.widgets.saveError"), "is-danger");
             return;
         }
-        this.setState("widgetsManageDialogActive", false);
-        this.setState("widgetsManageDialogLoading", false);
-        this.loadData();
+        this.setState("widgetsView", []);
+        setTimeout(() => {
+            this.setState("widgetsManageDialogActive", false);
+            this.setState("widgetsManageDialogLoading", false);
+            this.dataRequest();
+        }, 100);
     }
 };
