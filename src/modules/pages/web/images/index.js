@@ -29,7 +29,7 @@ export default () => ({
                     routes: {
                         ...req.zoiaConfig.routes
                     },
-                    accessAllowed: acl.checkPermission("pages", "read"),
+                    accessAllowed: acl.checkPermission("imagesBrowser", "read"),
                     ...await site.getGlobals(),
                 }
             });

@@ -50,5 +50,9 @@
 	"coreFunctions": "Core",
 	"createdAt": "Created At",
 	"displayName": "Display Name",
-	"displayNameHelpText": "Display instead of username"
+	"displayNameHelpText": "Display instead of username",
+	"corePermissions": "Core Permissions",
+	"corePermissionUpload": "Global file uploads",
+	"corePermissionTableSettings": "Store table settings",
+	"imagesBrowser": "Images Browser"
 }

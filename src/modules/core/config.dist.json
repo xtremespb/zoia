@@ -1,5 +1,6 @@
 {
     "collectionFilters": "filters",
+    "collectionWidgets": "widgets",
     "collectionColumns": "columns",
     "database": {
         "collections": {
@@ -32,6 +33,10 @@
             },
             "filters": {
                 "indexesAsc": ["type", "userId"],
+                "indexesDesc": []
+            },
+            "widgets": {
+                "indexesAsc": ["table"],
                 "indexesDesc": []
             },
             "columns": {

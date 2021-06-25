@@ -1,0 +1,36 @@
+{
+    "root": {
+        "type": "object",
+        "properties": {
+            "table": {
+                "type": "string",
+                "maxLength": 64
+
+            },
+            "widgets": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "maxLength": 128
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": ["static", "query"]
+                        },
+                        "value": {
+                            "type": "string",
+                            "minLength": 1
+                        }
+                    },
+                    "required": ["id", "type", "value"]
+                }
+            }
+        },
+        "required": ["table"]
+    },
+    "projection": {},
+    "search": []
+}

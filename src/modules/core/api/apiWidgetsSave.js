@@ -1,8 +1,8 @@
-import columnsSaveData from "./data/columnsSave.json";
+import widgetsSaveData from "./data/widgetsSave.json";
 
 export default () => ({
     schema: {
-        body: columnsSaveData.root
+        body: widgetsSaveData.root
     },
     attachValidation: true,
     async handler(req) {
@@ -28,23 +28,17 @@ export default () => ({
             return;
         }
         try {
-            await this.mongo.db.collection(req.zoiaModulesConfig["core"].collectionColumns || "columns").updateOne({
-                userId: String(auth.getUser()._id),
+            await this.mongo.db.collection(req.zoiaModulesConfig["core"].collectionWidgets || "widgets").updateOne({
                 table: req.body.table,
             }, {
                 $set: {
-                    userId: String(auth.getUser()._id),
                     table: req.body.table,
-                    ratios: req.body.ratios,
-                    columns: req.body.columns,
-                    itemsPerPage: req.body.itemsPerPage,
-                    autoItemsPerPage: req.body.autoItemsPerPage,
+                    widgets: req.body.widgets,
                 }
             }, {
                 upsert: true,
             });
             response.successJSON({});
-            return;
         } catch (e) {
             log.error(e);
             // eslint-disable-next-line consistent-return

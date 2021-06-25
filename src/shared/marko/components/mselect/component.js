@@ -66,10 +66,12 @@ module.exports = class {
         const value = [];
         this.state.items.map(i => value.push(i.id));
         this.setState("value", value);
+        this.emit("value-change", this.getValue());
     }
 
     onSelectNoneClick() {
         this.setState("value", []);
+        this.emit("value-change", this.getValue());
     }
 
     onSearchInput(e) {

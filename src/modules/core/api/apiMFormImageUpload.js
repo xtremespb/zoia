@@ -18,7 +18,7 @@ export default () => ({
             response.unauthorizedError();
             return;
         }
-        if (!acl.checkPermission("core", "create")) {
+        if (!acl.checkCorePermission("upload")) {
             response.requestAccessDeniedError();
             return;
         }

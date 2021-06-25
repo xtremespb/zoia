@@ -13,10 +13,15 @@ export default () => ({
             log,
             response,
             auth,
+            acl,
         } = req.zoia;
         // Check permissions
         if (!auth.statusAdmin()) {
             response.unauthorizedError();
+            return;
+        }
+        if (!acl.checkCorePermission("tableSettings")) {
+            response.requestAccessDeniedError();
             return;
         }
         // Validate form

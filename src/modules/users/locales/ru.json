@@ -50,5 +50,9 @@
 	"coreFunctions": "Ядро",
 	"createdAt": "Дата регистрации",
 	"displayName": "Отображаемое имя",
-	"displayNameHelpText": "Отображать вместо логина"
+	"displayNameHelpText": "Отображать вместо логина",
+	"corePermissions": "Базовые разрешения",
+	"corePermissionUpload": "Загрузка файлов",
+	"corePermissionTableSettings": "Настройки отображения таблиц",
+	"imagesBrowser": "Браузер изображений"
 }
