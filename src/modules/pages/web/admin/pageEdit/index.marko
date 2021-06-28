@@ -36,6 +36,11 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 			}
 		}
 		fields=[
+			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaMeta"),
+				css: "z3-mf-area-grey"
+			},
 			[
 				{
 					id: "dir",
@@ -72,6 +77,14 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 					helpText: out.global.i18n.t("dateHelpText")
 				}
 			],
+			{
+				type: "areaEnd"
+			},
+			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaContent"),
+				css: "z3-mf-area-white-bis"
+			},
 			{
 				id: "content",
 				type: "ace",
@@ -110,8 +123,8 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 				buttonLabel: out.global.i18n.t("selectFiles")
 			},
 			{
-				id: "div1",
-				type: "divider"
+				type: "areaEnd",
+				css: "mt-2"
 			},
 			{
 				id: "bg1",

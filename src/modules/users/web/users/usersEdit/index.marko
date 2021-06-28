@@ -43,6 +43,11 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			}
 		}
 		fields=[
+			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaMain"),
+				css: "z3-mf-area-grey"
+			},
 			[
 				{
 					id: "username",
@@ -66,16 +71,16 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					label: out.global.i18n.t("email"),
 					helpText: out.global.i18n.t("emailHelpText"),
 					wrapCSS: "z3-is-large"
-				},
-				{
-					id: "groups",
-					type: "text",
-					label: out.global.i18n.t("groups"),
-					helpText: out.global.i18n.t("groupsHelpText"),
-					wrapCSS: "z3-is-large",
-					tags: true
 				}
 			],
+			{
+				type: "areaEnd"
+			},
+			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaPassword"),
+				css: "z3-mf-area-white-bis"
+			},
 			[
 				{
 					id: "password",
@@ -98,6 +103,14 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				}
 			],
 			{
+				type: "areaEnd"
+			},
+			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaStatus"),
+				css: "z3-mf-area-white-bis"
+			},
+			{
 				id: "status",
 				type: "checkboxes",
 				label: out.global.i18n.t("status"),
@@ -116,8 +129,16 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				defaultValue: ["active"]
 			},
 			{
-				id: "div1",
-				type: "divider"
+				id: "groups",
+				type: "text",
+				label: out.global.i18n.t("groups"),
+				helpText: out.global.i18n.t("groupsHelpText"),
+				wrapCSS: "is-fullwidth",
+				tags: true
+			},
+			{
+				type: "areaEnd",
+				css: "mt-2"
 			},
 			{
 				id: "bg1",

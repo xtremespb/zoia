@@ -80,6 +80,11 @@ $ out.global.modules.map(m => {
 			}
 		}
 		fields=[
+			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaAclMain"),
+				css: "z3-mf-area-grey"
+			},
 			[
 				{
 					id: "group",
@@ -99,8 +104,12 @@ $ out.global.modules.map(m => {
 				}
 			],
 			{
-				id: "div1",
-				type: "divider"
+				type: "areaEnd"
+			},
+			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaAclCore"),
+				css: "z3-mf-area-grey"
 			},
 			{
 				id: `corePermissions`,
@@ -121,8 +130,12 @@ $ out.global.modules.map(m => {
 				defaultValue: ["upload", "tableSettings"]
 			},
 			{
-				id: "div2",
-				type: "divider"
+				type: "areaEnd"
+			},
+			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaAclModules"),
+				css: "z3-mf-area-white-bis"
 			},
 			{
 				id: `imagesBrowser_access`,
@@ -155,8 +168,8 @@ $ out.global.modules.map(m => {
 			},
 			...moduleFormData,
 			{
-				id: "div3",
-				type: "divider"
+				type: "areaEnd",
+				css: "mt-2"
 			},
 			{
 				id: "bg1",

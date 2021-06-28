@@ -54,5 +54,11 @@
 	"corePermissions": "Базовые разрешения",
 	"corePermissionUpload": "Загрузка файлов",
 	"corePermissionTableSettings": "Настройки отображения таблиц",
-	"imagesBrowser": "Браузер изображений"
+	"imagesBrowser": "Браузер изображений",
+	"areaMain": "Данные пользователя",
+	"areaPassword": "Пароль",
+	"areaStatus": "Статус и группы",
+	"areaAclMain": "Описание группы",
+	"areaAclCore": "Основные настройки",
+	"areaAclModules": "Модули"
 }
