@@ -70,7 +70,7 @@ style.scss {
 								  }`
 								: ""
 						)>
-						<!-- Area-related code end -->
+							<!-- Area-related code end -->
 							<div
 								class="field columns is-multiline z3-mf-field-columns"
 								key=`mf_cmp_${tItem.id}_wrap`
@@ -182,7 +182,9 @@ style.scss {
 					<button class="button is-primary" on-click("onTabSettingsDialogSaveClick")>
 						${input.i18n.t("mForm.save")}
 					</button>
-					<button class="button is-dialog-secondary" on-click("onTabSettingsDialogCloseClick")>
+					<button
+						class="button is-dialog-secondary"
+						on-click("onTabSettingsDialogCloseClick")>
 						${input.i18n.t("mForm.cancel")}
 					</button>
 				</footer>
@@ -191,9 +193,7 @@ style.scss {
 	</if>
 	<if(state.loading || !state.allSettled)>
 		<div class="z3-mf-loading">
-			<span class="button is-white is-loading is-large">
-				&nbsp;
-			</span>
+			<span class="button is-white is-loading is-large">&nbsp;</span>
 		</div>
 	</if>
 	<mnotify key=`${input.id}_mnotify`/>

@@ -29,7 +29,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				id: "username",
 				type: "input",
 				modes: ["equals", "notEquals", "isLike", "notLike"],
-				label: out.global.i18n.t("username"),
+				label: out.global.i18n.t("username")
 			},
 			{
 				id: "createdAt",
@@ -79,7 +79,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				title: out.global.i18n.t("username"),
 				css: "z3-ap-users-list-username",
 				sortable: true,
-				resize: true,
+				resize: true
 			},
 			{
 				id: "displayName",
@@ -87,18 +87,18 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				css: "z3-ap-users-list-displayName",
 				sortable: true,
 				resize: true,
-				hidden: true,
+				hidden: true
 			},
 			{
 				id: "email",
 				sortable: true,
 				resize: true,
-				title: out.global.i18n.t("email"),
+				title: out.global.i18n.t("email")
 			},
 			{
 				id: "status",
 				css: "z3-ap-users-list-status",
-				title: out.global.i18n.t("status"),
+				title: out.global.i18n.t("status")
 			}
 		]
 		actions=[

@@ -18,7 +18,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					id=`${input.id}_top_buttons`>
 					<for|btn| of=input.buttons>
 						<p class="z3-mt-top-control mt-1 mr-1">
-							<div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}${btn.dropdownRight ? " is-right" : ""}`>
+							<div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}${
+								btn.dropdownRight ? " is-right" : ""
+							}`>
 								<div class="dropdown-trigger">
 									<button
 										disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected)
@@ -214,12 +216,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				<div class="column is-narrow mb-0">
 					<div class="message">
 						<div class="message-body p-2">
-							<div class="menu-label m-0">
-								${w.title}
-							</div>
-							<div>
-								${w.value}
-							</div>
+							<div class="menu-label m-0">${w.title}</div>
+							<div>${w.value}</div>
 						</div>
 					</div>
 				</div>
@@ -231,7 +229,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	</if>
 	<else>
 		<div class="z3-mt-table-container" id=`${input.id}_tableContainer`>
-			<table class=`${input.css} z3-mt-table-wrap z3-mt-grip-resizable` id=`${input.id}_table`>
+			<table
+				class=`${input.css} z3-mt-table-wrap z3-mt-grip-resizable`
+				id=`${input.id}_table`>
 				<thead class="z3-mt-noselect z3-mt-table-head">
 					<tr>
 						<if(input.checkboxColumn)>
@@ -247,18 +247,31 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						$ let columnIndex = 1;
 						<for|column| of=input.columns>
 							<if(state.columnVisibility[column.id])>
-								<th class=`z3-mt-th ${column.css || ""}` data-id=column.id data-index=columnIndex id=`${input.id}_th_${column.id}`>
+								<th
+									class=`z3-mt-th ${column.css || ""}`
+									data-id=column.id
+									data-index=columnIndex
+									id=`${input.id}_th_${column.id}`>
 									<div class="z3-mt-th-wrap">
-										<div class=`z3-mt-th-data${column.sortable ? " z3-mt-sortable" : ""}` on-click("onColumnClick") data-id=column.id data-sortable=column.sortable>
+										<div
+											class=`z3-mt-th-data${column.sortable ? " z3-mt-sortable" : ""}`
+											on-click("onColumnClick")
+											data-id=column.id
+											data-sortable=column.sortable>
 											<div class=`z3-mt-sort mdi ${
-												state.sortDirection === "asc" ? "mdi-chevron-up" : "mdi-chevron-down"
+												state.sortDirection === "asc"
+													? "mdi-chevron-up"
+													: "mdi-chevron-down"
 											}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
-											<span>
-												${column.title}
-											</span>
+											<span>${column.title}</span>
 										</div>
 										<if(column.resize)>
-											<div class="z3-mt-th-resize" data-index=columnIndex on-mousedown("onColumnResizeMouseDown")>&nbsp;</div>
+											<div
+												class="z3-mt-th-resize"
+												data-index=columnIndex
+												on-mousedown("onColumnResizeMouseDown")>
+												&nbsp;
+											</div>
 										</if>
 									</div>
 								</th>
@@ -414,99 +427,102 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 	<!-- Add/Edit Filter modal: start -->
 	<if(input.filter && input.filter.length)>
 		<div class=`modal${state.filterDialogActive ? " is-active" : ""}`>
-				<div class="modal-background" on-click("onFilterDialogClose")/>
-				<div class="modal-card">
-					<form on-submit("onFilterFormSubmit")>
-						<header class="modal-card-head">
-							<p class="modal-card-title">
-								${state.filterDialogEdit !== null
-								? input.i18n.t("mTable.editFilter")
-								: input.i18n.t("mTable.addFilter")}
-							</p>
-							<if(!state.deleteDialogProgress)>
-								<button
-									class="delete"
-									type="button"
-									aria-label="close"
-									on-click("onFilterDialogClose")/>
-							</if>
-						</header>
-						<section class="modal-card-body">
-							<if(state.filterError)>
-								<div class="notification is-danger">${state.filterError}</div>
-							</if>
-							<div class="select is-fullwidth">
-								<select on-change("onFilterSelectChange")>
-									<option value="" selected=(state.filterSelected === "")>&ndash;</option>
-									<if(input.filter && input.filter.length)>
-										<for|f| of=input.filter>
-											<option value=f.id selected=(state.filterSelected === f.id)>
-												${f.label}
-											</option>
-										</for>
-									</if>
-								</select>
-							</div>
-							<div class=`select is-fullwidth mt-2 mb-2${
-								state.filterSelected === "" ? " is-hidden" : ""
-							}`>
-								<select on-change("onFilterModeSelectChange")>
-									<for|f| of=(state.filterSelectedData.modes || [
-										"equals",
-										"notEquals",
-										"isLike",
-										"notLike",
-										"oneOf",
-										"noneOf",
-										"greaterThan",
-										"greaterThanOrEquals",
-										"lessThan",
-										"lessThanOrEquals"
-									])>
-										<if(
-											(!f.match(/^larger/) && !f.match(/^smaller/)) ||
-											state.filterSelectedData.isNumber
-										)>
-											<option value=f selected=(state.filterMode === f)>
-												${input.i18n.t(`mTable.filter.${f}`)}
-											</option>
-										</if>
+			<div class="modal-background" on-click("onFilterDialogClose")/>
+			<div class="modal-card">
+				<form on-submit("onFilterFormSubmit")>
+					<header class="modal-card-head">
+						<p class="modal-card-title">
+							${state.filterDialogEdit !== null
+							? input.i18n.t("mTable.editFilter")
+							: input.i18n.t("mTable.addFilter")}
+						</p>
+						<if(!state.deleteDialogProgress)>
+							<button
+								class="delete"
+								type="button"
+								aria-label="close"
+								on-click("onFilterDialogClose")/>
+						</if>
+					</header>
+					<section class="modal-card-body">
+						<if(state.filterError)>
+							<div class="notification is-danger">${state.filterError}</div>
+						</if>
+						<div class="select is-fullwidth">
+							<select on-change("onFilterSelectChange")>
+								<option value="" selected=(state.filterSelected === "")>&ndash;</option>
+								<if(input.filter && input.filter.length)>
+									<for|f| of=input.filter>
+										<option value=f.id selected=(state.filterSelected === f.id)>
+											${f.label}
+										</option>
 									</for>
-								</select>
-							</div>
-							<mselect
-								key=`${input.id}_mselect`
-								active=(state.filterSelectedData.type === "select")/>
-							<div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")>
-								<input
-									class="input"
-									type="text"
-									value=state.filterValue
-									on-change("onFilterValueChange")
-									placeholder=input.i18n.t("mTable.filterValue")/>
-							</div>
-							<div class=(state.filterSelectedData.type !== "date" ? "is-hidden" : "")>
-								<mcalendar
-									id=`${input.id}_filterDate`
-									key=`${input.id}_filterDate`
-									on-value-change("onFilterCalendarValueChange")/>
-							</div>
-						</section>
-						<footer class="modal-card-foot">
-							<fieldset>
-								<button class="button is-primary" type="submit">
-									${state.filterDialogEdit !== null
-									? input.i18n.t("mTable.save")
-									: input.i18n.t("mTable.add")}
-								</button>
-								<button class="button is-dialog-secondary" type="button" on-click("onFilterDialogClose")>
-									${input.i18n.t("mTable.cancel")}
-								</button>
-							</fieldset>
-						</footer>
-					</form>
-				</div>
+								</if>
+							</select>
+						</div>
+						<div class=`select is-fullwidth mt-2 mb-2${
+							state.filterSelected === "" ? " is-hidden" : ""
+						}`>
+							<select on-change("onFilterModeSelectChange")>
+								<for|f| of=(state.filterSelectedData.modes || [
+									"equals",
+									"notEquals",
+									"isLike",
+									"notLike",
+									"oneOf",
+									"noneOf",
+									"greaterThan",
+									"greaterThanOrEquals",
+									"lessThan",
+									"lessThanOrEquals"
+								])>
+									<if(
+										(!f.match(/^larger/) && !f.match(/^smaller/)) ||
+										state.filterSelectedData.isNumber
+									)>
+										<option value=f selected=(state.filterMode === f)>
+											${input.i18n.t(`mTable.filter.${f}`)}
+										</option>
+									</if>
+								</for>
+							</select>
+						</div>
+						<mselect
+							key=`${input.id}_mselect`
+							active=(state.filterSelectedData.type === "select")/>
+						<div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")>
+							<input
+								class="input"
+								type="text"
+								value=state.filterValue
+								on-change("onFilterValueChange")
+								placeholder=input.i18n.t("mTable.filterValue")/>
+						</div>
+						<div class=(state.filterSelectedData.type !== "date" ? "is-hidden" : "")>
+							<mcalendar
+								id=`${input.id}_filterDate`
+								key=`${input.id}_filterDate`
+								on-value-change("onFilterCalendarValueChange")/>
+						</div>
+					</section>
+					<footer class="modal-card-foot">
+						<fieldset>
+							<button class="button is-primary" type="submit">
+								${state.filterDialogEdit !== null
+								? input.i18n.t("mTable.save")
+								: input.i18n.t("mTable.add")}
+							</button>
+							<button
+								class="button is-dialog-secondary"
+								type="button"
+								on-click("onFilterDialogClose")>
+								${input.i18n.t("mTable.cancel")}
+							</button>
+						</fieldset>
+					</footer>
+				</form>
 			</div>
+		</div>
 	</if>
 	<!-- Add/Edit Filter modal: end -->
 	<!-- Manage Filter modal: start -->
@@ -639,7 +655,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									type: "button",
 									buttonType: "button",
 									label: out.global.i18n.t("mTable.cancel"),
-									css: "is-light",
+									css: "is-light"
 								}
 							]
 						}
@@ -696,8 +712,15 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</div>
 			<footer class="modal-card-foot">
 				<div class="buttons">
-					<button type="button" class="button is-primary" on-click("onFilterRawSaveClick")>${out.global.i18n.t("mTable.save")}</button>
-					<button type="button" class="button is-dialog-secondary" on-click("onFilterRawDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
+					<button type="button" class="button is-primary" on-click("onFilterRawSaveClick")>
+						${out.global.i18n.t("mTable.save")}
+					</button>
+					<button
+						type="button"
+						class="button is-dialog-secondary"
+						on-click("onFilterRawDialogClose")>
+						${out.global.i18n.t("mTable.cancel")}
+					</button>
 				</div>
 			</footer>
 		</div>
@@ -714,58 +737,88 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			<div class="modal-card-body">
 				<div class="tabs">
 					<ul>
-					  <li class=(state.tableSettingsDialogTab === "columns" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="columns">${input.i18n.t("mTable.settingsColumns")}</a></li>
-					  <li class=(state.tableSettingsDialogTab === "pages" ? "is-active" : "")><a on-click("onSettingsDialogTabClick") data-id="pages">${input.i18n.t("mTable.settingsPages")}</a></li>
+						<li class=(state.tableSettingsDialogTab === "columns" ? "is-active" : "")>
+							<a on-click("onSettingsDialogTabClick") data-id="columns">
+								${input.i18n.t("mTable.settingsColumns")}
+							</a>
+						</li>
+						<li class=(state.tableSettingsDialogTab === "pages" ? "is-active" : "")>
+							<a on-click("onSettingsDialogTabClick") data-id="pages">
+								${input.i18n.t("mTable.settingsPages")}
+							</a>
+						</li>
 					</ul>
 				</div>
-				<div style=(state.tableSettingsDialogTab === "columns" ? {} : {display: "none"})>
-					<mselect
-						key=`${input.id}_config_columns`
-						active=true/>
-				</div>	
-				<div style=(state.tableSettingsDialogTab === "pages" ? {} : {display: "none"})>
+				<div style=(
+					state.tableSettingsDialogTab === "columns"
+						? {}
+						: {
+								display: "none"
+						  }
+				)>
+					<mselect key=`${input.id}_config_columns` active=true/>
+				</div>
+				<div style=(
+					state.tableSettingsDialogTab === "pages"
+						? {}
+						: {
+								display: "none"
+						  }
+				)>
 					<mform
 						manual=true
 						key=`${input.id}_tableSettingsPagesForm`
 						id=`${input.id}_tableSettingsPagesForm`
 						fields=[
-							[{
-								id: "paginationMode",
-								type: "select",
-								label: out.global.i18n.t("mTable.paginationMode"),
-								options: [
-									{
-										value: "dynamic",
-										label: out.global.i18n.t("mTable.paginationMode.dynamic")
-									},
-									{
-										value: "fixed",
-										label: out.global.i18n.t("mTable.paginationMode.fixed")
-									}
-								],
-								mandatory: true,
-								css: "is-fullwidth",
-								wrapCSS: "z3-is-medium",
-							},
-							{
-								id: "itemsPerPage",
-								type: "text",
-								label: out.global.i18n.t("mTable.itemsPerPage"),
-								helpText: out.global.i18n.t("mTable.itemsPerPageHelpText"),
-								convert: "integer",
-								wrapCSS: "z3-is-small",
-								mandatory: true
-							}]
+							[
+								{
+									id: "paginationMode",
+									type: "select",
+									label: out.global.i18n.t("mTable.paginationMode"),
+									options: [
+										{
+											value: "dynamic",
+											label: out.global.i18n.t("mTable.paginationMode.dynamic")
+										},
+										{
+											value: "fixed",
+											label: out.global.i18n.t("mTable.paginationMode.fixed")
+										}
+									],
+									mandatory: true,
+									css: "is-fullwidth",
+									wrapCSS: "z3-is-medium"
+								},
+								{
+									id: "itemsPerPage",
+									type: "text",
+									label: out.global.i18n.t("mTable.itemsPerPage"),
+									helpText: out.global.i18n.t("mTable.itemsPerPageHelpText"),
+									convert: "integer",
+									wrapCSS: "z3-is-small",
+									mandatory: true
+								}
+							]
 						]
 						validation=tableSettingsPagesFormData
 						on-form-submit("onTableSettingsPagesFormSubmit")
 						i18n=out.global.i18n/>
-				</div>	
+				</div>
 			</div>
 			<footer class="modal-card-foot">
 				<div class="buttons">
-					<button type="button" class="button is-primary" on-click("onTableSettingsDialogSave")>${out.global.i18n.t("mTable.save")}</button>
-					<button type="button" class="button is-dialog-secondary" on-click("onTableSettingsDialogClose")>${out.global.i18n.t("mTable.cancel")}</button>
+					<button
+						type="button"
+						class="button is-primary"
+						on-click("onTableSettingsDialogSave")>
+						${out.global.i18n.t("mTable.save")}
+					</button>
+					<button
+						type="button"
+						class="button is-dialog-secondary"
+						on-click("onTableSettingsDialogClose")>
+						${out.global.i18n.t("mTable.cancel")}
+					</button>
 				</div>
 			</footer>
 		</div>
@@ -800,9 +853,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					class="columns is-variable is-1">
 					<div class="column is-narrow z3-mt-widgets-manage-buttons">
 						<div>
-							<button
-								class="button is-light is-fullwidth"
-								on-click("onAddWidgetClick")>
+							<button class="button is-light is-fullwidth" on-click("onAddWidgetClick")>
 								${out.global.i18n.t("mTable.widgets.add")}
 							</button>
 						</div>
@@ -834,12 +885,18 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</div>
 			<footer class="modal-card-foot">
 				<div class="buttons">
-				<button class="button is-primary" on-click("onWidgetsManageDialogSubmit") disabled=state.widgetsManageDialogLoading>
-					${out.global.i18n.t("mTable.widgets.save")}
-				</button>
-				<button class="button is-dialog-secondary" on-click("onWidgetsManageDialogClose") disabled=state.widgetsManageDialogLoading>
-					${out.global.i18n.t("btnCloseGeneric")}
-				</button>
+					<button
+						class="button is-primary"
+						on-click("onWidgetsManageDialogSubmit")
+						disabled=state.widgetsManageDialogLoading>
+						${out.global.i18n.t("mTable.widgets.save")}
+					</button>
+					<button
+						class="button is-dialog-secondary"
+						on-click("onWidgetsManageDialogClose")
+						disabled=state.widgetsManageDialogLoading>
+						${out.global.i18n.t("btnCloseGeneric")}
+					</button>
 				</div>
 			</footer>
 		</div>
@@ -850,7 +907,9 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		<div class="modal-background" on-click("onWidgetsEditDialogClose")/>
 		<div class="modal-card">
 			<header class="modal-card-head">
-				<p class="modal-card-title">${input.i18n.t(state.widgetEdit !== null ? "mTable.widgetEdit" : "mTable.widgetAdd")}</p>
+				<p class="modal-card-title">
+					${input.i18n.t(state.widgetEdit !== null ? "mTable.widgetEdit" : "mTable.widgetAdd")}
+				</p>
 				<button class="delete" aria-label="close" on-click("onWidgetsEditDialogClose")/>
 			</header>
 			<div class="modal-card-body">
@@ -892,7 +951,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							label: out.global.i18n.t("mTable.widgetValue"),
 							helpText: out.global.i18n.t("mTable.widgetValueHelpText"),
 							wysiwyg: false,
-							source: true,
+							source: true
 						}
 					]
 					validation=widgetsSave
@@ -901,12 +960,12 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</div>
 			<footer class="modal-card-foot">
 				<div class="buttons">
-				<button class="button is-primary" on-click("onWidgetsEditDialogSave")>
-					${out.global.i18n.t("mTable.widgets.save")}
-				</button>
-				<button class="button is-dialog-secondary" on-click("onWidgetsEditDialogClose")>
-					${out.global.i18n.t("btnCloseGeneric")}
-				</button>
+					<button class="button is-primary" on-click("onWidgetsEditDialogSave")>
+						${out.global.i18n.t("mTable.widgets.save")}
+					</button>
+					<button class="button is-dialog-secondary" on-click("onWidgetsEditDialogClose")>
+						${out.global.i18n.t("btnCloseGeneric")}
+					</button>
 				</div>
 			</footer>
 		</div>
@@ -918,5 +977,5 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		on-confirm("onFilterDeleteConfirm")/>
 	<mconfirm
 		key=`${input.id}_widgetsDeleteConfirm`
-		on-confirm("onWidgetsDeleteConfirm")/>	
+		on-confirm("onWidgetsDeleteConfirm")/>
 </div>
