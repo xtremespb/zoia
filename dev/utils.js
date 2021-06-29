@@ -130,6 +130,7 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
             modules.push(moduleDataCurrent);
             if (moduleDataCurrent.admin) {
                 try {
+                    console.log(moduleDirPath);
                     const adminConfig = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/admin.json`));
                     const trans = {};
                     languages.map(language => {
@@ -147,7 +148,8 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
                         languages.map(language => data.title[language] = trans[language].moduleTitle || trans[language][`moduleTitle.${ac.id}`] || ac.id);
                         admin.push(data);
                     });
-                } catch {
+                } catch (e) {
+                    console.log(e);
                     // Ignore
                 }
             }
