@@ -26,7 +26,7 @@ style.scss {
 		<if(state.calendar.mode === "date")>
 			<div class="columns m-0 is-gapless is-mobile">
 				<div class="column is-narrow">
-					<a class="button is-dialog-secondary" on-click("onCalendarLeft")>
+					<a class="button is-ghost" on-click("onCalendarLeft")>
 						<span class="icon is-small">
 							<i class="mdi mdi-chevron-left"/>
 						</span>
@@ -40,7 +40,7 @@ style.scss {
 					</a>
 				</div>
 				<div class="column is-narrow">
-					<a class="button is-dialog-secondary" on-click("onCalendarRight")>
+					<a class="button is-ghost" on-click("onCalendarRight")>
 						<span class="icon is-small">
 							<i class="mdi mdi-chevron-right"/>
 						</span>
@@ -114,7 +114,7 @@ style.scss {
 			</div>
 		</if>
 		<if(state.calendar.mode === "year")>
-			<div class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year">
+			<div class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year" id=`${input.id}_calendar_wrap_year`>
 				<for|y, i| of=[...Array(100).keys()].map(i => i + new Date().getFullYear() - 50)>
 					<div
 						class=`column is-one-third z3-mf-calednar-cell-year${

@@ -293,9 +293,8 @@
     margin-bottom: 0 !important;
 }
 
-.z3-mf-area-end:after {
-    content: '';
-    box-shadow: 0 8px 10px -10px rgba(0, 0, 0, 0.5);
+.z3-mf-area-end::after {
+    box-shadow: 0 8px 6px -4px $grey;
 }
 
 .z3-mf-area-green {

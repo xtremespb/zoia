@@ -43,11 +43,11 @@
     box-shadow: none !important;
 }
 
-.button:not(.is-white) {
+.button:not(.is-white):not(.is-ghost) {
     box-shadow: 0px 2px 3px rgb(0 0 0 / 4%) !important;
 }
 
-.button:not(.is-white):hover {
+.button:not(.is-white):not(.is-ghost):hover {
     box-shadow: 0px 2px 3px rgb(0 0 0 / 6%) !important;
 }
 

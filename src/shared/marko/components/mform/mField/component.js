@@ -691,7 +691,7 @@ module.exports = class {
         calendarOptions.mode = mode;
         this.setState("calendar", calendarOptions);
         if (mode === "year") {
-            setTimeout(() => document.getElementById(`${this.input.id}_${this.input.item.id}_year_${this.state.calendar.year}`).scrollIntoView(), 100);
+            setTimeout(() => document.getElementById(`${this.input.id}_${this.state.item.id}_calendar_wrap_year`).scrollTop = document.getElementById(`${this.input.id}_${this.input.item.id}_year_${this.state.calendar.year}`).offsetTop, 100);
         }
     }
 
