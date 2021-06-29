@@ -20,6 +20,12 @@
     transition: 0.09s;
 }
 
+.button.is-warning {
+    border: 1px solid $yellow-dark !important;
+    border-bottom: 2px solid $yellow-darker !important;
+    transition: 0.09s;
+}
+
 .button.is-primary {
     border-bottom: 2px solid $primary-dark !important;
     transition: 0.09s;

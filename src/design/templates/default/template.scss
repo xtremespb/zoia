@@ -2,6 +2,7 @@
 @import "../../../shared/fonts/source-sans-pro/source-sans-pro.css";
 $mdi-font-path: "~@mdi/font/fonts";
 @import "~@mdi/font/scss/materialdesignicons.scss";
+@import '~pretty-checkbox/src/pretty-checkbox.scss';
 @import "~bulma/bulma";
 @import "./inputs.scss";
 
@@ -62,6 +63,12 @@ $mdi-font-path: "~@mdi/font/fonts";
 .button.is-danger {
     border: 1px solid $red-dark !important;
     border-bottom: 2px solid $red-darker !important;
+    transition: 0.09s;
+}
+
+.button.is-warning {
+    border: 1px solid $yellow-dark !important;
+    border-bottom: 2px solid $yellow-darker !important;
     transition: 0.09s;
 }
 
