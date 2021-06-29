@@ -36,7 +36,7 @@ export default routeId => ({
                         ...req.zoiaModulesConfig["users"].routes,
                         ...req.zoiaConfig.routes
                     },
-                    modules: this.zoiaAdmin.filter(i => i.id !== "acl"),
+                    modules: this.zoiaAdmin,
                     accessAllowed: acl.checkPermission("users", "read"),
                     ...await site.getGlobals()
                 },

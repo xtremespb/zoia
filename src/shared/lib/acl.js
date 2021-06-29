@@ -91,6 +91,9 @@ export default class {
         if (!module) {
             return false;
         }
+        if (module === "acl") {
+            module = "users";
+        }
         if (id && this.whitelist[module].indexOf(id) > -1) {
             return true;
         }

@@ -356,7 +356,7 @@ export default class {
             if (charCode === 65533 || charCode <= 8) {
                 // 8 and below are control characters (e.g. backspace, null, eof, etc.)
                 // 65533 is the unknown character
-                // console.log(charCode, contentChunkUTF8[i])
+                // charCode, contentChunkUTF8[i]
                 return binaryEncoding;
             }
         }
