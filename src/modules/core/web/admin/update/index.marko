@@ -1,4 +1,7 @@
-<if(out.global.updateData && out.global.updateData.tag_name !== out.global.packageJson.version)>
+<if(
+	out.global.updateData &&
+	out.global.updateData.tag_name !== out.global.packageJson.version
+)>
 	<if(state.error)>
 		<div class="notification is-danger">${state.error}</div>
 	</if>

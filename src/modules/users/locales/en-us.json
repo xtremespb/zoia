@@ -54,5 +54,11 @@
 	"corePermissions": "Core Permissions",
 	"corePermissionUpload": "Global file uploads",
 	"corePermissionTableSettings": "Store table settings",
-	"imagesBrowser": "Images Browser"
+	"imagesBrowser": "Images Browser",
+	"areaMain": "User Data",
+	"areaPassword": "Password",
+	"areaStatus": "Status and Group Membership",
+	"areaAclMain": "Group Description",
+	"areaAclCore": "Core",
+	"areaAclModules": "Modules"
 }

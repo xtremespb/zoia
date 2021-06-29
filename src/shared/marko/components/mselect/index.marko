@@ -5,20 +5,25 @@ style.scss {
 <if(input.active)>
 	<div class="columns is-mobile is-variable is-1 mb-0">
 		<div class="column control">
-			<input class="input" type="text" placeholder=out.global.i18n.t("mSelect.search") on-input("onSearchInput") value=state.searchValue>
+			<input
+				class="input"
+				type="text"
+				placeholder=out.global.i18n.t("mSelect.search")
+				on-input("onSearchInput")
+				value=state.searchValue/>
 		</div>
 		<div class="column is-narrow">
 			<div class="buttons">
 				<button class="button is-light" type="button" on-click("onSelectAllClick")>
 					<span class="icon is-small">
-						<i class="mdi mdi-checkbox-marked-outline"></i>
+						<i class="mdi mdi-checkbox-marked-outline"/>
 					</span>
 				</button>
 				<button class="button is-light" type="button" on-click("onSelectNoneClick")>
 					<span class="icon is-small">
-						<i class="mdi mdi-checkbox-blank-outline"></i>
+						<i class="mdi mdi-checkbox-blank-outline"/>
 					</span>
-				</button>  
+				</button>
 			</div>
 		</div>
 	</div>

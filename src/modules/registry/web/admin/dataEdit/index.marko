@@ -37,6 +37,11 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		}
 		fields=[
 			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaMain"),
+				css: "z3-mf-area-white-bis"
+			},
+			{
 				id: "_id",
 				type: "text",
 				label: out.global.i18n.t("id"),
@@ -57,8 +62,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				}
 			},
 			{
-				id: "div1",
-				type: "divider"
+				type: "areaEnd",
+				css: "mt-2"
 			},
 			{
 				id: "bg1",

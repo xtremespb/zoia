@@ -293,6 +293,10 @@
     margin-bottom: 0 !important;
 }
 
+.z3-mf-area-end::after {
+    box-shadow: 0 8px 6px -4px $grey;
+}
+
 .z3-mf-area-green {
     background: #d9e4dd;
 }
@@ -311,6 +315,24 @@
 
 .z3-mf-area-grey {
     background: #e8ecf1;
+}
+
+.z3-mf-area-grey-lightest {
+    background: $grey-lightest;
+}
+
+.z3-mf-area-white-bis {
+    background: $white-bis;
+}
+
+.z3-mf-area-round-top {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.z3-mf-area-round-bottom {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 
 .z3-mf-wysiwyg-toggle>ul>li:not(.is-active) {
