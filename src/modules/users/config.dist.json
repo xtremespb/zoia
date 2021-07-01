@@ -4,8 +4,8 @@
     "database": {
         "collections": {
             "users": {
-                "indexesAsc": ["username", "email"],
-                "indexesDesc": ["username", "email"]
+                "indexesAsc": ["username", "displayName", "email"],
+                "indexesDesc": ["username", "displayName", "email"]
             },
             "acl": {
                 "indexesAsc": ["group"],

@@ -1,5 +1,5 @@
 {
-	"global.dateFormatShort": "dd/MM/yyyy",
+	"global.dateFormatShort": "dd.MM.yyyy",
 	"global.langCode": "ru",
 	"global.weekStart": 1,
 	"global.weekDays": [

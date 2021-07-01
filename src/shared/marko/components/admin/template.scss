@@ -25,8 +25,9 @@
 .z3-ap-side-menu-area {
     min-height: 100%;
     background-color: $white-bis;
-    box-shadow: 1px 0 5px -2px $grey-lighter;
+    border-right: 1px solid $grey-lightest;
     z-index: 10;
+    min-width: 270px;
 }
 
 .z3-ap-side-menu {
@@ -134,10 +135,6 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-}
-
-.z3-ap-side-menu-area {
-    min-width: 270px;
 }
 
 .switch[type="checkbox"]:focus+label::after,
