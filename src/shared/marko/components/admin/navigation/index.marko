@@ -68,7 +68,7 @@
 					class="navbar-link z3-ap-navbar-link"
 					id="za_ap_username_dropdown"
 					on-click("onUserMenuClick")>
-					${out.global.authData.username}
+					${out.global.authData.displayName || out.global.authData.username}
 				</a>
 				<div class="navbar-dropdown is-right">
 					<a

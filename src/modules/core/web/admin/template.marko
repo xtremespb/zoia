@@ -1,3 +1,7 @@
+style.scss {
+	@import "./admin.scss";
+}
+
 <admin modules=input.modules moduleId=input.moduleId>
 	<h1 class="z3-ap-head-thin">
 		<span class="icon">
@@ -8,34 +12,30 @@
 	<p>
 		&copy; 2019-${new Date().getFullYear()} Michael A. Matveev. ${out.global.i18n.t("license")}.
 	</p>
-	<p class="mt-3">
+	<p class="z3-ap-controls-area mt-3 p-3">
 		${out.global.i18n.t("version")}:
 		<span class="has-text-weight-bold">${input.version}</span>, ${out.global.i18n.t(out.global.buildJson.mode)} (${out.global.buildJson.id})<br/>
-		${out.global.i18n.t("pid")}:
-		<span class="has-text-weight-bold">${out.global.pid}</span>
-		<br/>
 		${out.global.i18n.t("buildDate")}:
 		<span class="has-text-weight-bold">
 			${new Date(out.global.buildJson.date).toLocaleString()}
 		</span>
 	</p>
-	<p class="menu-label">
-		${out.global.i18n.t("usersOnline")}: ${out.global.usersOnline || 1}
-	</p>
 	<if(out.global.updateAllowed)>
-		<div class="columns is-variable is-1 is-mobile is-multiline">
-			<div class="column is-narrow">
-				<restart/>
+		<div class="z3-ap-controls-area mt-5 p-3">
+			<div class="columns is-variable is-1 is-mobile is-multiline">
+				<div class="column is-narrow">
+					<restart/>
+				</div>
+				<div class="column is-narrow">
+					<rebuild/>
+				</div>
+				<div class="column">
+					<update/>
+				</div>
 			</div>
-			<div class="column is-narrow">
-				<rebuild/>
+			<div class="mt-3">
+				<maintenance/>
 			</div>
-			<div class="column">
-				<update/>
-			</div>
-		</div>
-		<div class="mt-3">
-			<maintenance/>
 		</div>
 	</if>
 </admin>

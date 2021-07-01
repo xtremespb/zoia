@@ -46,6 +46,9 @@ module.exports = class {
     }
 
     onContextMenu(e) {
+        if (this.input.noContextMenu) {
+            return;
+        }
         e.preventDefault();
         this.getComponent("z3_ap_mt_treeMenu").func.setActive(true, e.pageX, e.pageY, e.currentTarget.dataset.id, e.currentTarget.dataset.order, e.currentTarget.dataset.len);
     }

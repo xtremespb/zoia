@@ -167,7 +167,7 @@ module.exports = class {
 
     resetData() {
         this.setState("data", this.dataOnMount);
-        this.setState("error", null);
+        this.setError(null);
         this.state.tabs.map(tab => {
             this.state.errors[tab.id] = {};
         });
@@ -481,7 +481,7 @@ module.exports = class {
             }
         });
         if (generalError) {
-            this.setState("error", focus ? this.i18n.t(`mFormErr.general`) : null);
+            this.setError(focus ? this.i18n.t(`mFormErr.general`) : null);
         }
         this.setState("errors", errors);
         this.setState("data", formData);
@@ -689,15 +689,15 @@ module.exports = class {
             if (e.response && e.response.data && e.response.data.error) {
                 const errorKeyword = e.response.data.error.errorKeyword || (e.response.data.error.errorData && e.response.data.error.errorData.length && e.response.data.error.errorData[0] && e.response.data.error.errorData[0].keyword) ? e.response.data.error.errorKeyword ? e.response.data.error.errorKeyword : e.response.data.error.errorData[0].keyword : null;
                 if (errorKeyword) {
-                    this.setState("error", this.i18n.t(`mFormErr.${errorKeyword || "general"}`));
+                    this.setError(this.i18n.t(`mFormErr.${errorKeyword || "general"}`));
                 } else {
-                    this.setState("error", this.i18n.t(`mFormErr.server`));
+                    this.setError(this.i18n.t(`mFormErr.server`));
                 }
                 if (e.response.data.error.errorData) {
                     this.visualizeErrors(e.response.data.error.errorData, false);
                 }
             } else {
-                this.setState("error", this.i18n.t(`mFormErr.server`));
+                this.setError(this.i18n.t(`mFormErr.server`));
             }
             this.getEl(`${this.input.id}_mForm_Wrap`).scrollIntoView();
         }
@@ -891,6 +891,14 @@ module.exports = class {
 
     setError(error) {
         setTimeout(() => this.setState("error", error), 1);
+        if (error) {
+            setTimeout(() => {
+                const y = document.getElementById(`${this.input.id}_mForm_Error`).top + window.scrollY;
+                window.scroll({
+                    top: y
+                });
+            }, 10);
+        }
     }
 
     onContextMenu(data) {
