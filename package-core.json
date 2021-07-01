@@ -88,6 +88,7 @@
 		"svg-url-loader": "^7.1.1",
 		"webpack": "^5.41.1",
 		"webpack-cli": "^4.7.2",
-		"webpack-fix-style-only-entries": "^0.6.1"
+		"webpack-fix-style-only-entries": "^0.6.1",
+		"webpack-sources": "^2.3.0"
 	}
 }
