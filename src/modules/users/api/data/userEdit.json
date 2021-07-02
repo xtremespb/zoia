@@ -16,7 +16,7 @@
             },
             "displayName": {
                 "type": ["string", "null"],
-                "maxLength": 128
+                "maxLength": 32
             },
             "email": {
                 "type": ["string", "null"],
