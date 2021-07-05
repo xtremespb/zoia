@@ -798,3 +798,30 @@ Date Picker
 		</if>
 	</div>
 </if>
+<!--
+Tags Input
+-->
+<if(state.item.type === "tags")>
+	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+		<div class="control" no-update>
+			<input
+				class="input"
+				id=`${input.id}_${state.item.id}`
+				key=`mf_ctl_${state.item.id}`
+				type="text"
+				placeholder=state.item.placeholder
+				value=input.value/>
+		</div>
+		<if(state.item.helpText)>
+			<p class="help">${state.item.helpText}</p>
+		</if>
+		<if(input.errors[state.item.id])>
+			<p class="help is-danger">${input.errors[state.item.id]}</p>
+		</if>
+	</div>
+</if>

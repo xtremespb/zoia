@@ -16,6 +16,7 @@ const {
 const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const CKEditorImageUploadAdapter = require("./CKEditorImageUploadAdapter");
+const BulmaTagsInput = require("../tagsinput/index").default;
 
 // Polyfill for Object.fromEntries (missing in CKEditor)
 if (!Object.fromEntries) {
@@ -130,6 +131,13 @@ module.exports = class {
         switch (this.state.item.type) {
         case "ace":
             throttle(this.updateAce.bind(this), 300)();
+            break;
+        case "tags":
+            const tagsField = document.getElementById(`${this.input.id}_${this.state.item.id}`);
+            if (tagsField && tagsField.BulmaTagsInput) {
+                tagsField.BulmaTagsInput().removeAll();
+                (this.input.value || []).map(i => tagsField.BulmaTagsInput().add(i));
+            }
             break;
         case "datepicker":
             this.updateDatePicker(this.input.value);
@@ -248,6 +256,13 @@ module.exports = class {
     async onMount() {
         await this.reloadCaptcha();
         switch (this.state.item.type) {
+        case "tags":
+            // this.tagifyInput = new Tagify(document.getElementById(`${this.input.id}_${this.state.item.id}`));
+            // this.tagifyInput.addTags(["banana", "orange", "apple"]);
+            new BulmaTagsInput(document.getElementById(`${this.input.id}_${this.state.item.id}`));
+            document.getElementById(`${this.input.id}_${this.state.item.id}`).BulmaTagsInput().on("after.add", this.onTagsInputValueChange.bind(this));
+            document.getElementById(`${this.input.id}_${this.state.item.id}`).BulmaTagsInput().on("after.remove", this.onTagsInputValueChange.bind(this));
+            break;
         case "ace":
             if (!document.getElementById(`${this.input.id}_${this.state.item.id}_ace`)) {
                 return;
@@ -357,6 +372,17 @@ module.exports = class {
             id: event.dataset.id,
             value: event.value
         });
+    }
+
+    onTagsInputValueChange() {
+        const tagsField = document.getElementById(`${this.input.id}_${this.state.item.id}`);
+        if (tagsField && tagsField.BulmaTagsInput) {
+            this.emit("value-change", {
+                type: "tags",
+                id: this.state.item.id,
+                value: tagsField.BulmaTagsInput().items
+            });
+        }
     }
 
     onArrInputChange(e) {

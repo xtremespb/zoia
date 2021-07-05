@@ -10,7 +10,7 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images", "image", "range", "datepicker"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images", "image", "range", "datepicker", "tags"];
 
 module.exports = class {
     onCreate(input) {
@@ -90,6 +90,7 @@ module.exports = class {
         case "checkbox":
             return false;
         case "checkboxes":
+        case "tags":
             return [];
         case "keyvalue":
             return {
@@ -304,6 +305,9 @@ module.exports = class {
                 currentItemState = currentItemState.filter(i => i !== obj.inputid);
             }
             value = currentItemState;
+            break;
+        case "tags":
+            value = Array.from(new Set(value));
             break;
         case "datepicker":
             value = value ? format(value, "yyyyMMdd") : null;
@@ -858,10 +862,6 @@ module.exports = class {
                     }
                     this.setState("errors", errors);
                 }
-                // const data = this.deserialize(result.data.data);
-                // this.setState("data", data);
-                // setTimeout(this.autoFocus.bind(this), 0);
-                // setTimeout(this.emitFieldsUpdate.bind(this), 0);
                 this.setData(result.data.data);
                 this.emit("load-success", result.data.data);
             }

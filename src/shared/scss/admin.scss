@@ -1,4 +1,28 @@
-$family-sans-serif: "Source Sans Pro", sans-serif;
+// Typography
+$family-sans-serif: "Source Sans Pro",
+sans-serif;
+$family-monospace: monospace !default;
+$render-mode: optimizeLegibility !default;
+$size-1: 3rem !default;
+$size-2: 2.5rem !default;
+$size-3: 2rem !default;
+$size-4: 1.5rem !default;
+$size-5: 1.25rem !default;
+$size-6: 1rem !default;
+$size-7: 0.75rem !default;
+$weight-light: 300 !default;
+$weight-normal: 400 !default;
+$weight-medium: 500 !default;
+$weight-semibold: 600 !default;
+$weight-bold: 700 !default;
+$family-primary: $family-sans-serif !default;
+$family-secondary: $family-sans-serif !default;
+$family-code: $family-monospace !default;
+$size-small: $size-7 !default;
+$size-normal: $size-6 !default;
+$size-medium: $size-5 !default;
+$size-large: $size-4 !default;
+// Colors
 $primary: hsl(208, 25%, 37%);
 $primary-dark: hsl(208, 25%, 21%);
 $link: hsl(212, 42%, 24%);
@@ -27,12 +51,23 @@ $purple: hsl(271, 100%, 71%) !default;
 $red: hsl(348, 86%, 61%) !default;
 $red-dark: hsl(348, 86%, 51%) !default;
 $red-darker: hsl(348, 86%, 41%) !default;
+// Icons
 $mdi-font-path: "~@mdi/font/fonts";
 $z3-head-background-color: $white-lightest;
 $z3-head-text-color: $grey-darker;
 $z3-yellow-light: hsl(48, 100%, 96%) !default;
 $z3-head-background-color: $white-lightest;
 $z3-head-text-color: $grey-darker;
+// Miscellaneous
+$easing: ease-out !default;
+$radius-small: 2px !default;
+$radius: 4px !default;
+$radius-large: 6px !default;
+$radius-rounded: 9999px !default;
+$speed: 86ms !default;
+// Spacing
+$block-spacing: 1.5rem !default;
+// Pretty Checkbox
 $pretty--class-name: z3-pretty !default;
 $pretty--color-default: $grey-light !default;
 $pretty--color-primary: $primary !default;
@@ -49,7 +84,11 @@ $pretty--box-size: calc(1em + 2px) !default;
 $pretty--label-text-offset: 1.5em !default;
 $pretty--label-text-offset-switch: 2.5em !default;
 $pretty--2x: 1.2em !default;
-$pretty--colors: (primary, $pretty--color-primary), (info, $pretty--color-info), (success, $pretty--color-success), (warning, $pretty--color-warning), (danger, $pretty--color-danger) !default;
+$pretty--colors: (primary, $pretty--color-primary),
+(info, $pretty--color-info),
+(success, $pretty--color-success),
+(warning, $pretty--color-warning),
+(danger, $pretty--color-danger) !default;
 $pretty-top: 8;
 $pretty-top-switch: ($pretty-top * 2) * 1%;
 $pretty-top-offset: calc((0.0001% - (100% - 1em)) - #{$pretty-top * 1%});
