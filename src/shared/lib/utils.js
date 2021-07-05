@@ -526,7 +526,7 @@ export default {
         }
         return data;
     },
-    async getWidgets(req, db, table, collection) {
+    async getWidgets(req, db, table, collection, filterQuery) {
         const data = (await db.collection(req.zoiaModulesConfig["core"].collectionWidgets || "widgets").findOne({
             table,
         })) || {
@@ -544,7 +544,13 @@ export default {
             switch (w.type) {
             case "query":
                 try {
-                    const res = await db.collection(collection).aggregate(JSON.parse(w.value)).toArray();
+                    let agrQuery = JSON.parse(w.value);
+                    if (filterQuery && agrQuery && Array.isArray(agrQuery)) {
+                        agrQuery = [{
+                            $match: filterQuery
+                        }, ...agrQuery];
+                    }
+                    const res = await db.collection(collection).aggregate(agrQuery).toArray();
                     widget.value = res[0].value || null;
                 } catch (e) {
                     // Ignore

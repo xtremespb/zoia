@@ -38,7 +38,7 @@ style.scss {
 	<form on-submit("onFormSubmit") key=`${input.id}_mForm_Wrap`>
 		<fieldset
 			disabled=state.disabled
-			class=`z3-mf-fields-wrap z3-mf-noselect${
+			class=`z3-mf-fields-wrap${
 				((state.tabs && state.tabs.length > 1) || input.tabsActive) &&
 				input.borderWhenTabs
 					? " z3-mf-fields-border"

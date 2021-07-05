@@ -17,7 +17,7 @@ const options = commandLineArgs([{
     type: Boolean
 }]);
 
-if (!options || !options.source || !String(options.source).match(/^[a-z]{2}$/) || !options.dest || !String(options.dest).match(/^[a-z]{2}$/)) {
+if (!options || !options.source || !String(options.source).match(/^[a-z]{2}(-[a-z]{2})?$/) || !options.dest || !String(options.dest).match(/^[a-z]{2}(-[a-z]{2})?$/)) {
     console.log("Usage: localize --source <language> --dest <language> [--default]");
     process.exit();
 }
@@ -32,6 +32,7 @@ const processLanguageFiles = async dir => {
         if (stat.isDirectory()) {
             await processLanguageFiles(filePath);
         } else if (file === `${options.source}.json`) {
+            console.log(`${dir}/${options.source}.json`);
             const sourceData = await fs.readJSON(filePath);
             let destData = {};
             const filePathDest = path.resolve(`${dir}/${options.dest}.json`);
