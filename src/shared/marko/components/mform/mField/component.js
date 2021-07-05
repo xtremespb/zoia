@@ -133,10 +133,9 @@ module.exports = class {
             throttle(this.updateAce.bind(this), 300)();
             break;
         case "tags":
-            const tagsField = document.getElementById(`${this.input.id}_${this.state.item.id}`);
-            if (tagsField && tagsField.BulmaTagsInput) {
-                tagsField.BulmaTagsInput().removeAll();
-                (this.input.value || []).map(i => tagsField.BulmaTagsInput().add(i));
+            if (this.btiInstance) {
+                this.btiInstance.removeAll();
+                (this.input.value || []).map(i => this.btiInstance.add(i));
             }
             break;
         case "datepicker":
@@ -257,11 +256,17 @@ module.exports = class {
         await this.reloadCaptcha();
         switch (this.state.item.type) {
         case "tags":
-            // this.tagifyInput = new Tagify(document.getElementById(`${this.input.id}_${this.state.item.id}`));
-            // this.tagifyInput.addTags(["banana", "orange", "apple"]);
-            new BulmaTagsInput(document.getElementById(`${this.input.id}_${this.state.item.id}`));
-            document.getElementById(`${this.input.id}_${this.state.item.id}`).BulmaTagsInput().on("after.add", this.onTagsInputValueChange.bind(this));
-            document.getElementById(`${this.input.id}_${this.state.item.id}`).BulmaTagsInput().on("after.remove", this.onTagsInputValueChange.bind(this));
+            setTimeout(() => {
+                const tagsField = document.getElementById(`${this.input.id}_${this.state.item.id}`);
+                if (tagsField) {
+                    const [btiInstance] = BulmaTagsInput.attach(tagsField);
+                    if (btiInstance) {
+                        this.btiInstance = btiInstance;
+                        this.btiInstance.on("after.add", this.onTagsInputValueChange.bind(this));
+                        this.btiInstance.on("after.remove", this.onTagsInputValueChange.bind(this));
+                    }
+                }
+            });
             break;
         case "ace":
             if (!document.getElementById(`${this.input.id}_${this.state.item.id}_ace`)) {
@@ -375,12 +380,11 @@ module.exports = class {
     }
 
     onTagsInputValueChange() {
-        const tagsField = document.getElementById(`${this.input.id}_${this.state.item.id}`);
-        if (tagsField && tagsField.BulmaTagsInput) {
+        if (this.btiInstance) {
             this.emit("value-change", {
                 type: "tags",
                 id: this.state.item.id,
-                value: tagsField.BulmaTagsInput().items
+                value: this.btiInstance.items
             });
         }
     }
