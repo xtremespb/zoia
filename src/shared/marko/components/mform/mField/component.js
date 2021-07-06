@@ -200,7 +200,7 @@ module.exports = class {
     }
 
     async initCkEditor() {
-        this.ckEditorElement = this.getEl(`mf_ctl_ckeditor_${this.input.item.id}`);
+        this.ckEditorElement = this.getEl(`mf_ctl_ckeditor_${this.input.item.id}`) || document.getElementById(`mf_ctl_ckeditor_${this.input.item.id}`);
         this.ckEditor = await ClassicEditor.create(this.ckEditorElement, {
             extraPlugins: [AddClassToAllHeading1],
         });
@@ -259,7 +259,9 @@ module.exports = class {
             setTimeout(() => {
                 const tagsField = document.getElementById(`${this.input.id}_${this.state.item.id}`);
                 if (tagsField) {
-                    const [btiInstance] = BulmaTagsInput.attach(tagsField);
+                    const [btiInstance] = BulmaTagsInput.attach(tagsField, {
+                        selectable: false
+                    });
                     if (btiInstance) {
                         this.btiInstance = btiInstance;
                         this.btiInstance.on("after.add", this.onTagsInputValueChange.bind(this));

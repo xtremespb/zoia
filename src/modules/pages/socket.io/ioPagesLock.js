@@ -23,7 +23,7 @@ export default async (fastify, data, socket) => {
                     _id: new ObjectId(lockData)
                 });
                 if (lockUser) {
-                    socket.emit("pages.alreadyLocked", lockUser.username);
+                    socket.emit("pages.alreadyLocked", lockUser.displayName || lockUser.username);
                 }
             } else if (lockData && lockData === String(user._id)) {
                 socket.lockData = {

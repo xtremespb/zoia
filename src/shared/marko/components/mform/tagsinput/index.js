@@ -1152,6 +1152,18 @@ export default class BulmaTagsInput extends Component {
         }
     }
 
+    _copyToClipboard(str) {
+        const el = document.createElement("textarea");
+        el.value = str;
+        el.setAttribute("readonly", "");
+        el.style.position = "absolute";
+        el.style.left = "-9999px";
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+    }
+
     /**
      * Tag click event handler
      *
@@ -1170,9 +1182,8 @@ export default class BulmaTagsInput extends Component {
 
         this.input.focus();
 
+        const tag = e.currentTarget.closest(".tag");
         if (this.options.selectable) {
-            const tag = e.currentTarget.closest(".tag");
-
             if (tag) {
                 const tagIndex = Array.from(this.container.children).indexOf(tag);
                 if (tagIndex === this._selected) {
@@ -1181,6 +1192,9 @@ export default class BulmaTagsInput extends Component {
                     this.selectAtIndex(tagIndex);
                 }
             }
+        } else if (tag) {
+            this._copyToClipboard(tag.dataset.value);
+            this.input.focus();
         }
     }
 

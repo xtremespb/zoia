@@ -15,7 +15,6 @@ module.exports = class {
         this.initialState = {
             data: [],
             totalCount: 0,
-            paginationData: [],
             dataSource: null,
             checkboxes: {},
             allCheckboxes: false,
@@ -102,6 +101,7 @@ module.exports = class {
         this.widgetsDeleteConfirm = this.getComponent(`${this.input.id}_widgetsDeleteConfirm`);
         this.tableSettingsPagesForm = this.getComponent(`${this.input.id}_tableSettingsPagesForm`);
         this.widgetEditForm = this.getComponent(`${this.input.id}_widgetsEditForm`);
+        this.pagination = this.getComponent(`${this.input.id}_pagination`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
             window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
@@ -211,7 +211,7 @@ module.exports = class {
                 this.setState("totalCount", response.data.count || 0);
                 this.setState("limit", response.data.limit || 1);
                 this.setState("pagesCount", response.data.pagesCount || 1);
-                this.setState("paginationData", this.generatePagination());
+                this.pagination.func.generatePagination(response.data.pagesCount || 1);
                 if (response.data.columns && Object.keys(response.data.columns).length) {
                     if (!Object.keys(this.state.columnRatios).length) {
                         this.setState("columnRatios", response.data.columns.ratios || {});
@@ -284,44 +284,6 @@ module.exports = class {
         this.forceUpdate();
     }
 
-    generatePagination() {
-        const delta = 2;
-        const range = [];
-        const pagesCount = parseInt(this.state.pagesCount, 10);
-        if (pagesCount <= 1) {
-            return range;
-        }
-        const page = parseInt(this.state.page, 10);
-        for (let i = Math.max(2, page - delta); i <= Math.min(pagesCount - 1, page + delta); i += 1) {
-            range.push({
-                type: "page",
-                active: page === i,
-                page: i
-            });
-        }
-        if (page - delta > 2) {
-            range.unshift({
-                type: "dots"
-            });
-        }
-        if (page + delta < pagesCount - 1) {
-            range.push({
-                type: "dots"
-            });
-        }
-        range.unshift({
-            type: "page",
-            active: page === 1,
-            page: 1
-        });
-        range.push({
-            type: "page",
-            active: page === pagesCount,
-            page: pagesCount
-        });
-        return range;
-    }
-
     onColumnClick(e) {
         const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
         if (dataset.sortable === undefined) {
@@ -336,16 +298,12 @@ module.exports = class {
             this.state.sortId = id;
             this.state.sortDirection = this.input.sortDirection;
         }
-        this.setState("page", 1);
+        this.setFirstPage();
         this.dataRequest();
     }
 
-    onPageClick(e) {
-        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
-        if (dataset.page === this.state.page) {
-            return;
-        }
-        this.setState("page", dataset.page);
+    onPageClick(page) {
+        this.setState("page", page);
         this.dataRequest();
     }
 
@@ -393,10 +351,15 @@ module.exports = class {
         }
     }
 
+    setFirstPage() {
+        this.setState("page", 1);
+        this.pagination.func.setPage(1);
+    }
+
     onSearchFieldInput(e) {
         const val = e.target.value.trim();
         this.setState("searchText", val);
-        this.setState("page", 1);
+        this.setFirstPage();
         this.dataRequestDebounced();
     }
 
@@ -420,7 +383,7 @@ module.exports = class {
             this.setState("deleteDialogActive", false);
             this.setState("deleteDialogProgress", false);
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTable.deleteSuccess`), "is-success");
-            this.setState("page", 1);
+            this.setFirstPage();
             this.dataRequest();
         } catch (e) {
             if (e && e.response && e.response.status === 401) {
@@ -546,7 +509,7 @@ module.exports = class {
         }
         this.setState("filters", filters);
         window.__zoiaTippyJs.reset();
-        this.setState("page", 1);
+        this.setFirstPage();
         setTimeout(() => this.dataRequest(), 100);
     }
 
@@ -587,7 +550,7 @@ module.exports = class {
         const filters = cloneDeep(this.state.filters);
         filters.splice(filterIndex, 1);
         this.setState("filters", filters);
-        this.setState("page", 1);
+        this.setFirstPage();
         setTimeout(() => this.dataRequest(), 100);
         if (filters.length === 0) {
             this.setState("filterCurrentId", null);
@@ -802,7 +765,7 @@ module.exports = class {
         this.setState("filterCurrentId", id);
         this.setState("filterCurrentTitle", currentFilter.title);
         window.__zoiaTippyJs.reset();
-        this.setState("page", 1);
+        this.setFirstPage();
         setTimeout(() => this.dataRequest(), 100);
     }
 
@@ -813,7 +776,7 @@ module.exports = class {
         this.setState("filterCurrentId", null);
         this.setState("filterCurrentTitle", null);
         window.__zoiaTippyJs.reset();
-        this.setState("page", 1);
+        this.setFirstPage();
         setTimeout(() => this.dataRequest(), 100);
     }
 
@@ -879,7 +842,7 @@ module.exports = class {
         }
         this.setState("filters", filters);
         window.__zoiaTippyJs.reset();
-        this.setState("page", 1);
+        this.setFirstPage();
         setTimeout(() => this.dataRequest(), 100);
     }
 

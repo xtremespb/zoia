@@ -70,7 +70,9 @@ $ langHTML += "</div></div>";
 							<if(Object.keys(out.global.languages).length > 1)>$!{langHTML}</if>
 							<if(out.global.authData && out.global.authData.username)>
 								<div class="navbar-item has-dropdown is-hoverable">
-									<a class="navbar-link">${out.global.authData.displayName || out.global.authData.username}</a>
+									<a class="navbar-link">
+										${out.global.authData.displayName || out.global.authData.username}
+									</a>
 									<div class="navbar-dropdown is-right">
 										<if(out.global.authData.status.indexOf("admin") > -1)>
 											<a

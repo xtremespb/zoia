@@ -19,7 +19,11 @@ import icons from "../../../data/mime.json"
 	class="columns is-variable is-1 z3-ap-noselect"
 	style=(state.currentMode === "list" ? "" : "display:none")>
 	<div class="column is-narrow z3-ap-f-tree-wrap">
-		<mtree key="z3_ap_f_tree" id="z3_ap_f_tree" on-item-click("onTreeItemClick") noContextMenu=true/>
+		<mtree
+			key="z3_ap_f_tree"
+			id="z3_ap_f_tree"
+			on-item-click("onTreeItemClick")
+			noContextMenu=true/>
 	</div>
 	<div class="column">
 		<div class="columns is-mobile is-multiline mb-3 z3-ap-f-toolbar-wrap is-variable is-1">
@@ -229,9 +233,7 @@ import icons from "../../../data/mime.json"
 				</for>
 			</div>
 			<if(!state.files.length && !state.loading)>
-				<div class="mt-3">
-					${out.global.i18n.t("noFilesInDirectory")}
-				</div>
+				<div class="mt-3">${out.global.i18n.t("noFilesInDirectory")}</div>
 			</if>
 			<if(state.loading)>
 				<div class="z3-ap-f-loading">

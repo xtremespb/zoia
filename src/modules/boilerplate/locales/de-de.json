@@ -1,0 +1,23 @@
+{
+	"moduleTitle": "Boilerplate",
+	"uid": "Unique ID",
+	"uidHelpText": "Sample help text for ID",
+	"title": "Title",
+	"titleHelpText": "Sample help text for Title",
+	"attachments": "Attachments",
+	"selectFiles": "Select file(s)",
+	"images": "Images",
+	"selectImages": "Select image(s)",
+	"actions": "Actions",
+	"add": "Add",
+	"edit": "Edit",
+	"delete": "Delete",
+	"reload": "Reload",
+	"save": "Save",
+	"cancel": "Cancel",
+	"couldNotLoadDataFromServer": "Could not load data from server",
+	"mFormErr.dataNotFound": "Data not found on server",
+	"mFormErr.anyOf": "Invalid length",
+	"mFormErr.oneOf": "Invalid length",
+	"mFormErr.alreadyExists": "Already exists"
+}

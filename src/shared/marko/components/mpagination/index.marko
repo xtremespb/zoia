@@ -1,0 +1,23 @@
+<if(state.paginationData && state.paginationData.length)>
+	<nav class=`pagination ${input.css}` role="navigation" aria-label="pagination">
+		<ul class="pagination-list">
+			<for|pi| of=state.paginationData>
+				<if(pi.type === "page")>
+					<li>
+						<a
+							class=`pagination-link${pi.active ? " is-current" : ""}`
+							data-page=pi.page
+							on-click("onPageClick")>
+							${pi.page}
+						</a>
+					</li>
+				</if>
+				<if(pi.type === "dots")>
+					<li>
+						<span class="pagination-ellipsis">&hellip;</span>
+					</li>
+				</if>
+			</for>
+		</ul>
+	</nav>
+</if>

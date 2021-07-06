@@ -418,7 +418,7 @@ ACE
 						: "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden"
 				)>
 				<div no-update>
-					<div key=`mf_ctl_ckeditor_${state.item.id}`/>
+					<div key=`mf_ctl_ckeditor_${state.item.id}` id=`mf_ctl_ckeditor_${state.item.id}`/>
 				</div>
 			</div>
 		</if>
@@ -576,7 +576,10 @@ Image Input
 				on-change("onSingleImageInputChange")
 				data-id=state.item.id
 				id=`${input.id}_${state.item.id}`/>
-			<a class="file-cta button is-light mr-1" key=`mf_ctl_${state.item.id}` tabindex="0">
+			<a
+				class="file-cta button is-light mr-1"
+				key=`mf_ctl_${state.item.id}`
+				tabindex="0">
 				<span class="file-icon">
 					<i class="mdi mdi-upload"/>
 				</span>
@@ -775,7 +778,9 @@ Date Picker
 				</div>
 			</if>
 			<if(state.calendar.mode === "year")>
-				<div class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year" id=`${input.id}_${state.item.id}_calendar_wrap_year`>
+				<div
+					class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year"
+					id=`${input.id}_${state.item.id}_calendar_wrap_year`>
 					<for|y, i| of=[...Array(100).keys()].map(i => i + new Date().getFullYear() - 50)>
 						<div
 							class=`column is-one-third z3-mf-calednar-cell-year${
