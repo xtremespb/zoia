@@ -73,7 +73,7 @@
 		"eslint-plugin-import": "^2.23.4",
 		"file-loader": "^6.2.0",
 		"imask": "^6.1.0",
-		"mini-css-extract-plugin": "^2.0.0",
+		"mini-css-extract-plugin": "^2.1.0",
 		"postcss": "^8.3.5",
 		"postcss-loader": "^6.1.1",
 		"postcss-preset-env": "^6.7.0",
@@ -86,7 +86,7 @@
 		"sass-loader": "^12.1.0",
 		"semantic-release": "^17.4.4",
 		"svg-url-loader": "^7.1.1",
-		"webpack": "^5.42.0",
+		"webpack": "^5.42.1",
 		"webpack-cli": "^4.7.2",
 		"webpack-fix-style-only-entries": "^0.6.1",
 		"webpack-sources": "^2.3.0"

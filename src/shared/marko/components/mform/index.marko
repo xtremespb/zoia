@@ -31,7 +31,10 @@ style.scss {
 		</div>
 	</if>
 	<if(state.error)>
-		<div class="notification is-danger" key=`${input.id}_mForm_Error` id=`${input.id}_mForm_Error`>
+		<div
+			class="notification is-danger"
+			key=`${input.id}_mForm_Error`
+			id=`${input.id}_mForm_Error`>
 			${state.error}
 		</div>
 	</if>
@@ -56,20 +59,25 @@ style.scss {
 							$ areaClass = tItem.css || "";
 							$ areaBorder = !!tItem.border;
 							<div class=`z3-mf-area-start${areaBorder ? " z3-mf-area-border-s" : ""}`>
-								${tItem.label}
+								<if(tItem.label)>${tItem.label}</if>
 							</div>
 							<if(!areaBorder)>
 								<div class=`z3-mf-area-round-top ${areaClass}`/>
 							</if>
 						</if>
 						<if(tItem.type === "areaEnd")>
-							<div class=`z3-mf-area-end${areaBorder ? " z3-mf-area-border-e" : " z3-mf-area-round-bottom " + areaClass}`/>
+							<div class=`z3-mf-area-end${
+								areaBorder
+									? " z3-mf-area-border-e"
+									: " z3-mf-area-round-bottom " + areaClass
+							}`/>
 							<div class=(tItem.css || "")/>
 							$ isArea = false;
 						</if>
 						<div class=(
 							isArea
-								? "z3-mf-area " + areaClass || "" + (areaBorder ? " z3-mf-area-border-lr" : "")
+								? "z3-mf-area " + areaClass ||
+								  "" + (areaBorder ? " z3-mf-area-border-lr" : "")
 								: ""
 						)>
 							<!-- Area-related code end -->

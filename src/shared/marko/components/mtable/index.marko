@@ -356,32 +356,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			</table>
 		</div>
 		<div class="z3-mt-table-meter" id=`${input.id}_tableMeter`/>
-		<if(state.paginationData.length)>
-			<nav
-				class="pagination is-small mb-0 mt-4"
-				role="navigation"
-				aria-label="pagination">
-				<ul class="pagination-list">
-					<for|pi| of=state.paginationData>
-						<if(pi.type === "page")>
-							<li>
-								<a
-									class=`pagination-link${pi.active ? " is-current" : ""}`
-									data-page=pi.page
-									on-click("onPageClick")>
-									${pi.page}
-								</a>
-							</li>
-						</if>
-						<if(pi.type === "dots")>
-							<li>
-								<span class="pagination-ellipsis">&hellip;</span>
-							</li>
-						</if>
-					</for>
-				</ul>
-			</nav>
-		</if>
+		<mpagination
+			css="is-small mb-0 mt-4"
+			on-page-click("onPageClick")
+			key=`${input.id}_pagination`/>
 	</else>
 	<if(state.loading)>
 		<div class="z3-mt-loading">

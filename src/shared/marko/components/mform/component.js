@@ -893,11 +893,14 @@ module.exports = class {
         setTimeout(() => this.setState("error", error), 1);
         if (error) {
             setTimeout(() => {
-                const y = document.getElementById(`${this.input.id}_mForm_Error`).top + window.scrollY;
-                window.scroll({
-                    top: y
-                });
-            }, 10);
+                const mFormError = document.getElementById(`${this.input.id}_mForm_Error`);
+                if (mFormError) {
+                    const y = mFormError.top + window.scrollY;
+                    window.scroll({
+                        top: y
+                    });
+                }
+            }, 100);
         }
     }
 
