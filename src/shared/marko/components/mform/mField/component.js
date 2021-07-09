@@ -332,7 +332,6 @@ module.exports = class {
                     this.hideCalendar();
                 }
             });
-
             break;
         }
         this.emit("settled");
@@ -687,7 +686,34 @@ module.exports = class {
             const calendarOptions = cloneDeep(this.state.calendar);
             calendarOptions.visible = false;
             this.setState("calendar", calendarOptions);
+            return;
         }
+        setTimeout(() => {
+            const element = document.getElementById(`${this.input.id}_${this.state.item.id}`);
+            if (element && !element.value.match(/_/)) {
+                const date = parse(element.value, this.i18n.t("global.dateFormatShort"), new Date());
+                const calendarOptions = cloneDeep(this.state.calendar);
+                calendarOptions.selected = {
+                    d: date.getDate(),
+                    m: date.getMonth(),
+                    y: date.getFullYear()
+                };
+                if (this.state.calendar.selected.y !== calendarOptions.selected.y || this.state.calendar.selected.m !== calendarOptions.selected.m) {
+                    calendarOptions.data = this.updateCalendarData(calendarOptions.selected.y, calendarOptions.selected.m);
+                    calendarOptions.year = calendarOptions.selected.y;
+                    calendarOptions.month = calendarOptions.selected.m;
+                }
+                calendarOptions.visible = true;
+                calendarOptions.value = date;
+                calendarOptions.valueText = element.value;
+                this.setState("calendar", calendarOptions);
+                this.emit("value-change", {
+                    type: "datepicker",
+                    id: this.state.item.id,
+                    value: calendarOptions.value
+                });
+            }
+        });
     }
 
     onCalendarCellClick(e) {

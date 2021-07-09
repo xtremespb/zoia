@@ -155,6 +155,18 @@ module.exports = class {
                     this.masked[field.id] = new InputMask(element, field.maskOptions);
                 }
             }
+            if (field.type === "datepicker") {
+                const element = document.getElementById(`${this.input.id}_${field.id}`);
+                if (element) {
+                    this.masked[field.id] = new InputMask(element, {
+                        mask: Date,
+                        pattern: this.i18n.t("global.dateMask.pattern"),
+                        lazy: false,
+                        format: date => format(date, this.i18n.t("global.dateFormatShort")),
+                        parse: str => parse(str, this.i18n.t("global.dateFormatShort"), new Date()),
+                    });
+                }
+            }
             if (this.input.save) {
                 this.getComponent(`mf_cmp_${field.id}`).func.setHeaders(this.input.save.headers);
             }
@@ -311,6 +323,11 @@ module.exports = class {
             break;
         case "datepicker":
             value = value ? format(value, "yyyyMMdd") : null;
+            const element = document.getElementById(`${this.input.id}_${obj.id}`);
+            if (element) {
+                element.value = format(obj.value, this.i18n.t("global.dateFormatShort"));
+                this.masked[obj.id].updateValue();
+            }
             break;
         default:
             value = String(value).trim();
