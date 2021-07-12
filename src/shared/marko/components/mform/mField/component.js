@@ -244,11 +244,16 @@ module.exports = class {
         }
         calendar.data = this.updateCalendarData(calendar.year, calendar.month);
         this.setState("calendar", calendar);
-        document.addEventListener("click", e => {
-            const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
-            if (this.state.calendar.visible && !calendarArea.contains(e.target)) {
-                this.hideCalendar();
-            }
+        // document.addEventListener("click", e => {
+        //     const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
+        //     if (this.state.calendar.visible && !calendarArea.contains(e.target)) {
+        //         this.hideCalendar();
+        //     }
+        // });
+        this.emit("value-change", {
+            type: "datepicker",
+            id: this.state.item.id,
+            value: calendar.value
         });
     }
 

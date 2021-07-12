@@ -1,3 +1,6 @@
+<if(process.browser)>
+	<navigation modules=input.modules/>
+</if>
 <div
 	class="columns is-desktop is-gapless z3-ap-content-area"
 	style=(process.browser ? "" : "display:none")>
@@ -42,6 +45,20 @@
 		</div>
 	</div>
 </div>
+<div class="z3-ap-main-footer" style=`display:${process.browser ? "flex" : "none"}`>
+	ZOIA &copy; 2019-${new Date().getFullYear()} Michael A. Matveev.&nbsp;<a
+		href="https://opensource.org/licenses/MIT"
+		class="is-underlined"
+		target="_blank">
+		${out.global.i18n.t("license.mit")}
+	</a>.
+</div>
 <div class="z3-ap-loading" style=`display:${process.browser ? "none" : "flex"}`>
-	${out.global.i18n.t("loading")}
+	<div class="z3-ap-loading-inner">
+		<div class="z3-admin-loading-spinner">
+			<div class="z3-admin-loading-double-bounce1"/>
+			<div class="z3-admin-loading-double-bounce2"/>
+		</div>
+		${out.global.i18n.t("loading")}
+	</div>
 </div>
