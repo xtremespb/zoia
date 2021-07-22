@@ -2,6 +2,9 @@
 const {
     exec
 } = require("child_process");
+const {
+    format,
+} = require("date-fns");
 const commandLineArgs = require("command-line-args");
 const fs = require("fs-extra");
 const path = require("path");
@@ -49,6 +52,8 @@ const execCommand = cmd => new Promise((resolve, reject) => {
     let exitCode;
     const workerProcess = exec(cmd, (error, stdout, stderr) => {
         if (exitCode === 0) {
+            // eslint-disable-next-line no-control-regex
+            fs.writeFileSync(path.resolve(`${__dirname}/../logs/build_${format(new Date(), "yyyyMMdd_HHmmss")}.log`), stdout.replace(/[^\x00-\x7F]/g, ""));
             resolve(stdout);
         } else {
             // eslint-disable-next-line prefer-promise-reject-errors

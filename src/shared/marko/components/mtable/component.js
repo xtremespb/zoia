@@ -873,12 +873,14 @@ module.exports = class {
     calculateTableMaxWidth() {
         this.resizeTable = document.getElementById(`${this.input.id}_table`);
         this.resizeTableMeter = document.getElementById(`${this.input.id}_tableMeter`);
-        this.resizeTableMeter.style.display = "block";
-        this.resizeTableContainer = document.getElementById(`${this.input.id}_tableContainer`);
-        this.resizeTable.style.display = "none";
-        this.resizeTableContainer.style.maxWidth = window.getComputedStyle(this.resizeTableMeter).width;
-        this.resizeTable.style.display = "table";
-        this.resizeTableMeter.style.display = "none";
+        if (this.resizeTable && this.resizeTableMeter) {
+            this.resizeTableMeter.style.display = "block";
+            this.resizeTableContainer = document.getElementById(`${this.input.id}_tableContainer`);
+            this.resizeTable.style.display = "none";
+            this.resizeTableContainer.style.maxWidth = window.getComputedStyle(this.resizeTableMeter).width;
+            this.resizeTable.style.display = "table";
+            this.resizeTableMeter.style.display = "none";
+        }
     }
 
     setupColumnResize() {

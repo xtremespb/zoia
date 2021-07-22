@@ -783,7 +783,7 @@ Date Picker
 				<div
 					class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calendar-wrap-year"
 					id=`${input.id}_${state.item.id}_calendar_wrap_year`>
-					<for|y, i| of=[...Array(100).keys()].map(i => i + new Date().getFullYear() - 50)>
+					<for|y, i| of=[...Array(200).keys()].map(i => i + new Date().getFullYear() - 100)>
 						<div
 							class=`column is-one-third z3-mf-calendar-cell-year${
 								state.calendar.year === y ? " z3-mf-calendar-cell-year-now" : ""

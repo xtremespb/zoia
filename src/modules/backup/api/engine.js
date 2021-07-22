@@ -5,7 +5,7 @@ import path from "path";
 import fs from "fs-extra";
 import archiver from "archiver";
 import {
-    ObjectID
+    ObjectId
 } from "mongodb";
 
 const backupData = fs.readJSONSync(path.resolve(`${__dirname}/../etc/backup.json`));
@@ -37,7 +37,7 @@ export default class {
                 if (data && data.length) {
                     Object.keys(data[0]).map(i => {
                         const val = data[0][i];
-                        if (val instanceof ObjectID) {
+                        if (val instanceof ObjectId) {
                             types[i] = "objectid";
                         } else if (val instanceof Date) {
                             types[i] = "date";

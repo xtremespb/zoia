@@ -1,5 +1,5 @@
 import {
-    ObjectID
+    ObjectId
 } from "mongodb";
 import filterSaveData from "./data/filterEdit.json";
 
@@ -32,7 +32,7 @@ export default () => ({
         }
         try {
             await this.mongo.db.collection(req.zoiaModulesConfig["core"].collectionFilters || "filters").updateOne({
-                _id: new ObjectID(req.body.id),
+                _id: new ObjectId(req.body.id),
             }, {
                 $set: {
                     title: req.body.title,

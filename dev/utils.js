@@ -5,11 +5,29 @@ const {
     v4: uuidv4
 } = require("uuid");
 const {
-    execSync
+    format,
+} = require("date-fns");
+const {
+    exec
 } = require("child_process");
 const minify = require("@node-minify/core");
 const htmlMinifier = require("@node-minify/html-minifier");
 const packageJson = require("../package.json");
+
+const execCommand = cmd => new Promise((resolve, reject) => {
+    let exitCode;
+    const workerProcess = exec(cmd, (error, stdout, stderr) => {
+        if (exitCode === 0) {
+            // eslint-disable-next-line no-control-regex
+            fs.writeFileSync(path.resolve(`${__dirname}/../logs/npm_${format(new Date(), "yyyyMMdd_HHmmss")}.log`), stdout.replace(/[^\x00-\x7F]/g, ""));
+            resolve(stdout);
+        } else {
+            // eslint-disable-next-line prefer-promise-reject-errors
+            reject(new Error(`${stdout || ""}${stderr || ""}`));
+        }
+    });
+    workerProcess.on("exit", code => exitCode = code);
+});
 
 const cleanUpWeb = argv => {
     [argv.update ? "build/public/update_" : "build/public/zoia_", "build/scripts"].map(d => {
@@ -130,7 +148,6 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
             modules.push(moduleDataCurrent);
             if (moduleDataCurrent.admin) {
                 try {
-                    console.log(moduleDirPath);
                     const adminConfig = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${moduleDirPath}/admin.json`));
                     const trans = {};
                     languages.map(language => {
@@ -221,7 +238,7 @@ const installRequiredPackages = async (moduleDirs, argv) => {
         if (cmd && cmd.length) {
             try {
                 console.log(`Installing NPM packages for module "${dir}"...`);
-                execSync(`npm i ${cmd} --loglevel=error`);
+                await execCommand(`npm i ${cmd} --loglevel=error`);
             } catch (e) {
                 console.error(e);
                 process.exit(1);

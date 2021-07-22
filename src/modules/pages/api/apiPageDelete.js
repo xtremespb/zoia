@@ -57,7 +57,7 @@ export default () => ({
                 }))
             });
             // Check result
-            if (!result || !result.result || !result.result.ok) {
+            if (!result || !result.acknowledged) {
                 response.deleteError();
                 return;
             }

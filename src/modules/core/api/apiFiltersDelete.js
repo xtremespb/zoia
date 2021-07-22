@@ -41,7 +41,7 @@ export default () => ({
             // Delete requested IDs
             const result = await this.mongo.db.collection(req.zoiaModulesConfig[moduleConfig.id].collectionFilters).deleteMany(queryDb);
             // Check result
-            if (!result || !result.result || !result.result.ok) {
+            if (!result || !result.acknowledged) {
                 response.deleteError();
                 return;
             }

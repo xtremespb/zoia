@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import crypto from "crypto";
 import {
-    ObjectID
+    ObjectId
 } from "mongodb";
 
 export default class {
@@ -36,7 +36,7 @@ export default class {
 
     async deleteRandomUser(userData) {
         await this.db.collection(this.modulesConfig["users"].collectionUsers).deleteOne({
-            _id: new ObjectID(userData._id)
+            _id: new ObjectId(userData._id)
         });
     }
 
