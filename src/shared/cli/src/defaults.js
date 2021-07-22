@@ -8,7 +8,7 @@
 
 import colors from "colors/safe";
 import {
-    ObjectID
+    ObjectId
 } from "mongodb";
 
 export default async (config, options, modulesConfig, db, defaultsData) => {
@@ -23,7 +23,7 @@ export default async (config, options, modulesConfig, db, defaultsData) => {
                     }
                     if (String(item[i]).match(/^ObjectId:/)) {
                         const oid = item[i].replace(/^ObjectId:/, "");
-                        item[i] = new ObjectID(oid);
+                        item[i] = new ObjectId(oid);
                     }
                 });
                 try {

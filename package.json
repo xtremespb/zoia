@@ -1,6 +1,6 @@
 {
 	"name": "zoia3",
-	"version": "3.1.80",
+	"version": "3.1.81",
 	"description": "ZOIA Content Management System",
 	"scripts": {
 		"config": "node ./dev/bin/config.js",
@@ -115,7 +115,7 @@
 		"sass-loader": "^12.1.0",
 		"semantic-release": "^17.4.4",
 		"svg-url-loader": "^7.1.1",
-		"webpack": "^5.45.1",
+		"webpack": "^5.46.0",
 		"webpack-cli": "^4.7.2",
 		"webpack-fix-style-only-entries": "^0.6.1",
 		"webpack-sources": "^2.3.1"

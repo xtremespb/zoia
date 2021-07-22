@@ -10,7 +10,7 @@ const commandLineArgs = require("command-line-args");
 const extract = require("extract-zip");
 const {
     MongoClient,
-    ObjectID
+    ObjectId
 } = require("mongodb");
 const {
     exec
@@ -305,7 +305,7 @@ try {
                             const item = rec;
                             Object.keys(item).map(i => {
                                 if (types[i] === "objectid") {
-                                    item[i] = new ObjectID(item[i]);
+                                    item[i] = new ObjectId(item[i]);
                                 } else if (types[i] === "date") {
                                     item[i] = new Date(item[i]);
                                 }

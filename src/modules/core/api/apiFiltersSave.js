@@ -1,5 +1,5 @@
 import {
-    ObjectID
+    ObjectId
 } from "mongodb";
 import filterSaveData from "./data/filterSave.json";
 
@@ -33,7 +33,7 @@ export default () => ({
         try {
             if (req.body.id) {
                 await this.mongo.db.collection(req.zoiaModulesConfig["core"].collectionFilters || "filters").updateOne({
-                    _id: new ObjectID(req.body.id),
+                    _id: new ObjectId(req.body.id),
                 }, {
                     $set: {
                         filters: req.body.filters,
