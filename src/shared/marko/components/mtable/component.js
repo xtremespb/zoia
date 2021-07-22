@@ -64,7 +64,7 @@ module.exports = class {
             widgets: [],
             widgetsView: [],
             anyWidgets: false,
-            currentWidgetsData: []
+            currentWidgetsData: [],
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -101,7 +101,6 @@ module.exports = class {
         this.widgetsDeleteConfirm = this.getComponent(`${this.input.id}_widgetsDeleteConfirm`);
         this.tableSettingsPagesForm = this.getComponent(`${this.input.id}_tableSettingsPagesForm`);
         this.widgetEditForm = this.getComponent(`${this.input.id}_widgetsEditForm`);
-        this.pagination = this.getComponent(`${this.input.id}_pagination`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
             window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
@@ -146,6 +145,14 @@ module.exports = class {
         this.setState("token", token);
         this.commitTableSettingsDebounced = debounce(this.commitTableSettings, 1000);
         this.calculateTableMaxWidth();
+        if (this.pagination) {
+            this.pagination.func.generatePagination(this.state.pagesCount || 1);
+        }
+    }
+
+    onPaginationMount() {
+        this.pagination = this.getComponent(`${this.input.id}_pagination`);
+        this.pagination.func.generatePagination(this.state.pagesCount || 1);
     }
 
     calculateItemsPerPage() {
@@ -211,7 +218,6 @@ module.exports = class {
                 this.setState("totalCount", response.data.count || 0);
                 this.setState("limit", response.data.limit || 1);
                 this.setState("pagesCount", response.data.pagesCount || 1);
-                this.pagination.func.generatePagination(response.data.pagesCount || 1);
                 if (response.data.columns && Object.keys(response.data.columns).length) {
                     if (!Object.keys(this.state.columnRatios).length) {
                         this.setState("columnRatios", response.data.columns.ratios || {});
@@ -233,6 +239,9 @@ module.exports = class {
                     this.setState("widgetsView", response.data.widgets.view || []);
                 }
                 setTimeout(() => this.setupColumnResize(), 10);
+                if (this.pagination) {
+                    this.pagination.func.generatePagination(this.state.pagesCount || 1);
+                }
             } else {
                 this.setState("error", this.i18n.t("mTableErr.general"));
             }

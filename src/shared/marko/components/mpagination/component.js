@@ -1,15 +1,23 @@
 module.exports = class {
-    onCreate() {
+    onCreate(input) {
         this.initialState = {
             page: 1,
-            paginationData: []
+            paginationData: input.paginationData || []
         };
-        this.state = this.initialState;
+        this.state = this.state || this.initialState;
         this.func = {
             reset: this.reset.bind(this),
             setPage: this.setPage.bind(this),
             generatePagination: this.generatePagination.bind(this),
+            setPaginationData: this.setPaginationData.bind(this),
         };
+    }
+
+    onMount() {
+        if (this.input.pagesCount && this.input.pagesCount > 1) {
+            this.generatePagination(this.input.pagesCount);
+        }
+        this.emit("mount");
     }
 
     reset() {
@@ -19,6 +27,10 @@ module.exports = class {
 
     setPage(page) {
         this.setState("page", page);
+    }
+
+    setPaginationData(data) {
+        this.setState("paginationData", data);
     }
 
     generatePagination(pagesCount) {
@@ -57,7 +69,7 @@ module.exports = class {
             active: page === count,
             page: count
         });
-        this.setState("paginationData", range);
+        this.setStateDirty("paginationData", range);
         return range;
     }
 

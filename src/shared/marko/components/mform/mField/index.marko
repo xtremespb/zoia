@@ -769,8 +769,8 @@ Date Picker
 				<div class="columns is-gapless is-mobile is-multiline is-size-7">
 					<for|m, i| of=out.global.i18n.t("global.monthsFull")>
 						<div
-							class=`column is-one-third z3-mf-calednar-cell-month${
-								state.calendar.month === i ? " z3-mf-calednar-cell-month-now" : ""
+							class=`column is-one-third z3-mf-calendar-cell-month${
+								state.calendar.month === i ? " z3-mf-calendar-cell-month-now" : ""
 							}`
 							data-month=i
 							on-click("onCalendarMonthClick")>
@@ -781,12 +781,12 @@ Date Picker
 			</if>
 			<if(state.calendar.mode === "year")>
 				<div
-					class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calednar-wrap-year"
+					class="columns is-gapless is-mobile is-multiline is-size-7 z3-mf-calendar-wrap-year"
 					id=`${input.id}_${state.item.id}_calendar_wrap_year`>
 					<for|y, i| of=[...Array(100).keys()].map(i => i + new Date().getFullYear() - 50)>
 						<div
-							class=`column is-one-third z3-mf-calednar-cell-year${
-								state.calendar.year === y ? " z3-mf-calednar-cell-year-now" : ""
+							class=`column is-one-third z3-mf-calendar-cell-year${
+								state.calendar.year === y ? " z3-mf-calendar-cell-year-now" : ""
 							}`
 							id=`${input.id}_${state.item.id}_year_${y}`
 							data-year=y

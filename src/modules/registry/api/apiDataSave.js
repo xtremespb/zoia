@@ -73,7 +73,7 @@ export default () => ({
                 upsert: true
             });
             // Check result
-            if (!update || !update.result || !update.result.ok) {
+            if (!update || !update.acknowledged) {
                 response.databaseError();
                 return;
             }

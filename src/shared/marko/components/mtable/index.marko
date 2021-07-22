@@ -9,7 +9,7 @@ style.scss {
 
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
-<div class="z3-mt-wrap" id=`${input.id}_wrap`>
+<div class="z3-mt-wrap" id=`${input.id}_wrap` key=`${input.id}_wrap`>
 	<div class="columns z3-ap-noselect">
 		<div class="column is-four-fifths">
 			<if(input.buttons && input.buttons.length)>
@@ -357,6 +357,8 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</div>
 		<div class="z3-mt-table-meter" id=`${input.id}_tableMeter`/>
 		<mpagination
+			on-mount("onPaginationMount")
+			pagesCount=state.pagesCount
 			css="is-small mb-0 mt-4"
 			on-page-click("onPageClick")
 			key=`${input.id}_pagination`/>
