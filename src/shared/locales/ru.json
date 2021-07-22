@@ -25,6 +25,7 @@
 		"Ноябрь",
 		"Декабрь"
 	],
+	"global.dateMask.pattern": "d{.}`m{.}`Y",
 	"adminPanel": "Панель администратора",
 	"modules": "Модули",
 	"logOut": "Выход",

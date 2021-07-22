@@ -1,6 +1,107 @@
 @import "../../../../design/variables/components.scss";
 
-.z3-mc-modal-content {
+.z3-mf-calendar-wrap {
+    border: 1px solid $grey-lightest;
+    width: 230px;
+    position: absolute;
+    z-index: 1000;
     background: $white;
-    max-width: 250px;
+    box-shadow: -2px 4px 8px -5px rgba(34, 60, 80, 0.2);
+    margin-top: 1px;
+    border-radius: 4px;
+}
+
+.z3-mf-calendar-dow {
+    background: $grey-light;
+}
+
+.z3-mf-calendar-cell {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 1px;
+}
+
+.z3-mf-calendar-cell-day {
+    cursor: pointer;
+}
+
+.z3-mf-calendar-cell-day-disabled {
+    opacity: 0.3;
+}
+
+.z3-mf-calendar-cell-day:hover {
+    border: 1px solid $primary;
+}
+
+.z3-mf-calendar-cell-day-side {
+    background: $grey-lightest;
+}
+
+.z3-mf-calendar-cell-day-today {
+    border: 1px dotted $grey;
+}
+
+.z3-mf-calendar-cell-day-selected {
+    background: $primary;
+    color: $white;
+}
+
+.z3-mf-calendar-cell-day-whitelist:not(.z3-mf-calendar-cell-day-selected) {
+    background: lighten($green, 40%);
+}
+
+.z3-mf-calendar-head-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.z3-mf-calendar-cell-month,
+.z3-mf-calendar-cell-year {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    cursor: pointer;
+}
+
+.z3-mf-calendar-cell-year-now,
+.z3-mf-calendar-cell-month-now {
+    background: $primary;
+    color: $white;
+}
+
+.z3-mf-calendar-cell-year:hover:not(.z3-mf-calendar-cell-year-now),
+.z3-mf-calendar-cell-month:hover:not(.z3-mf-calendar-month-year-now) {
+    background: $grey-lightest;
+    color: $black;
+}
+
+.z3-mf-calendar-wrap-year {
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.z3-mf-calendar-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border-top: 1px solid $grey-lightest;
+    cursor: pointer;
+}
+
+.z3-mf-calendar-control:hover {
+    background: $white-bis;
+}
+
+.z3-mf-calendar-cell-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

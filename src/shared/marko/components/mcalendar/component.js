@@ -24,12 +24,15 @@ module.exports = class {
                 value: null,
                 valueText: null,
                 mode: "date",
-            }
+            },
+            whitelist: [],
         };
         this.state = state;
         this.i18n = out.global.i18n;
         this.func = {
             setDate: this.setDateExt.bind(this),
+            setMonthYear: this.setMonthYear.bind(this),
+            setWhitelist: this.setWhitelist.bind(this),
             clear: this.onCalendarClear.bind(this),
         };
     }
@@ -48,7 +51,25 @@ module.exports = class {
     }
 
     setDateExt(date) {
-        const calendar = this.setDate(cloneDeep(this.state.calendar), date);
+        const calendar = date ? this.setDate(cloneDeep(this.state.calendar), date) : this.clearCalendar(cloneDeep(this.state.calendar));
+        calendar.data = this.updateCalendarData(calendar.year, calendar.month);
+        this.setState("calendar", calendar);
+    }
+
+    setMonthYear(month, year) {
+        if (!month || !year) {
+            return;
+        }
+        const calendar = cloneDeep(this.state.calendar);
+        calendar.value = null;
+        calendar.valueText = null;
+        calendar.selected = {
+            y: year,
+            m: month,
+            d: null,
+        };
+        calendar.year = calendar.selected.y;
+        calendar.month = calendar.selected.m;
         calendar.data = this.updateCalendarData(calendar.year, calendar.month);
         this.setState("calendar", calendar);
     }
@@ -75,7 +96,8 @@ module.exports = class {
             .map((_, index) => ({
                 d: addDays(startDate, index).getDate(),
                 m: addDays(startDate, index).getMonth(),
-                y: addDays(startDate, index).getFullYear()
+                y: addDays(startDate, index).getFullYear(),
+                enabled: this.state.whitelist.length ? this.state.whitelist.indexOf(format(addDays(startDate, index), "yyyyMMdd")) > -1 : true
             }))
             .reduce((matrix, current, index, days) => !(index % cols !== 0) ? [...matrix, days.slice(index, index + cols)] : matrix, []);
         if (data[5][0].d < 10) {
@@ -153,7 +175,7 @@ module.exports = class {
         calendarOptions.mode = mode;
         this.setState("calendar", calendarOptions);
         if (mode === "year") {
-            setTimeout(() => document.getElementById(`${this.input.id}_calendar_wrap_year`).scrollTop = document.getElementById(`${this.input.id}_year_${this.state.calendar.year}`).offsetTop, 100);
+            setTimeout(() => document.getElementById(`${this.input.id}_calendar_wrap_year`).scrollTop = document.getElementById(`${this.input.id}_year_${this.state.calendar.year}`).offsetTop - 120, 100);
         }
     }
 
@@ -179,15 +201,6 @@ module.exports = class {
         calendarOptions.data = this.updateCalendarData(calendarOptions.year, calendarOptions.month);
         calendarOptions.mode = "date";
         this.setState("calendar", calendarOptions);
-    }
-
-    hideCalendar(e) {
-        if (e && e.preventDefault) {
-            e.preventDefault();
-        }
-        const calendarState = cloneDeep(this.state.calendar);
-        calendarState.visible = false;
-        this.setState("calendar", calendarState);
     }
 
     clearCalendar(calendar) {
@@ -231,5 +244,12 @@ module.exports = class {
         calendar.visible = false;
         this.setState("calendar", calendar);
         this.emit("value-change", calendar.value);
+    }
+
+    setWhitelist(whitelist) {
+        this.setState("whitelist", whitelist);
+        const calendar = cloneDeep(this.state.calendar);
+        calendar.data = this.updateCalendarData(calendar.year, calendar.month);
+        this.setState("calendar", calendar);
     }
 };

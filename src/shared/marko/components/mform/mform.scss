@@ -224,8 +224,8 @@
     justify-content: center;
 }
 
-.z3-mf-calednar-cell-month,
-.z3-mf-calednar-cell-year {
+.z3-mf-calendar-cell-month,
+.z3-mf-calendar-cell-year {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -233,19 +233,19 @@
     cursor: pointer;
 }
 
-.z3-mf-calednar-cell-year-now,
-.z3-mf-calednar-cell-month-now {
+.z3-mf-calendar-cell-year-now,
+.z3-mf-calendar-cell-month-now {
     background: $primary;
     color: $white;
 }
 
-.z3-mf-calednar-cell-year:hover:not(.z3-mf-calednar-cell-year-now),
-.z3-mf-calednar-cell-month:hover:not(.z3-mf-calednar-month-year-now) {
+.z3-mf-calendar-cell-year:hover:not(.z3-mf-calendar-cell-year-now),
+.z3-mf-calendar-cell-month:hover:not(.z3-mf-calendar-month-year-now) {
     background: $grey-lightest;
     color: $black;
 }
 
-.z3-mf-calednar-wrap-year {
+.z3-mf-calendar-wrap-year {
     max-height: 300px;
     overflow: hidden;
     overflow-y: scroll;

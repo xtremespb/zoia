@@ -137,6 +137,11 @@
     height: 100vh;
 }
 
+.z3-ap-loading-inner {
+    display: flex;
+    align-items: center;
+}
+
 .switch[type="checkbox"]:focus+label::after,
 .switch[type="checkbox"]:active+label::after,
 .switch[type="checkbox"]:focus+label::before,
@@ -158,6 +163,43 @@
 .z3-pretty>.state>label:before,
 .z3-pretty>.state>label:after {
     top: calc((0.0001% - (100% - 1em)) - 8%) !important;
+}
+
+.z3-admin-loading-spinner {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    margin-right: 10px;
+}
+
+.z3-admin-loading-double-bounce1,
+.z3-admin-loading-double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: $grey;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: z3-admin-loading-sk-bounce 2s infinite ease-in-out;
+}
+
+.z3-admin-loading-double-bounce2 {
+    -webkit-animation-delay: -1s;
+    animation-delay: -1s;
+}
+
+@keyframes z3-admin-loading-sk-bounce {
+
+    0%,
+    100% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1);
+    }
 }
 
 @media (max-width: 768px) {

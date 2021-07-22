@@ -13,6 +13,12 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
     devtool: argv.mode === "production" ? false : "inline-source-map",
     module: {
         rules: [{
+                test: /\.(woff(2)?|ttf|eot|otf|png|jpg|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                type: "asset/resource",
+                generator: {
+                    filename: "[hash:8][ext][query]"
+                  }
+            }, {
                 test: /\.s?css$/,
                 use: [{
                         loader: MiniCssExtractPlugin.loader
@@ -20,7 +26,8 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
                         loader: "css-loader",
                         options: {
                             importLoaders: 1,
-                            sourceMap: false
+                            sourceMap: false,
+                            url: true,
                         }
                     },
                     argv.mode === "production" ? {
@@ -35,14 +42,6 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
                         loader: "sass-loader"
                     },
                 ].filter(i => i !== null)
-            }, {
-                test: /\.(woff(2)?|ttf|eot|otf|png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
-                use: [{
-                    loader: "file-loader",
-                    options: {
-                        name: "[contenthash:8].[ext]",
-                    }
-                }]
             },
             {
                 test: /\.marko$/,
@@ -56,10 +55,6 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
                         ]
                     }
                 }
-            },
-            {
-                test: /\.svg/,
-                loader: "svg-url-loader"
             },
             argv.mode === "production" ? {
                 test: /\.js$/,

@@ -155,6 +155,18 @@ module.exports = class {
                     this.masked[field.id] = new InputMask(element, field.maskOptions);
                 }
             }
+            if (field.type === "datepicker") {
+                const element = document.getElementById(`${this.input.id}_${field.id}`);
+                if (element) {
+                    this.masked[field.id] = new InputMask(element, {
+                        mask: Date,
+                        pattern: this.i18n.t("global.dateMask.pattern"),
+                        lazy: false,
+                        format: date => format(date, this.i18n.t("global.dateFormatShort")),
+                        parse: str => parse(str, this.i18n.t("global.dateFormatShort"), new Date()),
+                    });
+                }
+            }
             if (this.input.save) {
                 this.getComponent(`mf_cmp_${field.id}`).func.setHeaders(this.input.save.headers);
             }
@@ -179,16 +191,25 @@ module.exports = class {
 
     onTabClick(e) {
         const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        const prevTabId = this.state.activeTabId;
         this.setState("activeTabId", dataset.id);
         setTimeout(this.emitFieldsUpdate.bind(this), 0);
         setTimeout(this.autoFocus.bind(this), 0);
         this.fieldsFlat.map(field => {
-            if (this.masked[field.id]) {
+            if (this.masked[field.id] && field.maskOptions) {
                 this.masked[field.id].destroy();
                 setTimeout(() => {
                     const element = document.getElementById(`${this.input.id}_${field.id}`);
                     this.masked[field.id] = new InputMask(element, field.maskOptions);
                 }, 10);
+            }
+            if (field.type === "datepicker") {
+                const element = document.getElementById(`${this.input.id}_${field.id}`);
+                if (element && element.value.match(/_/)) {
+                    const data = cloneDeep(this.state.data);
+                    data[prevTabId][field.id] = null;
+                    this.setState("data", data);
+                }
             }
         });
     }
@@ -311,6 +332,11 @@ module.exports = class {
             break;
         case "datepicker":
             value = value ? format(value, "yyyyMMdd") : null;
+            const element = document.getElementById(`${this.input.id}_${obj.id}`);
+            if (element) {
+                element.value = obj.value ? format(obj.value, this.i18n.t("global.dateFormatShort")) : null;
+                this.masked[obj.id].updateValue();
+            }
             break;
         default:
             value = String(value).trim();
@@ -545,7 +571,7 @@ module.exports = class {
         const data = cloneDeep(this.state.data);
         this.fieldsFlat.map(field => {
             if (field.shared) {
-                const valueRaw = this.masked[field.id] ? this.masked[field.id].unmaskedValue : data[this.state.activeTabId][field.id];
+                const valueRaw = this.masked[field.id] && field.maskOptions ? this.masked[field.id].unmaskedValue : data[this.state.activeTabId][field.id];
                 const value = this.processSerializedValue(field, valueRaw);
                 if (field.tags) {
                     const valueArr = value && Array.isArray(value) ? value : value && typeof value === "string" ? value.replace(/\s/gm, "").split(",") : [];
@@ -559,7 +585,7 @@ module.exports = class {
             } else {
                 this.state.tabs.map(tab => {
                     serialized[tab.id] = serialized[tab.id] || {};
-                    const valueRaw = this.masked[field.id] ? this.masked[field.id].unmaskedValue : data[tab.id][field.id];
+                    const valueRaw = this.masked[field.id] && field.maskOptions ? this.masked[field.id].unmaskedValue : data[tab.id][field.id];
                     const value = this.processSerializedValue(field, valueRaw);
                     if (field.tags) {
                         const valueArr = value ? value.replace(/\s/gm, "").split(",") : [];
@@ -713,6 +739,16 @@ module.exports = class {
 
     async onFormSubmit(e) {
         e && e.preventDefault ? e.preventDefault() : null;
+        this.fieldsFlat.map(field => {
+            if (field.type === "datepicker") {
+                const element = document.getElementById(`${this.input.id}_${field.id}`);
+                if (element && element.value.match(/_/)) {
+                    const data = cloneDeep(this.state.data);
+                    data[this.state.activeTabId][field.id] = null;
+                    this.setState("data", data);
+                }
+            }
+        });
         const serialized = this.serialize(true);
         const validationResult = await this.validate(serialized);
         this.visualizeErrors(validationResult.errorData);
@@ -757,7 +793,7 @@ module.exports = class {
                             data[tab.id][field.id] = null;
                         }
                     }
-                    if (this.masked[field.id]) {
+                    if (this.masked[field.id] && field.maskOptions) {
                         this.masked[field.id].destroy();
                         setTimeout(() => {
                             const element = document.getElementById(`${this.input.id}_${field.id}`);
@@ -785,7 +821,7 @@ module.exports = class {
                                 data[tab.id][field.id] = null;
                             }
                         }
-                        if (this.masked[field.id]) {
+                        if (this.masked[field.id] && field.maskOptions) {
                             this.masked[field.id].destroy();
                             setTimeout(() => {
                                 const element = document.getElementById(`${this.input.id}_${field.id}`);
@@ -814,7 +850,7 @@ module.exports = class {
                         data.__default[field.id] = null;
                     }
                 }
-                if (this.masked[field.id]) {
+                if (this.masked[field.id] && field.maskOptions) {
                     this.masked[field.id].destroy();
                     setTimeout(() => {
                         const element = document.getElementById(`${this.input.id}_${field.id}`);
