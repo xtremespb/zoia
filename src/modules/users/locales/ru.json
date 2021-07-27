@@ -26,7 +26,7 @@
 	"mFormErr.emailAlreadyExists": "E-mail уже существует в системе",
 	"mFormErr.userNotFound": "Пользователь не найден в системе",
 	"groups": "Группы",
-	"groupsHelpText": "Список групп (щелкните по группе, чтобы скопировать в буфер обмена)",
+	"groupsHelpText": "Список групп",
 	"group": "ID группы",
 	"comment": "Комментарий",
 	"aclAdd": "Добавить группу",

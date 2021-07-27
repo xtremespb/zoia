@@ -16,7 +16,6 @@ const {
 const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const CKEditorImageUploadAdapter = require("./CKEditorImageUploadAdapter");
-const BulmaTagsInput = require("../tagsinput/index").default;
 
 // Polyfill for Object.fromEntries (missing in CKEditor)
 if (!Object.fromEntries) {
@@ -89,7 +88,9 @@ module.exports = class {
                 value: null,
                 valueText: null,
                 mode: "date",
-            }
+            },
+            tags: [],
+            tagInputValue: null,
         };
         this.state = state;
         this.func = {
@@ -133,10 +134,7 @@ module.exports = class {
             throttle(this.updateAce.bind(this), 300)();
             break;
         case "tags":
-            if (this.btiInstance) {
-                this.btiInstance.removeAll();
-                (this.input.value || []).map(i => this.btiInstance.add(i));
-            }
+            this.setState("tags", this.input.value || []);
             break;
         case "datepicker":
             this.updateDatePicker(this.input.value);
@@ -260,21 +258,6 @@ module.exports = class {
     async onMount() {
         await this.reloadCaptcha();
         switch (this.state.item.type) {
-        case "tags":
-            setTimeout(() => {
-                const tagsField = document.getElementById(`${this.input.id}_${this.state.item.id}`);
-                if (tagsField) {
-                    const [btiInstance] = BulmaTagsInput.attach(tagsField, {
-                        selectable: false
-                    });
-                    if (btiInstance) {
-                        this.btiInstance = btiInstance;
-                        this.btiInstance.on("after.add", this.onTagsInputValueChange.bind(this));
-                        this.btiInstance.on("after.remove", this.onTagsInputValueChange.bind(this));
-                    }
-                }
-            });
-            break;
         case "ace":
             if (!document.getElementById(`${this.input.id}_${this.state.item.id}_ace`)) {
                 return;
@@ -316,6 +299,14 @@ module.exports = class {
                 }
             });
             break;
+        case "tags":
+            document.addEventListener("click", e => {
+                const tagsWrap = document.getElementById(`${this.input.id}_${this.state.item.id}_wrap`);
+                if (tagsWrap && !tagsWrap.contains(e.target)) {
+                    tagsWrap.classList.remove("z3-mf-tags-wrap-focus");
+                }
+            });
+            break;
         case "datepicker":
             const calendar = cloneDeep(this.state.calendar);
             if (this.input.value) {
@@ -333,7 +324,7 @@ module.exports = class {
             this.setState("calendar", calendar);
             document.addEventListener("click", e => {
                 const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
-                if (this.state.calendar.visible && !calendarArea.contains(e.target)) {
+                if (this.state.calendar.visible && calendarArea && !calendarArea.contains(e.target)) {
                     this.hideCalendar();
                 }
             });
@@ -383,16 +374,6 @@ module.exports = class {
             id: event.dataset.id,
             value: event.value
         });
-    }
-
-    onTagsInputValueChange() {
-        if (this.btiInstance) {
-            this.emit("value-change", {
-                type: "tags",
-                id: this.state.item.id,
-                value: this.btiInstance.items
-            });
-        }
     }
 
     onArrInputChange(e) {
@@ -836,5 +817,71 @@ module.exports = class {
             id: this.state.item.id,
             value: calendar.value
         });
+    }
+
+    onTagsWrapClick() {
+        document.getElementById(`${this.input.id}_${this.state.item.id}_input`).focus();
+    }
+
+    onTagCloseClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const index = parseInt(e.target.dataset.index, 10);
+        const tags = cloneDeep(this.state.tags).filter((t, i) => i !== index);
+        this.setState("tags", tags);
+        document.getElementById(`${this.input.id}_${this.state.item.id}_input`).focus();
+        this.emit("value-change", {
+            type: "tags",
+            id: this.state.item.id,
+            value: tags
+        });
+    }
+
+    onTagClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.getElementById(`${this.input.id}_${this.state.item.id}_wrap`).classList.add("z3-mf-tags-wrap-focus");
+    }
+
+    onTagsInputFocus() {
+        document.getElementById(`${this.input.id}_${this.state.item.id}_wrap`).classList.add("z3-mf-tags-wrap-focus");
+    }
+
+    onTagsInputBlur() {
+        document.getElementById(`${this.input.id}_${this.state.item.id}_wrap`).classList.remove("z3-mf-tags-wrap-focus");
+    }
+
+    onTagsInputKeyup(e) {
+        const inputField = document.getElementById(`${this.input.id}_${this.state.item.id}_input`);
+        const value = inputField.value ? inputField.value.trim() : null;
+        let changed;
+        if (value && e.keyCode === 13) {
+            e.preventDefault();
+            const tags = cloneDeep(this.state.tags);
+            tags.push(value);
+            this.setState("tags", tags);
+            inputField.value = "";
+            changed = true;
+        }
+        if (!value && this.state.tags.length && e.keyCode === 8) {
+            e.preventDefault();
+            const tags = cloneDeep(this.state.tags).filter((t, i) => i !== this.state.tags.length - 1);
+            this.setState("tags", tags);
+            changed = true;
+        }
+        if (changed) {
+            this.emit("value-change", {
+                type: "tags",
+                id: this.state.item.id,
+                value: this.state.tags
+            });
+        }
+    }
+
+    onTagsInputChange(e) {
+        const {
+            value
+        } = e.target;
+        this.setState("tagInputValue", value);
     }
 };

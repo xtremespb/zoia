@@ -810,19 +810,31 @@ Tags Input
 -->
 <if(state.item.type === "tags")>
 	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-		<label class="label" style="white-space:nowrap">
+		<label class="label z3-mf-tags-label" style="white-space:nowrap">
 			${state.item.label}:<if(state.mandatory)>
 				&nbsp;<span class="has-text-danger">*</span>
 			</if>
 		</label>
-		<div class="control" no-update>
-			<input
-				class="input"
-				id=`${input.id}_${state.item.id}`
-				key=`mf_ctl_${state.item.id}`
-				type="text"
-				placeholder=state.item.placeholder
-				value=input.value/>
+		<div class="input columns is-variable is-1 is-multiline is-mobile z3-mf-tags-wrap pt-1"
+			on-click("onTagsWrapClick")
+			id=`${input.id}_${state.item.id}_wrap`
+			key=`mf_ctl_${state.item.id}`>
+			<for|tag, index| of=state.tags>
+				<div class="control pb-1 pl-1 pr-1">
+					<div class="tags has-addons">
+						<span class="tag is-info" on-click("onTagClick")>${tag}</span>
+						<a class="tag is-delete" on-click("onTagCloseClick") data-index=index/>
+					</div>
+				</div>
+			</for>
+			<div class=`column is-auto z3-mf-tags-input-wrap pb-1 ${state.tags.length ? "ml-1" : "ml-2"} mr-2`>
+				<input
+					id=`${input.id}_${state.item.id}_input`
+					on-focus("onTagsInputFocus")
+					on-blur("onTagsInputBlur")
+					on-keydown("onTagsInputKeyup")
+					class="input z3-mf-tags-input p-0"/>
+			</div>
 		</div>
 		<if(state.item.helpText)>
 			<p class="help">${state.item.helpText}</p>
