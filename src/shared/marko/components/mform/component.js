@@ -573,28 +573,18 @@ module.exports = class {
             if (field.shared) {
                 const valueRaw = this.masked[field.id] && field.maskOptions ? this.masked[field.id].unmaskedValue : data[this.state.activeTabId][field.id];
                 const value = this.processSerializedValue(field, valueRaw);
-                if (field.tags) {
-                    const valueArr = value && Array.isArray(value) ? value : value && typeof value === "string" ? value.replace(/\s/gm, "").split(",") : [];
-                    serialized[field.id] = [...new Set(valueArr)];
-                } else {
-                    serialized[field.id] = value;
-                    if (undef && (serialized[field.id] === null || serialized[field.id] === "")) {
-                        serialized[field.id] = undefined;
-                    }
+                serialized[field.id] = value;
+                if (undef && (serialized[field.id] === null || serialized[field.id] === "")) {
+                    serialized[field.id] = undefined;
                 }
             } else {
                 this.state.tabs.map(tab => {
                     serialized[tab.id] = serialized[tab.id] || {};
                     const valueRaw = this.masked[field.id] && field.maskOptions ? this.masked[field.id].unmaskedValue : data[tab.id][field.id];
                     const value = this.processSerializedValue(field, valueRaw);
-                    if (field.tags) {
-                        const valueArr = value ? value.replace(/\s/gm, "").split(",") : [];
-                        serialized[tab.id][field.id] = [...new Set(valueArr)];
-                    } else {
-                        serialized[tab.id][field.id] = value;
-                        if (undef && (serialized[tab.id][field.id] === null || serialized[tab.id][field.id] === "")) {
-                            serialized[tab.id][field.id] = undefined;
-                        }
+                    serialized[tab.id][field.id] = value;
+                    if (undef && (serialized[tab.id][field.id] === null || serialized[tab.id][field.id] === "")) {
+                        serialized[tab.id][field.id] = undefined;
                     }
                 });
             }

@@ -26,7 +26,7 @@
 	"mFormErr.emailAlreadyExists": "E-mail existiert bereits in der Datenbank",
 	"mFormErr.userNotFound": "Benutzer in der Datenbank nicht gefunden",
 	"groups": "Gruppen",
-	"groupsHelpText": "Gruppenliste (zum kopieren in die Zwischenablage anklicken)",
+	"groupsHelpText": "Gruppenliste",
 	"group": "Gruppe ID",
 	"comment": "Kommentar",
 	"aclAdd": "Gruppe hinzufügen",

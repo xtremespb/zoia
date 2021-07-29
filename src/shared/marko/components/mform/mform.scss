@@ -339,6 +339,38 @@
     background: $white;
 }
 
+.z3-mf-tags-label {
+    padding-bottom: 0.5em;
+}
+
+.z3-mf-tag,
+.z3-mf-tags-input-wrap {
+    margin: 0;
+    padding: 0;
+}
+
+.z3-mf-tags-wrap {
+    height: unset !important;
+    padding: 0;
+}
+
+.z3-mf-tags-wrap-focus {
+    border-color: $link !important;
+    box-shadow: 0 0 0 0.125em rgba($link, 0.25) !important;
+}
+
+.z3-mf-tags-input {
+    border: 0 !important;
+    width: 100%;
+    box-shadow: unset !important;
+    height: 100% !important;
+    min-width: 200px;
+}
+
+.z3-mf-tags-wrap {
+    min-height: 2.5em;
+}
+
 @media (max-width: 1024px) {
 
     .z3-mf-captcha-input,

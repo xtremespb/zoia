@@ -19,7 +19,7 @@ const execCommand = cmd => new Promise((resolve, reject) => {
     const workerProcess = exec(cmd, (error, stdout, stderr) => {
         if (exitCode === 0) {
             // eslint-disable-next-line no-control-regex
-            fs.writeFileSync(path.resolve(`${__dirname}/../logs/npm_${format(new Date(), "yyyyMMdd_HHmmss")}.log`), stdout.replace(/[^\x00-\x7F]/g, ""));
+            fs.writeFileSync(path.resolve(`${__dirname}/../logs/npm_${format(new Date(), "yyyyMMdd_HHmmss")}.log`), `${cmd}\n\n${stdout.replace(/[^\x00-\x7F]/g, "")}`);
             resolve(stdout);
         } else {
             // eslint-disable-next-line prefer-promise-reject-errors
@@ -234,11 +234,17 @@ const installRequiredPackages = async (moduleDirs, argv) => {
                 }
                 return `${m}@${npmData[m]}`;
             }
-        }).filter(i => i).join(" ");
+        }).filter(i => i);
         if (cmd && cmd.length) {
             try {
-                console.log(`Installing NPM packages for module "${dir}"...`);
-                await execCommand(`npm i ${cmd} --loglevel=error`);
+                for (const c of cmd) {
+                    console.log(`Installing NPM package for module "${dir}": ${c}`);
+                    try {
+                        await execCommand(`npm i ${c} --loglevel=info${argv.mode === "production" ? " --save" : ""}`);
+                    } catch (e) {
+                        console.log(e.message);
+                    }
+                }
             } catch (e) {
                 console.error(e);
                 process.exit(1);
