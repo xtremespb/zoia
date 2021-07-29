@@ -38,7 +38,7 @@ module.exports = class {
     }
 
     setDate(calendar, date) {
-        calendar.value = parse(date, "yyyyMMdd", new Date());
+        calendar.value = typeof date === "string" ? parse(date, "yyyyMMdd", new Date()) : date;
         calendar.valueText = format(calendar.value, this.i18n.t("global.dateFormatShort"));
         calendar.selected = {
             y: calendar.value.getFullYear(),

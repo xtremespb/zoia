@@ -59,8 +59,8 @@
 		"lodash.clonedeep": "^4.5.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
-		"marko": "^5.14.0",
-		"mime-types": "^2.1.31",
+		"marko": "^5.15.0",
+		"mime-types": "^2.1.32",
 		"mongodb": "^4.0.1",
 		"nodemailer": "^6.6.3",
 		"pino": "^6.13.0",
@@ -83,7 +83,7 @@
 		"@babel/plugin-transform-runtime": "^7.14.5",
 		"@babel/preset-env": "^7.14.8",
 		"@ckeditor/ckeditor5-build-classic": "^29.0.0",
-		"@marko/compiler": "^5.14.0",
+		"@marko/compiler": "^5.15.0",
 		"@marko/prettyprint": "^3.0.1",
 		"@marko/webpack": "^9.0.3",
 		"@mdi/font": "^5.9.55",
@@ -115,10 +115,10 @@
 		"sass-loader": "^12.1.0",
 		"semantic-release": "^17.4.4",
 		"svg-url-loader": "^7.1.1",
-		"webpack": "^5.46.0",
+		"webpack": "^5.47.0",
 		"webpack-cli": "^4.7.2",
 		"webpack-fix-style-only-entries": "^0.6.1",
-		"webpack-sources": "^2.3.1"
+		"webpack-sources": "^3.0.4"
 	},
 	"private": true,
 	"files": [
