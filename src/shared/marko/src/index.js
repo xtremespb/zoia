@@ -8,7 +8,9 @@ import fastifyFormbody from "fastify-formbody";
 import fastifyCookie from "fastify-cookie";
 import fastifyStatic from "fastify-static";
 import Pino from "pino";
-import { Telegraf } from "telegraf";
+import {
+    Telegraf
+} from "telegraf";
 import Redis from "ioredis";
 import Fastify from "fastify";
 import {
@@ -43,8 +45,8 @@ import Env from "../../lib/env";
     let admin;
     let packageJson;
     let env;
-    const mailTemplatesHTML = {};
-    const mailTemplatesText = {};
+    let mailTemplatesHTML = {};
+    let mailTemplatesText = {};
     const mailTemplateComponentsHTML = {};
     const mailTemplateComponentsText = {};
     const modulesConfig = {};
@@ -75,16 +77,14 @@ import Env from "../../lib/env";
         pino.info(`Compiled module(s): ${modules.map(m => m.id).join(", ")}`);
         const defaultConfigs = [];
         pino.info(`Compiled template(s): ${templates.join(", ")}`);
-        await Promise.allSettled(Object.keys(config.languages).map(async language => {
-            try {
-                const mailTemplateFileHTML = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${language}_${config.email.template}.html`), "utf8");
-                mailTemplatesHTML[language] = template(mailTemplateFileHTML);
-                const mailTemplateFileText = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${language}_${config.email.template}.txt`), "utf8");
-                mailTemplatesText[language] = template(mailTemplateFileText);
-            } catch {
-                // Ignore
-            }
-        }));
+        try {
+            const mailTemplateFileHTML = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${config.email.template}.html`), "utf8");
+            mailTemplatesHTML = template(mailTemplateFileHTML);
+            const mailTemplateFileText = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/templates/${config.email.template}.txt`), "utf8");
+            mailTemplatesText = template(mailTemplateFileText);
+        } catch {
+            // Ignore
+        }
         const availableMailComponents = fs.readdirSync(path.resolve(`${__dirname}/../../build/mail/components/${config.email.template}`));
         availableMailComponents.map(c => {
             const mailTemplateComponentFileHTML = fs.readFileSync(path.resolve(`${__dirname}/../../build/mail/components/${config.email.template}/${c}/index.html`), "utf8");
