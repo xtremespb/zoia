@@ -205,15 +205,19 @@ module.exports = class {
     }
 
     updateDatePicker(value) {
-        this.calendarField.func.setDate(value);
-        this.setState("calendarValue", value);
-        const dateObject = typeof value === "string" ? parse(value, "yyyyMMdd", new Date()) : value;
-        this.setState("calendarValueText", format(dateObject, this.i18n.t("global.dateFormatShort")));
-        this.emit("value-change", {
-            type: "datepicker",
-            id: this.state.item.id,
-            value: dateObject,
-        });
+        if (value) {
+            this.calendarField.func.setDate(value);
+            this.setState("calendarValue", value);
+            const dateObject = typeof value === "string" ? parse(value, "yyyyMMdd", new Date()) : value;
+            this.setState("calendarValueText", format(dateObject, this.i18n.t("global.dateFormatShort")));
+            this.emit("value-change", {
+                type: "datepicker",
+                id: this.state.item.id,
+                value: dateObject,
+            });
+        } else {
+            this.setState("calendarValueText", "");
+        }
     }
 
     async onMount() {
