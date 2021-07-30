@@ -563,6 +563,9 @@ module.exports = class {
         if (field.type === "datepicker") {
             valueProcess = value;
         }
+        if (field.tags) {
+            valueProcess = value && typeof value === "string" ? value.split(",").map(v => v.trim()) : [];
+        }
         return valueProcess;
     }
 
