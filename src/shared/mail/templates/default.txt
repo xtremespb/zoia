@@ -1,0 +1,4 @@
+<%= content %>
+--
+ <%= meta.siteLink %>
+ <%= meta.siteLinkText %>
