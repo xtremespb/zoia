@@ -12,5 +12,6 @@
 	"reset": "Zurücksetzen",
 	"folderId": "Ordner ID",
 	"folderIdHelpText": "Nur lateinische Zeichen und Zahlen",
-	"addFolder": "Ordner hinzufügen"
+	"addFolder": "Ordner hinzufügen",
+	"deleteFolder": "Ordner löschen"
 }

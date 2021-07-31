@@ -12,5 +12,6 @@
 	"reset": "Reset",
 	"folderId": "Folder ID",
 	"folderIdHelpText": "Latin chars and numbers only",
-	"addFolder": "Add Folder"
+	"addFolder": "Add Folder",
+	"deleteFolder": "Delete Folder"
 }
