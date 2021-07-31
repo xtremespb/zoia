@@ -677,7 +677,6 @@ Date Picker
 				key=`mf_ctl_${state.item.id}`
 				data-id=state.item.id
 				disabled=(!state.enabled || !state.visible)
-				value=state.calendarValueText
 				no-update
 				on-click("onDatePickerInputClick")
 				on-focus("onDatePickerInputClick")
@@ -692,6 +691,7 @@ Date Picker
 				<mcalendar
 					key=`${input.id}_${state.item.id}_datepicker_field`
 					on-value-change("onCalendarValueChange")
+					on-clear-click("onCalendarClearClick")
 					/>
 		</div>
 		<if(state.item.helpText)>

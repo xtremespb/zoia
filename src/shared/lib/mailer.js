@@ -48,7 +48,7 @@ export default class {
     }
 
     setText(value, fromHTML = false) {
-        this.message.text = this.fastify.mailTemplatesText[this.language]({
+        this.message.text = this.fastify.mailTemplatesText({
             subject: this.message.subject,
             preheader: this.preheader,
             meta: this.siteMetadata,
@@ -61,7 +61,7 @@ export default class {
     }
 
     setHTML(value) {
-        this.message.html = this.fastify.mailTemplatesHTML[this.language]({
+        this.message.html = this.fastify.mailTemplatesHTML({
             subject: this.message.subject,
             preheader: this.preheader,
             meta: this.siteMetadata,

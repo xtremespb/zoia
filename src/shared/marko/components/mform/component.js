@@ -205,10 +205,20 @@ module.exports = class {
             }
             if (field.type === "datepicker") {
                 const element = document.getElementById(`${this.input.id}_${field.id}`);
-                if (element && element.value.match(/_/)) {
-                    const data = cloneDeep(this.state.data);
-                    data[prevTabId][field.id] = null;
-                    this.setState("data", data);
+                if (element) {
+                    if (element.value.match(/_/)) {
+                        const data = cloneDeep(this.state.data);
+                        data[prevTabId][field.id] = null;
+                        this.setState("data", data);
+                    }
+                    const currentValue = this.state.data[dataset.id][field.id];
+                    if (currentValue) {
+                        const dateObject = parse(currentValue, "yyyyMMdd", new Date());
+                        this.masked[field.id].value = format(dateObject, this.i18n.t("global.dateFormatShort"));
+                    } else {
+                        this.masked[field.id].value = "";
+                    }
+                    this.masked[field.id].updateValue();
                 }
             }
         });
@@ -331,12 +341,13 @@ module.exports = class {
             value = Array.from(new Set(value));
             break;
         case "datepicker":
-            value = value ? format(value, "yyyyMMdd") : null;
-            const element = document.getElementById(`${this.input.id}_${obj.id}`);
-            if (element) {
-                element.value = obj.value ? format(obj.value, this.i18n.t("global.dateFormatShort")) : null;
-                this.masked[obj.id].updateValue();
+            value = obj.value ? format(obj.value, "yyyyMMdd") : null;
+            if (obj.noMaskUpdate) {
+                break;
             }
+            const datepickerValue = obj.value ? format(obj.value, this.i18n.t("global.dateFormatShort")) : "";
+            this.masked[obj.id].value = datepickerValue;
+            this.masked[obj.id].updateValue();
             break;
         default:
             value = String(value).trim();

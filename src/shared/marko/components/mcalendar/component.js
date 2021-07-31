@@ -38,6 +38,10 @@ module.exports = class {
     }
 
     setDate(calendar, date) {
+        if (!date) {
+            this.onCalendarClear();
+            return;
+        }
         calendar.value = typeof date === "string" ? parse(date, "yyyyMMdd", new Date()) : date;
         calendar.valueText = format(calendar.value, this.i18n.t("global.dateFormatShort"));
         calendar.selected = {
@@ -217,14 +221,14 @@ module.exports = class {
     }
 
     onCalendarClear(e) {
-        if (e && e.preventDefault) {
-            e.preventDefault();
-        }
         const calendar = this.clearCalendar(cloneDeep(this.state.calendar));
+        calendar.data = this.updateCalendarData(calendar.year, calendar.month);
         calendar.visible = false;
         this.setState("calendar", calendar);
-        if (e) {
-            this.emit("value-change", calendar.value);
+        if (e && e.preventDefault) {
+            // this.emit("value-change", calendar.value);
+            this.emit("clear-click");
+            e.preventDefault();
         }
     }
 

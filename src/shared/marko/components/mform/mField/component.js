@@ -7,7 +7,6 @@ const {
     v4: uuidv4
 } = require("uuid");
 const {
-    format,
     parse,
 } = require("date-fns");
 const axios = require("axios");
@@ -73,7 +72,6 @@ module.exports = class {
             item: input.item,
             imageDragging: false,
             calendarValue: null,
-            calendarValueText: "",
             tags: [],
             tagInputValue: null,
         };
@@ -209,14 +207,17 @@ module.exports = class {
             this.calendarField.func.setDate(value);
             this.setState("calendarValue", value);
             const dateObject = typeof value === "string" ? parse(value, "yyyyMMdd", new Date()) : value;
-            this.setState("calendarValueText", format(dateObject, this.i18n.t("global.dateFormatShort")));
             this.emit("value-change", {
                 type: "datepicker",
                 id: this.state.item.id,
                 value: dateObject,
             });
         } else {
-            this.setState("calendarValueText", "");
+            this.emit("value-change", {
+                type: "datepicker",
+                id: this.state.item.id,
+                value: null,
+            });
         }
     }
 
@@ -575,6 +576,11 @@ module.exports = class {
         this.setState("calendarVisible", false);
     }
 
+    onCalendarClearClick() {
+        this.updateDatePicker(null);
+        this.setState("calendarVisible", false);
+    }
+
     onDatePickerKeyPress(e) {
         if ((e.which || e.keyCode) === 9 && this.state.calendarVisible) {
             this.setState("calendarVisible", false);
@@ -584,7 +590,13 @@ module.exports = class {
             const element = document.getElementById(`${this.input.id}_${this.state.item.id}`);
             if (element && !element.value.match(/_/)) {
                 const dateObject = parse(element.value, this.i18n.t("global.dateFormatShort"), new Date());
-                this.updateDatePicker(dateObject);
+                this.setState("calendarValue", dateObject);
+                this.emit("value-change", {
+                    type: "datepicker",
+                    id: this.state.item.id,
+                    value: dateObject,
+                    noMaskUpdate: true,
+                });
             }
         });
     }
