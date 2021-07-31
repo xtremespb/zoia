@@ -575,6 +575,10 @@ module.exports = class {
         this.setState("calendarVisible", false);
     }
 
+    onCalendarClearClick() {
+        this.updateDatePicker(null);
+    }
+
     onDatePickerKeyPress(e) {
         if ((e.which || e.keyCode) === 9 && this.state.calendarVisible) {
             this.setState("calendarVisible", false);

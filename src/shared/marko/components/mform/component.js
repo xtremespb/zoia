@@ -210,6 +210,7 @@ module.exports = class {
                     data[prevTabId][field.id] = null;
                     this.setState("data", data);
                 }
+                this.masked[field.id].unmaskedValue = this.state.data[dataset.id][field.id] || "";
             }
         });
     }
@@ -335,6 +336,7 @@ module.exports = class {
             const element = document.getElementById(`${this.input.id}_${obj.id}`);
             if (element) {
                 element.value = obj.value ? format(obj.value, this.i18n.t("global.dateFormatShort")) : null;
+                this.masked[obj.id].maskedValue = value;
                 this.masked[obj.id].updateValue();
             }
             break;

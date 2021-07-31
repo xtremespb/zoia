@@ -38,6 +38,10 @@ module.exports = class {
     }
 
     setDate(calendar, date) {
+        if (!date) {
+            this.onCalendarClear();
+            return;
+        }
         calendar.value = typeof date === "string" ? parse(date, "yyyyMMdd", new Date()) : date;
         calendar.valueText = format(calendar.value, this.i18n.t("global.dateFormatShort"));
         calendar.selected = {
@@ -224,7 +228,8 @@ module.exports = class {
         calendar.visible = false;
         this.setState("calendar", calendar);
         if (e) {
-            this.emit("value-change", calendar.value);
+            // this.emit("value-change", calendar.value);
+            this.emit("clear-click");
         }
     }
 
