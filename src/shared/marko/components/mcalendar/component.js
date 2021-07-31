@@ -221,15 +221,14 @@ module.exports = class {
     }
 
     onCalendarClear(e) {
-        if (e && e.preventDefault) {
-            e.preventDefault();
-        }
         const calendar = this.clearCalendar(cloneDeep(this.state.calendar));
+        calendar.data = this.updateCalendarData(calendar.year, calendar.month);
         calendar.visible = false;
         this.setState("calendar", calendar);
-        if (e) {
+        if (e && e.preventDefault) {
             // this.emit("value-change", calendar.value);
             this.emit("clear-click");
+            e.preventDefault();
         }
     }
 
