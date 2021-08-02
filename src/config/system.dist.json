@@ -66,7 +66,11 @@
         "enabled": false,
         "redis": false,
         "ban": false,
-        "global": false,
+        "global": {
+            "max": 100,
+            "ban": 1000,
+            "timeWindow": 10000
+        },
         "whiteList": [],
         "blackList": [],
         "addHeaders": {

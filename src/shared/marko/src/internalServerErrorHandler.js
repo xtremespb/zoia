@@ -36,10 +36,10 @@ export default async (err, req, rep, fastify) => {
         $global: {
             serializedGlobals: {
                 pageTitle: true,
-                ...site.getSerializedGlobals()
+                // ...site.getSerializedGlobals()
             },
             pageTitle: errorTitle,
-            ...await site.getGlobals()
+            // ...await site.getGlobals()
         },
         errorTitle,
         errorMessage

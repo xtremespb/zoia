@@ -134,10 +134,8 @@ const checkBlackList = (settings, req) => {
 const buildRate = async (fastify, settings, routeOptions) => {
     routeOptions.rateLimit = routeOptions.rateLimit || settings.global;
     const preHandlerRate = async (req, rep, next) => {
-        const response = new this.Response(req, rep);
         if (checkWhiteList(settings, req)) {
-            next();
-            return response.getCode204();
+            return;
         }
         const hashFull = xx64(`${req.ip}${req.urlData().path}`, fastify.zoiaConfig.secretInt).toString(16);
         const hashIP = xx64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
@@ -165,40 +163,37 @@ const buildRate = async (fastify, settings, routeOptions) => {
                     rep.header("retry-after", routeOptions.rateLimit.timeWindow);
                 }
             }
-            response.sendError("Rate Limit Exceeded", 429);
-            return response.getCode204(rep);
+            const err = new Error(`Rate limit exceeded, retry in ${routeOptions.rateLimit.timeWindow / 1000} second(s)`);
+            err.code = 429;
+            next(err, req, rep, fastify);
         }
         if (timestampNow - timestampUpdated > routeOptions.rateLimit.timeWindow) {
             dataLimit.max = 0;
         }
         await updateDataLimit(fastify, settings, hashFull, dataLimit.createdAt, dataLimit.max);
-        next();
-        return response.getCode204(rep);
     };
     const preHandlerBan = async (req, rep, next) => {
-        const response = new this.Response(req, rep);
+        const err = new Error("Forbidden, your IP is blacklisted");
+        err.code = 403;
         if (checkBlackList(settings, req)) {
-            response.sendError("Forbidden (blacklisted)", 403);
-            return response.getCode204(rep);
+            next(err, req, rep, fastify);
+            return;
         }
         const hashIP = xx64(req.ip, fastify.zoiaConfig.secretInt).toString(16);
         const dataBan = await getBanData(fastify, settings, hashIP);
         if (dataBan) {
-            response.sendError("Forbidden", 403);
-            return response.getCode204(rep);
+            next(err, req, rep, fastify);
         }
-        next();
-        return response.getCode204(rep);
     };
     // Add pre-handler to the route
-    if (!Array.isArray(routeOptions.preHandler)) {
-        routeOptions.preHandler = routeOptions.preHandler ? [routeOptions.preHandler] : [];
+    if (!Array.isArray(routeOptions.onRequest)) {
+        routeOptions.onRequest = routeOptions.onRequest ? [routeOptions.onRequest] : [];
     }
     if (settings.ban) {
-        routeOptions.preHandler.push(preHandlerBan);
+        routeOptions.onRequest.push(preHandlerBan);
     }
     if (routeOptions.rateLimit || (settings.global && Object.keys(settings.global).length)) {
-        routeOptions.preHandler.push(preHandlerRate);
+        routeOptions.onRequest.push(preHandlerRate);
     }
 };
 

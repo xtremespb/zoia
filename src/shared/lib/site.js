@@ -9,13 +9,14 @@ if (!process.browser) {
 
 export default class {
     constructor(req, module, db) {
+        req.zoiaModulesConfig = req.zoiaModulesConfig || {};
         this.moduleConfigUsers = req.zoiaModulesConfig["users"];
         this.moduleConfigAdmin = req.zoiaModulesConfig["core"];
         this.module = module;
         this.catalogs = i18nCatalogs.getModuleCatalog(module);
         this.language = this.getLocaleFromURL(req);
-        this.config = req.zoiaConfig;
-        this.siteMetadata = req.siteMetadata || this.config.siteMetadata;
+        this.config = req.zoiaConfig || {};
+        this.siteMetadata = req.siteMetadata || this.config ? this.config.siteMetadata : null || {};
         this.languagesList = this.catalogs.languages;
         this.languages = this.config.languages;
         this.path = req.urlData().path;
@@ -91,9 +92,9 @@ export default class {
             query: this.query,
             cookieOptions: this.config.cookieOptions,
             authData: this.authData,
-            login: this.moduleConfigUsers.routes.login,
-            logout: this.moduleConfigUsers.routes.logout,
-            admin: this.moduleConfigAdmin.routes.core,
+            login: this.moduleConfigUsers ? this.moduleConfigUsers.routes.login : null,
+            logout: this.moduleConfigUsers ? this.moduleConfigUsers.routes.logout : null,
+            admin: this.moduleConfigAdmin ? this.moduleConfigAdmin.routes.core : null,
             navData: navData ? navData.tree : [],
             publicFiles: this.config.routes.publicFiles,
             publicImages: this.config.routes.publicImages,

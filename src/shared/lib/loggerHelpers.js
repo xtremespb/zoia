@@ -31,7 +31,7 @@ export default class {
             path: this.path,
             query: this.query,
             msg: (msg || (e && e.message ? e.message : null)) || "Internal Server Error",
-            stack: e && this.req && this.req.zoiaConfig.stackTrace && e.stack ? e.stack : undefined
+            stack: e && this.req && this.req.zoiaConfig && this.req.zoiaConfig.stackTrace && e.stack ? e.stack : undefined
         });
     }
 }
