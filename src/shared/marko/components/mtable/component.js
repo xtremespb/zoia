@@ -885,6 +885,7 @@ module.exports = class {
 
     setupColumnResize() {
         this.calculateTableMaxWidth();
+        this.resizeTable = document.getElementById(`${this.input.id}_table`);
         this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th`));
         this.resizeTableGrips = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th>div>.z3-mt-th-resize`));
         this.setTableWidth("");

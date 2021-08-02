@@ -5,7 +5,7 @@ style.scss {
 
 <div class="z3-mf-wrap">
 	<if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
-		<div class=`tabs is-toggle is-toggle-rounded ${input.tabsCSS || ""} ${
+		<div class=`tabs is-toggle ${input.tabsCSS || ""} ${
 			((state.tabs && state.tabs.length > 1) || input.tabsActive) &&
 			input.borderWhenTabs
 				? " z3-mf-tabs"

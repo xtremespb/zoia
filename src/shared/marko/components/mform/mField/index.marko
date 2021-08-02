@@ -688,11 +688,10 @@ Date Picker
 		<div
 			class=`z3-mf-calendar-wrap${state.calendarVisible ? "" : " is-hidden"}`
 			id=`${input.id}_${state.item.id}_datepicker`>
-				<mcalendar
-					key=`${input.id}_${state.item.id}_datepicker_field`
-					on-value-change("onCalendarValueChange")
-					on-clear-click("onCalendarClearClick")
-					/>
+			<mcalendar
+				key=`${input.id}_${state.item.id}_datepicker_field`
+				on-value-change("onCalendarValueChange")
+				on-clear-click("onCalendarClearClick")/>
 		</div>
 		<if(state.item.helpText)>
 			<p class="help">${state.item.helpText}</p>
@@ -712,7 +711,8 @@ Tags Input
 				&nbsp;<span class="has-text-danger">*</span>
 			</if>
 		</label>
-		<div class="input columns is-variable is-1 is-multiline is-mobile z3-mf-tags-wrap pt-1"
+		<div
+			class="input columns is-variable is-1 is-multiline is-mobile z3-mf-tags-wrap pt-1"
 			on-click("onTagsWrapClick")
 			id=`${input.id}_${state.item.id}_wrap`
 			key=`mf_ctl_${state.item.id}`>
@@ -724,7 +724,9 @@ Tags Input
 					</div>
 				</div>
 			</for>
-			<div class=`column is-auto z3-mf-tags-input-wrap pb-1 ${state.tags.length ? "ml-1" : "ml-2"} mr-2`>
+			<div class=`column is-auto z3-mf-tags-input-wrap pb-1 ${
+				state.tags.length ? "ml-1" : "ml-2"
+			} mr-2`>
 				<input
 					id=`${input.id}_${state.item.id}_input`
 					on-focus("onTagsInputFocus")

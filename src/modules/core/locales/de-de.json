@@ -40,7 +40,7 @@
 	"maintenanceMode": "Wartungsmodus",
 	"maintenanceChanged": "Wartungsmodus wurde umgeschaltet",
 	"couldNotSwitchMaintenance": "Wartungsmodus konnte nicht umgeschaltet werden",
-	"rebuild": "Wieder aufgebaut",
+	"rebuild": "Wieder aufbauen",
 	"warnRebuildText": "Sie werden Ihre ZOIA-Instanz neu erstellen. Dieser Prozess kann je nach Serverkonfiguration lange dauern. Nach Abschluss wird die Instanz neu gestartet. Bitte stellen Sie sicher, dass Sie Zugriff auf Ihre Systemkonsole haben, so können Sie Protokolle überprüfen und bei Bedarf manuell neu starten.",
 	"confirm": "Bestätigen",
 	"updateInProgress": "Aktualisierungsprozess wurde bereits gestartet. Bitte versuchen Sie diese Seite zu aktualisieren um den aktuellen Status abzurufen.",

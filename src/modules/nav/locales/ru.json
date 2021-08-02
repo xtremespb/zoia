@@ -12,5 +12,6 @@
 	"reset": "Сброс",
 	"folderId": "ID папки",
 	"folderIdHelpText": "Лат. символы и цифры",
-	"addFolder": "Добавить папку"
+	"addFolder": "Добавить папку",
+	"deleteFolder": "Удалить папку"
 }
