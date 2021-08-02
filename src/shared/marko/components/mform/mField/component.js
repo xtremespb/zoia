@@ -597,6 +597,7 @@ module.exports = class {
                     value: dateObject,
                     noMaskUpdate: true,
                 });
+                this.calendarField.func.setDate(dateObject);
             }
         });
     }

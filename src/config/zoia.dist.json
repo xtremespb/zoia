@@ -1,6 +1,7 @@
 {
     "languages": {
         "en-us": "English",
+        "de-de": "Deutsch",
         "ru": "Русский"
     },
     "siteMetadata": {
@@ -10,6 +11,13 @@
             "descShort": "Example Website powered by ZOIA",
             "siteLink": "https://zoiajs.org",
             "siteLinkText": "Example Website"
+        },
+        "de-de": {
+            "title": "ZOIA Website",
+            "titleShort": "ZOIA Website",
+            "descShort": "Beispielwebsite basierend auf ZOIA",
+            "siteLink": "https://zoiajs.org",
+            "siteLinkText": "Beispielwebsite"
         },
         "ru": {
             "title": "Сайт на ZOIA",
