@@ -262,7 +262,25 @@ const ensureDirectories = (config) => {
 const copyPublic = argv => {
     const publicFiles = [{
         src: "favicon.ico",
-        dest: `${argv.update ? "update_" : "zoia_"}/favicon.ico`
+        dest: `${argv.update ? "update_" : "zoia_"}/favicon.ico`,
+    }, {
+        src: "android-chrome-192x192.png",
+        dest: `${argv.update ? "update_" : "zoia_"}/android-chrome-192x192.png`,
+    }, {
+        src: "android-chrome-512x512.png",
+        dest: `${argv.update ? "update_" : "zoia_"}/android-chrome-512x512.png`,
+    }, {
+        src: "apple-touch-icon.png",
+        dest: `${argv.update ? "update_" : "zoia_"}/apple-touch-icon.png`,
+    }, {
+        src: "favicon-16x16.png",
+        dest: `${argv.update ? "update_" : "zoia_"}/favicon-16x16.png`,
+    }, {
+        src: "favicon-32x32.png",
+        dest: `${argv.update ? "update_" : "zoia_"}/favicon-32x32.png`,
+    }, {
+        src: "site.webmanifest",
+        dest: `${argv.update ? "update_" : "zoia_"}/site.webmanifest`,
     }];
     publicFiles.map(i => fs.copyFileSync(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/public/${i.src}`), path.resolve(`${__dirname}/../build/public/${i.dest}`)));
 };

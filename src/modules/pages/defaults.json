@@ -15,6 +15,17 @@
                 "cssMin": null,
                 "jsMin": null
             },
+            "de-de": {
+                "title": "Hauptseite",
+                "content": "<h1 class=\"title is-2\">Hauptseite</h1>\n<p>Die Installation ist abgeschlossen. Jetzt können Sie sich mit Ihrem Benutzernamen und Passwort beim <a href=\"/de-de/admin\">Admin Panel</a> anmelden.</p>",
+                "date": null,
+                "css": null,
+                "js": null,
+                "attachments": [],
+                "contentMin": "<h1 class=\"title is-2\">Hauptseite</h1><p>Die Installation ist abgeschlossen. Jetzt können Sie sich mit Ihrem Benutzernamen und Passwort beim <a href=/de-de/admin>Admin panel</a> anmelden.",
+                "cssMin": null,
+                "jsMin": null
+            },
             "modifiedAt": null,
             "ru": {
                 "title": "Главная",
@@ -35,6 +46,17 @@
             "createdAt": "ISODate(now)",
             "en-us": {
                 "title": "License",
+                "content": "<p class=\"title is-2\">MIT License</p>\n\n<p>Copyright © 2019-2021 Michael Matveev</p>\n\n<p>Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:</p>\n\n<p>The above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.</p>\n\n<p>THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.</p>",
+                "date": null,
+                "css": null,
+                "js": null,
+                "attachments": [],
+                "contentMin": "<p class=\"title is-2\">MIT License<p>Copyright © 2019-2021 Michael Matveev<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<p>THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+                "cssMin": null,
+                "jsMin": null
+            },
+            "de-de": {
+                "title": "Lizenz",
                 "content": "<p class=\"title is-2\">MIT License</p>\n\n<p>Copyright © 2019-2021 Michael Matveev</p>\n\n<p>Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:</p>\n\n<p>The above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.</p>\n\n<p>THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.</p>",
                 "date": null,
                 "css": null,

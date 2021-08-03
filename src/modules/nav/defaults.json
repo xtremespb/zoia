@@ -9,12 +9,16 @@
                         "title": "Home",
                         "url": "/"
                     },
+                    "de-de": {
+                        "title": "Haputseite",
+                        "url": "/de-de"
+                    },
                     "ru": {
                         "title": "Главная",
                         "url": "/ru"
                     }
                 },
-                "checksum": "4b68a72c34ceb3c222ec0a59cd7b909f"
+                "checksum": ""
             },
             {
                 "id": "license",
@@ -24,12 +28,16 @@
                         "title": "License",
                         "url": "/license"
                     },
+                    "de-de": {
+                        "title": "Lizenz",
+                        "url": "/de-de/license"
+                    },
                     "ru": {
                         "title": "Лицензия",
                         "url": "/ru/license"
                     }
                 },
-                "checksum": "c701fce9c2e41f2972a7b45dba71f552"
+                "checksum": ""
             }
         ]
     }]
