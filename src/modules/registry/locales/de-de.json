@@ -3,7 +3,7 @@
 	"actions": "Aktionen",
 	"add": "Hinzufügen",
 	"edit": "Bearbeiten",
-	"delete": "Stornieren",
+	"delete": "Löschen",
 	"reload": "Neu laden",
 	"id": "Eintrag ID",
 	"idHelpText": "Lateinische Zeichen, Zahlen, Unterstrich",
