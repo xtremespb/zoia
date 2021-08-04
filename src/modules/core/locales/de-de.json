@@ -1,5 +1,5 @@
 {
-	"moduleTitle": "Administrationsmenü",
+	"moduleTitle": "Administration",
 	"moduleTitleImages": "Bilder",
 	"btnSelect": "Wählen",
 	"btnCancel": "Stornieren",
@@ -29,7 +29,7 @@
 	"createDir": "Verzeichnis erstellen",
 	"paste": "Einfügen",
 	"noFilesInDirectory": "Es gibt keine Dateien im aktuellen Verzeichnis",
-	"zoia3": "Administrationsmenü",
+	"zoia3": "Administration",
 	"controlPanelMessage": "Mit ZOIA Administrationsmenü können Sie Ihren Website steuern.",
 	"version": "Version",
 	"restart": "Neu starten",
