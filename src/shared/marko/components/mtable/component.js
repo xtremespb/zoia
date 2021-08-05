@@ -17,7 +17,9 @@ module.exports = class {
             totalCount: 0,
             dataSource: null,
             checkboxes: {},
+            recycledCheckboxes: {},
             allCheckboxes: false,
+            allRecycledCheckboxes: false,
             sortId: null,
             sortDirection: "asc",
             page: 1,
@@ -65,6 +67,11 @@ module.exports = class {
             widgetsView: [],
             anyWidgets: false,
             currentWidgetsData: [],
+            recycleBinLoading: false,
+            recycleBinDialogActive: false,
+            recycledPage: 1,
+            recycledPagesCount: 1,
+            recycledData: [],
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -153,6 +160,11 @@ module.exports = class {
     onPaginationMount() {
         this.pagination = this.getComponent(`${this.input.id}_pagination`);
         this.pagination.func.generatePagination(this.state.pagesCount || 1);
+    }
+
+    onRecycledPaginationMount() {
+        this.recycledPagination = this.getComponent(`${this.input.id}_pagination_recycled`);
+        this.recycledPagination.func.generatePagination(this.state.recycledPagesCount || 1);
     }
 
     calculateItemsPerPage() {
@@ -282,6 +294,10 @@ module.exports = class {
         this.anyCheckboxCheck();
     }
 
+    setRecycledCheckbox(e) {
+        this.state.recycledCheckboxes[`i${e.target.dataset.id}`] = e.target.checked || false;
+    }
+
     setChecked(state) {
         this.state.allCheckboxes = state;
         this.state.data.map(i => (this.state.checkboxes[`i${i.id || i._id}`] = state));
@@ -291,6 +307,15 @@ module.exports = class {
         this.setChecked(e.target.checked);
         this.anyCheckboxCheck();
         this.forceUpdate();
+    }
+
+    setRecycledCheckboxesAction(state) {
+        this.state.allRecycledCheckboxes = state;
+        this.state.data.map(i => (this.state.recycledCheckboxes[`i${i.id || i._id}`] = state));
+    }
+
+    setRecycledCheckboxes(e) {
+        this.setRecycledCheckboxesAction(e.target.checked);
     }
 
     onColumnClick(e) {
@@ -314,6 +339,11 @@ module.exports = class {
     onPageClick(page) {
         this.setState("page", page);
         this.dataRequest();
+    }
+
+    onRecycledPageClick(page) {
+        this.setState("recycledPage", page);
+        this.loadRecycled();
     }
 
     onActionButtonClick(e) {
@@ -1219,5 +1249,53 @@ module.exports = class {
             this.setState("widgetsManageDialogLoading", false);
             this.dataRequest();
         }, 100);
+    }
+
+    async loadRecycled() {
+        const source = cloneDeep(this.state.dataSource);
+        source.data = source.data || {};
+        source.url = `${source.url}/recycled`;
+        source.data = {
+            ...source.data,
+            page: this.state.recycledPage,
+            sortId: "deletedAt",
+            sortDirection: "asc",
+            searchText: "",
+            itemsPerPage: 1,
+            autoItemsPerPage: false,
+        };
+        this.setState("recycleBinLoading", true);
+        try {
+            const response = await axios(source);
+            this.setState("recycleBinLoading", false);
+            this.setState("recycledData", response.data.data || []);
+            this.setState("recycledPagesCount", response.data.pagesCount || 1);
+            if (this.recycledPagination) {
+                this.recycledPagination.func.generatePagination(response.data.pagesCount || 1);
+            }
+        } catch (e) {
+            this.setState("recycleBinLoading", false);
+            this.setState("recycleBinDialogActive", false);
+            if (e && e.response && e.response.status === 401) {
+                this.emit("unauthorized", {});
+                return;
+            }
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTableErr.general`), "is-danger");
+        }
+    }
+
+    onRecycleBinOpen() {
+        this.setState("recycleBinDialogActive", true);
+        this.setState("recycledPage", 1);
+        this.setRecycledCheckboxesAction(false);
+        window.__zoiaTippyJs.reset();
+        this.loadRecycled();
+    }
+
+    onRecycleBinDialogClose() {
+        if (this.state.recycleBinLoading) {
+            return;
+        }
+        this.setState("recycleBinDialogActive", false);
     }
 };

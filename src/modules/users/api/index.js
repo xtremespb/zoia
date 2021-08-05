@@ -3,6 +3,7 @@ import apiUsersList from "./apiUsersList";
 import apiUserSave from "./apiUserSave";
 import apiUserLoad from "./apiUserLoad";
 import apiUserDelete from "./apiUserDelete";
+import apiUsersRecycledList from "./apiUsersRecycledList";
 import apiAclList from "./apiAclList";
 import apiAclSave from "./apiAclSave";
 import apiAclLoad from "./apiAclLoad";
@@ -14,6 +15,7 @@ export default fastify => {
     fastify.post("/api/users/edit/save", apiUserSave());
     fastify.post("/api/users/edit/load", apiUserLoad());
     fastify.post("/api/users/edit/delete", apiUserDelete());
+    fastify.post("/api/users/list/recycled", apiUsersRecycledList());
     fastify.post("/api/acl/list", apiAclList());
     fastify.post("/api/acl/edit/save", apiAclSave());
     fastify.post("/api/acl/edit/load", apiAclLoad());

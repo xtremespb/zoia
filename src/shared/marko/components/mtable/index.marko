@@ -22,24 +22,50 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								btn.dropdownRight ? " is-right" : ""
 							}`>
 								<div class="dropdown-trigger">
-									<button
-										disabled=(btn.id === "btnDeleteSelectedGeneric" && !state.anyCheckboxSelected)
-										class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}`
-										data-button=btn.id
-										data-dropdown=String(!!(btn.dropdown && btn.dropdown.length))
-										id=`${input.id}_${btn.id}`
-										type="button"
-										on-click("onTopButtonClick")
-										aria-haspopup="true">
-										<if(btn.icon)>
-											<div class="z3-mt-icon-wrap">
-												<span class="icon">
-													<i class=btn.icon/>
-												</span>
-											</div>
+									<div class="field has-addons">
+										<p class="control">
+											<button
+												disabled=(
+													btn.id === "btnDeleteSelectedGeneric" &&
+													!state.anyCheckboxSelected
+												)
+												class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}`
+												data-button=btn.id
+												data-dropdown=String(!!(btn.dropdown && btn.dropdown.length))
+												id=`${input.id}_${btn.id}`
+												type="button"
+												on-click("onTopButtonClick")
+												aria-haspopup="true">
+												<if(btn.icon)>
+													<div class="z3-mt-icon-wrap">
+														<span class="icon">
+															<i class=(
+																btn.id === "btnDeleteSelectedGeneric"
+																	? "mdi mdi-close-circle-outline"
+																	: btn.icon
+															)/>
+														</span>
+													</div>
+												</if>
+												<if(btn.displayText && btn.text)>${btn.text}</if>
+											</button>
+										</p>
+										<if(btn.id === "btnDeleteSelectedGeneric" && input.recycleBin)>
+											<p class="control">
+												<button
+													data-button=btn.id
+													on-click("onRecycleBinOpen")
+													class="button is-light z3-mt-recycle-bin-btn"
+													type="button"
+													data-tippy-content=out.global.i18n.t("mTable.recycleBin")
+													aria-haspopup="true">
+													<span class="icon">
+														<i class="mdi mdi-trash-can-outline"/>
+													</span>
+												</button>
+											</p>
 										</if>
-										<if(btn.displayText && btn.text)>${btn.text}</if>
-									</button>
+									</div>
 								</div>
 								<if(btn.dropdown && btn.dropdown.length)>
 									<div class="dropdown-menu" role="menu">
@@ -73,7 +99,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					</if>
 					<if(input.filter && input.filter.length)>
 						<p class="z3-mt-top-control mt-1 mr-1">
-							<div class=`dropdown is-right${
+							<div class=`dropdown${
 								state.dropdownVisible["filterGeneric"] ? " is-active" : ""
 							}`>
 								<div class="dropdown-trigger">
@@ -951,6 +977,98 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</div>
 	</div>
 	<!-- Edit Filter modal: end -->
+	<!-- Recycle Bin modal: start -->
+	<if(state.recycleBinDialogActive)>
+		<div class="modal is-active">
+			<div class="modal-background" on-click("onRecycleBinDialogClose")/>
+			<div class="modal-card container z3-mt-recycle-bin-modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">${out.global.i18n.t("mTable.recycleBin")}</p>
+					<if(!state.recycleBinLoading)>
+						<button class="delete" aria-label="close" on-click("onRecycleBinDialogClose")/>
+					</if>
+				</header>
+				<section class="modal-card-body z3-mt-recycle-bin-modal-card-body">
+						<div
+							style=`display:${state.recycleBinLoading ? "flex" : "none"}`
+							class="z3-mt-filter-spinner-wrap">
+							<div class="z3-mt-filter-spinner">
+								<div/>
+								<div/>
+								<div/>
+								<div/>
+							</div>
+						</div>
+						<div style=`display:${state.recycleBinLoading ? "none" : "block"}`>
+							<if(state.recycledData && state.recycledData.length)>
+								<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+									<thead>
+										<tr>
+											<th>
+												<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
+													<input type="checkbox" on-change("setRecycledCheckboxes") checked=state.allRecycledCheckboxes/>
+													<div class="state p-primary">
+														<label/>
+													</div>
+												</div>
+											</th>
+											<th>
+												${out.global.i18n.t("mTable.recycledItem")}
+											</th>
+											<th class="z3-mt-actions-wrap">
+												${input.actionsTitle}
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<for|item| of=state.recycledData>
+											<tr>
+												<td style="width:43px;min-width:43px;max-width:43px">
+													<div class="z3-mt-th-wrap">
+													<div class="z3-pretty p-icon z3-mt-pretty-checkbox-id">
+														<input
+															data-id=(item.id || item._id)
+															type="checkbox"
+															checked=state.recycledCheckboxes[`i${item.id || item._id}`]
+															on-change("setRecycledCheckbox")/>
+														<div class="state">
+															<i class="icon mdi mdi-check"/>
+															<label/>
+														</div>
+													</div>
+													</div>
+												</td>
+												<td>${item.title}</td>
+												<td>
+													<div class="z3-mt-th-wrap">
+													<button
+														class="button is-small is-light is-action-button z3-mt-action-button"
+														data-id=(item.id || item._id)
+														type="button"
+														data-tippy-content=out.global.i18n.t("mTable.recycledRestore")>
+														<span class="icon">
+															<i class="mdi mdi-backup-restore"/>
+														</span>
+													</button>
+													</div>
+												</td>
+											</tr>
+										</for>
+									</tbody>
+								</table>
+							</if>
+							<mpagination
+								on-mount("onRecycledPaginationMount")
+								pagesCount=state.recycledPagesCount
+								css="is-small mb-0 mt-4"
+								on-page-click("onRecycledPageClick")
+								key=`${input.id}_pagination_recycled`/>
+						</div>
+				</section>
+			</div>
+		</div>
+	</if>
+	<!-- Recycle Bin modal: end -->
 	<mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
 	<mconfirm
 		key=`${input.id}_filterDeleteConfirm`

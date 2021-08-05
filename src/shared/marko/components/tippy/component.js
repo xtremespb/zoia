@@ -13,7 +13,7 @@ module.exports = class {
     onMount() {
         tippy.setDefaultProps({
             arrow: true,
-            zIndex: 30,
+            zIndex: 50,
             animation: "fade",
         });
         setTimeout(() => this.initTippy(), 200);
@@ -33,7 +33,7 @@ module.exports = class {
     hide() {
         Array.from(document.querySelectorAll("[data-tippy-root]")).map(i => {
             i.style.visibility = "hidden";
-            i.style.zIndex = 30;
+            i.style.zIndex = 50;
         });
     }
 };
