@@ -9,7 +9,7 @@
             },
             "sortId": {
                 "type": "string",
-                "enum": ["group"]
+                "enum": ["title", "deletedAt"]
             },
             "sortDirection": {
                 "type": "string",
@@ -25,19 +25,16 @@
                 "minimum": 0,
                 "maximum": 1000
             },
-            "language": {
-                "type": "string",
-                "pattern": "^[a-z]{2}(-[a-z]{2})?$",
-                "minLength": 2,
-                "maxLength": 5
+            "autoItemsPerPage": {
+                "type": "boolean"
             }
         },
-        "required": ["page", "sortId", "sortDirection", "language"]
+        "required": ["page", "sortId", "sortDirection"]
     },
     "projection": {
         "_id": 1,
         "group": 1,
-        "comment": 1
+        "deletedAt": 1
     },
-    "search": ["group", "comment"]
+    "search": ["group"]
 }

@@ -13,7 +13,7 @@ export default () => ({
             log,
             response,
             auth,
-            acl,
+            acl
         } = req.zoia;
         // Check permissions
         if (!auth.statusAdmin()) {
@@ -27,8 +27,8 @@ export default () => ({
             return;
         }
         try {
-             // Build query
-             const queryDb = {
+            // Build query
+            const queryDb = {
                 $or: req.body.ids.map(id => ({
                     _id: new ObjectId(id)
                 }))
@@ -42,7 +42,7 @@ export default () => ({
             // Check permission
             let allowed = true;
             (dataDb || []).map(i => {
-                if (allowed && !acl.checkPermission("users", "delete", i.username)) {
+                if (allowed && !acl.checkPermission("users", "delete", i.group)) {
                     allowed = false;
                 }
             });
@@ -50,19 +50,14 @@ export default () => ({
                 response.requestAccessDeniedError();
                 return;
             }
-            let result;
-            if (req.body.recycle) {
-                result = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).updateMany(queryDb, {
-                    $set: {
-                        deletedAt: new Date(),
-                    }
-                }, {
-                    upsert: false
-                });
-            } else {
-                // Delete requested IDs
-                result = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).deleteMany(queryDb);
-            }
+            // Delete requested IDs
+            const result = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).updateMany(queryDb, {
+                $set: {
+                    deletedAt: null
+                }
+            }, {
+                upsert: false
+            });
             // Check result
             if (!result || !result.acknowledged) {
                 response.deleteError();

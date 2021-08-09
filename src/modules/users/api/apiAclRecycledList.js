@@ -1,5 +1,4 @@
-import utils from "../../../shared/lib/utils";
-import aclListData from "./data/aclList.json";
+import aclListData from "./data/aclRecycledList.json";
 
 export default () => ({
     schema: {
@@ -24,28 +23,16 @@ export default () => ({
             response.validationError(req.validationError);
             return;
         }
+        const {
+            collectionAcl
+        } = req.zoiaModulesConfig["users"];
         try {
-            // Get acl data
-            const langProjection = {};
-            Object.keys(req.zoiaConfig.languages).map(i => {
-                langProjection[`${i}.comment`] = 1;
-            });
             const options = {
                 sort: {},
-                projection: {
-                    ...aclListData.projection,
-                    ...langProjection
-                }
+                projection: aclListData.projection
             };
-            switch (req.body.sortId) {
-            case "title":
-                req.body.sortId = `${req.body.language}.${req.body.sortId}`;
-                break;
-            }
             const query = {
-                deletedAt: {
-                    $eq: null
-                },
+                deletedAt: { $ne: null },
             };
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = aclListData.search.map(c => {
@@ -57,16 +44,15 @@ export default () => ({
                     return sr;
                 });
             }
-            const count = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).find(query, options).count();
-            const columns = await utils.getTableSettings(req, this.mongo.db, auth, "acl");
-            const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            const count = await this.mongo.db.collection(collectionAcl).find(query, options).count();
+            const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
-            const data = (await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).find(query, options).toArray()).map(i => ({
-                _id: i._id,
-                group: !acl.checkPermission("users", "read", i.group) ? "***" : i.group,
-                comment: i.comment || ""
+            const data = (await this.mongo.db.collection(collectionAcl).find(query, options).toArray()).map(i => ({
+                _id: String(i._id),
+                deletedAt: !acl.checkPermission("users", "read", i.deletedAt) ? "***" : i.deletedAt,
+                title: !acl.checkPermission("users", "read", i.group) ? "***" : i.group,
             }));
             // Send response
             response.successJSON({
@@ -74,7 +60,6 @@ export default () => ({
                 count,
                 limit,
                 pagesCount: Math.ceil(count / limit),
-                columns,
             });
             return;
         } catch (e) {

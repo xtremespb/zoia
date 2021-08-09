@@ -10,6 +10,9 @@ import apiAclList from "./apiAclList";
 import apiAclSave from "./apiAclSave";
 import apiAclLoad from "./apiAclLoad";
 import apiAclDelete from "./apiAclDelete";
+import apiAclRecycledRestore from "./apiAclRecycledRestore";
+import apiAclRecycledDelete from "./apiAclRecycledDelete";
+import apiAclRecycledList from "./apiAclRecycledList";
 
 export default fastify => {
     fastify.post("/api/users/login", apiUserLogin());
@@ -21,7 +24,10 @@ export default fastify => {
     fastify.post("/api/users/edit/delete/restore", apiUsersRecycledRestore());
     fastify.post("/api/users/edit/delete/recycled", apiUsersRecycledDelete());
     fastify.post("/api/acl/list", apiAclList());
+    fastify.post("/api/acl/list/recycled", apiAclRecycledList());
     fastify.post("/api/acl/edit/save", apiAclSave());
     fastify.post("/api/acl/edit/load", apiAclLoad());
     fastify.post("/api/acl/edit/delete", apiAclDelete());
+    fastify.post("/api/acl/edit/delete/restore", apiAclRecycledRestore());
+    fastify.post("/api/acl/edit/delete/recycled", apiAclRecycledDelete());
 };
