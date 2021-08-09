@@ -37,7 +37,7 @@ export default () => ({
             }, {
                 upsert: true
             });
-            if (!resultSave || !resultSave.result || !resultSave.result.ok) {
+            if (!resultSave || !resultSave.acknowledged) {
                 response.requestError({
                     failed: true,
                     error: "Could not update one or more items",

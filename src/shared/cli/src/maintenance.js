@@ -19,7 +19,7 @@ export default async (config, options, modulesConfig, db) => {
     }, {
         upsert: true
     });
-    if (!resultSave || !resultSave.result || !resultSave.result.ok) {
+    if (!resultSave || !resultSave.acknowledged) {
         console.error(`${colors.red(" Error:")} ${colors.white("could not save maintenance status")}`);
         return;
     }

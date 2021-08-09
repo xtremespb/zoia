@@ -60,7 +60,7 @@ export default class {
             const user = await this.db.collection(this.collectionUsers).findOne({
                 _id: new ObjectId(tokenData.id)
             });
-            if (!user || user.sid !== tokenData.sid) {
+            if (!user || user.sid !== tokenData.sid || user.deletedAt) {
                 return null;
             }
             if (this.zoiaConfig.token.ip && this.ip && tokenData.ip !== this.ip) {

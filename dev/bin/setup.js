@@ -97,7 +97,8 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
                             const {
                                 indexesAsc,
                                 indexesDesc,
-                                expires
+                                expires,
+                                expireField,
                             } = moduleConfig.database.collections[c];
                             if (indexesAsc && indexesAsc.length) {
                                 const indexes = {};
@@ -166,10 +167,14 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
                                     // Ignore
                                 }
                                 console.log(`* Creating indexes: "${m.id}_${c}_exp"`);
+                                const expData = {};
+                                if (expireField) {
+                                    expData[expireField] = 1;
+                                } else {
+                                    expData.createdAt = 1;
+                                }
                                 try {
-                                    await db.collection(c).createIndex({
-                                        createdAt: 1
-                                    }, {
+                                    await db.collection(c).createIndex(expData, {
                                         expireAfterSeconds: parseInt(expires, 10),
                                         name: `${m.id}_${c}_exp`,
                                     });

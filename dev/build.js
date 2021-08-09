@@ -139,6 +139,7 @@ const buildAnimation = () => {
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/cli.js.bak`));
         fs.removeSync(path.resolve(`${__dirname}/../build/public/${dir}`));
         fs.removeSync(path.resolve(`${__dirname}/../build/public/${dir}_bak`));
+        fs.removeSync(path.resolve(`${__dirname}/../package-update.json`));
         fs.moveSync(path.resolve(`${__dirname}/../build/public/${dir}_`), path.resolve(`${__dirname}/../build/public/${dir}`));
         clearTimeout(loading);
     } catch (e) {

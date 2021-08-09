@@ -51,6 +51,7 @@ export default () => ({
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
             const data = (await this.mongo.db.collection(collectionUsers).find(query, options).toArray()).map(i => ({
                 _id: String(i._id),
+                deletedAt: !acl.checkPermission("users", "read", i.deletedAt) ? "***" : i.deletedAt,
                 title: !acl.checkPermission("users", "read", i.username) ? "***" : i.username,
             }));
             // Send response

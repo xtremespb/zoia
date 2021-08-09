@@ -32,7 +32,7 @@
 	"folderId": "ID директории",
 	"folderSelectModalTitle": "Выбрать директорию",
 	"couldNotLoadDataFromServer": "Ошибка во время загрузки данных с сервера",
-	"cannotLoadFoldersTree": "Ошибка во время загрузки данных с сервера, пожалуйста, обновите страницу",
+	"cannotLoadFoldersTree": "Ошибка во время загрузки данных с сервера",
 	"duplicateTreeId": "Директория с указанным ID уже существует",
 	"folderIdHelpText": "Лат. символы и цифры",
 	"date": "Дата",

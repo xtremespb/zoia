@@ -235,7 +235,6 @@ table tr:last-child td:last-child {
 .z3-mt-td {
     vertical-align: middle !important;
 }
-
 .z3-mt-sort {
     display: inline-block;
     margin-right: 4px;
@@ -271,6 +270,10 @@ table tr:last-child td:last-child {
 
 .z3-mt-recycle-bin-modal-card-head {
     border-bottom: 1px solid $grey-lightest;
+}
+
+.z3-mt-deletedAt {
+    width: 200px;
 }
 
 @keyframes z3-mt-filter-spinner {

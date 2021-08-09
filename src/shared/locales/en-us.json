@@ -1,5 +1,6 @@
 {
 	"global.dateFormatShort": "yyyy-MM-dd",
+	"global.timeFormatShort": "hh:mm a",
 	"global.langCode": "en",
 	"global.weekStart": "0",
 	"global.weekDays": [
@@ -67,6 +68,15 @@
 	"mTable.recycleBin": "Recycle Bin",
 	"mTable.recycledItem": "Deleted Item",
 	"mTable.recycledRestore": "Restore Item",
+	"mTable.recycledRestoreMultiple": "Restore Selected",
+	"mTable.recycledDeleteAll": "Delete All",
+	"mTable.recycledRestoreConfirmTitle": "Restore Item(s)",
+	"mTable.recycledRestoreSuccess": "Restore operation completed",
+	"mTable.recycledDeleteAllConfirmTitle": "Empty Recycle Bin",
+	"mTable.recycledDeleteAllConfirmText": "DANGER: this operation will permanently delete all records from your recycle bin. You will not be able to restore anything after the operation is complete.",
+	"mTable.recycleBinIsEmpty": "Recycle bin is empty. Every record you delete in database will appear here so you will be able to restore it.",
+	"mTable.recycledRestoreConfirmText": "The following entries will be restored in the system and removed from the recycle bin",
+	"mTable.recycledDate": "Date",
 	"mTable.deleteDesc": "The following item(s) will be deleted",
 	"mTable.delete": "Delete",
 	"mTable.loading": "Loading data, please wait…",

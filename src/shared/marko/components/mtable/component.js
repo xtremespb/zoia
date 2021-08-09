@@ -4,6 +4,7 @@ const debounce = require("lodash.debounce");
 const cloneDeep = require("lodash.clonedeep");
 const {
     format,
+    parseISO,
 } = require("date-fns");
 const {
     v4: uuidv4
@@ -33,6 +34,7 @@ module.exports = class {
             deleteDialogTitles: [],
             deleteDialogProgress: false,
             anyCheckboxSelected: false,
+            anyRecycledCheckboxSelected: false,
             itemsPerPage: null,
             autoItemsPerPage: !!input.autoItemsPerPage,
             filterDialogActive: false,
@@ -72,6 +74,7 @@ module.exports = class {
             recycledPage: 1,
             recycledPagesCount: 1,
             recycledData: [],
+            recycledCurrentIds: null,
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -108,6 +111,8 @@ module.exports = class {
         this.widgetsDeleteConfirm = this.getComponent(`${this.input.id}_widgetsDeleteConfirm`);
         this.tableSettingsPagesForm = this.getComponent(`${this.input.id}_tableSettingsPagesForm`);
         this.widgetEditForm = this.getComponent(`${this.input.id}_widgetsEditForm`);
+        this.recycledRestoreConfirm = this.getComponent(`${this.input.id}_recycledRestoreConfirm`);
+        this.recycledDeleteAllConfirm = this.getComponent(`${this.input.id}_recycledDeleteAllConfirm`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
             window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
@@ -289,6 +294,16 @@ module.exports = class {
         this.setState("anyCheckboxSelected", anyCheckboxSelected);
     }
 
+    anyRecycledCheckboxCheck() {
+        let anyCheckboxSelected = false;
+        Object.keys(this.state.recycledCheckboxes).map(c => {
+            if (this.state.recycledCheckboxes[c]) {
+                anyCheckboxSelected = true;
+            }
+        });
+        this.setState("anyRecycledCheckboxSelected", anyCheckboxSelected);
+    }
+
     setCheckbox(e) {
         this.state.checkboxes[`i${e.target.dataset.id}`] = e.target.checked || false;
         this.anyCheckboxCheck();
@@ -296,11 +311,19 @@ module.exports = class {
 
     setRecycledCheckbox(e) {
         this.state.recycledCheckboxes[`i${e.target.dataset.id}`] = e.target.checked || false;
+        this.anyRecycledCheckboxCheck();
     }
 
     setChecked(state) {
         this.state.allCheckboxes = state;
         this.state.data.map(i => (this.state.checkboxes[`i${i.id || i._id}`] = state));
+        let anyCheckboxSelected = false;
+        Object.keys(this.state.checkboxes).map(c => {
+            if (this.state.checkboxes[c]) {
+                anyCheckboxSelected = true;
+            }
+        });
+        this.setState("anyRecycledCheckboxSelected", anyCheckboxSelected);
     }
 
     setCheckboxes(e) {
@@ -311,7 +334,10 @@ module.exports = class {
 
     setRecycledCheckboxesAction(state) {
         this.state.allRecycledCheckboxes = state;
-        this.state.data.map(i => (this.state.recycledCheckboxes[`i${i.id || i._id}`] = state));
+        const recycledCheckboxes = {};
+        this.state.recycledData.map(i => (recycledCheckboxes[`i${i.id || i._id}`] = state));
+        this.setState("recycledCheckboxes", recycledCheckboxes);
+        this.setState("anyRecycledCheckboxSelected", state);
     }
 
     setRecycledCheckboxes(e) {
@@ -418,6 +444,7 @@ module.exports = class {
             } = this.input.genericDelete;
             source.data = source.data || {};
             source.data.ids = this.state.deleteDialogIds;
+            source.data.recycle = !!this.input.recycleBin;
             await axios(source);
             this.setState("deleteDialogActive", false);
             this.setState("deleteDialogProgress", false);
@@ -1252,6 +1279,8 @@ module.exports = class {
     }
 
     async loadRecycled() {
+        this.setState("anyRecycledCheckboxSelected", false);
+        this.setState("allRecycledCheckboxes", false);
         const source = cloneDeep(this.state.dataSource);
         source.data = source.data || {};
         source.url = `${source.url}/recycled`;
@@ -1259,20 +1288,22 @@ module.exports = class {
             ...source.data,
             page: this.state.recycledPage,
             sortId: "deletedAt",
-            sortDirection: "asc",
+            sortDirection: "desc",
             searchText: "",
-            itemsPerPage: 1,
             autoItemsPerPage: false,
         };
         this.setState("recycleBinLoading", true);
         try {
             const response = await axios(source);
             this.setState("recycleBinLoading", false);
-            this.setState("recycledData", response.data.data || []);
             this.setState("recycledPagesCount", response.data.pagesCount || 1);
             if (this.recycledPagination) {
                 this.recycledPagination.func.generatePagination(response.data.pagesCount || 1);
             }
+            this.setState("recycledData", (response.data.data || []).map(i => {
+                i.deletedAt = format(parseISO(i.deletedAt), `${this.i18n.t("global.dateFormatShort")} ${this.i18n.t("global.timeFormatShort")}`);
+                return i;
+            }) || []);
         } catch (e) {
             this.setState("recycleBinLoading", false);
             this.setState("recycleBinDialogActive", false);
@@ -1297,5 +1328,62 @@ module.exports = class {
             return;
         }
         this.setState("recycleBinDialogActive", false);
+    }
+
+    onRecycledRestoreClick(e) {
+        e.preventDefault();
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        const titles = this.state.recycledData.map(item => String(dataset.id) === String(item.id) || String(dataset.id) === String(item._id) ? item.title : null).filter(item => item);
+        this.setState("recycledCurrentIds", dataset.id);
+        this.recycledRestoreConfirm.func.setActive(true, this.i18n.t("mTable.recycledRestoreConfirmTitle"), `${this.i18n.t("mTable.recycledRestoreConfirmText")}: ${titles.map(t => `"${t}"`).join(", ")}`);
+    }
+
+    async recycledRestore(ids) {
+        this.setState("recycleBinLoading", true);
+        try {
+            const source = cloneDeep(this.input.genericDelete.source);
+            source.data = source.data || {};
+            source.url = `${source.url}/restore`;
+            source.data.ids = ids;
+            await axios(source);
+            this.loadRecycled();
+            this.dataRequest();
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTable.recycledRestoreSuccess"), "is-success");
+        } catch {
+            this.setState("recycleBinLoading", false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.general"), "is-danger");
+        }
+    }
+
+    onRecycleRestoreMultiple() {
+        const ids = Object.keys(this.state.recycledCheckboxes).map(i => this.state.recycledCheckboxes[i] ? i.replace(/^i/, "") : null).filter(i => i !== undefined && i !== null);
+        const titles = this.state.recycledData.map(item => ids.indexOf(String(item.id)) > -1 || ids.indexOf(String(item._id)) > -1 ? item.title : null).filter(item => item).sort();
+        this.setState("recycledCurrentIds", ids);
+        this.recycledRestoreConfirm.func.setActive(true, this.i18n.t("mTable.recycledRestoreConfirmTitle"), `${this.i18n.t("mTable.recycledRestoreConfirmText")}: ${titles.map(t => `"${t}"`).join(", ")}`);
+    }
+
+    onRecycledRestoreConfirm() {
+        this.recycledRestore(Array.isArray(this.state.recycledCurrentIds) ? this.state.recycledCurrentIds : [this.state.recycledCurrentIds]);
+    }
+
+    onRecycleDeleteAll(e) {
+        e.preventDefault();
+        this.recycledDeleteAllConfirm.func.setActive(true, this.i18n.t("mTable.recycledDeleteAllConfirmTitle"), this.i18n.t("mTable.recycledDeleteAllConfirmText"));
+    }
+
+    async onRecycledDeleteAllConfirm() {
+        this.setState("recycleBinLoading", true);
+        try {
+            const source = cloneDeep(this.input.genericDelete.source);
+            source.data = source.data || {};
+            source.url = `${source.url}/recycled`;
+            await axios(source);
+            this.loadRecycled();
+            this.dataRequest();
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTable.deleteSuccess"), "is-success");
+        } catch {
+            this.setState("recycleBinLoading", false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.general"), "is-danger");
+        }
     }
 };
