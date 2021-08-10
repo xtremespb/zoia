@@ -45,7 +45,11 @@ export default () => ({
                 req.body.sortId = `${req.body.language}.${req.body.sortId}`;
                 break;
             }
-            const query = {};
+            const query = {
+                deletedAt: {
+                    $eq: null
+                }
+            };
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = [];
                 listData.search.map(c => {

@@ -11,7 +11,9 @@
             },
             "acl": {
                 "indexesAsc": ["group"],
-                "indexesDesc": ["group"]
+                "indexesDesc": ["group"],
+                "expires": 259200,
+                "expireField": "deletedAt"
             }
         }
     },

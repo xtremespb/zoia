@@ -15,7 +15,9 @@
             },
             "registry": {
                 "indexesAsc": [],
-                "indexesDesc": []
+                "indexesDesc": [],
+                "expires": 259200,
+                "expireField": "deletedAt"
             },
             "rateLimit": {
                 "indexesAsc": [],

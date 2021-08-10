@@ -2,6 +2,7 @@ import {
     ObjectId
 } from "mongodb";
 import pageDelete from "./data/pageDelete.json";
+import moduleConfig from "../module.json";
 
 export default () => ({
     schema: {
@@ -26,6 +27,9 @@ export default () => ({
             response.validationError(req.validationError);
             return;
         }
+        const {
+            collectionPages
+        } = req.zoiaModulesConfig[moduleConfig.id];
         try {
             // Build query
             const queryDb = {
@@ -34,7 +38,7 @@ export default () => ({
                 }))
             };
             // Get requested data
-            const dataDb = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(queryDb, {
+            const dataDb = await this.mongo.db.collection(collectionPages).find(queryDb, {
                 projection: {
                     filename: 1
                 }
@@ -50,12 +54,19 @@ export default () => ({
                 response.requestAccessDeniedError();
                 return;
             }
-            // Delete requested IDs
-            const result = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).deleteMany({
-                $or: req.body.ids.map(id => ({
-                    _id: new ObjectId(id)
-                }))
-            });
+            let result;
+            if (req.body.recycle) {
+                result = await this.mongo.db.collection(collectionPages).updateMany(queryDb, {
+                    $set: {
+                        deletedAt: new Date(),
+                    }
+                }, {
+                    upsert: false
+                });
+            } else {
+                // Delete requested IDs
+                result = await this.mongo.db.collection(collectionPages).deleteMany(queryDb);
+            }
             // Check result
             if (!result || !result.acknowledged) {
                 response.deleteError();

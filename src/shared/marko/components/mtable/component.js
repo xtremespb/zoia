@@ -89,6 +89,7 @@ module.exports = class {
         this.i18n = input.i18n;
         this.cookieOptions = out.global.cookieOptions;
         this.siteId = out.global.siteId;
+        this.language = out.global.language;
         this.commonTableItemsLimit = out.global.commonTableItemsLimit;
     }
 
@@ -1291,6 +1292,7 @@ module.exports = class {
             sortDirection: "desc",
             searchText: "",
             autoItemsPerPage: false,
+            language: this.language,
         };
         this.setState("recycleBinLoading", true);
         try {

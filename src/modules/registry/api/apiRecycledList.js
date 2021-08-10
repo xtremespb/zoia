@@ -1,9 +1,9 @@
-import utils from "../../../shared/lib/utils";
-import dataListData from "./data/dataList.json";
+import recycledListData from "./data/recycledList.json";
+import moduleConfig from "../module.json";
 
 export default () => ({
     schema: {
-        body: dataListData.schema
+        body: recycledListData.schema
     },
     attachValidation: true,
     async handler(req) {
@@ -27,15 +27,13 @@ export default () => ({
         try {
             const options = {
                 sort: {},
-                projection: dataListData.projection
+                projection: recycledListData.projection
             };
             const query = {
-                deletedAt: {
-                    $eq: null
-                },
+                deletedAt: { $ne: null },
             };
             if (req.body.searchText && req.body.searchText.length > 1) {
-                query.$or = dataListData.search.map(c => {
+                query.$or = recycledListData.search.map(c => {
                     const sr = {};
                     sr[c] = {
                         $regex: req.body.searchText,
@@ -45,21 +43,21 @@ export default () => ({
                 });
             }
             const count = await this.mongo.db.collection(req.zoiaConfig.collections.registry).find(query, options).count();
-            const columns = await utils.getTableSettings(req, this.mongo.db, auth, "registry");
-            const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
+            const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
             const data = (await this.mongo.db.collection(req.zoiaConfig.collections.registry).find(query, options).toArray()).map(i => ({
-                ...i,
-                _id: !acl.checkPermission("registry", "read", i.username) ? "***" : i._id
+                _id: String(i._id),
+                deletedAt: !acl.checkPermission(moduleConfig.id, "read", i.deletedAt) ? "***" : i.deletedAt,
+                title: i._id,
             }));
             // Send response
             response.successJSON({
                 data,
                 count,
                 limit,
-                pagesCount: Math.ceil(count / limit)
+                pagesCount: Math.ceil(count / limit),
             });
             return;
         } catch (e) {

@@ -1,26 +1,6 @@
 import utils from "../../../shared/lib/utils";
 import pagesListData from "./data/pagesList.json";
-
-const findNodeByUUID = (uuid, data) => {
-    let node;
-    data.map(i => {
-        if (i.uuid === uuid) {
-            node = i;
-        }
-        if (!node && i.c) {
-            node = findNodeByUUID(uuid, i.c);
-        }
-    });
-    return node;
-};
-
-const getLabel = (uuid, language, treeData) => {
-    if (!uuid) {
-        return "/";
-    }
-    const node = findNodeByUUID(uuid, treeData);
-    return node ? node.data[language] || node.id : null;
-};
+import utilsPages from "./utilsPages";
 
 export default () => ({
     schema: {
@@ -68,7 +48,10 @@ export default () => ({
                 break;
             }
             const query = {
-                dir: req.body.dir
+                dir: req.body.dir,
+                deletedAt: {
+                    $eq: null
+                }
             };
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = [];
@@ -101,7 +84,7 @@ export default () => ({
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
             const data = (await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).toArray()).map(i => ({
                 _id: i._id,
-                dir: !acl.checkPermission("pages", "read", i.filename) ? "***" : treeData ? getLabel(i.dir, req.body.language, treeData.tree) || "/" : "/",
+                dir: !acl.checkPermission("pages", "read", i.filename) ? "***" : treeData ? utilsPages.getLabel(i.dir, req.body.language, treeData.tree) || "/" : "/",
                 filename: !acl.checkPermission("pages", "read", i.filename) ? "***" : i.filename,
                 title: !acl.checkPermission("pages", "read", i.filename) ? "***" : i[req.body.language] ? i[req.body.language].title : ""
             }));
