@@ -29,7 +29,11 @@ export default () => ({
                 sort: {},
                 projection: dataListData.projection
             };
-            const query = {};
+            const query = {
+                deletedAt: {
+                    $eq: null
+                },
+            };
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = dataListData.search.map(c => {
                     const sr = {};

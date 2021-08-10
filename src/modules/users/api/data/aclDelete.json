@@ -12,6 +12,9 @@
                 },
                 "minItems": 1,
                 "uniqueItems": true
+            },
+            "recycle": {
+                "type": ["boolean", "null"]
             }
         },
         "required": ["ids"]

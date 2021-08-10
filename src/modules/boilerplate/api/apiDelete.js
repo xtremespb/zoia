@@ -60,8 +60,19 @@ export default () => ({
             await utils.removeFiles(filesList, req.zoiaConfig);
             // Remove images (from disk)
             await utils.removeImages(imagesList, req.zoiaConfig);
-            // Delete requested IDs
-            const result = await this.mongo.db.collection(collectionName).deleteMany(queryDb);
+            let result;
+            if (req.body.recycle) {
+                result = await this.mongo.db.collection(collectionName).updateMany(queryDb, {
+                    $set: {
+                        deletedAt: new Date(),
+                    }
+                }, {
+                    upsert: false
+                });
+            } else {
+                // Delete requested IDs
+                result = await this.mongo.db.collection(collectionName).deleteMany(queryDb);
+            }
             // Check result
             if (!result || !result.acknowledged) {
                 response.deleteError();

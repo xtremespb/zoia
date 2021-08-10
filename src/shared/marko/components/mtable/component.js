@@ -4,6 +4,7 @@ const debounce = require("lodash.debounce");
 const cloneDeep = require("lodash.clonedeep");
 const {
     format,
+    parseISO,
 } = require("date-fns");
 const {
     v4: uuidv4
@@ -17,7 +18,9 @@ module.exports = class {
             totalCount: 0,
             dataSource: null,
             checkboxes: {},
+            recycledCheckboxes: {},
             allCheckboxes: false,
+            allRecycledCheckboxes: false,
             sortId: null,
             sortDirection: "asc",
             page: 1,
@@ -31,6 +34,7 @@ module.exports = class {
             deleteDialogTitles: [],
             deleteDialogProgress: false,
             anyCheckboxSelected: false,
+            anyRecycledCheckboxSelected: false,
             itemsPerPage: null,
             autoItemsPerPage: !!input.autoItemsPerPage,
             filterDialogActive: false,
@@ -65,6 +69,12 @@ module.exports = class {
             widgetsView: [],
             anyWidgets: false,
             currentWidgetsData: [],
+            recycleBinLoading: false,
+            recycleBinDialogActive: false,
+            recycledPage: 1,
+            recycledPagesCount: 1,
+            recycledData: [],
+            recycledCurrentIds: null,
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -79,6 +89,7 @@ module.exports = class {
         this.i18n = input.i18n;
         this.cookieOptions = out.global.cookieOptions;
         this.siteId = out.global.siteId;
+        this.language = out.global.language;
         this.commonTableItemsLimit = out.global.commonTableItemsLimit;
     }
 
@@ -101,6 +112,8 @@ module.exports = class {
         this.widgetsDeleteConfirm = this.getComponent(`${this.input.id}_widgetsDeleteConfirm`);
         this.tableSettingsPagesForm = this.getComponent(`${this.input.id}_tableSettingsPagesForm`);
         this.widgetEditForm = this.getComponent(`${this.input.id}_widgetsEditForm`);
+        this.recycledRestoreConfirm = this.getComponent(`${this.input.id}_recycledRestoreConfirm`);
+        this.recycledDeleteAllConfirm = this.getComponent(`${this.input.id}_recycledDeleteAllConfirm`);
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
             window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
@@ -153,6 +166,11 @@ module.exports = class {
     onPaginationMount() {
         this.pagination = this.getComponent(`${this.input.id}_pagination`);
         this.pagination.func.generatePagination(this.state.pagesCount || 1);
+    }
+
+    onRecycledPaginationMount() {
+        this.recycledPagination = this.getComponent(`${this.input.id}_pagination_recycled`);
+        this.recycledPagination.func.generatePagination(this.state.recycledPagesCount || 1);
     }
 
     calculateItemsPerPage() {
@@ -277,20 +295,54 @@ module.exports = class {
         this.setState("anyCheckboxSelected", anyCheckboxSelected);
     }
 
+    anyRecycledCheckboxCheck() {
+        let anyCheckboxSelected = false;
+        Object.keys(this.state.recycledCheckboxes).map(c => {
+            if (this.state.recycledCheckboxes[c]) {
+                anyCheckboxSelected = true;
+            }
+        });
+        this.setState("anyRecycledCheckboxSelected", anyCheckboxSelected);
+    }
+
     setCheckbox(e) {
         this.state.checkboxes[`i${e.target.dataset.id}`] = e.target.checked || false;
         this.anyCheckboxCheck();
     }
 
+    setRecycledCheckbox(e) {
+        this.state.recycledCheckboxes[`i${e.target.dataset.id}`] = e.target.checked || false;
+        this.anyRecycledCheckboxCheck();
+    }
+
     setChecked(state) {
         this.state.allCheckboxes = state;
         this.state.data.map(i => (this.state.checkboxes[`i${i.id || i._id}`] = state));
+        let anyCheckboxSelected = false;
+        Object.keys(this.state.checkboxes).map(c => {
+            if (this.state.checkboxes[c]) {
+                anyCheckboxSelected = true;
+            }
+        });
+        this.setState("anyRecycledCheckboxSelected", anyCheckboxSelected);
     }
 
     setCheckboxes(e) {
         this.setChecked(e.target.checked);
         this.anyCheckboxCheck();
         this.forceUpdate();
+    }
+
+    setRecycledCheckboxesAction(state) {
+        this.state.allRecycledCheckboxes = state;
+        const recycledCheckboxes = {};
+        this.state.recycledData.map(i => (recycledCheckboxes[`i${i.id || i._id}`] = state));
+        this.setState("recycledCheckboxes", recycledCheckboxes);
+        this.setState("anyRecycledCheckboxSelected", state);
+    }
+
+    setRecycledCheckboxes(e) {
+        this.setRecycledCheckboxesAction(e.target.checked);
     }
 
     onColumnClick(e) {
@@ -314,6 +366,11 @@ module.exports = class {
     onPageClick(page) {
         this.setState("page", page);
         this.dataRequest();
+    }
+
+    onRecycledPageClick(page) {
+        this.setState("recycledPage", page);
+        this.loadRecycled();
     }
 
     onActionButtonClick(e) {
@@ -388,6 +445,7 @@ module.exports = class {
             } = this.input.genericDelete;
             source.data = source.data || {};
             source.data.ids = this.state.deleteDialogIds;
+            source.data.recycle = !!this.input.recycleBin;
             await axios(source);
             this.setState("deleteDialogActive", false);
             this.setState("deleteDialogProgress", false);
@@ -1219,5 +1277,115 @@ module.exports = class {
             this.setState("widgetsManageDialogLoading", false);
             this.dataRequest();
         }, 100);
+    }
+
+    async loadRecycled() {
+        this.setState("anyRecycledCheckboxSelected", false);
+        this.setState("allRecycledCheckboxes", false);
+        const source = cloneDeep(this.state.dataSource);
+        source.data = source.data || {};
+        source.url = `${source.url}/recycled`;
+        source.data = {
+            ...source.data,
+            page: this.state.recycledPage,
+            sortId: "deletedAt",
+            sortDirection: "desc",
+            searchText: "",
+            autoItemsPerPage: false,
+            language: this.language,
+        };
+        this.setState("recycleBinLoading", true);
+        try {
+            const response = await axios(source);
+            this.setState("recycleBinLoading", false);
+            this.setState("recycledPagesCount", response.data.pagesCount || 1);
+            if (this.recycledPagination) {
+                this.recycledPagination.func.generatePagination(response.data.pagesCount || 1);
+            }
+            this.setState("recycledData", (response.data.data || []).map(i => {
+                i.deletedAt = format(parseISO(i.deletedAt), `${this.i18n.t("global.dateFormatShort")} ${this.i18n.t("global.timeFormatShort")}`);
+                return i;
+            }) || []);
+        } catch (e) {
+            this.setState("recycleBinLoading", false);
+            this.setState("recycleBinDialogActive", false);
+            if (e && e.response && e.response.status === 401) {
+                this.emit("unauthorized", {});
+                return;
+            }
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mTableErr.general`), "is-danger");
+        }
+    }
+
+    onRecycleBinOpen() {
+        this.setState("recycleBinDialogActive", true);
+        this.setState("recycledPage", 1);
+        this.setRecycledCheckboxesAction(false);
+        window.__zoiaTippyJs.reset();
+        this.loadRecycled();
+    }
+
+    onRecycleBinDialogClose() {
+        if (this.state.recycleBinLoading) {
+            return;
+        }
+        this.setState("recycleBinDialogActive", false);
+    }
+
+    onRecycledRestoreClick(e) {
+        e.preventDefault();
+        const dataset = Object.keys(e.target.dataset).length ? e.target.dataset : Object.keys(e.target.parentNode.dataset).length ? e.target.parentNode.dataset : Object.keys(e.target.parentNode.parentNode.dataset).length ? e.target.parentNode.parentNode.dataset : {};
+        const titles = this.state.recycledData.map(item => String(dataset.id) === String(item.id) || String(dataset.id) === String(item._id) ? item.title : null).filter(item => item);
+        this.setState("recycledCurrentIds", dataset.id);
+        this.recycledRestoreConfirm.func.setActive(true, this.i18n.t("mTable.recycledRestoreConfirmTitle"), `${this.i18n.t("mTable.recycledRestoreConfirmText")}: ${titles.map(t => `"${t}"`).join(", ")}`);
+    }
+
+    async recycledRestore(ids) {
+        this.setState("recycleBinLoading", true);
+        try {
+            const source = cloneDeep(this.input.genericDelete.source);
+            source.data = source.data || {};
+            source.url = `${source.url}/restore`;
+            source.data.ids = ids;
+            await axios(source);
+            this.loadRecycled();
+            this.dataRequest();
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTable.recycledRestoreSuccess"), "is-success");
+        } catch {
+            this.setState("recycleBinLoading", false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.general"), "is-danger");
+        }
+    }
+
+    onRecycleRestoreMultiple() {
+        const ids = Object.keys(this.state.recycledCheckboxes).map(i => this.state.recycledCheckboxes[i] ? i.replace(/^i/, "") : null).filter(i => i !== undefined && i !== null);
+        const titles = this.state.recycledData.map(item => ids.indexOf(String(item.id)) > -1 || ids.indexOf(String(item._id)) > -1 ? item.title : null).filter(item => item).sort();
+        this.setState("recycledCurrentIds", ids);
+        this.recycledRestoreConfirm.func.setActive(true, this.i18n.t("mTable.recycledRestoreConfirmTitle"), `${this.i18n.t("mTable.recycledRestoreConfirmText")}: ${titles.map(t => `"${t}"`).join(", ")}`);
+    }
+
+    onRecycledRestoreConfirm() {
+        this.recycledRestore(Array.isArray(this.state.recycledCurrentIds) ? this.state.recycledCurrentIds : [this.state.recycledCurrentIds]);
+    }
+
+    onRecycleDeleteAll(e) {
+        e.preventDefault();
+        this.recycledDeleteAllConfirm.func.setActive(true, this.i18n.t("mTable.recycledDeleteAllConfirmTitle"), this.i18n.t("mTable.recycledDeleteAllConfirmText"));
+    }
+
+    async onRecycledDeleteAllConfirm() {
+        this.setState("recycleBinLoading", true);
+        try {
+            const source = cloneDeep(this.input.genericDelete.source);
+            source.data = source.data || {};
+            source.url = `${source.url}/recycled`;
+            await axios(source);
+            this.loadRecycled();
+            this.dataRequest();
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTable.deleteSuccess"), "is-success");
+        } catch {
+            this.setState("recycleBinLoading", false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.general"), "is-danger");
+        }
     }
 };

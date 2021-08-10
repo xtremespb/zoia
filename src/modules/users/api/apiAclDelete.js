@@ -50,8 +50,19 @@ export default () => ({
                 response.requestAccessDeniedError();
                 return;
             }
-            // Delete requested IDs
-            const result = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).deleteMany(queryDb);
+            let result;
+            if (req.body.recycle) {
+                result = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).updateMany(queryDb, {
+                    $set: {
+                        deletedAt: new Date(),
+                    }
+                }, {
+                    upsert: false
+                });
+            } else {
+                // Delete requested IDs
+                result = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).deleteMany(queryDb);
+            }
             // Check result
             if (!result || !result.acknowledged) {
                 response.deleteError();

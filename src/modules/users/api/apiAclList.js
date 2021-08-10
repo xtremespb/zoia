@@ -43,7 +43,9 @@ export default () => ({
                 break;
             }
             const query = {
-                dir: req.body.dir
+                deletedAt: {
+                    $eq: null
+                },
             };
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = aclListData.search.map(c => {

@@ -4,7 +4,9 @@
         "collections": {
             "pages": {
                 "indexesAsc": ["dir", "filename", "[language].title"],
-                "indexesDesc": ["dir", "filename", "[language].title"]
+                "indexesDesc": ["dir", "filename", "[language].title"],
+                "expires": 259200,
+                "expireField": "deletedAt"
             }
         }
     },

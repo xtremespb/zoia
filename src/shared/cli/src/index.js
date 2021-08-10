@@ -58,7 +58,7 @@ const options = commandLineArgs([{
 `);
     console.log(colors.brightWhite(` Console client, version: ${packageJson.version}`));
     if (Object.keys(options).length < 1 || (options.maintenance && !options.maintenance.match(/on|off/)) || (options.demo && !options.demo.match(/on|off/)) || options.acl === null) {
-        console.error(`\n ${colors.brightCyan("npm run cli")} -- ${colors.yellow("--maintenance")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn maintenance mode on or off")}\n                ${colors.yellow("--user")} ${colors.green("username")} - ${colors.grey("create an user or reset password")}\n                ${colors.yellow("--demo")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn demo mode on or off")}\n                ${colors.yellow("--acl")} ${colors.green("group")} ${colors.yellow("--permissions")} ${colors.green("crud")} - ${colors.grey("set ACL for group (create, read, update, delete)")}`);
+        console.error(`\n ${colors.brightCyan("npm run cli")} -- ${colors.yellow("--maintenance")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn maintenance mode on or off")}\n                ${colors.yellow("--user")} ${colors.green("username")} - ${colors.grey("create an user or reset password")}\n                ${colors.yellow("--demo")} ${colors.red("on")}|${colors.green("off")} - ${colors.grey("turn demo mode on or off")}\n                ${colors.yellow("--acl")} ${colors.green("group")} ${colors.yellow("--permissions")} ${colors.green("crud")} - ${colors.grey("set ACL for group (create, read, update, delete)")}\n                ${colors.yellow("--defaults")} - ${colors.grey("create defaults for all modules")}`);
     }
     try {
         const config = {

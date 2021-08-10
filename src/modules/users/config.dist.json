@@ -5,11 +5,15 @@
         "collections": {
             "users": {
                 "indexesAsc": ["username", "displayName", "email"],
-                "indexesDesc": ["username", "displayName", "email"]
+                "indexesDesc": ["username", "displayName", "email"],
+                "expires": 259200,
+                "expireField": "deletedAt"
             },
             "acl": {
                 "indexesAsc": ["group"],
-                "indexesDesc": ["group"]
+                "indexesDesc": ["group"],
+                "expires": 259200,
+                "expireField": "deletedAt"
             }
         }
     },

@@ -89,7 +89,6 @@
     },
     "captchaValidity": 3600,
     "originCORS": "*",
-
     "telegram": {
         "enabled": false,
         "token": ""

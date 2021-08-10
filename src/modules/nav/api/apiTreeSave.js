@@ -79,7 +79,7 @@ export default () => ({
             }, {
                 upsert: true
             });
-            if (!resultTree || !resultTree.result || !resultTree.result.ok) {
+            if (!resultTree || !resultTree.acknowledged) {
                 response.requestError({
                     failed: true,
                     error: "Could not update one or more items",

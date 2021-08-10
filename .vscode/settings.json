@@ -21,6 +21,7 @@
         "mform",
         "mnotify",
         "mtable",
+        "npmi",
         "ratelimit",
         "rerr",
         "rspace",

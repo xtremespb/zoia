@@ -30,10 +30,6 @@
                 "pattern": "^[a-z]{2}(-[a-z]{2})?$",
                 "minLength": 2,
                 "maxLength": 5
-            },
-            "dir": {
-                "type": "string",
-                "pattern": "^$|^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
             }
         },
         "required": ["page", "sortId", "sortDirection", "language"]

@@ -68,7 +68,8 @@
         "username": 1,
         "displayName": 1,
         "email": 1,
-        "status": 1
+        "status": 1,
+        "deletedAt": 1
     },
     "search": ["username", "email"]
 }

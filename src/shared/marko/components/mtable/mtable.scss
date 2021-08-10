@@ -235,7 +235,6 @@ table tr:last-child td:last-child {
 .z3-mt-td {
     vertical-align: middle !important;
 }
-
 .z3-mt-sort {
     display: inline-block;
     margin-right: 4px;
@@ -254,6 +253,27 @@ table tr:last-child td:last-child {
 .z3-mt-table-meter {
     height: 1px;
     width: 100%;
+}
+
+.z3-mt-recycle-bin-btn {
+    margin-left: 1px !important;
+}
+
+.z3-mt-recycle-bin-modal-card {
+    width: 100%;
+}
+
+.z3-mt-recycle-bin-modal-card-body {
+    border-bottom-left-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+}
+
+.z3-mt-recycle-bin-modal-card-head {
+    border-bottom: 1px solid $grey-lightest;
+}
+
+.z3-mt-deletedAt {
+    width: 200px;
 }
 
 @keyframes z3-mt-filter-spinner {

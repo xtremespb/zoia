@@ -32,7 +32,11 @@ export default () => ({
                 sort: {},
                 projection: usersListData.projection
             };
-            let query = {};
+            let query = {
+                deletedAt: {
+                    $eq: null
+                }
+            };
             if (req.body.searchText && req.body.searchText.length > 1) {
                 query.$or = usersListData.search.map(c => {
                     const sr = {};

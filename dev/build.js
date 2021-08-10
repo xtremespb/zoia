@@ -1,13 +1,8 @@
 /* eslint-disable no-console */
-const {
-    exec
-} = require("child_process");
-const {
-    format,
-} = require("date-fns");
 const commandLineArgs = require("command-line-args");
 const fs = require("fs-extra");
 const path = require("path");
+const NPMI = require("./npmi");
 
 const options = commandLineArgs([{
     name: "dev",
@@ -48,22 +43,18 @@ if (!params[command]) {
     return;
 }
 
-const execCommand = cmd => new Promise((resolve, reject) => {
-    let exitCode;
-    const workerProcess = exec(cmd, (error, stdout, stderr) => {
-        if (exitCode === 0) {
-            // eslint-disable-next-line no-control-regex
-            fs.writeFileSync(path.resolve(`${__dirname}/../logs/build_${format(new Date(), "yyyyMMdd_HHmmss")}.log`), stdout.replace(/[^\x00-\x7F]/g, ""));
-            resolve(stdout);
-        } else {
-            // eslint-disable-next-line prefer-promise-reject-errors
-            reject(new Error(`${stdout || ""}${stderr || ""}`));
-        }
-    });
-    workerProcess.on("exit", code => exitCode = code);
-});
+const installAnimation = (module, version) => {
+    const h = ["|", "/", "-", "\\"];
+    let i = 0;
+    return setInterval(() => {
+        i = (i > 3) ? 0 : i;
+        const msg = `- Installing ${module}@${version}... ${h[i]}`;
+        process.stdout.write(`\r${msg}`);
+        i += 1;
+    }, 100);
+};
 
-const loadingAnimation = () => {
+const buildAnimation = () => {
     const h = ["|", "/", "-", "\\"];
     let i = 0;
     return setInterval(() => {
@@ -78,9 +69,11 @@ const loadingAnimation = () => {
     const packageJson = require(path.resolve(`${__dirname}/../package.json`));
     console.log(`ZOIA Build Script, mode: ${buildMode}, version: ${packageJson.version}\nStart time: ${new Date()}\n`);
     const timestampStart = new Date().getTime() / 1000;
-    const loading = loadingAnimation();
     const dir = command === "update" ? "update" : "zoia";
+    let loading;
     try {
+        const npmi = new NPMI();
+        // Create backups of all files
         if (fs.existsSync(path.resolve(`${__dirname}/../build/bin/zoia.js`))) {
             fs.copySync(path.resolve(`${__dirname}/../build/bin/zoia.js`), path.resolve(`${__dirname}/../build/bin/zoia.js.bak`));
         }
@@ -93,12 +86,60 @@ const loadingAnimation = () => {
         if (fs.existsSync(path.resolve(`${__dirname}/../build/public/${dir}`))) {
             fs.copySync(path.resolve(`${__dirname}/../build/public/${dir}`), path.resolve(`${__dirname}/../build/public/${dir}_bak`));
         }
-        await execCommand(`node node_modules/webpack-cli/bin/cli ${params[command]}`);
+        // Get list of modules
+        const moduleDirs = (await fs.readdir(path.resolve(`${__dirname}/../${command === "update" ? "update" : "src"}/modules`))).filter(d => !d.match(/^\./));
+        // Build a list of "3rd-party" NPM modules
+        let extraModules = {};
+        for (const moduleDir of moduleDirs) {
+            try {
+                const npmData = require(path.resolve(`${__dirname}/../${command === "update" ? "update" : "src"}/modules/${moduleDir}/npm.json`));
+                extraModules = {
+                    ...extraModules,
+                    ...npmData
+                };
+            } catch {
+                // Ignore
+            }
+        }
+        const extraModuleNames = Object.keys(extraModules);
+        // Install 3rd-party modules when necessary
+        if (extraModuleNames.length) {
+            console.log(`${extraModuleNames.length} additional NPM module(s) will be installed:\n`);
+            for (const m of extraModuleNames) {
+                const moduleIsInstalled = await npmi.isInstalled(m, extraModules[m]);
+                if (!moduleIsInstalled) {
+                    loading = installAnimation(m, extraModules[m]);
+                    await npmi.execCommand(`npm i ${m}@${extraModules[m]} --loglevel=info`);
+                    clearTimeout(loading);
+                    process.stdout.write(`\r- Successfully installed NPM module: ${m}@${extraModules[m]}\n`);
+                } else {
+                    console.log(`- Already up-to-date, skipping: ${m}@${extraModules[m]}`);
+                }
+            }
+            console.log("");
+        }
+        // Overwrite dependencies and devDependencies from package-core.json
+        const packageJsonMain = require(path.resolve(`${__dirname}/../package.json`));
+        const packageJsonCore = require(path.resolve(`${__dirname}/../package-core.json`));
+        packageJsonMain.dependencies = packageJsonCore.dependencies;
+        packageJsonMain.devDependencies = packageJsonCore.devDependencies;
+        await fs.writeJSON(path.resolve(`${__dirname}/../package-update.json`), packageJsonMain, {
+            spaces: "\t"
+        });
+        await fs.copy(path.resolve(`${__dirname}/../package-update.json`), path.resolve(`${__dirname}/../package.json`), {
+            overwrite: true,
+            errorOnExist: false
+        });
+        // Start building
+        loading = buildAnimation();
+        await npmi.execCommand(`node node_modules/webpack-cli/bin/cli ${params[command]}`);
+        // Remove backups
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/zoia.js.bak`));
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/test.js.bak`));
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/cli.js.bak`));
         fs.removeSync(path.resolve(`${__dirname}/../build/public/${dir}`));
         fs.removeSync(path.resolve(`${__dirname}/../build/public/${dir}_bak`));
+        fs.removeSync(path.resolve(`${__dirname}/../package-update.json`));
         fs.moveSync(path.resolve(`${__dirname}/../build/public/${dir}_`), path.resolve(`${__dirname}/../build/public/${dir}`));
         clearTimeout(loading);
     } catch (e) {
@@ -109,7 +150,9 @@ const loadingAnimation = () => {
         } catch {
             // Ignore
         }
-        clearTimeout(loading);
+        if (loading) {
+            clearTimeout(loading);
+        }
         console.log(`Failed:\n`);
         console.log(e);
         process.exit(1);

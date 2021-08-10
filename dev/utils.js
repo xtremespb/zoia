@@ -4,30 +4,9 @@ const path = require("path");
 const {
     v4: uuidv4
 } = require("uuid");
-const {
-    format,
-} = require("date-fns");
-const {
-    exec
-} = require("child_process");
 const minify = require("@node-minify/core");
 const htmlMinifier = require("@node-minify/html-minifier");
 const packageJson = require("../package.json");
-
-const execCommand = cmd => new Promise((resolve, reject) => {
-    let exitCode;
-    const workerProcess = exec(cmd, (error, stdout, stderr) => {
-        if (exitCode === 0) {
-            // eslint-disable-next-line no-control-regex
-            fs.writeFileSync(path.resolve(`${__dirname}/../logs/npm_${format(new Date(), "yyyyMMdd_HHmmss")}.log`), `${cmd}\n\n${stdout.replace(/[^\x00-\x7F]/g, "")}`);
-            resolve(stdout);
-        } else {
-            // eslint-disable-next-line prefer-promise-reject-errors
-            reject(new Error(`${stdout || ""}${stderr || ""}`));
-        }
-    });
-    workerProcess.on("exit", code => exitCode = code);
-});
 
 const cleanUpWeb = argv => {
     [argv.update ? "build/public/update_" : "build/public/zoia_", "build/scripts"].map(d => {
@@ -197,62 +176,6 @@ const generateModulesConfig = (moduleDirs, languages, argv) => {
     });
 };
 
-const installRequiredPackages = async (moduleDirs, argv) => {
-    const packageJsonMain = require(path.resolve(`${__dirname}/../package.json`));
-    const packageJsonCore = require(path.resolve(`${__dirname}/../package-core.json`));
-    packageJsonMain.dependencies = packageJsonCore.dependencies;
-    packageJsonMain.devDependencies = packageJsonCore.devDependencies;
-    await fs.writeJSON(path.resolve(`${__dirname}/../package-update.json`), packageJsonMain, {
-        spaces: "\t"
-    });
-    await fs.copy(path.resolve(`${__dirname}/../package-update.json`), path.resolve(`${__dirname}/../package.json`), {
-        overwrite: true,
-        errorOnExist: false
-    });
-    await fs.remove(path.resolve(`${__dirname}/../package-update.json`));
-    for (const dir of moduleDirs) {
-        let npmData;
-        try {
-            npmData = require(path.resolve(`${__dirname}/../${argv.update ? "update" : "src"}/modules/${dir}/npm.json`));
-        } catch {
-            // Ignore
-        }
-        if (!npmData) {
-            // eslint-disable-next-line no-continue
-            continue;
-        }
-        const cmd = Object.keys(npmData).map(m => {
-            if (!packageJsonCore.dependencies[m] || packageJsonCore.dependencies[m] !== npmData[m] || !packageJsonCore.devDependencies[m] || packageJsonCore.devDependencies[m] !== npmData[m]) {
-                try {
-                    require(m);
-                    const modulePackageJson = require(`${__dirname}/../node_modules/${m}/package.json`);
-                    if (modulePackageJson.version === npmData[m].replace(/[^0-9.]/gm, "")) {
-                        return null;
-                    }
-                } catch {
-                    // Ignore
-                }
-                return `${m}@${npmData[m]}`;
-            }
-        }).filter(i => i);
-        if (cmd && cmd.length) {
-            try {
-                for (const c of cmd) {
-                    console.log(`Installing NPM package for module "${dir}": ${c}`);
-                    try {
-                        await execCommand(`npm i ${c} --loglevel=info${argv.mode === "production" ? " --save" : ""}`);
-                    } catch (e) {
-                        console.log(e.message);
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-                process.exit(1);
-            }
-        }
-    }
-};
-
 const ensureDirectories = (config) => {
     const dirs = ["etc", config.directories.tmp, "logs", "build/etc", "build/bin", "build/public", config.directories.files, "build/mail", config.directories.publicFiles, config.directories.publicImages];
     console.log(`Ensuring directories: ${dirs.join(", ")}`);
@@ -306,7 +229,6 @@ module.exports = {
     ensureDirectories,
     copyPublic,
     copyMailTemplates,
-    installRequiredPackages,
     runBuildScripts,
     generateVariablesSCSS,
 };

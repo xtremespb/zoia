@@ -4,7 +4,9 @@
         "collections": {
             "boilerplate": {
                 "indexesAsc": ["id", "[language].title"],
-                "indexesDesc": ["id", "[language].title"]
+                "indexesDesc": ["id", "[language].title"],
+                "expires": 259200,
+                "expireField": "deletedAt"
             }
         }
     },

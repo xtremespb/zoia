@@ -1,0 +1,40 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "page": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 999999
+            },
+            "sortId": {
+                "type": "string",
+                "enum": ["title", "deletedAt"]
+            },
+            "sortDirection": {
+                "type": "string",
+                "enum": ["asc", "desc"]
+            },
+            "searchText": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 128
+            },
+            "itemsPerPage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000
+            },
+            "autoItemsPerPage": {
+                "type": "boolean"
+            }
+        },
+        "required": ["page", "sortId", "sortDirection"]
+    },
+    "projection": {
+        "_id": 1,
+        "group": 1,
+        "deletedAt": 1
+    },
+    "search": ["group"]
+}

@@ -97,7 +97,8 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
                             const {
                                 indexesAsc,
                                 indexesDesc,
-                                expires
+                                expires,
+                                expireField,
                             } = moduleConfig.database.collections[c];
                             if (indexesAsc && indexesAsc.length) {
                                 const indexes = {};
@@ -111,10 +112,22 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
                                         indexes[i] = 1;
                                     }
                                 });
+                                console.log(`* Dropping indexes: "${m.id}_${c}_asc"`);
+                                try {
+                                    await db.collection(c).dropIndex(`${m.id}_${c}_asc`);
+                                } catch (e) {
+                                    console.log(`  Warning: ${e.message}`);
+                                    // Ignore
+                                }
                                 console.log(`* Creating indexes: "${m.id}_${c}_asc"`);
-                                await db.collection(c).createIndex(indexes, {
-                                    name: `${m.id}_${c}_asc`
-                                });
+                                try {
+                                    await db.collection(c).createIndex(indexes, {
+                                        name: `${m.id}_${c}_asc`
+                                    });
+                                } catch (e) {
+                                    console.log(`  Failed: ${e.message}`);
+                                    // Ignore
+                                }
                             }
                             if (indexesDesc && indexesDesc.length) {
                                 const indexes = {};
@@ -128,20 +141,47 @@ console.log(colors.yellow(`Installing modules: ${modules.map(m => m.id).join(", 
                                         indexes[i] = -1;
                                     }
                                 });
+                                console.log(`* Dropping indexes: "${m.id}_${c}_desc"`);
+                                try {
+                                    await db.collection(c).dropIndex(`${m.id}_${c}_desc`);
+                                } catch (e) {
+                                    console.log(`  Warning: ${e.message}`);
+                                    // Ignore
+                                }
                                 console.log(`* Creating indexes: "${m.id}_${c}_desc"`);
-                                await db.collection(c).createIndex(indexes, {
-                                    name: `${m.id}_${c}_desc`
-                                });
+                                try {
+                                    await db.collection(c).createIndex(indexes, {
+                                        name: `${m.id}_${c}_desc`
+                                    });
+                                } catch (e) {
+                                    console.log(`  Failed: ${e.message}`);
+                                    // Ignore
+                                }
                             }
                             if (expires) {
+                                console.log(`* Dropping indexes: "${m.id}_${c}_exp"`);
+                                try {
+                                    await db.collection(c).dropIndex(`${m.id}_${c}_exp`);
+                                } catch (e) {
+                                    console.log(`  Warning: ${e.message}`);
+                                    // Ignore
+                                }
                                 console.log(`* Creating indexes: "${m.id}_${c}_exp"`);
-                                await db.collection(c).createIndex({
-                                    createdAt: 1
-                                }, {
-                                    expireAfterSeconds: parseInt(expires, 10)
-                                }, {
-                                    name: `${m.id}_${c}_exp`
-                                });
+                                const expData = {};
+                                if (expireField) {
+                                    expData[expireField] = 1;
+                                } else {
+                                    expData.createdAt = 1;
+                                }
+                                try {
+                                    await db.collection(c).createIndex(expData, {
+                                        expireAfterSeconds: parseInt(expires, 10),
+                                        name: `${m.id}_${c}_exp`,
+                                    });
+                                } catch (e) {
+                                    console.log(`  Failed: ${e.message}`);
+                                    // Ignore
+                                }
                             }
                         } catch (e) {
                             console.error(e);

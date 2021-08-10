@@ -80,7 +80,7 @@ export default () => ({
             }, {
                 upsert: true
             });
-            if (!resultTree || !resultTree.result || !resultTree.result.ok) {
+            if (!resultTree || !resultTree.acknowledged) {
                 response.requestError({
                     failed: true,
                     error: "Could not update one or more items",
@@ -104,7 +104,7 @@ export default () => ({
                     upsert: false
                 });
                 // Check result
-                if (!resultPages || !resultPages.result || !resultPages.result.ok) {
+                if (!!resultPages || !resultPages.acknowledged) {
                     response.requestError({
                         failed: true,
                         error: "Could not update one or more items",

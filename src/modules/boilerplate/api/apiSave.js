@@ -89,6 +89,7 @@ export default () => ({
                 updateExtras.createdAt = new Date();
             }
             // Update database
+            delete data.id;
             const update = await this.mongo.db.collection(collectionName).updateOne(id ? {
                 _id: new ObjectId(id)
             } : {
