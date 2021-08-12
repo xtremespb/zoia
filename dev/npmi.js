@@ -25,8 +25,8 @@ class NPMI {
             let exitCode;
             const workerProcess = exec(cmd, (error, stdout, stderr) => {
                 if (exitCode === 0) {
-                    // eslint-disable-next-line no-control-regex
                     fs.ensureDirSync(path.resolve(`${__dirname}/../logs`));
+                    // eslint-disable-next-line no-control-regex
                     fs.writeFileSync(path.resolve(`${__dirname}/../logs/build_${format(new Date(), "yyyyMMdd_HHmmss")}.log`), stdout.replace(/[^\x00-\x7F]/g, ""));
                     resolve(stdout);
                 } else {

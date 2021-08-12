@@ -72,6 +72,7 @@ export default () => ({
                 const tempFile = `${uuid()}.zip`;
                 const workingDir = path.resolve(`${__dirname}/../..`);
                 const updateDir = path.resolve(`${__dirname}/../../update`);
+                const devDir = path.resolve(`${__dirname}/../../dev`);
                 const srcDir = path.resolve(`${__dirname}/../../src/`);
                 const currentServerScript = path.resolve(`${__dirname}/../../build/bin/zoia.js`);
                 const currentTestScript = path.resolve(`${__dirname}/../../build/bin/test.js`);
@@ -106,6 +107,8 @@ export default () => ({
                     // Get update contents
                     const tempDirContents = await fs.readdir(tempDir);
                     await updateStatus(req, this.mongo.db, C.UPDATE_STATUS_COPY_SRC_DIR);
+                    // Copy "dev" directory
+                    await fs.copy(path.resolve(tempDir, tempDirContents[0], "dev"), devDir);
                     // Copy "src" directory to the update directory
                     await fs.copy(path.resolve(tempDir, tempDirContents[0], "src"), updateDir);
                     // Create backup of the "package.json" file
