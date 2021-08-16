@@ -989,68 +989,63 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 					</if>
 				</header>
 				<section class="modal-card-body z3-mt-recycle-bin-modal-card-body">
-						<div
-							style=`display:${state.recycleBinLoading ? "flex" : "none"}`
-							class="z3-mt-filter-spinner-wrap">
-							<div class="z3-mt-filter-spinner">
-								<div/>
-								<div/>
-								<div/>
-								<div/>
-							</div>
+					<div
+						style=`display:${state.recycleBinLoading ? "flex" : "none"}`
+						class="z3-mt-filter-spinner-wrap">
+						<div class="z3-mt-filter-spinner">
+							<div/>
+							<div/>
+							<div/>
+							<div/>
 						</div>
-						<div style=`display:${state.recycleBinLoading ? "none" : "block"}`>
-							<if(state.recycledData && state.recycledData.length)>
-								<div class="buttons">
-									<button 
-										class="button is-light" 
-										on-click("onRecycleRestoreMultiple")
-										disabled=(!state.anyRecycledCheckboxSelected)>
-										<div class="z3-mt-icon-wrap">
-											<span class="icon">
-												<i class="mdi mdi-backup-restore"/>
-											</span>
-										</div>
-										${out.global.i18n.t("mTable.recycledRestoreMultiple")}
-									</button>
-									<button 
-										on-click("onRecycleDeleteAll")
-										class="button is-danger">
-										<div class="z3-mt-icon-wrap">
-											<span class="icon">
-												<i class="mdi mdi-trash-can-outline"/>
-											</span>
-										</div>
-										${out.global.i18n.t("mTable.recycledDeleteAll")}
-									</button>
-								</div>
-								<table class="table is-bordered is-striped is-hoverable is-fullwidth">
-									<thead>
-										<tr>
-											<th class="z3-mt-td">
-												<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
-													<input type="checkbox" on-change("setRecycledCheckboxes") checked=state.allRecycledCheckboxes/>
-													<div class="state p-primary">
-														<label/>
-													</div>
+					</div>
+					<div style=`display:${state.recycleBinLoading ? "none" : "block"}`>
+						<if(state.recycledData && state.recycledData.length)>
+							<div class="buttons">
+								<button
+									class="button is-light"
+									on-click("onRecycleRestoreMultiple")
+									disabled=!state.anyRecycledCheckboxSelected>
+									<div class="z3-mt-icon-wrap">
+										<span class="icon">
+											<i class="mdi mdi-backup-restore"/>
+										</span>
+									</div>
+									${out.global.i18n.t("mTable.recycledRestoreMultiple")}
+								</button>
+								<button on-click("onRecycleDeleteAll") class="button is-danger">
+									<div class="z3-mt-icon-wrap">
+										<span class="icon">
+											<i class="mdi mdi-trash-can-outline"/>
+										</span>
+									</div>
+									${out.global.i18n.t("mTable.recycledDeleteAll")}
+								</button>
+							</div>
+							<table class="table is-bordered is-striped is-hoverable is-fullwidth">
+								<thead>
+									<tr>
+										<th class="z3-mt-td">
+											<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
+												<input
+													type="checkbox"
+													on-change("setRecycledCheckboxes")
+													checked=state.allRecycledCheckboxes/>
+												<div class="state p-primary">
+													<label/>
 												</div>
-											</th>
-											<th>
-												${out.global.i18n.t("mTable.recycledItem")}
-											</th>
-											<th>
-												${out.global.i18n.t("mTable.recycledDate")}
-											</th>
-											<th class="z3-mt-actions-wrap">
-												${input.actionsTitle}
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<for|item| of=state.recycledData>
-											<tr>
-												<td style="width:43px;min-width:43px;max-width:43px" class="z3-mt-td">
-													<div class="z3-mt-th-wrap">
+											</div>
+										</th>
+										<th>${out.global.i18n.t("mTable.recycledItem")}</th>
+										<th>${out.global.i18n.t("mTable.recycledDate")}</th>
+										<th class="z3-mt-actions-wrap">${input.actionsTitle}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<for|item| of=state.recycledData>
+										<tr>
+											<td style="width:43px;min-width:43px;max-width:43px" class="z3-mt-td">
+												<div class="z3-mt-th-wrap">
 													<div class="z3-pretty p-icon z3-mt-pretty-checkbox-id">
 														<input
 															data-id=(item.id || item._id)
@@ -1062,39 +1057,37 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 															<label/>
 														</div>
 													</div>
-													</div>
-												</td>
-												<td class="z3-mt-td">${item.title}</td>
-												<td class="z3-mt-td z3-mt-deletedAt">${item.deletedAt}</td>
-												<td class="z3-mt-td has-text-centered">
-														<button
-															data-id=(item._id || item.id)
-															class="button is-small is-light is-action-button z3-mt-action-button"
-															type="button"
-															on-click("onRecycledRestoreClick")
-															data-tippy-content=out.global.i18n.t("mTable.recycledRestore")>
-															<span class="icon">
-																<i class="mdi mdi-backup-restore"/>
-															</span>
-														</button>
-												</td>
-											</tr>
-										</for>
-									</tbody>
-								</table>
-							</if>
-							<else>
-								<div>
-									${out.global.i18n.t("mTable.recycleBinIsEmpty")}
-								</div>
-							</else>
-							<mpagination
-								on-mount("onRecycledPaginationMount")
-								pagesCount=state.recycledPagesCount
-								css="is-small mb-0 mt-4"
-								on-page-click("onRecycledPageClick")
-								key=`${input.id}_pagination_recycled`/>
-						</div>
+												</div>
+											</td>
+											<td class="z3-mt-td">${item.title}</td>
+											<td class="z3-mt-td z3-mt-deletedAt">${item.deletedAt}</td>
+											<td class="z3-mt-td has-text-centered">
+												<button
+													data-id=(item._id || item.id)
+													class="button is-small is-light is-action-button z3-mt-action-button"
+													type="button"
+													on-click("onRecycledRestoreClick")
+													data-tippy-content=out.global.i18n.t("mTable.recycledRestore")>
+													<span class="icon">
+														<i class="mdi mdi-backup-restore"/>
+													</span>
+												</button>
+											</td>
+										</tr>
+									</for>
+								</tbody>
+							</table>
+						</if>
+						<else>
+							<div>${out.global.i18n.t("mTable.recycleBinIsEmpty")}</div>
+						</else>
+						<mpagination
+							on-mount("onRecycledPaginationMount")
+							pagesCount=state.recycledPagesCount
+							css="is-small mb-0 mt-4"
+							on-page-click("onRecycledPageClick")
+							key=`${input.id}_pagination_recycled`/>
+					</div>
 				</section>
 			</div>
 		</div>

@@ -119,5 +119,10 @@
                 }
             }
         }]
+    },
+    "collections": {
+        "files": "files",
+        "registry": "registry",
+        "counters": "counters"
     }
 }

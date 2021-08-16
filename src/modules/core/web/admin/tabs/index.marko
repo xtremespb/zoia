@@ -1,0 +1,37 @@
+<if(out.global.updateAllowed)>
+	<div class="tabs mt-3">
+		<ul>
+			<li class=(state.tab === "controls" ? "is-active" : "")>
+				<a data-id="controls" on-click("onTabClick")>
+					${out.global.i18n.t("tabControls")}
+				</a>
+			</li>
+			<li class=(state.tab === "config" ? "is-active" : "")>
+				<a data-id="config" on-click("onTabClick")>
+					${out.global.i18n.t("tabConfig")}
+				</a>
+			</li>
+		</ul>
+	</div>
+	<if(state.tab === "controls")>
+		<div class="columns is-variable is-1 is-mobile is-multiline">
+			<div class="column is-narrow">
+				<restart/>
+			</div>
+			<div class="column is-narrow">
+				<rebuild/>
+			</div>
+			<div class="column">
+				<update/>
+			</div>
+		</div>
+		<div class="mt-3">
+			<maintenance/>
+		</div>
+	</if>
+	<if(state.tab === "config")>
+		<div class="mt-1">
+			<config/>
+		</div>
+	</if>
+</if>

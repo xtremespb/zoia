@@ -17,7 +17,7 @@ style.scss {
 						<a on-click("onTabClick") data-id=tab.id>${tab.label}</a>
 					</li>
 				</for>
-				<if(input.tabsActive)>
+				<if(input.tabsActive && !input.hideSettings)>
 					<li>
 						<a on-click("onTabSettingsClick")>
 							<span class="icon">

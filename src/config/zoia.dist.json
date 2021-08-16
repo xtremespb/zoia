@@ -35,10 +35,5 @@
         "publicFiles": "/files",
         "publicImages": "/files/images"
     },
-    "collections": {
-        "files": "files",
-        "registry": "registry",
-        "counters": "counters"
-    },
     "commonTableItemsLimit": 20
 }
