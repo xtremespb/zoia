@@ -81,5 +81,6 @@
 	"publicImages": "Public Images",
 	"areaMisc": "Other Settings",
 	"commonTableItemsLimit": "Table Limit",
-	"configNotice": "ZOIA must be restarted to apply the changes after saving"
+	"configNotice": "ZOIA must be restarted to apply the changes after saving",
+	"email": "E-mail"
 }

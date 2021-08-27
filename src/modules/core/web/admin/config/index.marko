@@ -80,7 +80,16 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 				wrapCSS: "z3-is-xlarge",
 				convert: "string",
 				mandatory: true
-			}
+			},
+			{
+				id: "email",
+				type: "text",
+				label: out.global.i18n.t("email"),
+				wrapCSS: "z3-is-medium",
+				convert: "string",
+				shared: true,
+				mandatory: true
+			},
 		],
 		{
 			type: "areaEnd"
@@ -190,5 +199,5 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 	tabsAvail=languageTabs
 	tabsActive=languageTabs.map(t => t.id)
 	hideSettings=true
-	validation=configEdit
-	on-load-success("onLoadSuccess")/>
+	validation=configEdit/>
+<mnotify key="config_mnotify"/>

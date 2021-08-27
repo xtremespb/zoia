@@ -10,16 +10,15 @@ module.exports = class {
 
     onMount() {
         this.configForm = this.getComponent("configForm");
+        this.notify = this.getComponent("config_mnotify");
         setTimeout(async () => this.configForm.func.loadData(), 10);
     }
 
     onFormPostSuccess() {
+        this.notify.func.show(this.i18n.t("operationSuccess"), "is-success");
     }
 
     onUnauthorized() {
         window.location.href = this.i18n.getLocalizedURL(`${this.routes.login}?_=${new Date().getTime()}`, this.language);
-    }
-
-    onLoadSuccess() {
     }
 };

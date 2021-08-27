@@ -39,7 +39,8 @@ module.exports = class {
             loading: false,
             allSettled: false,
             validation: input.validation,
-            visible: {}
+            visible: {},
+            options: {},
         };
         tabs.map(tab => {
             state.data[tab.id] = {};
@@ -57,10 +58,12 @@ module.exports = class {
         this.func = {
             autoFocus: this.autoFocus.bind(this),
             loadData: this.loadData.bind(this),
+            loadMetadata: this.loadMetadata.bind(this),
             setProgress: this.setProgress.bind(this),
             setData: this.setData.bind(this),
             setValue: this.setValue.bind(this),
             getValue: this.getValue.bind(this),
+            setOptions: this.setOptions.bind(this),
             submitForm: this.submitForm.bind(this),
             setError: this.setError.bind(this),
             resetData: this.resetData.bind(this),
@@ -84,9 +87,10 @@ module.exports = class {
         if (item.defaultValue) {
             return item.defaultValue;
         }
+        const options = this.state && this.state.options && this.state.options[item.id] ? this.state.options[item.id] : item.options;
         switch (item.type) {
         case "select":
-            return item.options && item.options.length ? item.options[0].value : null;
+            return options && options.length ? options[0].value : null;
         case "checkbox":
             return false;
         case "checkboxes":
@@ -309,9 +313,10 @@ module.exports = class {
             value,
         } = obj;
         const item = this.fieldsFlat.find(i => i.id === obj.id);
+        const options = this.state.options[obj.id] || item.options;
         switch (item.type) {
         case "select":
-            obj.label = item.options.find(i => String(i.value) === String(obj.value)).label;
+            obj.label = options.find(i => String(i.value) === String(obj.value)).label;
             break;
         }
         switch (obj.type) {
@@ -370,6 +375,16 @@ module.exports = class {
         const component = this.getComponent(`mf_cmp_${id}`);
         if (component && component.func.performUpdate) {
             component.func.performUpdate();
+        }
+    }
+
+    setOptions(id, options) {
+        const component = this.getComponent(`mf_cmp_${id}`);
+        if (component && component.func.setOptions) {
+            component.func.setOptions(options);
+            const optionsState = cloneDeep(this.state.options);
+            optionsState[id] = options;
+            this.setState("options", optionsState);
         }
     }
 
@@ -904,6 +919,7 @@ module.exports = class {
                 }
                 this.setData(result.data.data);
                 this.emit("load-success", result.data.data);
+                return true;
             }
         } catch (e) {
             // eslint-disable-next-line no-console
@@ -919,6 +935,39 @@ module.exports = class {
             }
             this.emit("load-error");
         }
+    }
+
+    async loadMetadata() {
+        if (!this.input.loadMetadata) {
+            return;
+        }
+        this.setState("loading", true);
+        this.setState("disabled", true);
+        try {
+            const result = await axios.post(this.input.loadMetadata.url, this.input.loadMetadata.extras, this.input.loadMetadata.headers ? {
+                headers: this.input.loadMetadata.headers
+            } : undefined);
+            this.setState("loading", false);
+            this.setState("disabled", false);
+            if (result && result.data) {
+                // this.setData(result.data.data);
+                return result.data;
+            }
+        } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error(e);
+            if (e && e.response && e.response.status === 401) {
+                this.emit("unauthorized", {});
+            }
+            this.setState("loading", false);
+            if (e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword) {
+                this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`) || this.i18n.t(`mFormErr.server`), "is-danger");
+            } else {
+                this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.server`), "is-danger");
+            }
+            this.emit("load-error");
+        }
+        return false;
     }
 
     onCaptcha(secret) {

@@ -26,6 +26,7 @@ export default () => ({
             const data = {
                 ...configData.routes,
                 commonTableItemsLimit: configData.commonTableItemsLimit,
+                email: configData.emailFrom,
             };
             Object.keys(req.zoiaConfig.languages).map(i => data[i] = configData.siteMetadata[i]);
             response.successJSON({

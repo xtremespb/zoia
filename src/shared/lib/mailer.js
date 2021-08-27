@@ -14,7 +14,7 @@ export default class {
         this.config = fastify.zoiaConfig;
         this.transporter = nodemailer.createTransport(fastify.zoiaConfig.email.mailer);
         this.message = {
-            from: fastify.zoiaConfig.email.from,
+            from: fastify.zoiaConfig.emailFrom || fastify.zoiaConfig.email.from,
             to: "",
             subject: "",
             text: "",

@@ -52,6 +52,7 @@ export default () => ({
             configData.routes.publicFiles = data.publicFiles;
             configData.routes.publicImages = data.publicImages;
             configData.commonTableItemsLimit = data.commonTableItemsLimit;
+            configData.emailFrom = data.email;
             await fs.writeJSON(configFile, configData, {
                 spaces: "\t"
             });

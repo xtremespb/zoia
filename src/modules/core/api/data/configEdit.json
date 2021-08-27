@@ -45,6 +45,11 @@
                 "type": "integer",
                 "minimum": 1,
                 "pattern": "^[0-9]+$"
+            },
+            "email": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
             }
         },
         "required": ["download", "imagesBrowser", "login", "logout", "publicFiles", "publicImages"]

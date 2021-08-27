@@ -81,5 +81,6 @@
 	"publicImages": "Öffentliche Bilder",
 	"areaMisc": "Andere Einstellungen",
 	"commonTableItemsLimit": "Tischlimit",
-	"configNotice": "ZOIA muss neu gestartet werden, um die Änderungen nach dem Speichern zu übernehmen"
+	"configNotice": "ZOIA muss neu gestartet werden, um die Änderungen nach dem Speichern zu übernehmen",
+	"email": "E-mail"
 }
