@@ -89,6 +89,7 @@ module.exports = class {
             getData: this.getData.bind(this),
             setAceValue: this.setAceValue.bind(this),
             getAceInstance: this.getAceInstance.bind(this),
+            setOptions: this.setOptions.bind(this),
         };
         this.beautifyOptions = {
             indent_size: "2",
@@ -673,5 +674,11 @@ module.exports = class {
             value
         } = e.target;
         this.setState("tagInputValue", value);
+    }
+
+    setOptions(options) {
+        const item = cloneDeep(this.state.item);
+        item.options = options;
+        this.setState("item", item);
     }
 };

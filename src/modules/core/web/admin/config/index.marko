@@ -1,0 +1,203 @@
+import cloneDeep from "lodash/cloneDeep"
+import Cookies from "../../../../../shared/lib/cookies"
+import configEdit from "../../../api/data/configEdit.json"
+
+$ const cookies = new Cookies(out.global.cookieOptions);
+$ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
+$ const languageTabs = Object.keys(out.global.languages).map(k => ({
+	id: k,
+	label: out.global.languages[k]
+}));
+<div class="mb-2 notification is-info mb-5">
+	${out.global.i18n.t("configNotice")}
+</div>
+<mform
+	key="configForm"
+	id="configForm"
+	save={
+		url: "/api/core/config/save",
+		extras: {
+			id: input.id === "new" ? undefined : input.id
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	}
+	load={
+		url: "/api/core/config/load",
+		extras: {
+			id: input.id
+		},
+		headers: {
+			Authorization: `Bearer ${token}`
+		}
+	}
+	fields=[
+		{
+			type: "areaStart",
+			label: out.global.i18n.t("siteConfig"),
+			css: "z3-mf-area-grey"
+		},
+		[
+			{
+				id: "title",
+				type: "text",
+				label: out.global.i18n.t("title"),
+				wrapCSS: "z3-is-xlarge",
+				convert: "string",
+				mandatory: true
+			},
+			{
+				id: "titleShort",
+				type: "text",
+				label: out.global.i18n.t("titleShort"),
+				wrapCSS: "z3-is-large",
+				convert: "string",
+				mandatory: true
+			},
+			{
+				id: "descShort",
+				type: "text",
+				label: out.global.i18n.t("descShort"),
+				wrapCSS: "z3-is-xlarge",
+				convert: "string",
+				mandatory: true
+			}
+		],
+		[
+			{
+				id: "siteLink",
+				type: "text",
+				label: out.global.i18n.t("siteLink"),
+				wrapCSS: "z3-is-large",
+				convert: "string",
+				mandatory: true
+			},
+			{
+				id: "siteLinkText",
+				type: "text",
+				label: out.global.i18n.t("siteLinkText"),
+				wrapCSS: "z3-is-xlarge",
+				convert: "string",
+				mandatory: true
+			},
+			{
+				id: "email",
+				type: "text",
+				label: out.global.i18n.t("email"),
+				wrapCSS: "z3-is-medium",
+				convert: "string",
+				shared: true,
+				mandatory: true
+			},
+		],
+		{
+			type: "areaEnd"
+		},
+		{
+			type: "areaStart",
+			label: out.global.i18n.t("areaRoutes"),
+			css: "z3-mf-area-grey"
+		},
+		[
+			{
+				id: "download",
+				type: "text",
+				label: out.global.i18n.t("download"),
+				wrapCSS: "z3-is-medium",
+				convert: "string",
+				mandatory: true,
+				shared: true
+			},
+			{
+				id: "imagesBrowser",
+				type: "text",
+				label: out.global.i18n.t("imagesBrowser"),
+				wrapCSS: "z3-is-medium",
+				convert: "string",
+				mandatory: true,
+				shared: true
+			},
+			{
+				id: "login",
+				type: "text",
+				label: out.global.i18n.t("login"),
+				wrapCSS: "z3-is-medium",
+				convert: "string",
+				mandatory: true,
+				shared: true
+			},
+			{
+				id: "logout",
+				type: "text",
+				label: out.global.i18n.t("logout"),
+				wrapCSS: "z3-is-medium",
+				convert: "string",
+				mandatory: true,
+				shared: true
+			},
+			{
+				id: "publicFiles",
+				type: "text",
+				label: out.global.i18n.t("publicFiles"),
+				wrapCSS: "z3-is-medium",
+				convert: "string",
+				mandatory: true,
+				shared: true
+			},
+			{
+				id: "publicImages",
+				type: "text",
+				label: out.global.i18n.t("publicImages"),
+				wrapCSS: "z3-is-medium",
+				convert: "string",
+				mandatory: true,
+				shared: true
+			}
+		],
+		{
+			type: "areaEnd"
+		},
+		{
+			type: "areaStart",
+			label: out.global.i18n.t("areaMisc"),
+			css: "z3-mf-area-grey"
+		},
+		[
+			{
+				id: "commonTableItemsLimit",
+				type: "text",
+				label: out.global.i18n.t("commonTableItemsLimit"),
+				wrapCSS: "z3-is-small",
+				convert: "integer",
+				mandatory: true,
+				shared: true
+			}
+		],
+		{
+			type: "areaEnd"
+		},
+		{
+			id: "bg1",
+			type: "buttons",
+			data: [
+				{
+					id: "btnSave",
+					type: "button",
+					buttonType: "submit",
+					label: out.global.i18n.t("save"),
+					css: "is-primary"
+				}
+			]
+		}
+	]
+	formType="formData"
+	progressButtonId="btnSave"
+	i18n=out.global.i18n
+	on-post-success("onFormPostSuccess")
+	on-unauthorized("onUnauthorized")
+	tabsAvail=languageTabs
+	tabsActive=languageTabs.map(t => t.id)
+	hideSettings=true
+	validation=configEdit/>
+<mnotify key="config_mnotify"/>

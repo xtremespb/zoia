@@ -1,0 +1,96 @@
+{
+    "schema": {
+        "type": "object",
+        "properties": {
+            "__form": {
+                "type": "string"
+            }
+        },
+        "required": ["__form"]
+    },
+    "root": {
+        "type": "object",
+        "properties": {
+            "download": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "imagesBrowser": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "login": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "logout": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "publicFiles": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "publicImages": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "commonTableItemsLimit": {
+                "type": "integer",
+                "minimum": 1,
+                "pattern": "^[0-9]+$"
+            },
+            "email": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            }
+        },
+        "required": ["download", "imagesBrowser", "login", "logout", "publicFiles", "publicImages"]
+    },
+    "part": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "titleShort": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "descShort": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "siteLink": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "siteLinkText": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            }
+        },
+        "required": ["title", "titleShort", "descShort", "siteLink", "siteLinkText"]
+    },
+    "files": {
+        "attachments": {
+            "minAmount": 0,
+            "maxAmount": 5,
+            "minSizeBytes": 0,
+            "maxSizeBytes": 5242880
+        }
+    }
+}

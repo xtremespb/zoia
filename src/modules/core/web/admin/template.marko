@@ -20,22 +20,5 @@ style.scss {
 			${new Date(out.global.buildJson.date).toLocaleString()}
 		</span>
 	</p>
-	<if(out.global.updateAllowed)>
-		<div class="z3-ap-controls-area mt-4 p-3">
-			<div class="columns is-variable is-1 is-mobile is-multiline">
-				<div class="column is-narrow">
-					<restart/>
-				</div>
-				<div class="column is-narrow">
-					<rebuild/>
-				</div>
-				<div class="column">
-					<update/>
-				</div>
-			</div>
-			<div class="mt-3">
-				<maintenance/>
-			</div>
-		</div>
-	</if>
+	<tabs/>
 </admin>

@@ -35,10 +35,6 @@
         "publicFiles": "/files",
         "publicImages": "/files/images"
     },
-    "collections": {
-        "files": "files",
-        "registry": "registry",
-        "counters": "counters"
-    },
-    "commonTableItemsLimit": 20
+    "commonTableItemsLimit": 20,
+    "emailFrom": "ZOIA <info@zoiajs.org>"
 }
