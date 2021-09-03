@@ -5,15 +5,22 @@
 			path: out.global.i18n.getLocalizedURL(out.global.routes.pages)
 		},
 		{
-			name: "pages.edit",
+			name: "pages.editRaw",
 			path: "/edit/:id"
-		}
+		},
+		{
+			name: "pages.editPME",
+			path: "/pm/:id"
+		},
 	]
 	on-state-change("onStateChange")>
 	<if(state.route.name === "pages")>
 		<pagesList ...state.route.params/>
 	</if>
-	<if(state.route.name === "pages.edit")>
-		<pageEdit ...state.route.params/>
+	<if(state.route.name === "pages.editRaw")>
+		<pageEditRaw ...state.route.params/>
+	</if>
+	<if(state.route.name === "pages.editPME")>
+		<pageEditPME ...state.route.params/>
 	</if>
 </router>

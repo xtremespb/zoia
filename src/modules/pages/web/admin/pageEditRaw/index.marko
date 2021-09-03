@@ -1,6 +1,6 @@
 import cloneDeep from "lodash/cloneDeep"
 import Cookies from "../../../../../shared/lib/cookies"
-import pageEdit from "../../../api/data/pageEdit.json"
+import pageEditRaw from "../../../api/data/pageEditRaw.json"
 
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
@@ -12,11 +12,11 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 	<h1 class="z3-ap-head-thin">
 		<span class="icon">
 			<i class="mdi z3-ap-mdi-head mdi-dark mdi-square-edit-outline"/>
-		</span>&nbsp;${input.id === "new" ? out.global.i18n.t("pageAdd") : out.global.i18n.t("pageEdit")}
+		</span>&nbsp;${input.id === "new" ? out.global.i18n.t("pageAddRaw") : out.global.i18n.t("pageEditRaw")}
 	</h1>
 	<mform
-		key="pageEditForm"
-		id="pageEditForm"
+		key="pageEditRawForm"
+		id="pageEditRawForm"
 		save={
 			url: "/api/pages/edit/save",
 			extras: {
@@ -55,11 +55,14 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 				},
 				{
 					id: "filename",
-					type: "text",
+					type: "imask",
 					label: out.global.i18n.t("filename"),
 					helpText: out.global.i18n.t("filenameHelpText"),
 					wrapCSS: "z3-is-medium",
-					shared: true
+					shared: true,
+					imask: {
+						mask: /^(?![0-9-])[a-z0-9_-]+$/i
+					},
 				},
 				{
 					id: "title",
@@ -69,13 +72,6 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 					wrapCSS: "z3-is-large",
 					convert: "string"
 				},
-				{
-					id: "date",
-					type: "datepicker",
-					wrapCSS: "z3-is-medium",
-					label: out.global.i18n.t("date"),
-					helpText: out.global.i18n.t("dateHelpText")
-				}
 			],
 			{
 				type: "areaEnd"
@@ -148,7 +144,7 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 			}
 		]
 		formType="formData"
-		validation=pageEdit
+		validation=pageEditRaw
 		progressButtonId="btnSave"
 		i18n=out.global.i18n
 		on-post-success("onFormPostSuccess")

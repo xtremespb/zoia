@@ -10,7 +10,7 @@ const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const ExtendedValidation = require("../../../lib/extendedValidation").default;
 
-const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images", "image", "range", "datepicker", "tags"];
+const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", "file", "captcha", "textarea", "ace", "keyvalue", "images", "image", "range", "datepicker", "tags", "imask", "postmodern"];
 
 module.exports = class {
     onCreate(input) {
@@ -100,8 +100,6 @@ module.exports = class {
             return {
                 data: "", label: ""
             };
-            // case "datepicker":
-            // return "";
         default:
             return null;
         }
@@ -171,6 +169,12 @@ module.exports = class {
                     });
                 }
             }
+            if (field.type === "imask" && field.imask) {
+                const element = document.getElementById(`${this.input.id}_${field.id}`);
+                if (element) {
+                    this.masked[field.id] = new InputMask(element, field.imask);
+                }
+            }
             if (this.input.save) {
                 this.getComponent(`mf_cmp_${field.id}`).func.setHeaders(this.input.save.headers);
             }
@@ -222,6 +226,13 @@ module.exports = class {
                     } else {
                         this.masked[field.id].value = "";
                     }
+                    this.masked[field.id].updateValue();
+                }
+            }
+            if (field.type === "imask") {
+                const element = document.getElementById(`${this.input.id}_${field.id}`);
+                if (element) {
+                    this.masked[field.id].value = this.state.data[dataset.id][field.id] || "";
                     this.masked[field.id].updateValue();
                 }
             }
@@ -352,6 +363,9 @@ module.exports = class {
             }
             const datepickerValue = obj.value ? format(obj.value, this.i18n.t("global.dateFormatShort")) : "";
             this.masked[obj.id].value = datepickerValue;
+            this.masked[obj.id].updateValue();
+            break;
+        case "imask":
             this.masked[obj.id].updateValue();
             break;
         default:
@@ -586,9 +600,6 @@ module.exports = class {
         if (field.type === "keyvalue") {
             valueProcess = value.data;
         }
-        if (field.type === "datepicker") {
-            valueProcess = value;
-        }
         if (field.tags) {
             valueProcess = value && typeof value === "string" ? value.split(",").map(v => v.trim()) : [];
         }
@@ -600,7 +611,7 @@ module.exports = class {
         const data = cloneDeep(this.state.data);
         this.fieldsFlat.map(field => {
             if (field.shared) {
-                const valueRaw = this.masked[field.id] && field.maskOptions ? this.masked[field.id].unmaskedValue : data[this.state.activeTabId][field.id];
+                const valueRaw = this.masked[field.id] && (field.maskOptions || field.imask) ? this.masked[field.id].unmaskedValue : data[this.state.activeTabId][field.id];
                 const value = this.processSerializedValue(field, valueRaw);
                 serialized[field.id] = value;
                 if (undef && (serialized[field.id] === null || serialized[field.id] === "")) {
@@ -609,7 +620,7 @@ module.exports = class {
             } else {
                 this.state.tabs.map(tab => {
                     serialized[tab.id] = serialized[tab.id] || {};
-                    const valueRaw = this.masked[field.id] && field.maskOptions ? this.masked[field.id].unmaskedValue : data[tab.id][field.id];
+                    const valueRaw = this.masked[field.id] && (field.maskOptions || field.imask) ? this.masked[field.id].unmaskedValue : data[tab.id][field.id];
                     const value = this.processSerializedValue(field, valueRaw);
                     serialized[tab.id][field.id] = value;
                     if (undef && (serialized[tab.id][field.id] === null || serialized[tab.id][field.id] === "")) {
@@ -819,6 +830,9 @@ module.exports = class {
                             this.masked[field.id] = new InputMask(element, field.maskOptions);
                         }, 1);
                     }
+                    if (this.masked[field.id] && field.imask) {
+                        this.masked[field.id].value = data[tab.id][field.id] || "";
+                    }
                 });
             });
             // Deserialize shared fields
@@ -846,6 +860,9 @@ module.exports = class {
                                 const element = document.getElementById(`${this.input.id}_${field.id}`);
                                 this.masked[field.id] = new InputMask(element, field.maskOptions);
                             }, 1);
+                        }
+                        if (this.masked[field.id] && field.imask) {
+                            this.masked[field.id].value = data[tab.id][field.id] || "";
                         }
                     }
                 });
@@ -875,6 +892,9 @@ module.exports = class {
                         const element = document.getElementById(`${this.input.id}_${field.id}`);
                         this.masked[field.id] = new InputMask(element, field.maskOptions);
                     }, 1);
+                }
+                if (this.masked[field.id] && field.imask) {
+                    this.masked[field.id].value = data.__default[field.id] || "";
                 }
             });
         }

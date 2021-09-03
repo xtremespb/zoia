@@ -1,5 +1,5 @@
 const axios = require("axios");
-const Cookies = require("../../../../../../shared/lib/cookies").default;
+const Cookies = require("../../../../../shared/lib/cookies").default;
 
 module.exports = class {
     onCreate(input, out) {

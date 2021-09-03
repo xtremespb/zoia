@@ -1,12 +1,8 @@
 import {
     ObjectId
 } from "mongodb";
-import minify from "@node-minify/core";
-import csso from "@node-minify/csso";
-import terser from "@node-minify/terser";
-import htmlMinifier from "@node-minify/html-minifier";
 import utils from "../../../shared/lib/utils";
-import pageEditRaw from "./data/pageEditRaw.json";
+import pageEditPostmodern from "./data/pageEditPostmodern.json";
 
 export default () => ({
     attachValidation: false,
@@ -24,7 +20,7 @@ export default () => ({
         }
         // Initialize validator
         const formData = await req.processMultipart();
-        const extendedValidation = new req.ExtendedValidation(formData, pageEditRaw.root, pageEditRaw.part, pageEditRaw.files, Object.keys(req.zoiaConfig.languages));
+        const extendedValidation = new req.ExtendedValidation(formData, pageEditPostmodern.root, pageEditPostmodern.part, pageEditPostmodern.files, Object.keys(req.zoiaConfig.languages));
         // Perform validation
         const extendedValidationResult = await extendedValidation.validate();
         // Check if there are any validation errors
@@ -37,8 +33,8 @@ export default () => ({
         try {
             const id = formData.fields.id && typeof formData.fields.id === "string" && formData.fields.id.match(/^[a-f0-9]{24}$/) ? formData.fields.id : undefined;
             // Get data from form body
-            const dataRaw = extendedValidation.getData();
-            const data = extendedValidation.filterDataFiles(dataRaw);
+            const dataPostmodern = extendedValidation.getData();
+            const data = extendedValidation.filterDataFiles(dataPostmodern);
             // Check permission
             if ((!id && !acl.checkPermission("pages", "create")) || !acl.checkPermission("pages", "update", data.filename)) {
                 response.requestAccessDeniedError();
@@ -77,36 +73,6 @@ export default () => ({
             if (!id) {
                 updateExtras.createdAt = new Date();
             }
-            // Compile contents
-            await Promise.allSettled(Object.keys(req.zoiaConfig.languages).map(async k => {
-                if (!data[k]) {
-                    data[k] = undefined;
-                } else {
-                    data[k].contentMin = data[k].content;
-                    data[k].cssMin = data[k].css;
-                    data[k].jsMin = data[k].js;
-                    try {
-                        data[k].contentMin = await minify({
-                            compressor: htmlMinifier,
-                            options: {
-                                collapseInlineTagWhitespace: false,
-                                decodeEntities: true,
-                            },
-                            content: data[k].content
-                        });
-                        data[k].cssMin = await minify({
-                            compressor: csso,
-                            content: data[k].css
-                        });
-                        data[k].jsMin = await minify({
-                            compressor: terser,
-                            content: data[k].js
-                        });
-                    } catch {
-                        // Ignore
-                    }
-                }
-            }));
             // Update database
             const update = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).updateOne(id ? {
                 _id: new ObjectId(id)
@@ -116,6 +82,7 @@ export default () => ({
             }, {
                 $set: {
                     ...data,
+                    engine: "pm",
                     dir: data.dir || "",
                     filename: data.filename || "",
                     modifiedAt: new Date(),

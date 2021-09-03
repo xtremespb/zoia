@@ -13,19 +13,19 @@ module.exports = class {
 
     async onMount() {
         this.treeLoadingError = false;
-        this.pageEditForm = this.getComponent("pageEditForm");
+        this.pageEditRawForm = this.getComponent("pageEditRawForm");
         this.folderSelectModal = this.getComponent("z3_ap_pe_folderModal");
         this.lockedModal = this.getComponent("z3_ap_pe_lockedModal");
         setTimeout(async () => {
             if (this.input.id === "new") {
                 const data = this.input.dir ? this.input.dir.data : "";
                 const label = this.input.dir ? this.input.dir.label : "/";
-                this.pageEditForm.func.setValue("dir", {
+                this.pageEditRawForm.func.setValue("dir", {
                     data,
                     label
                 });
             } else {
-                await this.pageEditForm.func.loadData();
+                await this.pageEditRawForm.func.loadData();
             }
             await this.folderSelectModal.func.loadTree();
         }, 10);
@@ -42,7 +42,7 @@ module.exports = class {
         }
         window.router.navigate("pages", {
             successNotification: true,
-            dirData: this.pageEditForm.func.getValue("dir").data
+            dirData: this.pageEditRawForm.func.getValue("dir").data
         });
     }
 
@@ -55,7 +55,7 @@ module.exports = class {
                 });
             }
             window.router.navigate("pages", {
-                dirData: this.pageEditForm.func.getValue("dir").data
+                dirData: this.pageEditRawForm.func.getValue("dir").data
             });
         }
     }
@@ -69,14 +69,14 @@ module.exports = class {
             return;
         }
         this.folderSelectModal.func.setActive(true);
-        const dir = this.pageEditForm.func.getValue("dir");
+        const dir = this.pageEditRawForm.func.getValue("dir");
         if (dir && dir.data) {
             this.folderSelectModal.func.selectUUID(dir.data);
         }
     }
 
     onFolderSelectConfirm(data) {
-        this.pageEditForm.func.setValue("dir", {
+        this.pageEditRawForm.func.setValue("dir", {
             data: this.folderSelectModal.func.getRoot().uuid === data.uuid ? "" : data.uuid,
             label: data.label
         });
@@ -85,16 +85,16 @@ module.exports = class {
     onGotTreeData() {
         const {
             data
-        } = this.pageEditForm.func.getValue("dir");
+        } = this.pageEditRawForm.func.getValue("dir");
         const label = !data || this.folderSelectModal.func.getRoot().uuid === data ? "/" : this.folderSelectModal.func.getUUIDLabel(data) || "";
-        this.pageEditForm.func.setValue("dir", {
+        this.pageEditRawForm.func.setValue("dir", {
             data,
             label
         });
     }
 
     onTreeLoadingError() {
-        this.pageEditForm.func.setError(this.i18n.t("cannotLoadFoldersTree"));
+        this.pageEditRawForm.func.setError(this.i18n.t("cannotLoadFoldersTree"));
         this.treeLoadingError = true;
     }
 

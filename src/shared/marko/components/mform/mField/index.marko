@@ -21,6 +21,7 @@ Text Input
 					value=input.value
 					on-change("onFieldValueChange")
 					data-id=state.item.id
+					tabindex=(state.visible ? "" : "-1")
 					disabled=(!state.enabled || !state.visible)
 					no-update-if(input.maskedOptions)
 					readonly=(state.item.readOnly ? true : false)
@@ -38,6 +39,7 @@ Text Input
 					value=input.value
 					on-change("onFieldValueChange")
 					data-id=state.item.id
+					tabindex=(state.visible ? "" : "-1")
 					disabled=(!state.enabled || !state.visible)
 					no-update-if(input.maskedOptions)
 					readonly=(state.item.readOnly ? true : false)/>
@@ -115,6 +117,7 @@ Button
 		id=`${input.id}_${state.item.id}`
 		type=state.item.buttonType
 		data-id=state.item.id
+		tabindex=(state.visible ? "" : "-1")
 		key=`mf_ctl_${state.item.id}`
 		on-click("onButtonClick")>
 		${state.item.label}
@@ -134,6 +137,7 @@ Button group
 					id=`${input.id}_${btn.id}`
 					type=btn.buttonType
 					data-id=btn.id
+					tabindex=(state.visible ? "" : "-1")
 					key=`mf_ctl_${btn.id}`
 					on-click("onButtonClick")
 					disabled=!state.enabled>
@@ -173,6 +177,7 @@ Select
 			id=`${input.id}_${state.item.id}`
 			value=input.value
 			on-change("onFieldValueChange")
+			tabindex=(state.visible ? "" : "-1")
 			disabled=!state.enabled>
 			<for|option| of=state.item.options>
 				<option value=option.value selected=(input.value === String(option.value))>
@@ -206,6 +211,7 @@ Radio
 					id=`${input.id}_${state.item.id}_${index}`
 					data-id=state.item.id
 					name=state.item.id
+					tabindex=(state.visible ? "" : "-1")
 					value=option.value
 					checked=(input.value === String(option.value))
 					on-change("onFieldValueChange")/>&nbsp;${option.label}
@@ -237,6 +243,7 @@ Checkboxes
 				id=`${input.id}_${state.item.id}_${option.id}`
 				data-id=state.item.id
 				data-inputid=option.id
+				tabindex=(state.visible ? "" : "-1")
 				checked=(input.value.indexOf(String(option.id)) > -1)/>
 			<div class="state">
 				<i class="icon mdi mdi-check"/>
@@ -270,6 +277,7 @@ Checkbox
 			on-change("onBooleanInputChange")
 			data-id=state.item.id
 			checked=input.value
+			tabindex=(state.visible ? "" : "-1")
 			class=(state.item.css || "")/>
 		<div class="state p-primary">
 			<label>${state.item.labelCheckbox}</label>
@@ -303,6 +311,7 @@ Captcha
 					type="text"
 					placeholder=state.item.placeholder
 					value=input.value
+					tabindex=(state.visible ? "" : "-1")
 					on-change("onFieldValueChange")
 					data-id=state.item.id/>
 			</div>
@@ -334,6 +343,7 @@ Textarea
 			key=`mf_ctl_${state.item.id}`
 			placeholder=state.item.placeholder
 			value=input.value
+			tabindex=(state.visible ? "" : "-1")
 			on-change("onFieldValueChange")
 			data-id=state.item.id/>
 	</div>
@@ -357,6 +367,7 @@ ACE
 				type="button"
 				class="button is-small is-rounded z3-mf-toggle-wrap"
 				data-id=state.item.id
+				tabindex=(state.visible ? "" : "-1")
 				on-click("onAceToggleClick")>
 				<span class="icon is-small">
 					<i
@@ -448,6 +459,7 @@ Key-Value Input
 			key=`mf_ctl_${state.item.id}`
 			type=(state.item.textType || "text")
 			placeholder=state.item.placeholder
+			tabindex=(state.visible ? "" : "-1")
 			value=(
 				input.value.data &&
 				Array.isArray(input.value.data) &&
@@ -494,6 +506,7 @@ Images Input
 				multiple=state.item.multiple
 				on-change("onImageInputChange")
 				data-id=state.item.id
+				tabindex=(state.visible ? "" : "-1")
 				id=`${input.id}_${state.item.id}`/>
 			<a class="file-cta button is-light" key=`mf_ctl_${state.item.id}` tabindex="0">
 				<span class="file-icon">
@@ -577,6 +590,7 @@ Image Input
 				multiple=false
 				on-change("onSingleImageInputChange")
 				data-id=state.item.id
+				tabindex=(state.visible ? "" : "-1")
 				id=`${input.id}_${state.item.id}`/>
 			<a
 				class="file-cta button is-light mr-1"
@@ -644,6 +658,7 @@ Range Input
 			value=input.value
 			min=input.item.min
 			max=input.item.max
+			tabindex=(state.visible ? "" : "-1")
 			on-change("onFieldValueChange")
 			on-input("onRangeFieldValueChange")
 			data-id=state.item.id
@@ -678,6 +693,7 @@ Date Picker
 				data-id=state.item.id
 				disabled=(!state.enabled || !state.visible)
 				no-update
+				tabindex=(state.visible ? "" : "-1")
 				on-click("onDatePickerInputClick")
 				on-focus("onDatePickerInputClick")
 				on-keydown("onDatePickerKeyPress")/>
@@ -729,6 +745,7 @@ Tags Input
 			} mr-2`>
 				<input
 					id=`${input.id}_${state.item.id}_input`
+					tabindex=(state.visible ? "" : "-1")
 					on-focus("onTagsInputFocus")
 					on-blur("onTagsInputBlur")
 					on-keydown("onTagsInputKeyup")
@@ -742,4 +759,44 @@ Tags Input
 			<p class="help is-danger">${input.errors[state.item.id]}</p>
 		</if>
 	</div>
+</if>
+<!--
+Masked input (IMASK)
+-->
+<if(state.item.type === "imask")>
+	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+		<div class="control">
+			<input
+				class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
+					state.item.readOnly ? " has-background-white-bis" : ""
+				}`
+				id=`${input.id}_${state.item.id}`
+				key=`mf_ctl_${state.item.id}`
+				type=(state.item.textType || "text")
+				placeholder=state.item.placeholder
+				on-keydown("onIMaskKeyPress")
+				data-id=state.item.id
+				tabindex=(state.visible ? "" : "-1")
+				disabled=(!state.enabled || !state.visible)
+				readonly=(state.item.readOnly ? true : false)
+				no-update/>
+		</div>
+		<if(state.item.helpText)>
+			<p class="help">${state.item.helpText}</p>
+		</if>
+		<if(input.errors[state.item.id])>
+			<p class="help is-danger">${input.errors[state.item.id]}</p>
+		</if>
+	</div>
+</if>
+<!--
+Postmodern Engine
+-->
+<if(state.item.type === "postmodern")>
+	PME
 </if>

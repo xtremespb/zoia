@@ -45,7 +45,7 @@
 	"mForm.imageBrowser": "Bildbrowser",
 	"mForm.save": "Speichern",
 	"mForm.cancel": "Stornieren",
-	"mForm.settings": "Einstellungen",
+	"mForm.languages": "Sprachen",
 	"mFormErr.general": "Formular enthält Fehler, bitte überprüfen Sie alle Eingaben",
 	"mFormErr.server": "Formulardaten konnten nicht gespeichern, geladen oder verarbeitet werden",
 	"mFormErr.type": "Ungültiges Format",

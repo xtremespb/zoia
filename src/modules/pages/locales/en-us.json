@@ -8,8 +8,8 @@
 	"edit": "Edit",
 	"delete": "Delete",
 	"reload": "Reload",
-	"pageAdd": "Add Page",
-	"pageEdit": "Edit Page",
+	"pageAddRaw": "Add Page",
+	"pageEditRaw": "Edit Page",
 	"save": "Save",
 	"cancel": "Cancel",
 	"dirHelpText": "A folder where this page should be located",
@@ -38,5 +38,11 @@
 	"date": "Date",
 	"dateHelpText": "Publish Date",
 	"areaMeta": "Metadata",
-	"areaContent": "Page Content and Attachments"
+	"areaContent": "Page Content and Attachments",
+	"addPageRaw": "Add Page (Raw)",
+	"addPagePME": "Add Page (PM)",
+	"editPagePME": "Edit Page (PM)",
+	"engine": "Engine",
+	"rawEngine": "Raw",
+	"pmEngine": "PM"
 }

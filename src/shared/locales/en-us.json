@@ -45,7 +45,7 @@
 	"mForm.imageBrowser": "Image Browser",
 	"mForm.save": "Save",
 	"mForm.cancel": "Cancel",
-	"mForm.settings": "Settings",
+	"mForm.languages": "Languages",
 	"mFormErr.general": "Form contains errors, please check all inputs",
 	"mFormErr.server": "Form data could not be saved, loaded or processed",
 	"mFormErr.type": "Invalid format",

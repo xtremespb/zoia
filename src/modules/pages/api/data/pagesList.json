@@ -9,7 +9,7 @@
             },
             "sortId": {
                 "type": "string",
-                "enum": ["dir", "title", "filename"]
+                "enum": ["dir", "title", "filename", "engine"]
             },
             "sortDirection": {
                 "type": "string",
@@ -41,7 +41,8 @@
     "projection": {
         "_id": 1,
         "filename": 1,
-        "dir": 1
+        "dir": 1,
+        "engine": 1
     },
     "search": ["filename", "[language].title"]
 }

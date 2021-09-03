@@ -123,6 +123,13 @@ module.exports = class {
         case "datepicker":
             this.updateDatePicker(this.input.value);
             break;
+        case "imask":
+            this.emit("value-change", {
+                type: "imask",
+                id: this.state.item.id,
+                value: this.input.value,
+            });
+            break;
         }
     }
 
@@ -600,6 +607,19 @@ module.exports = class {
                 });
                 this.calendarField.func.setDate(dateObject);
             }
+        });
+    }
+
+    onIMaskKeyPress() {
+        setTimeout(() => {
+            const element = document.getElementById(`${this.input.id}_${this.state.item.id}`);
+            const value = (element.value || "").trim();
+            this.emit("value-change", {
+                type: "imask",
+                id: this.state.item.id,
+                value,
+                noMaskUpdate: true,
+            });
         });
     }
 

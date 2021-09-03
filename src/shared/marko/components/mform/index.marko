@@ -5,29 +5,33 @@ style.scss {
 
 <div class="z3-mf-wrap">
 	<if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
-		<div class=`tabs is-toggle ${input.tabsCSS || ""} ${
-			((state.tabs && state.tabs.length > 1) || input.tabsActive) &&
-			input.borderWhenTabs
-				? " z3-mf-tabs"
-				: ""
-		}`>
-			<ul>
-				<for|tab| of=state.tabs>
-					<li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
-						<a on-click("onTabClick") data-id=tab.id>${tab.label}</a>
-					</li>
-				</for>
-				<if(input.tabsActive && !input.hideSettings)>
-					<li>
-						<a on-click("onTabSettingsClick")>
-							<span class="icon">
-								<i class="mdi mdi-cog" aria-hidden="true"/>
-							</span>
-							<span>${input.i18n.t("mForm.settings")}</span>
-						</a>
-					</li>
-				</if>
-			</ul>
+		<div class="columns is-variable is-1">
+			<div class="column is-auto">
+				<div class=`tabs is-toggle ${input.tabsCSS || ""} ${
+					((state.tabs && state.tabs.length > 1) || input.tabsActive) &&
+					input.borderWhenTabs
+						? " z3-mf-tabs"
+						: ""
+				}`>
+					<ul>
+						<for|tab| of=state.tabs>
+							<li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
+								<a on-click("onTabClick") data-id=tab.id>${tab.label}</a>
+							</li>
+						</for>
+					</ul>
+				</div>
+			</div>
+			<if(input.tabsActive && !input.hideSettings)>
+				<div class="column is-narrow">
+					<a on-click("onTabSettingsClick") class="is-underlined">
+						<span class="icon">
+							<i class="mdi mdi-cog" aria-hidden="true"/>
+						</span>
+						<span>${input.i18n.t("mForm.languages")}</span>
+					</a>
+				</div>
+			</if>
 		</div>
 	</if>
 	<if(state.error)>
@@ -165,7 +169,7 @@ style.scss {
 			<div class="modal-background"/>
 			<div class="modal-card">
 				<header class="modal-card-head">
-					<p class="modal-card-title">${input.i18n.t("mForm.settings")}</p>
+					<p class="modal-card-title">${input.i18n.t("mForm.languages")}</p>
 					<button
 						class="delete"
 						aria-label="close"

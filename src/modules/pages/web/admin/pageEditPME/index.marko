@@ -1,0 +1,137 @@
+import cloneDeep from "lodash/cloneDeep"
+import Cookies from "../../../../../shared/lib/cookies"
+import pageEditPostmodern from "../../../api/data/pageEditPostmodern.json"
+
+$ const cookies = new Cookies(out.global.cookieOptions);
+$ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
+$ const languageTabs = Object.keys(out.global.languages).map(k => ({
+	id: k,
+	label: out.global.languages[k]
+}));
+<div class="mb-5">
+	<h1 class="z3-ap-head-thin">
+		<span class="icon">
+			<i class="mdi z3-ap-mdi-head mdi-dark mdi-square-edit-outline"/>
+		</span>&nbsp;${input.id === "new" ? out.global.i18n.t("addPagePME") : out.global.i18n.t("editPagePME")}
+	</h1>
+	<mform
+		key="pageEditPostmodernForm"
+		id="pageEditPostmodernForm"
+		save={
+			url: "/api/pages/edit/pm/save",
+			extras: {
+				id: input.id === "new" ? undefined : input.id
+			},
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+		load={
+			url: "/api/pages/edit/pm/load",
+			extras: {
+				id: input.id
+			},
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		}
+		fields=[
+			{
+				type: "areaStart",
+				label: out.global.i18n.t("areaMeta"),
+				css: "z3-mf-area-grey"
+			},
+			[
+				{
+					id: "dir",
+					type: "keyvalue",
+					label: out.global.i18n.t("dir"),
+					helpText: out.global.i18n.t("dirHelpText"),
+					wrapCSS: "z3-is-medium",
+					autoFocus: true,
+					mandatory: true,
+					shared: true,
+					emptyArrayLabel: "/"
+				},
+				{
+					id: "filename",
+					type: "imask",
+					label: out.global.i18n.t("filename"),
+					helpText: out.global.i18n.t("filenameHelpText"),
+					wrapCSS: "z3-is-medium",
+					shared: true,
+					imask: {
+						mask: /^(?![0-9-])[a-z0-9_-]+$/i
+					},
+				},
+				{
+					id: "title",
+					type: "text",
+					label: out.global.i18n.t("title"),
+					helpText: out.global.i18n.t("titleHelpText"),
+					wrapCSS: "z3-is-large",
+					convert: "string"
+				},
+			],
+			{
+				type: "areaEnd"
+			},
+			{
+				type: "areaStart",
+				css: "z3-mf-area-white-bis",
+				label: out.global.i18n.t("areaContent"),
+			},
+			{
+				id: "content",
+				type: "postmodern",
+			},
+			{
+				id: "attachments",
+				type: "file",
+				label: out.global.i18n.t("attachments"),
+				multiple: true,
+				buttonLabel: out.global.i18n.t("selectFiles")
+			},
+			{
+				type: "areaEnd",
+				css: "mt-2"
+			},
+			{
+				id: "bg1",
+				type: "buttons",
+				data: [
+					{
+						id: "btnSave",
+						type: "button",
+						buttonType: "submit",
+						label: out.global.i18n.t("save"),
+						css: "is-primary"
+					},
+					{
+						id: "btnCancel",
+						type: "button",
+						buttonType: "button",
+						label: out.global.i18n.t("cancel"),
+						css: "is-light"
+					}
+				]
+			}
+		]
+		formType="formData"
+		validation=pageEditPostmodern
+		progressButtonId="btnSave"
+		i18n=out.global.i18n
+		on-post-success("onFormPostSuccess")
+		on-button-click("onButtonClick")
+		on-unauthorized("onUnauthorized")
+		tabsAvail=languageTabs
+		tabsActive=[languageTabs[0].id]
+		on-get-key-value("onGetKeyValue")
+		on-load-success("onLoadSuccess")/>
+	<folderModal
+		key="z3_ap_pe_folderModal"
+		on-confirm("onFolderSelectConfirm")
+		on-got-tree-data("onGotTreeData")
+		on-tree-loading-error("onTreeLoadingError")/>
+	<lockedModal key="z3_ap_pe_lockedModal"/>
+</div>
