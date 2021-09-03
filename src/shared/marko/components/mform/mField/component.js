@@ -12,6 +12,7 @@ const {
 const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const CKEditorImageUploadAdapter = require("./CKEditorImageUploadAdapter");
+const postmodern = require("./postmodern.json");
 
 // Polyfill for Object.fromEntries (missing in CKEditor)
 if (!Object.fromEntries) {
@@ -74,6 +75,7 @@ module.exports = class {
             calendarValue: null,
             tags: [],
             tagInputValue: null,
+            pmCurrentItem: Object.keys(postmodern.items)[0],
         };
         this.state = state;
         this.func = {
@@ -700,5 +702,14 @@ module.exports = class {
         const item = cloneDeep(this.state.item);
         item.options = options;
         this.setState("item", item);
+    }
+
+    onSelectPmChange(e) {
+        e.preventDefault();
+        this.setState("pmCurrentItem", e.target.value);
+    }
+
+    onPmAddClick(e) {
+        e.preventDefault();
     }
 };

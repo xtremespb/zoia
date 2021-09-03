@@ -1,3 +1,4 @@
+import postmodern from "./postmodern.json"
 <!--
 Text Input
 -->
@@ -798,5 +799,20 @@ Masked input (IMASK)
 Postmodern Engine
 -->
 <if(state.item.type === "postmodern")>
-	PME
+	<div class="field has-addons">
+		<div class="control">
+			<div class="select">
+				<select value=state.pmCurrentItem on-change("onSelectPmChange")>
+					<for|k| of=Object.keys(postmodern.items)>
+						<option value=k selected=(state.pmCurrentItem === k)>
+							${out.global.i18n.t(`mForm.pm.item.${k}`)}
+						</option>
+					</for>
+				</select>
+			</div>
+		</div>
+		<div class="control">
+			<button class="button is-light" type="button" on-click("onPmAddClick")>${out.global.i18n.t(`mForm.pm.add`)}</button>
+		</div>
+	</div>
 </if>

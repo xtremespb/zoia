@@ -1,0 +1,10 @@
+{
+    "version": "1.0.0",
+    "items": {
+        "header": {
+            "minSize": 1,
+            "maxSize": 6
+        },
+        "basicParagraph": {}
+    }
+}

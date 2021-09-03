@@ -196,5 +196,8 @@
 	"mTable.widgetValueHelpText": "Static text or JSON query",
 	"mTable.widgets.widgetsDeleteConfirmTitle": "Delete Widgets",
 	"mTable.widgets.widgetsDeleteConfirmText": "Selected widgets will be removed from the database and you won't be able to restore them",
-	"mTable.widgets.saveError": "Could not save widgets"
+	"mTable.widgets.saveError": "Could not save widgets",
+	"mForm.pm.item.header": "Header",
+	"mForm.pm.item.basicParagraph": "Basic Paragraph",
+	"mForm.pm.add": "Add"
 }
