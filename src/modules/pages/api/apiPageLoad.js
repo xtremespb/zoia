@@ -1,7 +1,7 @@
 import {
     ObjectId
 } from "mongodb";
-import pageLoad from "./data/pageLoadRaw.json";
+import pageLoad from "./data/pageLoad.json";
 
 export default () => ({
     async handler(req) {

@@ -1,6 +1,6 @@
 import cloneDeep from "lodash/cloneDeep"
 import Cookies from "../../../../../shared/lib/cookies"
-import pageEditRaw from "../../../api/data/pageEditRaw.json"
+import pageEdit from "../../../api/data/pageEdit.json"
 
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
@@ -12,15 +12,16 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 	<h1 class="z3-ap-head-thin">
 		<span class="icon">
 			<i class="mdi z3-ap-mdi-head mdi-dark mdi-square-edit-outline"/>
-		</span>&nbsp;${input.id === "new" ? out.global.i18n.t("pageAddRaw") : out.global.i18n.t("pageEditRaw")}
+		</span>&nbsp;${input.id === "new" ? out.global.i18n.t("pageAddRaw") : out.global.i18n.t("pageEdit")}
 	</h1>
 	<mform
-		key="pageEditRawForm"
-		id="pageEditRawForm"
+		key="pageEditForm"
+		id="pageEditForm"
 		save={
 			url: "/api/pages/edit/save",
 			extras: {
-				id: input.id === "new" ? undefined : input.id
+				id: input.id === "new" ? undefined : input.id,
+				engine: input.engine
 			},
 			headers: {
 				Authorization: `Bearer ${token}`
@@ -62,7 +63,7 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 					shared: true,
 					imask: {
 						mask: /^(?![0-9-])[a-z0-9_-]+$/i
-					},
+					}
 				},
 				{
 					id: "title",
@@ -71,7 +72,7 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 					helpText: out.global.i18n.t("titleHelpText"),
 					wrapCSS: "z3-is-large",
 					convert: "string"
-				},
+				}
 			],
 			{
 				type: "areaEnd"
@@ -81,36 +82,48 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 				label: out.global.i18n.t("areaContent"),
 				css: "z3-mf-area-white-bis"
 			},
-			{
-				id: "content",
-				type: "ace",
-				label: out.global.i18n.t("content"),
-				helpText: out.global.i18n.t("contentHelpText"),
-				wysiwyg: true,
-				source: true
-			},
-			{
-				id: "css",
-				type: "ace",
-				label: out.global.i18n.t("css"),
-				helpText: out.global.i18n.t("cssHelpText"),
-				aceOptions: {
-					mode: "ace/mode/css"
-				},
-				toggle: true,
-				source: true
-			},
-			{
-				id: "js",
-				type: "ace",
-				label: out.global.i18n.t("js"),
-				helpText: out.global.i18n.t("jsHelpText"),
-				aceOptions: {
-					mode: "ace/mode/javascript"
-				},
-				toggle: true,
-				source: true
-			},
+			input.engine === "raw"
+				? {
+						id: "content",
+						type: "ace",
+						label: out.global.i18n.t("content"),
+						helpText: out.global.i18n.t("contentHelpText"),
+						wysiwyg: true,
+						source: true
+				  }
+				: {},
+			input.engine === "raw"
+				? {
+						id: "css",
+						type: "ace",
+						label: out.global.i18n.t("css"),
+						helpText: out.global.i18n.t("cssHelpText"),
+						aceOptions: {
+							mode: "ace/mode/css"
+						},
+						toggle: true,
+						source: true
+				  }
+				: {},
+			input.engine === "raw"
+				? {
+						id: "js",
+						type: "ace",
+						label: out.global.i18n.t("js"),
+						helpText: out.global.i18n.t("jsHelpText"),
+						aceOptions: {
+							mode: "ace/mode/javascript"
+						},
+						toggle: true,
+						source: true
+				  }
+				: {},
+			input.engine === "pm"
+				? {
+						id: "pm",
+						type: "postmodern"
+				  }
+				: {},
 			{
 				id: "attachments",
 				type: "file",
@@ -144,7 +157,7 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 			}
 		]
 		formType="formData"
-		validation=pageEditRaw
+		validation=pageEdit
 		progressButtonId="btnSave"
 		i18n=out.global.i18n
 		on-post-success("onFormPostSuccess")

@@ -11,8 +11,6 @@ export default fastify => {
     fastify.get(`/:language${fastify.zoiaModulesConfig["pages"].routes.view}`, pageView());
     fastify.get(fastify.zoiaConfig.routes.imagesBrowser, images());
     fastify.get(`/:language${fastify.zoiaConfig.routes.imagesBrowser}`, images());
-    fastify.get(`${fastify.zoiaModulesConfig["pages"].routes.pages}/pm/:id`, admin("pages.editPME"));
-    fastify.get(`/:language${fastify.zoiaModulesConfig["pages"].routes.pages}/pm/:id`, admin("pages.editPME"));
-    fastify.get(`${fastify.zoiaModulesConfig["pages"].routes.pages}/pm/edit/:id`, admin("pages.editPME"));
-    fastify.get(`/:language${fastify.zoiaModulesConfig["pages"].routes.pages}/pm/edit/:id`, admin("pages.editPME"));
+    fastify.get(`${fastify.zoiaModulesConfig["pages"].routes.pages}/pm/edit/:id`, admin("pages.editPM"));
+    fastify.get(`/:language${fastify.zoiaModulesConfig["pages"].routes.pages}/pm/edit/:id`, admin("pages.editPM"));
 };

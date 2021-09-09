@@ -389,6 +389,25 @@
     padding: 2px;
 }
 
+.z3-mf-pm-list-item {
+    border: 1px solid $grey-lighter;
+    user-select: none;
+}
+
+.z3-mf-pm-list-text {
+    cursor: grab;
+}
+
+.z3-mf-pm-list-divider {
+    height: 15px;
+    border-top: 1px dashed $grey-light;
+    border-bottom: 1px dashed $grey-light;
+}
+
+.z3-mf-pm-list-divider-hover {
+    background: $yellow;
+}
+
 @media (max-width: 768px) {
 
     .z3-mf-notification {

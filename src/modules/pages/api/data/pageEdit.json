@@ -4,9 +4,13 @@
         "properties": {
             "__form": {
                 "type": "string"
+            },
+            "engine": {
+                "type": "string",
+                "enum": ["raw", "pm"]
             }
         },
-        "required": ["__form"]
+        "required": ["__form", "engine"]
     },
     "root": {
         "type": "object",
@@ -32,10 +36,31 @@
                 "minLength": 0,
                 "maxLength": 128
             },
+            "content": {
+                "oneOf": [{
+                    "type": "string"
+                }, {
+                    "type": "null"
+                }]
+            },
             "date": {
                 "type": ["string", "null"],
                 "pattern": "(((19|20)([2468][048]|[13579][26]|0[48])|2000)0229|((19|20)[0-9]{2}(0[469]|11)(0[1-9]|[12][0-9]|30)|(19|20)[0-9]{2}(0[13578]|1[02])(0[1-9]|[12][0-9]|3[01])|(19|20)[0-9]{2}02(0[1-9]|1[0-9]|2[0-8])))",
                 "zoiaConvert": "YYYYMMDD"
+            },
+            "css": {
+                "oneOf": [{
+                    "type": "string"
+                }, {
+                    "type": "null"
+                }]
+            },
+            "js": {
+                "oneOf": [{
+                    "type": "string"
+                }, {
+                    "type": "null"
+                }]
             },
             "attachments": {
                 "type": "array",

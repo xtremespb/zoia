@@ -76,6 +76,7 @@ module.exports = class {
             setAceValue: this.setAceValue.bind(this),
             getAceInstance: this.getAceInstance.bind(this),
             focus: this.focus.bind(this),
+            serialize: this.serialize.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -95,6 +96,7 @@ module.exports = class {
             return false;
         case "checkboxes":
         case "tags":
+        case "postmodern":
             return [];
         case "keyvalue":
             return {
@@ -340,6 +342,7 @@ module.exports = class {
             value = [...prev, ...Array.from(value)];
             break;
         case "image":
+        case "postmodern":
             value = Array.from(value);
             break;
         case "arr":

@@ -6,7 +6,7 @@ import csso from "@node-minify/csso";
 import terser from "@node-minify/terser";
 import htmlMinifier from "@node-minify/html-minifier";
 import utils from "../../../shared/lib/utils";
-import pageEditRaw from "./data/pageEditRaw.json";
+import pageEdit from "./data/pageEdit.json";
 
 export default () => ({
     attachValidation: false,
@@ -24,7 +24,7 @@ export default () => ({
         }
         // Initialize validator
         const formData = await req.processMultipart();
-        const extendedValidation = new req.ExtendedValidation(formData, pageEditRaw.root, pageEditRaw.part, pageEditRaw.files, Object.keys(req.zoiaConfig.languages));
+        const extendedValidation = new req.ExtendedValidation(formData, pageEdit.root, pageEdit.part, pageEdit.files, Object.keys(req.zoiaConfig.languages));
         // Perform validation
         const extendedValidationResult = await extendedValidation.validate();
         // Check if there are any validation errors

@@ -9,7 +9,7 @@
 	"delete": "Löschen",
 	"reload": "Neu laden",
 	"pageAddRaw": "Die Seite hinzufügen",
-	"pageEditRaw": "Die Seite bearbeiten",
+	"pageEdit": "Die Seite bearbeiten",
 	"save": "Speichern",
 	"cancel": "Stornieren",
 	"dirHelpText": "Der Ordner, in dem sich diese Seite befinden soll",

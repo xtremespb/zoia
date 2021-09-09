@@ -1,0 +1,51 @@
+import validationData from "./header.json"
+
+<mform
+	manual=true
+	key=`${input.id}_pmForm`
+	id=`${input.id}_pmForm`
+    validation=validationData
+	fields=[
+		{
+			id: "title",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.header.title"),
+			autoFocus: true,
+			mandatory: true
+		},
+        [{
+			id: "type",
+			type: "select",
+			label: out.global.i18n.t("mForm.pm.header.type"),
+			options: [
+                {
+                    value: "title",
+                    label: out.global.i18n.t("mForm.pm.header.type.title"),
+                },
+                {
+                    value: "subtitle",
+                    label: out.global.i18n.t("mForm.pm.header.type.subtitle"),
+                },
+			],
+		    wrapCSS: "z3-is-small",
+			css: "is-fullwidth",
+			defaultValue: "title",
+			mandatory: true
+		}, {
+			id: "size",
+			type: "select",
+			label: out.global.i18n.t("mForm.pm.header.size"),
+			options: [...Array(6).keys()].map( i => ({ value: `is-${i + 1}`, label: i + 1 })),
+		    wrapCSS: "z3-is-xsmall",
+			css: "is-fullwidth",
+			defaultValue: "is-1",
+			mandatory: true
+		}, {
+			id: "class",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.header.class"),
+            helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+            css: "is-fullwidth",
+		}],
+	]
+	i18n=out.global.i18n/>

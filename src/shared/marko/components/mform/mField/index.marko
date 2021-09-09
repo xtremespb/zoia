@@ -1,4 +1,5 @@
 import postmodern from "./postmodern.json"
+
 <!--
 Text Input
 -->
@@ -380,7 +381,7 @@ ACE
 			</button>
 		</if>
 	</label>
-	<if(state.item.wysiwyg)>
+	<if(state.item.wysiwyg && !state.item.noTopButtons)>
 		<div class="tabs is-toggle is-small mb-1 z3-mf-wysiwyg-toggle">
 			<ul>
 				<if(state.item.source)>
@@ -812,7 +813,93 @@ Postmodern Engine
 			</div>
 		</div>
 		<div class="control">
-			<button class="button is-light" type="button" on-click("onPmAddClick")>${out.global.i18n.t(`mForm.pm.add`)}</button>
+			<button class="button is-light" type="button" on-click("onPmAddClick")>
+				${out.global.i18n.t(`mForm.pm.add`)}
+			</button>
 		</div>
 	</div>
+	<if(input.value && input.value.length)>
+		<for|i, ix| of=input.value>
+			<div
+				data-index=ix
+				on-dragover("onPmItemDragOver")
+				on-dragleave("onPmItemDragLeave")
+				on-drop("onPmItemDrop")
+				class="z3-mf-pm-list-divider mb-1"
+				style={
+					display: state.pmItemDragging ? "block" : "none"
+				}/>
+			<div class="card card-body is-shadowless p-2 mb-1 z3-mf-pm-list-item">
+				<div class="columns is-variable is-1">
+					<div class="column is-narrow pb-0">
+						<div class="field is-grouped mr-2">
+							<p class="control z3-mf-pm-list-buttons" data-id=i.id>
+								<button
+									class="button is-light mr-1 z3-mf-pm-list-button"
+									data-index=ix
+									disabled=(ix === 0)
+									on-click("onPmMoveUpClick")>
+									<span class="icon">
+										<i class="mdi mdi-18px mdi-menu-up-outline"/>
+									</span>
+								</button>
+								<button
+									class="button is-light mr-1 z3-mf-pm-list-button"
+									data-index=ix
+									disabled=(ix === input.value.length - 1)
+									on-click("onPmMoveDownClick")>
+									<span class="icon">
+										<i class="mdi mdi-18px mdi-menu-down-outline"/>
+									</span>
+								</button>
+								<button
+									class="button is-light mr-1 z3-mf-pm-list-button"
+									data-index=ix
+									on-click("onPmEditClick")>
+									<span class="icon">
+										<i class="mdi mdi-18px mdi-pencil-outline"/>
+									</span>
+								</button>
+								<button
+									class="button is-danger z3-mf-pm-list-button"
+									data-index=ix
+									on-click("onPmDeleteClick")>
+									<span class="icon">
+										<i class="mdi mdi-18px mdi-trash-can-outline"/>
+									</span>
+								</button>
+							</p>
+						</div>
+					</div>
+					<div
+						on-dragstart("onPmItemDragStart")
+						on-dragend("onPmItemDragEnd")
+						draggable="true"
+						data-index=ix
+						class="column is-auto z3-mf-pm-list-text">
+						<div class="menu-label mb-0">
+							${out.global.i18n.t(`mForm.pm.item.${i.type}`)}
+						</div>
+						<div>${i.title}</div>
+					</div>
+				</div>
+			</div>
+		</for>
+		<div
+			data-index=-1
+			on-dragover("onPmItemDragOver")
+			on-dragleave("onPmItemDragLeave")
+			on-drop("onPmItemDrop")
+			class="z3-mf-pm-list-divider mb-1"
+			style={
+				display: state.pmItemDragging ? "block" : "none"
+			}/>
+		<mconfirm
+			key=`${input.id}_${input.item.id}_confirm`
+			on-confirm("onPmItemDeleteConfirm")/>
+	</if>
+	<pm 
+		key=`${input.id}_${input.item.id}_pm`
+		on-save("onPmItemSave")
+		id=`${input.id}_${input.item.id}`/>
 </if>

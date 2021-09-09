@@ -75,7 +75,7 @@ module.exports = class {
     onActionClick(obj) {
         switch (obj.action) {
         case "btnEdit":
-            setTimeout(() => window.router.navigate(obj.data.engine === "pm" ? "pages.editPME" : "pages.editRaw", {
+            setTimeout(() => window.router.navigate(obj.data.engine === "pm" ? "pages.editPM" : "pages.editRaw", {
                 id: obj.id
             }), 10);
             break;
@@ -98,10 +98,10 @@ module.exports = class {
                 },
             });
             break;
-        case "ddAddPagePME":
+        case "ddAddPagePM":
             const dataPm = this.tree.func.isRootSelected() ? "" : this.tree.func.getSelected();
             const labelPm = this.tree.func.isRootSelected() ? "/" : this.tree.func.getSelectedLabel();
-            window.router.navigate("pages.editPME", {
+            window.router.navigate("pages.editPM", {
                 id: "new",
                 dir: {
                     dataPm,

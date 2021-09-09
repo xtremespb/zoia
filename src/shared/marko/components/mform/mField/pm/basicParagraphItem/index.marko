@@ -1,0 +1,33 @@
+import validationData from "./basicParagraph.json"
+
+<mform
+	manual=true
+	key=`${input.id}_pmForm`
+	id=`${input.id}_pmForm`
+    validation=validationData
+	fields=[
+		{
+			id: "title",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.header.title"),
+			autoFocus: true,
+			mandatory: true
+		},
+        {
+			id: "content",
+			type: "ace",
+			label: out.global.i18n.t("mForm.pm.header.content"),
+			wysiwyg: true,
+			noTopButtons: true,
+			simple: true,
+			source: false
+		},
+		{
+			id: "class",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.header.class"),
+            helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+            css: "is-fullwidth",
+		}
+	]
+	i18n=out.global.i18n/>
