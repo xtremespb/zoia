@@ -209,5 +209,6 @@
 	"mForm.pm.header.size": "Size",
 	"mForm.pm.header.class": "Class",
 	"mForm.pm.header.classHelpText": "Separated by space",
-	"mForm.pm.header.content": "Content"
+	"mForm.pm.header.content": "Content",
+	"mForm.ck.newTab": "Open in new tab"
 }

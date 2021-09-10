@@ -194,13 +194,29 @@ module.exports = class {
 
     async initCkEditor() {
         this.ckEditorElement = this.getEl(`mf_ctl_ckeditor_${this.input.item.id}`) || document.getElementById(`mf_ctl_ckeditor_${this.input.item.id}`);
+        const ckEditorConfig = {
+            link: {
+                decorators: {
+                    isExternal: {
+                        mode: "manual",
+                        label: this.i18n.t("mForm.ck.newTab"),
+                        attributes: {
+                            target: "_blank"
+                        }
+                    }
+                }
+            },
+        };
         if (this.input.item.simple) {
             ClassicEditor.defaultConfig = {
+                ...ckEditorConfig,
                 removePlugins: ["ImageToolbar", "ImageCaption", "ImageStyle"],
                 toolbar: {
                     items: [
                         "bold",
                         "italic",
+                        "|",
+                        "link",
                         "|",
                         "bulletedList",
                         "numberedList",

@@ -39,6 +39,9 @@ module.exports = class {
         e.preventDefault();
         const pmComponent = this.getComponent(`${this.input.id}_${this.state.type}`);
         const data = await pmComponent.func.getData();
+        if (!data) {
+            return;
+        }
         this.emit("save", {
             index: this.state.index,
             data,

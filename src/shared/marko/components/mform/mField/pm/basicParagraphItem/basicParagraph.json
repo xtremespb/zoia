@@ -16,7 +16,7 @@
                 "maxLength": 512
             }
         },
-        "required": ["title", "type", "size"]
+        "required": ["title", "content"]
     },
     "part": {},
     "files": {}
