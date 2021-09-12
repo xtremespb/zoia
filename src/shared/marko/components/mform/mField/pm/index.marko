@@ -1,0 +1,29 @@
+<if(state.modalActive)>
+	<div class="modal is-active">
+		<div class="modal-background" on-click("onModalClose")/>
+		<div class="modal-card z3-mf-pm-modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">
+					${out.global.i18n.t(`mForm.pm.item.${state.type}`)}
+				</p>
+				<button class="delete" aria-label="close" on-click("onModalClose")/>
+			</header>
+			<section class="modal-card-body">
+				<form on-submit("onFormSubmit")>
+					<if(state.type === "header")>
+						<headerItem key=`${input.id}_${state.type}`/>
+					</if>
+					<if(state.type === "basicParagraph")>
+						<basicParagraphItem key=`${input.id}_${state.type}`/>
+					</if>
+				</form>
+			</section>
+			<footer class="modal-card-foot">
+				<button class="button is-primary" type="button" on-click("onPmSave")>${out.global.i18n.t("mForm.save")}</button>
+				<button class="button is-light" type="button" on-click("onModalClose")>
+					${out.global.i18n.t("mForm.cancel")}
+				</button>
+			</footer>
+		</div>
+	</div>
+</if>

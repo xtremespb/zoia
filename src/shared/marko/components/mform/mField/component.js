@@ -12,6 +12,7 @@ const {
 const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
 const CKEditorImageUploadAdapter = require("./CKEditorImageUploadAdapter");
+const postmodern = require("./postmodern.json");
 
 // Polyfill for Object.fromEntries (missing in CKEditor)
 if (!Object.fromEntries) {
@@ -74,6 +75,9 @@ module.exports = class {
             calendarValue: null,
             tags: [],
             tagInputValue: null,
+            pmCurrentItem: Object.keys(postmodern.items)[0],
+            pmItemDragging: false,
+            pmItemDeleteIndex: null,
         };
         this.state = state;
         this.func = {
@@ -122,6 +126,13 @@ module.exports = class {
             break;
         case "datepicker":
             this.updateDatePicker(this.input.value);
+            break;
+        case "imask":
+            this.emit("value-change", {
+                type: "imask",
+                id: this.state.item.id,
+                value: this.input.value,
+            });
             break;
         }
     }
@@ -183,16 +194,51 @@ module.exports = class {
 
     async initCkEditor() {
         this.ckEditorElement = this.getEl(`mf_ctl_ckeditor_${this.input.item.id}`) || document.getElementById(`mf_ctl_ckeditor_${this.input.item.id}`);
+        const ckEditorConfig = {
+            link: {
+                decorators: {
+                    isExternal: {
+                        mode: "manual",
+                        label: this.i18n.t("mForm.ck.newTab"),
+                        attributes: {
+                            target: "_blank"
+                        }
+                    }
+                }
+            },
+        };
+        if (this.input.item.simple) {
+            ClassicEditor.defaultConfig = {
+                ...ckEditorConfig,
+                removePlugins: ["ImageToolbar", "ImageCaption", "ImageStyle"],
+                toolbar: {
+                    items: [
+                        "bold",
+                        "italic",
+                        "|",
+                        "link",
+                        "|",
+                        "bulletedList",
+                        "numberedList",
+                        "|",
+                        "undo",
+                        "redo"
+                    ]
+                },
+            };
+        }
         this.ckEditor = await ClassicEditor.create(this.ckEditorElement, {
             extraPlugins: [AddClassToAllHeading1],
         });
-        this.ckEditor.plugins.get("FileRepository").createUploadAdapter = loader => {
-            this.ckEditorImageUploadAdapter = new CKEditorImageUploadAdapter(loader, {
-                url: "/api/core/mform/image/upload",
-                headers: this.headers
-            });
-            return this.ckEditorImageUploadAdapter;
-        };
+        if (!this.input.item.simple) {
+            this.ckEditor.plugins.get("FileRepository").createUploadAdapter = loader => {
+                this.ckEditorImageUploadAdapter = new CKEditorImageUploadAdapter(loader, {
+                    url: "/api/core/mform/image/upload",
+                    headers: this.headers
+                });
+                return this.ckEditorImageUploadAdapter;
+            };
+        }
         this.ckEditor.model.document.on("change:data", () => {
             const value = this.ckEditor.getData();
             this.emit("value-change", {
@@ -603,6 +649,19 @@ module.exports = class {
         });
     }
 
+    onIMaskKeyPress() {
+        setTimeout(() => {
+            const element = document.getElementById(`${this.input.id}_${this.state.item.id}`);
+            const value = (element.value || "").trim();
+            this.emit("value-change", {
+                type: "imask",
+                id: this.state.item.id,
+                value,
+                noMaskUpdate: true,
+            });
+        });
+    }
+
     hideCalendar(e) {
         if (e && e.preventDefault) {
             e.preventDefault();
@@ -680,5 +739,142 @@ module.exports = class {
         const item = cloneDeep(this.state.item);
         item.options = options;
         this.setState("item", item);
+    }
+
+    onSelectPmChange(e) {
+        e.preventDefault();
+        this.setState("pmCurrentItem", e.target.value);
+    }
+
+    onPmAddClick(e) {
+        e.preventDefault();
+        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(this.state.pmCurrentItem);
+    }
+
+    pmMove(e, direction) { // 1 = up, 2 = down
+        e.preventDefault();
+        const datasetButton = e.target.closest(".z3-mf-pm-list-button").dataset;
+        const index = parseInt(datasetButton.index, 10);
+        const value = cloneDeep(this.input.value);
+        if (direction === "up") {
+            [value[index - 1], value[index]] = [value[index], value[index - 1]];
+            if (!value[index - 1] || !value[index]) {
+                return;
+            }
+        } else {
+            [value[index], value[index + 1]] = [value[index + 1], value[index]];
+            if (!value[index] || !value[index + 1]) {
+                return;
+            }
+        }
+        this.emit("value-change", {
+            type: "postmodern",
+            id: this.state.item.id,
+            value,
+        });
+    }
+
+    onPmMoveUpClick(e) {
+        this.pmMove(e, "up");
+    }
+
+    onPmMoveDownClick(e) {
+        this.pmMove(e, "down");
+    }
+
+    onPmEditClick(e) {
+        e.preventDefault();
+        const datasetButton = e.target.closest(".z3-mf-pm-list-button").dataset;
+        const index = parseInt(datasetButton.index, 10);
+        const value = cloneDeep(this.input.value);
+        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(this.state.pmCurrentItem, index, value[index]);
+    }
+
+    onPmDeleteClick(e) {
+        e.preventDefault();
+        const datasetButton = e.target.closest(".z3-mf-pm-list-button").dataset;
+        const index = parseInt(datasetButton.index, 10);
+        this.setState("pmItemDeleteIndex", index);
+        this.getComponent(`${this.input.id}_${this.input.item.id}_confirm`).func.setActive(true, this.i18n.t("mForm.pm.itemDeleteConfirmTitle"), this.i18n.t("mForm.pm.itemDeleteConfirmText"));
+    }
+
+    onPmItemDragStart(e) {
+        this.state.pmItemDragging = true;
+        const datasetItem = e.target.closest(".z3-mf-pm-list-text").dataset;
+        const index = parseInt(datasetItem.index, 10);
+        e.dataTransfer.setData("text/plain", `__z3_mform_${this.input.id}_${this.input.item.id}_${index}`);
+    }
+
+    onPmItemDragEnd() {
+        this.state.pmItemDragging = false;
+        Array.from(document.querySelectorAll(".z3-mf-pm-list-divider")).forEach((el) => el.classList.remove("z3-mf-pm-list-divider-hover"));
+    }
+
+    onPmItemDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "copy";
+        e.target.classList.add("z3-mf-pm-list-divider-hover");
+    }
+
+    onPmItemDragLeave(e) {
+        e.target.classList.remove("z3-mf-pm-list-divider-hover");
+    }
+
+    onPmItemDrop(e) {
+        e.preventDefault();
+        const value = cloneDeep(this.input.value);
+        const dataTransfer = e.dataTransfer.getData("text/plain");
+        const rx = new RegExp(`^__z3_mform_${this.input.id}_${this.input.item.id}_`);
+        if (!dataTransfer || typeof dataTransfer !== "string" || !rx.test(dataTransfer)) {
+            return false;
+        }
+        const datasetDest = e.target.closest(".z3-mf-pm-list-divider").dataset;
+        const indexSrc = parseInt(dataTransfer.replace(rx, ""), 10);
+        let indexDest = parseInt(datasetDest.index, 10);
+        if (indexSrc === indexDest) {
+            return false;
+        }
+        if (indexDest === value.length - 1) {
+            indexDest -= 1;
+        }
+        if (indexDest === -1) {
+            value.splice(value.length - 1, 0, value.splice(indexSrc, 1)[0]);
+        } else if (indexSrc !== indexDest) {
+            value.splice(indexDest, 0, value.splice(indexSrc, 1)[0]);
+        }
+        this.emit("value-change", {
+            type: "postmodern",
+            id: this.state.item.id,
+            value,
+        });
+    }
+
+    onPmItemDeleteConfirm() {
+        const value = cloneDeep(this.input.value);
+        value.splice(this.state.pmItemDeleteIndex, 1);
+        this.emit("value-change", {
+            type: "postmodern",
+            id: this.state.item.id,
+            value,
+        });
+    }
+
+    onPmItemSave(obj) {
+        const value = cloneDeep(this.input.value);
+        const item = obj && obj.index ? value[obj.index] : {};
+        item.title = obj.data.title;
+        item.type = this.state.pmCurrentItem;
+        item.id = item.id || uuidv4();
+        item.data = obj.data;
+        if (obj.index !== null) {
+            value[obj.index] = item;
+        } else {
+            value.push(item);
+        }
+        this.emit("value-change", {
+            type: "postmodern",
+            id: this.state.item.id,
+            value,
+        });
     }
 };

@@ -1,3 +1,5 @@
+import postmodern from "./postmodern.json"
+
 <!--
 Text Input
 -->
@@ -21,6 +23,7 @@ Text Input
 					value=input.value
 					on-change("onFieldValueChange")
 					data-id=state.item.id
+					tabindex=(state.visible ? "" : "-1")
 					disabled=(!state.enabled || !state.visible)
 					no-update-if(input.maskedOptions)
 					readonly=(state.item.readOnly ? true : false)
@@ -38,6 +41,7 @@ Text Input
 					value=input.value
 					on-change("onFieldValueChange")
 					data-id=state.item.id
+					tabindex=(state.visible ? "" : "-1")
 					disabled=(!state.enabled || !state.visible)
 					no-update-if(input.maskedOptions)
 					readonly=(state.item.readOnly ? true : false)/>
@@ -115,6 +119,7 @@ Button
 		id=`${input.id}_${state.item.id}`
 		type=state.item.buttonType
 		data-id=state.item.id
+		tabindex=(state.visible ? "" : "-1")
 		key=`mf_ctl_${state.item.id}`
 		on-click("onButtonClick")>
 		${state.item.label}
@@ -134,6 +139,7 @@ Button group
 					id=`${input.id}_${btn.id}`
 					type=btn.buttonType
 					data-id=btn.id
+					tabindex=(state.visible ? "" : "-1")
 					key=`mf_ctl_${btn.id}`
 					on-click("onButtonClick")
 					disabled=!state.enabled>
@@ -173,6 +179,7 @@ Select
 			id=`${input.id}_${state.item.id}`
 			value=input.value
 			on-change("onFieldValueChange")
+			tabindex=(state.visible ? "" : "-1")
 			disabled=!state.enabled>
 			<for|option| of=state.item.options>
 				<option value=option.value selected=(input.value === String(option.value))>
@@ -206,6 +213,7 @@ Radio
 					id=`${input.id}_${state.item.id}_${index}`
 					data-id=state.item.id
 					name=state.item.id
+					tabindex=(state.visible ? "" : "-1")
 					value=option.value
 					checked=(input.value === String(option.value))
 					on-change("onFieldValueChange")/>&nbsp;${option.label}
@@ -237,6 +245,7 @@ Checkboxes
 				id=`${input.id}_${state.item.id}_${option.id}`
 				data-id=state.item.id
 				data-inputid=option.id
+				tabindex=(state.visible ? "" : "-1")
 				checked=(input.value.indexOf(String(option.id)) > -1)/>
 			<div class="state">
 				<i class="icon mdi mdi-check"/>
@@ -270,6 +279,7 @@ Checkbox
 			on-change("onBooleanInputChange")
 			data-id=state.item.id
 			checked=input.value
+			tabindex=(state.visible ? "" : "-1")
 			class=(state.item.css || "")/>
 		<div class="state p-primary">
 			<label>${state.item.labelCheckbox}</label>
@@ -303,6 +313,7 @@ Captcha
 					type="text"
 					placeholder=state.item.placeholder
 					value=input.value
+					tabindex=(state.visible ? "" : "-1")
 					on-change("onFieldValueChange")
 					data-id=state.item.id/>
 			</div>
@@ -334,6 +345,7 @@ Textarea
 			key=`mf_ctl_${state.item.id}`
 			placeholder=state.item.placeholder
 			value=input.value
+			tabindex=(state.visible ? "" : "-1")
 			on-change("onFieldValueChange")
 			data-id=state.item.id/>
 	</div>
@@ -357,6 +369,7 @@ ACE
 				type="button"
 				class="button is-small is-rounded z3-mf-toggle-wrap"
 				data-id=state.item.id
+				tabindex=(state.visible ? "" : "-1")
 				on-click("onAceToggleClick")>
 				<span class="icon is-small">
 					<i
@@ -368,7 +381,7 @@ ACE
 			</button>
 		</if>
 	</label>
-	<if(state.item.wysiwyg)>
+	<if(state.item.wysiwyg && !state.item.noTopButtons)>
 		<div class="tabs is-toggle is-small mb-1 z3-mf-wysiwyg-toggle">
 			<ul>
 				<if(state.item.source)>
@@ -448,6 +461,7 @@ Key-Value Input
 			key=`mf_ctl_${state.item.id}`
 			type=(state.item.textType || "text")
 			placeholder=state.item.placeholder
+			tabindex=(state.visible ? "" : "-1")
 			value=(
 				input.value.data &&
 				Array.isArray(input.value.data) &&
@@ -494,6 +508,7 @@ Images Input
 				multiple=state.item.multiple
 				on-change("onImageInputChange")
 				data-id=state.item.id
+				tabindex=(state.visible ? "" : "-1")
 				id=`${input.id}_${state.item.id}`/>
 			<a class="file-cta button is-light" key=`mf_ctl_${state.item.id}` tabindex="0">
 				<span class="file-icon">
@@ -577,6 +592,7 @@ Image Input
 				multiple=false
 				on-change("onSingleImageInputChange")
 				data-id=state.item.id
+				tabindex=(state.visible ? "" : "-1")
 				id=`${input.id}_${state.item.id}`/>
 			<a
 				class="file-cta button is-light mr-1"
@@ -644,6 +660,7 @@ Range Input
 			value=input.value
 			min=input.item.min
 			max=input.item.max
+			tabindex=(state.visible ? "" : "-1")
 			on-change("onFieldValueChange")
 			on-input("onRangeFieldValueChange")
 			data-id=state.item.id
@@ -678,6 +695,7 @@ Date Picker
 				data-id=state.item.id
 				disabled=(!state.enabled || !state.visible)
 				no-update
+				tabindex=(state.visible ? "" : "-1")
 				on-click("onDatePickerInputClick")
 				on-focus("onDatePickerInputClick")
 				on-keydown("onDatePickerKeyPress")/>
@@ -729,6 +747,7 @@ Tags Input
 			} mr-2`>
 				<input
 					id=`${input.id}_${state.item.id}_input`
+					tabindex=(state.visible ? "" : "-1")
 					on-focus("onTagsInputFocus")
 					on-blur("onTagsInputBlur")
 					on-keydown("onTagsInputKeyup")
@@ -742,4 +761,145 @@ Tags Input
 			<p class="help is-danger">${input.errors[state.item.id]}</p>
 		</if>
 	</div>
+</if>
+<!--
+Masked input (IMASK)
+-->
+<if(state.item.type === "imask")>
+	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+		<div class="control">
+			<input
+				class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
+					state.item.readOnly ? " has-background-white-bis" : ""
+				}`
+				id=`${input.id}_${state.item.id}`
+				key=`mf_ctl_${state.item.id}`
+				type=(state.item.textType || "text")
+				placeholder=state.item.placeholder
+				on-keydown("onIMaskKeyPress")
+				data-id=state.item.id
+				tabindex=(state.visible ? "" : "-1")
+				disabled=(!state.enabled || !state.visible)
+				readonly=(state.item.readOnly ? true : false)
+				no-update/>
+		</div>
+		<if(state.item.helpText)>
+			<p class="help">${state.item.helpText}</p>
+		</if>
+		<if(input.errors[state.item.id])>
+			<p class="help is-danger">${input.errors[state.item.id]}</p>
+		</if>
+	</div>
+</if>
+<!--
+Postmodern Engine
+-->
+<if(state.item.type === "postmodern")>
+	<div class="field has-addons">
+		<div class="control">
+			<div class="select">
+				<select value=state.pmCurrentItem on-change("onSelectPmChange")>
+					<for|k| of=Object.keys(postmodern.items)>
+						<option value=k selected=(state.pmCurrentItem === k)>
+							${out.global.i18n.t(`mForm.pm.item.${k}`)}
+						</option>
+					</for>
+				</select>
+			</div>
+		</div>
+		<div class="control">
+			<button class="button is-light" type="button" on-click("onPmAddClick")>
+				${out.global.i18n.t(`mForm.pm.add`)}
+			</button>
+		</div>
+	</div>
+	<if(input.value && input.value.length)>
+		<for|i, ix| of=input.value>
+			<div
+				data-index=ix
+				on-dragover("onPmItemDragOver")
+				on-dragleave("onPmItemDragLeave")
+				on-drop("onPmItemDrop")
+				class="z3-mf-pm-list-divider mb-1"
+				style={
+					display: state.pmItemDragging ? "block" : "none"
+				}/>
+			<div class="card card-body is-shadowless p-2 mb-1 z3-mf-pm-list-item">
+				<div class="columns is-variable is-1">
+					<div class="column is-narrow pb-0">
+						<div class="field is-grouped mr-2">
+							<p class="control z3-mf-pm-list-buttons" data-id=i.id>
+								<button
+									class="button is-light mr-1 z3-mf-pm-list-button"
+									data-index=ix
+									disabled=(ix === 0)
+									on-click("onPmMoveUpClick")>
+									<span class="icon">
+										<i class="mdi mdi-18px mdi-menu-up-outline"/>
+									</span>
+								</button>
+								<button
+									class="button is-light mr-1 z3-mf-pm-list-button"
+									data-index=ix
+									disabled=(ix === input.value.length - 1)
+									on-click("onPmMoveDownClick")>
+									<span class="icon">
+										<i class="mdi mdi-18px mdi-menu-down-outline"/>
+									</span>
+								</button>
+								<button
+									class="button is-light mr-1 z3-mf-pm-list-button"
+									data-index=ix
+									on-click("onPmEditClick")>
+									<span class="icon">
+										<i class="mdi mdi-18px mdi-pencil-outline"/>
+									</span>
+								</button>
+								<button
+									class="button is-danger z3-mf-pm-list-button"
+									data-index=ix
+									on-click("onPmDeleteClick")>
+									<span class="icon">
+										<i class="mdi mdi-18px mdi-trash-can-outline"/>
+									</span>
+								</button>
+							</p>
+						</div>
+					</div>
+					<div
+						on-dragstart("onPmItemDragStart")
+						on-dragend("onPmItemDragEnd")
+						draggable="true"
+						data-index=ix
+						class="column is-auto z3-mf-pm-list-text">
+						<div class="menu-label mb-0">
+							${out.global.i18n.t(`mForm.pm.item.${i.type}`)}
+						</div>
+						<div>${i.title}</div>
+					</div>
+				</div>
+			</div>
+		</for>
+		<div
+			data-index=-1
+			on-dragover("onPmItemDragOver")
+			on-dragleave("onPmItemDragLeave")
+			on-drop("onPmItemDrop")
+			class="z3-mf-pm-list-divider mb-1"
+			style={
+				display: state.pmItemDragging ? "block" : "none"
+			}/>
+		<mconfirm
+			key=`${input.id}_${input.item.id}_confirm`
+			on-confirm("onPmItemDeleteConfirm")/>
+	</if>
+	<pm 
+		key=`${input.id}_${input.item.id}_pm`
+		on-save("onPmItemSave")
+		id=`${input.id}_${input.item.id}`/>
 </if>

@@ -84,6 +84,7 @@ export default () => ({
             options.sort[req.body.sortId] = req.body.sortDirection === "asc" ? 1 : -1;
             const data = (await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).toArray()).map(i => ({
                 _id: i._id,
+                engine: i.engine || "raw",
                 dir: !acl.checkPermission("pages", "read", i.filename) ? "***" : treeData ? utilsPages.getLabel(i.dir, req.body.language, treeData.tree) || "/" : "/",
                 filename: !acl.checkPermission("pages", "read", i.filename) ? "***" : i.filename,
                 title: !acl.checkPermission("pages", "read", i.filename) ? "***" : i[req.body.language] ? i[req.body.language].title : ""

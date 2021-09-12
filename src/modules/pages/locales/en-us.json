@@ -8,7 +8,7 @@
 	"edit": "Edit",
 	"delete": "Delete",
 	"reload": "Reload",
-	"pageAdd": "Add Page",
+	"pageAddRaw": "Add Page",
 	"pageEdit": "Edit Page",
 	"save": "Save",
 	"cancel": "Cancel",
@@ -38,5 +38,11 @@
 	"date": "Date",
 	"dateHelpText": "Publish Date",
 	"areaMeta": "Metadata",
-	"areaContent": "Page Content and Attachments"
+	"areaContent": "Page Content and Attachments",
+	"addPageRaw": "Add Page (Raw)",
+	"addPagePM": "Add Page (PM)",
+	"editPagePM": "Edit Page (PM)",
+	"engine": "Engine",
+	"rawEngine": "Raw",
+	"pmEngine": "PM"
 }

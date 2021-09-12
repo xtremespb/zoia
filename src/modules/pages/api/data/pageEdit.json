@@ -4,9 +4,13 @@
         "properties": {
             "__form": {
                 "type": "string"
+            },
+            "engine": {
+                "type": "string",
+                "enum": ["raw", "pm"]
             }
         },
-        "required": ["__form"]
+        "required": ["__form", "engine"]
     },
     "root": {
         "type": "object",
@@ -46,7 +50,7 @@
             },
             "css": {
                 "oneOf": [{
-                    "type": "string"
+                    "type": "array"
                 }, {
                     "type": "null"
                 }]
@@ -57,6 +61,18 @@
                 }, {
                     "type": "null"
                 }]
+            },
+            "pm": {
+                "oneOf": [{
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    {
+                        "type": "null"
+                    }
+                ]
             },
             "attachments": {
                 "type": "array",

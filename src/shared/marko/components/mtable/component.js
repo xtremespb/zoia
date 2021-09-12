@@ -387,7 +387,8 @@ module.exports = class {
         // Emit action event
         this.emit("action-click", {
             action: dataset.action,
-            id: dataset.id
+            id: dataset.id,
+            data: this.state.data.find(item => String(dataset.id) === String(item.id) || String(dataset.id) === String(item._id)),
         });
     }
 

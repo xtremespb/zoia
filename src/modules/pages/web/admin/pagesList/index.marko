@@ -59,6 +59,12 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						id: "title",
 						sortable: true,
 						title: out.global.i18n.t("title")
+					},
+					{
+						id: "engine",
+						title: out.global.i18n.t("engine"),
+						css: "z3-ap-ps-list-engine",
+						sortable: true
 					}
 				]
 				actions=[
@@ -81,12 +87,22 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				]
 				buttons=[
 					{
-						id: "btnAdd",
+						id: "btnAddPage",
 						css: "button is-light",
 						icon: "mdi mdi-plus-circle-outline",
 						text: out.global.i18n.t("add"),
 						displayText: true,
-						tooltip: false
+						tooltip: false,
+						dropdown: [
+							{
+								id: "ddAddPageRaw",
+								label: out.global.i18n.t("addPageRaw")
+							},
+							{
+								id: "ddAddPagePM",
+								label: out.global.i18n.t("addPagePM")
+							}
+						]
 					},
 					{
 						id: "btnDeleteSelectedGeneric",

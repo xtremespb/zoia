@@ -25,6 +25,8 @@ module.exports = class {
         // eslint-disable-next-line no-unused-vars
         this.state.processValue = (id, value, column, row) => {
             switch (column) {
+            case "engine":
+                return this.i18n.t(`${value}Engine`);
             default:
                 return value;
             }
@@ -70,11 +72,11 @@ module.exports = class {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    onActionClick(data) {
-        switch (data.action) {
+    onActionClick(obj) {
+        switch (obj.action) {
         case "btnEdit":
-            setTimeout(() => window.router.navigate("pages.edit", {
-                id: data.id
+            setTimeout(() => window.router.navigate(obj.data.engine === "pm" ? "pages.editPM" : "pages.editRaw", {
+                id: obj.id
             }), 10);
             break;
         }
@@ -85,14 +87,25 @@ module.exports = class {
         case "btnReload":
             this.table.func.dataRequest();
             break;
-        case "btnAdd":
+        case "ddAddPageRaw":
             const data = this.tree.func.isRootSelected() ? "" : this.tree.func.getSelected();
             const label = this.tree.func.isRootSelected() ? "/" : this.tree.func.getSelectedLabel();
-            window.router.navigate("pages.edit", {
+            window.router.navigate("pages.editRaw", {
                 id: "new",
                 dir: {
                     data,
                     label
+                },
+            });
+            break;
+        case "ddAddPagePM":
+            const dataPm = this.tree.func.isRootSelected() ? "" : this.tree.func.getSelected();
+            const labelPm = this.tree.func.isRootSelected() ? "/" : this.tree.func.getSelectedLabel();
+            window.router.navigate("pages.editPM", {
+                id: "new",
+                dir: {
+                    dataPm,
+                    labelPm,
                 },
             });
             break;
