@@ -8,16 +8,25 @@
                 "minLength": 1,
                 "maxLength": 128
             },
-            "content": {
-                "type": ["string", "null"]
-            },
-            "class": {
+            "classColumns": {
                 "type": ["string", "null"],
                 "maxLength": 512
             }
         },
         "required": ["title"]
     },
-    "part": {},
+    "part": {
+        "type": "object",
+        "properties": {
+            "content": {
+                "type": ["string", "null"]
+            },
+            "classColumn": {
+                "type": ["string", "null"],
+                "maxLength": 512
+            }
+        },
+        "required": []
+    },
     "files": {}
 }

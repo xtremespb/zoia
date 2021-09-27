@@ -1,0 +1,19 @@
+<if(state.modalActive)>
+	<div class="modal is-active">
+		<div class="modal-background" on-click("onModalClose")/>
+		<div class="modal-card container z3-mf-pm-modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">${out.global.i18n.t("mForm.pm.preview")}</p>
+				<button class="delete" aria-label="close" on-click("onModalClose")/>
+			</header>
+			<section class="modal-card-body">
+				<pmView content=state.data/>
+			</section>
+			<footer class="modal-card-foot">
+				<button class="button is-light" type="button" on-click("onModalClose")>
+					${out.global.i18n.t("mForm.cancel")}
+				</button>
+			</footer>
+		</div>
+	</div>
+</if>

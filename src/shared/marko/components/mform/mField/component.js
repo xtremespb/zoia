@@ -76,6 +76,7 @@ module.exports = class {
             tags: [],
             tagInputValue: null,
             pmCurrentItem: Object.keys(postmodern.items)[0],
+            pmEditItem: null,
             pmItemDragging: false,
             pmItemDeleteIndex: null,
         };
@@ -748,7 +749,15 @@ module.exports = class {
 
     onPmAddClick(e) {
         e.preventDefault();
-        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(this.state.pmCurrentItem);
+        const pmEditItem = this.state.pmCurrentItem;
+        this.setState("pmEditItem", pmEditItem);
+        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(this.state.pmEditItem);
+    }
+
+    onPmPreviewClick(e) {
+        e.preventDefault();
+        const value = cloneDeep(this.input.value);
+        this.getComponent(`${this.input.id}_${this.input.item.id}_preview`).func.showModal(value);
     }
 
     pmMove(e, direction) { // 1 = up, 2 = down
@@ -787,7 +796,8 @@ module.exports = class {
         const datasetButton = e.target.closest(".z3-mf-pm-list-button").dataset;
         const index = parseInt(datasetButton.index, 10);
         const value = cloneDeep(this.input.value);
-        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(this.state.pmCurrentItem, index, value[index]);
+        this.setState("pmEditItem", value[index].type);
+        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(value[index].type, index, value[index]);
     }
 
     onPmDeleteClick(e) {
@@ -863,7 +873,7 @@ module.exports = class {
         const value = cloneDeep(this.input.value);
         const item = obj && obj.index ? value[obj.index] : {};
         item.title = obj.data.title;
-        item.type = this.state.pmCurrentItem;
+        item.type = this.state.pmEditItem;
         item.id = item.id || uuidv4();
         item.data = obj.data;
         if (obj.index !== null) {

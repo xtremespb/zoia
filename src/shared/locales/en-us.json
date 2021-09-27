@@ -199,6 +199,7 @@
 	"mTable.widgets.saveError": "Could not save widgets",
 	"mForm.pm.item.header": "Header",
 	"mForm.pm.item.basicParagraph": "Basic Paragraph",
+	"mForm.pm.item.columnsParagraph": "Column Paragraphs",
 	"mForm.pm.add": "Add",
 	"mForm.pm.itemDeleteConfirmTitle": "Delete Item",
 	"mForm.pm.itemDeleteConfirmText": "Selected item will be deleted from the list and you won't be able to restore it if you save your changes.",
@@ -210,5 +211,9 @@
 	"mForm.pm.header.class": "Class",
 	"mForm.pm.header.classHelpText": "Separated by space",
 	"mForm.pm.header.content": "Content",
-	"mForm.ck.newTab": "Open in new tab"
+	"mForm.ck.newTab": "Open in new tab",
+	"mForm.pm.preview": "Preview",
+	"mForm.pm.columns": "Columns",
+	"mForm.pm.columnsParagraph.classColumn": "Column Class",
+	"mForm.pm.columnsParagraph.classColumns": "Columns Class"
 }

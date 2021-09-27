@@ -1,0 +1,11 @@
+<for|i| of=input.content>
+	<if(i.type === "header")>
+		<pmHeader item=i/>
+	</if>
+	<if(i.type === "basicParagraph")>
+		<pmBasicParagraph item=i/>
+	</if>
+	<if(i.type === "columnsParagraph")>
+		<pmColumnsParagraph item=i/>
+	</if>
+</for>

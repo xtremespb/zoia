@@ -15,10 +15,29 @@ const serializableTypes = ["text", "select", "radio", "checkbox", "checkboxes", 
 module.exports = class {
     onCreate(input) {
         let tabs;
+        let tabsAvail;
         if (input.tabsAvail && input.tabsActive) {
+            tabsAvail = input.tabsAvail;
             tabs = input.tabsActive.map(taId => input.tabsAvail.find(t => t.id === taId));
         } else if (input.tabsAvail) {
             tabs = input.tabsAvail;
+            tabsAvail = input.tabsAvail;
+        } else if (input.tabsCount) {
+            const tabsCount = input.tabsCountInit ? parseInt(input.tabsCountInit, 10) : 1;
+            tabs = Array.from({
+                length: tabsCount
+            }, (v, k) => k).map(t => ({
+                id: `tab${t + 1}`,
+                label: t + 1,
+                default: true,
+            }));
+            tabsAvail = Array.from({
+                length: parseInt(input.tabsCount, 10)
+            }, (v, k) => k).map(t => ({
+                id: `tab${t + 1}`,
+                label: t + 1,
+                default: true,
+            }));
         } else {
             tabs = [{
                 id: "__default",
@@ -28,7 +47,10 @@ module.exports = class {
         }
         const state = {
             tabs,
+            tabsAvail,
             tabsSelect: [],
+            tabsCount: input.tabsCountInit ? parseInt(input.tabsCountInit, 10) : null,
+            tabsCountSelected: null,
             tabSettingsDialogActive: false,
             activeTabId: tabs[0].id,
             data: {},
@@ -177,7 +199,7 @@ module.exports = class {
                     this.masked[field.id] = new InputMask(element, field.imask);
                 }
             }
-            if (this.input.save) {
+            if (this.input.save && this.getComponent(`mf_cmp_${field.id}`)) {
                 this.getComponent(`mf_cmp_${field.id}`).func.setHeaders(this.input.save.headers);
             }
         });
@@ -242,11 +264,16 @@ module.exports = class {
     }
 
     onTabSettingsClick() {
-        const tabsSelect = this.input.tabsAvail.map(tab => ({
-            ...tab,
-            selected: !!this.state.tabs.find(t => t.id === tab.id)
-        }));
-        this.setState("tabsSelect", tabsSelect);
+        if (this.state.tabsAvail) {
+            const tabsSelect = this.state.tabsAvail.map(tab => ({
+                ...tab,
+                selected: !!this.state.tabs.find(t => t.id === tab.id)
+            }));
+            this.setState("tabsSelect", tabsSelect);
+        }
+        if (this.state.tabsCount) {
+            this.setState("tabsCountSelected", this.state.tabsCount);
+        }
         this.setState("tabSettingsDialogActive", true);
     }
 
@@ -272,6 +299,17 @@ module.exports = class {
 
     onTabSettingsDialogSaveClick() {
         let tabs = cloneDeep(this.state.tabs);
+        let tabsSelect = cloneDeep(this.state.tabsSelect);
+        const numberOfTabs = this.state.tabsCountSelected;
+        if (this.input.tabsCount) {
+            tabsSelect = Array.from({
+                length: numberOfTabs
+            }, (v, k) => k).map(t => ({
+                id: `tab${t + 1}`,
+                label: t + 1,
+                selected: true,
+            }));
+        }
         const data = cloneDeep(this.state.data);
         const errors = {};
         tabs.map(t => errors[t.id] = {});
@@ -281,7 +319,7 @@ module.exports = class {
         } else {
             this.fieldsFlat.map(i => dataCurrent[i.id] = this.getDefaultValue(i));
         }
-        this.state.tabsSelect.map(ts => {
+        tabsSelect.map(ts => {
             const findTab = tabs.find(t => t.id === ts.id);
             // Add missing tabs and data
             if (ts.selected && !findTab) {
@@ -309,6 +347,13 @@ module.exports = class {
         if (this.state.validation) {
             this.extendedValidation.setParts(tabs.map(t => t.id));
         }
+        if (this.input.tabsCount) {
+            if (tabs.length > numberOfTabs) {
+                activeTabId = `tab${numberOfTabs}`;
+            }
+            tabs.length = numberOfTabs;
+        }
+        this.setState("tabsCount", numberOfTabs);
         this.setState("data", data);
         this.setState("errors", errors);
         this.setState("tabs", tabs);
@@ -632,6 +677,9 @@ module.exports = class {
                 });
             }
         });
+        if (this.state.tabsCount) {
+            serialized.__tabsCount = this.state.tabsCount;
+        }
         return serialized;
     }
 
@@ -806,9 +854,9 @@ module.exports = class {
 
     deserialize(raw) {
         const data = {};
-        if (this.input.tabsAvail) {
+        if (this.state.tabsAvail) {
             // Deserialize all tabs
-            this.input.tabsAvail.map(tab => {
+            this.state.tabsAvail.map(tab => {
                 data[tab.id] = {};
                 this.fieldsFlat.map(field => {
                     data[tab.id][field.id] = raw[tab.id] && raw[tab.id][field.id] ? raw[tab.id][field.id] : this.getDefaultValue(field);
@@ -839,7 +887,7 @@ module.exports = class {
                 });
             });
             // Deserialize shared fields
-            this.input.tabsAvail.map(tab => {
+            this.state.tabsAvail.map(tab => {
                 this.fieldsFlat.map(field => {
                     if (raw[field.id]) {
                         data[tab.id][field.id] = raw[field.id];
@@ -906,6 +954,19 @@ module.exports = class {
 
     setData(data) {
         this.setState("data", this.deserialize(data));
+        if (this.state.tabsAvail && this.state.tabsAvail.length) {
+            const tabs = this.state.tabsAvail.map(t => {
+                if (data[t.id]) {
+                    return t;
+                }
+                return null;
+            }).filter(t => t);
+            const errors = {};
+            tabs.map(tab => errors[tab.id] = {});
+            this.setState("tabs", tabs);
+            this.setState("tabsCount", tabs.length);
+            this.setState("errors", errors);
+        }
         setTimeout(this.autoFocus.bind(this), 0);
         setTimeout(this.emitFieldsUpdate.bind(this), 0);
     }
@@ -923,8 +984,8 @@ module.exports = class {
             this.setState("loading", false);
             this.setState("disabled", false);
             if (result && result.data && result.data.data) {
-                if (this.input.tabsAvail && this.input.tabsActive) {
-                    const tabs = this.input.tabsAvail.map(t => {
+                if (this.state.tabsAvail && this.input.tabsActive) {
+                    const tabs = this.state.tabsAvail.map(t => {
                         if (result.data.data[t.id]) {
                             return t;
                         }
@@ -1105,5 +1166,10 @@ module.exports = class {
         if (this.fieldsSettled === this.fieldsFlat.length) {
             this.emit("all-settled");
         }
+    }
+
+    onSettingsDialogTabsCountChange(e) {
+        const count = parseInt(e.target.value, 10);
+        this.setState("tabsCountSelected", count);
     }
 };

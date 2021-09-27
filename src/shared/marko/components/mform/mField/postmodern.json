@@ -5,6 +5,7 @@
             "minSize": 1,
             "maxSize": 6
         },
-        "basicParagraph": {}
+        "basicParagraph": {},
+        "columnsParagraph": {}
     }
 }

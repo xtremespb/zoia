@@ -9,7 +9,7 @@ export default async (req, rep, fastify) => {
     const site = new req.ZoiaSite(req, null, db);
     await auth.getUserData();
     site.setAuth(auth);
-    const render = await error404.stream({
+    const render = await error404.render({
         $global: {
             serializedGlobals: {
                 template: true,
@@ -22,7 +22,13 @@ export default async (req, rep, fastify) => {
         }
     });
     log.warn("Not Found");
-    req.urlData().path.match(/^\/api\//) ? rep.code(404).type("application/json").send({
-        errorMessage: "Not Found"
-    }) : rep.code(404).type("text/html").send(render);
+    rep.code(404);
+    // This is an API request
+    if (req.urlData().path.match(/^\/api\//)) {
+        rep.type("application/json");
+        return `{"errorMessage":"Not Found"}`;
+    }
+    // Regular request
+    rep.type("text/html");
+    return render.getOutput();
 };
