@@ -1,0 +1,77 @@
+import validationData from "./columnsImage.json"
+import Cookies from "../../../../../../../shared/lib/cookies"
+
+$ const cookies = new Cookies(out.global.cookieOptions);
+$ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
+<mform
+	manual=true
+	key=`${input.id}_pmForm`
+	id=`${input.id}_pmForm`
+	validation=validationData
+	headers={
+		Authorization: `Bearer ${token}`
+	}
+	fields=[
+		{
+			id: "title",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.header.title"),
+			autoFocus: true,
+			mandatory: true,
+			shared: true,
+		},
+		{
+			id: "classColumns",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.columnsParagraph.classColumns"),
+			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+			css: "is-fullwidth",
+			shared: true,
+		},
+		{
+			id: "content",
+			type: "ace",
+			label: out.global.i18n.t("mForm.pm.header.content"),
+			wysiwyg: true,
+			noTopButtons: true,
+			simple: true,
+			source: false,
+			shared: false,
+		},
+		{
+			id: "image",
+			type: "image",
+			label: out.global.i18n.t("mForm.pm.columnsImage.image"),
+			multiple: false,
+			instant: true,
+			shared: false,
+			buttonLabel: out.global.i18n.t("mForm.pm.columnsImage.selectImage")
+		}, 
+		[{
+			id: "classColumn",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.columnsParagraph.classColumn"),
+			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+			css: "is-fullwidth",
+			shared: false,
+		}, {
+			id: "classParagraph",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.columnsImage.classParagraph"),
+			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+			css: "is-fullwidth",
+			shared: false,
+		}, {
+			id: "classImage",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.columnsImage.classImage"),
+			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+			css: "is-fullwidth",
+			shared: false,
+		}]
+	]
+	tabsCount=8
+	tabsCountInit=2
+	settingsTitle=out.global.i18n.t("mForm.pm.columns")
+	on-loading-state-change("onLoadingStateChange")
+	i18n=out.global.i18n/>

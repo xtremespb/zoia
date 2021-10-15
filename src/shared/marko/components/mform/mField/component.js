@@ -327,9 +327,15 @@ module.exports = class {
             document.addEventListener("click", e => {
                 const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
                 if (this.state.calendarVisible && calendarArea && !calendarArea.contains(e.target)) {
-                    this.hideCalendar();
+                    document.dispatchEvent(new CustomEvent("z3HideCalendar", {
+                        reopen: false
+                    }));
                 }
+                this.setCalendarNullValue();
             });
+            document.addEventListener("z3HideCalendar", () => {
+                this.hideCalendar();
+            }, false);
             break;
         }
         this.emit("settled");
@@ -444,6 +450,7 @@ module.exports = class {
                     name: file.name,
                     id: uid,
                     data: e.target.files[index],
+                    instant: this.input.item.instant,
                 };
             })
         });
@@ -616,6 +623,7 @@ module.exports = class {
 
     onDatePickerInputClick(e) {
         e.stopPropagation();
+        document.dispatchEvent(new Event("z3HideCalendar"));
         this.setState("calendarVisible", true);
     }
 
@@ -629,8 +637,22 @@ module.exports = class {
         this.setState("calendarVisible", false);
     }
 
+    setCalendarNullValue() {
+        const element = document.getElementById(`${this.input.id}_${this.state.item.id}`);
+        if (element && element.value.match(/_/)) {
+            this.setState("calendarValue", null);
+            this.emit("value-change", {
+                type: "datepicker",
+                id: this.state.item.id,
+                value: null,
+                noMaskUpdate: null,
+            });
+        }
+    }
+
     onDatePickerKeyPress(e) {
-        if ((e.which || e.keyCode) === 9 && this.state.calendarVisible) {
+        if ((e.which || e.keyCode) === 9) {
+            this.setCalendarNullValue();
             this.setState("calendarVisible", false);
             return;
         }

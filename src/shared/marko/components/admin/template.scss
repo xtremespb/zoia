@@ -160,10 +160,10 @@
     background: $white;
 }
 
-// .z3-pretty>.state>label:before,
-// .z3-pretty>.state>label:after {
-//     top: calc((0.0001% - (100% - 1em)) - 8%) !important;
-// }
+.z3-pretty>.state>label:before,
+.z3-pretty>.state>label:after {
+    top: calc((0.0001% - (100% - 1em)) - 8%) !important;
+}
 
 .z3-admin-loading-spinner {
     width: 20px;

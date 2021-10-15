@@ -6,6 +6,7 @@
             "maxSize": 6
         },
         "basicParagraph": {},
-        "columnsParagraph": {}
+        "columnsParagraph": {},
+        "columnsImage": {}
     }
 }

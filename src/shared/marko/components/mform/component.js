@@ -365,7 +365,7 @@ module.exports = class {
         }
     }
 
-    onValueChange(obj) {
+    async onValueChange(obj) {
         const data = cloneDeep(this.state.data);
         let {
             value,
@@ -389,6 +389,30 @@ module.exports = class {
         case "image":
         case "postmodern":
             value = Array.from(value);
+            if (obj.type === "image" && value.length && value[0].instant) {
+                this.setState("loading", true);
+                this.setState("disabled", true);
+                try {
+                    const formData = new FormData();
+                    formData.append("upload", value[0].data);
+                    const headers = this.input.save && this.input.save.headers ? this.input.save.headers : this.input.headers ? this.input.headers : {};
+                    const result = await axios.post("/api/core/mform/pm/upload", formData, headers ? {
+                        headers,
+                    } : undefined);
+                    delete value[0].data;
+                    delete value[0].instant;
+                    delete value[0].name;
+                    value[0].id = result.data.fid;
+                    value[0].ext = result.data.ext;
+                } catch {
+                    this.setError(this.i18n.t(`mFormErr.instantImageUpload`));
+                    value = null;
+                }
+                setTimeout(() => {
+                    this.setState("loading", false);
+                    this.setState("disabled", false);
+                }, 10);
+            }
             break;
         case "arr":
             let currentItemState = cloneDeep(data[this.state.activeTabId][obj.id]);

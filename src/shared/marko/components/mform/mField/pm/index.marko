@@ -19,6 +19,9 @@
 					<if(state.type === "columnsParagraph")>
 						<columnsParagraphItem key=`${input.id}_${state.type}`/>
 					</if>
+					<if(state.type === "columnsImage")>
+						<columnsImageItem key=`${input.id}_${state.type}`/>
+					</if>
 				</form>
 			</section>
 			<footer class="modal-card-foot">
