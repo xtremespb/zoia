@@ -800,21 +800,30 @@ Masked input (IMASK)
 Postmodern Engine
 -->
 <if(state.item.type === "postmodern")>
-	<div class="field has-addons">
-		<div class="control">
-			<div class="select">
-				<select value=state.pmCurrentItem on-change("onSelectPmChange")>
-					<for|k| of=Object.keys(postmodern.items)>
-						<option value=k selected=(state.pmCurrentItem === k)>
-							${out.global.i18n.t(`mForm.pm.item.${k}`)}
-						</option>
-					</for>
-				</select>
+	<div class="columns is-variable is-1 mb-0 pb-0">
+		<div class="column is-narrow">
+			<div class="field has-addons">
+				<div class="control">
+					<div class="select">
+						<select value=state.pmCurrentItem on-change("onSelectPmChange")>
+							<for|k| of=Object.keys(postmodern.items)>
+								<option value=k selected=(state.pmCurrentItem === k)>
+									${out.global.i18n.t(`mForm.pm.item.${k}`)}
+								</option>
+							</for>
+						</select>
+					</div>
+				</div>
+				<div class="control">
+					<button class="button is-light" type="button" on-click("onPmAddClick")>
+						${out.global.i18n.t(`mForm.pm.add`)}
+					</button>
+				</div>
 			</div>
 		</div>
-		<div class="control">
-			<button class="button is-light" type="button" on-click("onPmAddClick")>
-				${out.global.i18n.t(`mForm.pm.add`)}
+		<div class="column is-narrow">
+			<button class="button is-light" on-click("onPmPreviewClick")>
+				${out.global.i18n.t(`mForm.pm.preview`)}
 			</button>
 		</div>
 	</div>
@@ -898,8 +907,9 @@ Postmodern Engine
 			key=`${input.id}_${input.item.id}_confirm`
 			on-confirm("onPmItemDeleteConfirm")/>
 	</if>
-	<pm 
+	<pm
 		key=`${input.id}_${input.item.id}_pm`
 		on-save("onPmItemSave")
 		id=`${input.id}_${input.item.id}`/>
+	<preview key=`${input.id}_${input.item.id}_preview`/>
 </if>

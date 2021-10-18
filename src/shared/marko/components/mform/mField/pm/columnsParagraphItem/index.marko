@@ -1,0 +1,47 @@
+import validationData from "./columnsParagraph.json"
+
+<mform
+	manual=true
+	key=`${input.id}_pmForm`
+	id=`${input.id}_pmForm`
+	validation=validationData
+	fields=[
+		{
+			id: "title",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.header.title"),
+			autoFocus: true,
+			mandatory: true,
+			shared: true,
+		},
+		{
+			id: "classColumns",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.columnsParagraph.classColumns"),
+			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+			css: "is-fullwidth",
+			shared: true,
+		},
+		{
+			id: "content",
+			type: "ace",
+			label: out.global.i18n.t("mForm.pm.header.content"),
+			wysiwyg: true,
+			noTopButtons: true,
+			simple: true,
+			source: false,
+			shared: false,
+		},
+		{
+			id: "classColumn",
+			type: "text",
+			label: out.global.i18n.t("mForm.pm.columnsParagraph.classColumn"),
+			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+			css: "is-fullwidth",
+			shared: false,
+		}
+	]
+	tabsCount=8
+	tabsCountInit=2
+	settingsTitle=out.global.i18n.t("mForm.pm.columns")
+	i18n=out.global.i18n/>

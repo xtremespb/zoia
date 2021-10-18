@@ -1,5 +1,6 @@
 import cloneDeep from "lodash/cloneDeep";
-import template from "./index.marko";
+import templateRaw from "./raw.marko";
+import templatePM from "./pm.marko";
 
 const findNodeById = (id, data) => {
     let node;
@@ -29,15 +30,18 @@ const getUUIDByPath = (path, tree) => {
 
 export default () => ({
     async handler(req, rep) {
+        const log = new this.LoggerHelpers(req, this);
         try {
             const {
                 response,
                 auth,
-            } = req.zoia;
+            } = req.zoia || {};
             const site = new req.ZoiaSite(req, "pages", this.mongo.db);
-            response.setSite(site);
-            await auth.getUserData();
-            site.setAuth(auth);
+            if (response && auth) {
+                response.setSite(site);
+                await auth.getUserData();
+                site.setAuth(auth);
+            }
             const {
                 url
             } = site.i18n.getNonLocalizedURL(req);
@@ -75,9 +79,10 @@ export default () => ({
                 dir: 1,
                 filename: 1,
                 createdAt: 1,
-                modifiedAt: 1
+                modifiedAt: 1,
+                engine: 1,
             };
-            ["title", "contentMin", "cssMin", "jsMin"].map(i => projection[`${site.language}.${i}`] = 1);
+            ["title", "contentMin", "cssMin", "jsMin", "pm"].map(i => projection[`${site.language}.${i}`] = 1);
             const page = await this.mongo.db.collection(this.zoiaModulesConfig["pages"].collectionPages).findOne(query, {
                 projection
             });
@@ -85,25 +90,46 @@ export default () => ({
                 rep.callNotFound();
                 return rep.code(204);
             }
-            const render = await template.stream({
-                $global: {
-                    serializedGlobals: {
-                        template: true,
-                        pageTitle: true,
-                        extraCSS: true,
-                        extraJS: true,
-                        ...site.getSerializedGlobals()
+            let render;
+            switch (page.engine) {
+            case "pm":
+                render = await templatePM.stream({
+                    $global: {
+                        serializedGlobals: {
+                            template: true,
+                            pageTitle: true,
+                            ...site.getSerializedGlobals()
+                        },
+                        template: req.zoiaTemplates[0],
+                        pageTitle: page[site.language].title,
+                        ...await site.getGlobals()
                     },
-                    template: req.zoiaTemplates[0],
-                    pageTitle: page[site.language].title,
-                    extraCSS: page[site.language].cssMin,
-                    extraJS: page[site.language].jsMin,
-                    ...await site.getGlobals()
-                },
-                content: page[site.language].contentMin
-            });
+                    content: page[site.language].pm,
+                });
+                break;
+            default:
+                render = await templateRaw.stream({
+                    $global: {
+                        serializedGlobals: {
+                            template: true,
+                            pageTitle: true,
+                            extraCSS: true,
+                            extraJS: true,
+                            ...site.getSerializedGlobals()
+                        },
+                        template: req.zoiaTemplates[0],
+                        pageTitle: page[site.language].title,
+                        extraCSS: page[site.language].cssMin,
+                        extraJS: page[site.language].jsMin,
+                        ...await site.getGlobals()
+                    },
+                    content: page[site.language].contentMin
+                });
+                break;
+            }
             return response.sendHTML(render);
         } catch (e) {
+            log.error(e);
             return Promise.reject(e);
         }
     }

@@ -302,9 +302,15 @@ import Env from "../../lib/env";
             await globalPrehandler(req, rep, fastify);
         });
         // Set handler for error 404
-        fastify.setNotFoundHandler((req, rep) => notFoundErrorHandler(req, rep, fastify));
+        // fastify.setNotFoundHandler(async (req, rep) => notFoundErrorHandler(req, rep, fastify));
+        fastify.setNotFoundHandler(async (req, rep) => {
+            const data = await notFoundErrorHandler(req, rep, fastify);
+            rep.send(data);
+        });
         // Set handler for error 500
-        fastify.setErrorHandler((err, req, rep) => internalServerErrorHandler(err, req, rep, fastify));
+        fastify.setErrorHandler(async (err, req, rep) => {
+            await internalServerErrorHandler(err, req, rep, fastify);
+        });
         // Add an maintenance handler
         fastify.addHook("preHandler", async (req, rep) => {
             await maintenanceHandler(req, rep, fastify);

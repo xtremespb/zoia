@@ -4,7 +4,7 @@ import validationData from "./basicParagraph.json"
 	manual=true
 	key=`${input.id}_pmForm`
 	id=`${input.id}_pmForm`
-    validation=validationData
+	validation=validationData
 	fields=[
 		{
 			id: "title",
@@ -13,7 +13,7 @@ import validationData from "./basicParagraph.json"
 			autoFocus: true,
 			mandatory: true
 		},
-        {
+		{
 			id: "content",
 			type: "ace",
 			label: out.global.i18n.t("mForm.pm.header.content"),
@@ -26,8 +26,8 @@ import validationData from "./basicParagraph.json"
 			id: "class",
 			type: "text",
 			label: out.global.i18n.t("mForm.pm.header.class"),
-            helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
-            css: "is-fullwidth",
+			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+			css: "is-fullwidth"
 		}
 	]
 	i18n=out.global.i18n/>

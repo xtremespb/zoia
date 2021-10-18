@@ -945,24 +945,26 @@ module.exports = class {
     setupColumnResize() {
         this.calculateTableMaxWidth();
         this.resizeTable = document.getElementById(`${this.input.id}_table`);
-        this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th`));
-        this.resizeTableGrips = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th>div>.z3-mt-th-resize`));
-        this.setTableWidth("");
-        this.resizeTableHeaders.map(c => c.style.minWidth = "");
-        this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseFloat(window.getComputedStyle(c).width.replace(/px/, ""), 10));
-        this.setTableWidth(window.getComputedStyle(this.resizeTable).width);
-        this.resizeTableOriginComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
-        this.resizeTableInitialComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
-        const oldColumnWidths = cloneDeep(this.resizeTableColumnWidths);
-        this.resizeTableColumnWidths = this.columnRatiosToWidths();
-        this.columnsResizeToValues();
-        const currentTableComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
-        if (currentTableComputedWidth !== this.resizeTableOriginComputedWidth) {
-            this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
+        if (this.resizeTable) {
+            this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th`));
+            this.resizeTableGrips = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th>div>.z3-mt-th-resize`));
+            this.setTableWidth("");
+            this.resizeTableHeaders.map(c => c.style.minWidth = "");
+            this.resizeTableColumnWidths = this.resizeTableHeaders.map(c => parseFloat(window.getComputedStyle(c).width.replace(/px/, ""), 10));
+            this.setTableWidth(window.getComputedStyle(this.resizeTable).width);
+            this.resizeTableOriginComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+            this.resizeTableInitialComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+            const oldColumnWidths = cloneDeep(this.resizeTableColumnWidths);
+            this.resizeTableColumnWidths = this.columnRatiosToWidths();
             this.columnsResizeToValues();
+            const currentTableComputedWidth = parseFloat(window.getComputedStyle(this.resizeTable).width.replace(/px/, ""), 10);
+            if (currentTableComputedWidth !== this.resizeTableOriginComputedWidth) {
+                this.resizeTableColumnWidths = cloneDeep(oldColumnWidths);
+                this.columnsResizeToValues();
+            }
+            this.setTableWidth(window.getComputedStyle(this.resizeTable).width);
+            this.resizeTableGrips.map(g => g.style.left = `${this.resizeTableColumnWidths[g.dataset.index] - 5}px`);
         }
-        this.setTableWidth(window.getComputedStyle(this.resizeTable).width);
-        this.resizeTableGrips.map(g => g.style.left = `${this.resizeTableColumnWidths[g.dataset.index] - 5}px`);
     }
 
     columnsResizeToValues() {

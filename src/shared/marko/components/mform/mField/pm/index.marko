@@ -16,10 +16,18 @@
 					<if(state.type === "basicParagraph")>
 						<basicParagraphItem key=`${input.id}_${state.type}`/>
 					</if>
+					<if(state.type === "columnsParagraph")>
+						<columnsParagraphItem key=`${input.id}_${state.type}`/>
+					</if>
+					<if(state.type === "columnsImage")>
+						<columnsImageItem key=`${input.id}_${state.type}`/>
+					</if>
 				</form>
 			</section>
 			<footer class="modal-card-foot">
-				<button class="button is-primary" type="button" on-click("onPmSave")>${out.global.i18n.t("mForm.save")}</button>
+				<button class="button is-primary" type="button" on-click("onPmSave")>
+					${out.global.i18n.t("mForm.save")}
+				</button>
 				<button class="button is-light" type="button" on-click("onModalClose")>
 					${out.global.i18n.t("mForm.cancel")}
 				</button>

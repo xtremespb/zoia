@@ -108,13 +108,14 @@ export default class {
     }
 
     sendHTML(data) {
-        this.rep.code(200).type("text/html").send(data);
+        this.rep.code(200).type("text/html");
+        return Promise.resolve(data);
     }
 
     sendError(msg, code) {
         const error = new Error(msg);
         error.code = code;
-        this.rep.send(error);
+        return Promise.resolve(error);
     }
 
     getCode204() {

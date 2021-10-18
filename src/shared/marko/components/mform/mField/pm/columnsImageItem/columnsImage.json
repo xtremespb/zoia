@@ -1,0 +1,40 @@
+{
+    "schema": {},
+    "root": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+            },
+            "classColumns": {
+                "type": ["string", "null"],
+                "maxLength": 512
+            }
+        },
+        "required": ["title"]
+    },
+    "part": {
+        "type": "object",
+        "properties": {
+            "content": {
+                "type": ["string", "null"]
+            },
+            "classColumn": {
+                "type": ["string", "null"],
+                "maxLength": 512
+            },
+            "classParagraph": {
+                "type": ["string", "null"],
+                "maxLength": 512
+            },
+            "classImage": {
+                "type": ["string", "null"],
+                "maxLength": 512
+            }
+        },
+        "required": []
+    },
+    "files": {}
+}

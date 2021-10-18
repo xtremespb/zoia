@@ -199,6 +199,8 @@
 	"mTable.widgets.saveError": "Could not save widgets",
 	"mForm.pm.item.header": "Header",
 	"mForm.pm.item.basicParagraph": "Basic Paragraph",
+	"mForm.pm.item.columnsParagraph": "Paragraph Columns",
+    "mForm.pm.item.columnsImage": "Image Columns",
 	"mForm.pm.add": "Add",
 	"mForm.pm.itemDeleteConfirmTitle": "Delete Item",
 	"mForm.pm.itemDeleteConfirmText": "Selected item will be deleted from the list and you won't be able to restore it if you save your changes.",
@@ -210,5 +212,14 @@
 	"mForm.pm.header.class": "Class",
 	"mForm.pm.header.classHelpText": "Separated by space",
 	"mForm.pm.header.content": "Content",
-	"mForm.ck.newTab": "Open in new tab"
+	"mForm.ck.newTab": "Open in new tab",
+	"mForm.pm.preview": "Preview",
+	"mForm.pm.columns": "Columns",
+	"mForm.pm.columnsParagraph.classColumn": "Column Class",
+	"mForm.pm.columnsParagraph.classColumns": "Columns Class",
+	"mForm.pm.columnsImage.selectImage": "Select Image",
+	"mForm.pm.columnsImage.image": "Image",
+	"mFormErr.instantImageUpload": "Could not upload image to server",
+	"mForm.pm.columnsImage.classParagraph": "Paragraph Class",
+	"mForm.pm.columnsImage.classImage": "Image Class"
 }

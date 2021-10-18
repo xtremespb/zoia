@@ -448,11 +448,11 @@ export default {
                 query.$and.push(filter);
                 break;
             case "noneOf":
+                console.log(f.value.id);
                 f.value.id.map(i => {
-                    filter[f.id] = {
+                    query.$and.push({
                         $ne: i
-                    };
-                    query.$and.push(filter);
+                    });
                 });
                 break;
             case "greaterThan":

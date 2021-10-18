@@ -76,6 +76,7 @@ module.exports = class {
             tags: [],
             tagInputValue: null,
             pmCurrentItem: Object.keys(postmodern.items)[0],
+            pmEditItem: null,
             pmItemDragging: false,
             pmItemDeleteIndex: null,
         };
@@ -326,9 +327,15 @@ module.exports = class {
             document.addEventListener("click", e => {
                 const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
                 if (this.state.calendarVisible && calendarArea && !calendarArea.contains(e.target)) {
-                    this.hideCalendar();
+                    document.dispatchEvent(new CustomEvent("z3HideCalendar", {
+                        reopen: false
+                    }));
                 }
+                this.setCalendarNullValue();
             });
+            document.addEventListener("z3HideCalendar", () => {
+                this.hideCalendar();
+            }, false);
             break;
         }
         this.emit("settled");
@@ -443,6 +450,7 @@ module.exports = class {
                     name: file.name,
                     id: uid,
                     data: e.target.files[index],
+                    instant: this.input.item.instant,
                 };
             })
         });
@@ -615,6 +623,7 @@ module.exports = class {
 
     onDatePickerInputClick(e) {
         e.stopPropagation();
+        document.dispatchEvent(new Event("z3HideCalendar"));
         this.setState("calendarVisible", true);
     }
 
@@ -628,8 +637,22 @@ module.exports = class {
         this.setState("calendarVisible", false);
     }
 
+    setCalendarNullValue() {
+        const element = document.getElementById(`${this.input.id}_${this.state.item.id}`);
+        if (element && element.value.match(/_/)) {
+            this.setState("calendarValue", null);
+            this.emit("value-change", {
+                type: "datepicker",
+                id: this.state.item.id,
+                value: null,
+                noMaskUpdate: null,
+            });
+        }
+    }
+
     onDatePickerKeyPress(e) {
-        if ((e.which || e.keyCode) === 9 && this.state.calendarVisible) {
+        if ((e.which || e.keyCode) === 9) {
+            this.setCalendarNullValue();
             this.setState("calendarVisible", false);
             return;
         }
@@ -748,7 +771,15 @@ module.exports = class {
 
     onPmAddClick(e) {
         e.preventDefault();
-        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(this.state.pmCurrentItem);
+        const pmEditItem = this.state.pmCurrentItem;
+        this.setState("pmEditItem", pmEditItem);
+        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(this.state.pmEditItem);
+    }
+
+    onPmPreviewClick(e) {
+        e.preventDefault();
+        const value = cloneDeep(this.input.value);
+        this.getComponent(`${this.input.id}_${this.input.item.id}_preview`).func.showModal(value);
     }
 
     pmMove(e, direction) { // 1 = up, 2 = down
@@ -787,7 +818,8 @@ module.exports = class {
         const datasetButton = e.target.closest(".z3-mf-pm-list-button").dataset;
         const index = parseInt(datasetButton.index, 10);
         const value = cloneDeep(this.input.value);
-        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(this.state.pmCurrentItem, index, value[index]);
+        this.setState("pmEditItem", value[index].type);
+        this.getComponent(`${this.input.id}_${this.input.item.id}_pm`).func.showModal(value[index].type, index, value[index]);
     }
 
     onPmDeleteClick(e) {
@@ -863,7 +895,7 @@ module.exports = class {
         const value = cloneDeep(this.input.value);
         const item = obj && obj.index ? value[obj.index] : {};
         item.title = obj.data.title;
-        item.type = this.state.pmCurrentItem;
+        item.type = this.state.pmEditItem;
         item.id = item.id || uuidv4();
         item.data = obj.data;
         if (obj.index !== null) {
