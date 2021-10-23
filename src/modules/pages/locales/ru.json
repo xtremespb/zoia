@@ -38,5 +38,11 @@
 	"date": "Дата",
 	"dateHelpText": "Дата публикации",
 	"areaMeta": "Метаданные страницы",
-	"areaContent": "Содержимое страницы и вложения"
+	"areaContent": "Содержимое страницы и вложения",
+	"addPageRaw": "Добавить страницу (Raw)",
+	"addPagePM": "Добавить страницу (PM)",
+	"editPagePM": "Редактировать страницу (PM)",
+	"engine": "Движок",
+	"rawEngine": "Raw",
+	"pmEngine": "PM"
 }

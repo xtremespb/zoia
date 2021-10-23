@@ -119,6 +119,7 @@ export default () => ({
                     dir: data.dir || "",
                     filename: data.filename || "",
                     modifiedAt: new Date(),
+                    engine: formData.fields.engine === "pm" ? "pm" : "raw",
                     ...updateExtras
                 }
             }, {

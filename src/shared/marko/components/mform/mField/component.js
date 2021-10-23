@@ -117,6 +117,80 @@ module.exports = class {
         this.i18n = out.global.i18n;
     }
 
+    async onMount() {
+        this.state.mandatory = this.input.item.mandatory;
+        this.state.modeAce = this.input.item.source ? "ace" : "ck";
+        await this.reloadCaptcha();
+        switch (this.state.item.type) {
+        case "ace":
+            if (!document.getElementById(`${this.input.id}_${this.state.item.id}_ace`)) {
+                return;
+            }
+            setTimeout(() => {
+                [this.aceEditorElement] = document.getElementById(`${this.input.id}_${this.state.item.id}_ace`).getElementsByTagName("div");
+                this.aceEditor = ace.edit(this.aceEditorElement);
+                const aceDefaults = {
+                    mode: "ace/mode/html",
+                    theme: "ace/theme/chrome",
+                    fontSize: "16px",
+                    wrap: true,
+                    useSoftTabs: true,
+                    tabSize: 2
+                };
+                this.aceEditor.setOptions(this.state.item.aceOptions ? {
+                    ...aceDefaults,
+                    ...this.state.item.aceOptions
+                } : aceDefaults);
+                this.aceEditor.getSession().on("change", () => {
+                    const value = this.aceEditor.getSession().getValue();
+                    this.emit("value-change", {
+                        type: "input",
+                        id: this.state.item.id,
+                        value
+                    });
+                });
+                // Remove annotations, e.g.
+                // "Non-space characters found without seeing a doctype first. Expected e.g. <!DOCTYPE html>."
+                this.aceEditor.getSession().on("changeAnnotation", () => {
+                    const annotations = this.aceEditor.getSession().getAnnotations();
+                    const annotationsFiltered = annotations.filter(a => a && !a.text.match(/DOCTYPE html/));
+                    if (annotations.length > annotationsFiltered.length) {
+                        this.aceEditor.getSession().setAnnotations(annotationsFiltered);
+                    }
+                });
+                if (this.state.item.wysiwyg && !this.state.item.source) {
+                    this.initCkEditor();
+                }
+            });
+            break;
+        case "tags":
+            document.addEventListener("click", e => {
+                const tagsWrap = document.getElementById(`${this.input.id}_${this.state.item.id}_wrap`);
+                if (tagsWrap && !tagsWrap.contains(e.target)) {
+                    tagsWrap.classList.remove("z3-mf-tags-wrap-focus");
+                }
+            });
+            break;
+        case "datepicker":
+            this.calendarField = this.getComponent(`${this.input.id}_${this.state.item.id}_datepicker_field`);
+            this.setState("calendarValue", this.input.value);
+            document.addEventListener("click", e => {
+                const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
+                if (this.state.calendarVisible && calendarArea && !calendarArea.contains(e.target)) {
+                    document.dispatchEvent(new CustomEvent("z3HideCalendar", {
+                        reopen: false
+                    }));
+                }
+                this.setCalendarNullValue();
+            });
+            document.addEventListener("z3HideCalendar", () => {
+                this.hideCalendar();
+            }, false);
+            break;
+        }
+        this.emit("settled");
+    }
+
     performUpdate() {
         switch (this.state.item.type) {
         case "ace":
@@ -267,78 +341,6 @@ module.exports = class {
                 value: null,
             });
         }
-    }
-
-    async onMount() {
-        await this.reloadCaptcha();
-        switch (this.state.item.type) {
-        case "ace":
-            if (!document.getElementById(`${this.input.id}_${this.state.item.id}_ace`)) {
-                return;
-            }
-            setTimeout(() => {
-                [this.aceEditorElement] = document.getElementById(`${this.input.id}_${this.state.item.id}_ace`).getElementsByTagName("div");
-                this.aceEditor = ace.edit(this.aceEditorElement);
-                const aceDefaults = {
-                    mode: "ace/mode/html",
-                    theme: "ace/theme/chrome",
-                    fontSize: "16px",
-                    wrap: true,
-                    useSoftTabs: true,
-                    tabSize: 2
-                };
-                this.aceEditor.setOptions(this.state.item.aceOptions ? {
-                    ...aceDefaults,
-                    ...this.state.item.aceOptions
-                } : aceDefaults);
-                this.aceEditor.getSession().on("change", () => {
-                    const value = this.aceEditor.getSession().getValue();
-                    this.emit("value-change", {
-                        type: "input",
-                        id: this.state.item.id,
-                        value
-                    });
-                });
-                // Remove annotations, e.g.
-                // "Non-space characters found without seeing a doctype first. Expected e.g. <!DOCTYPE html>."
-                this.aceEditor.getSession().on("changeAnnotation", () => {
-                    const annotations = this.aceEditor.getSession().getAnnotations();
-                    const annotationsFiltered = annotations.filter(a => a && !a.text.match(/DOCTYPE html/));
-                    if (annotations.length > annotationsFiltered.length) {
-                        this.aceEditor.getSession().setAnnotations(annotationsFiltered);
-                    }
-                });
-                if (this.state.item.wysiwyg && !this.state.item.source) {
-                    this.initCkEditor();
-                }
-            });
-            break;
-        case "tags":
-            document.addEventListener("click", e => {
-                const tagsWrap = document.getElementById(`${this.input.id}_${this.state.item.id}_wrap`);
-                if (tagsWrap && !tagsWrap.contains(e.target)) {
-                    tagsWrap.classList.remove("z3-mf-tags-wrap-focus");
-                }
-            });
-            break;
-        case "datepicker":
-            this.calendarField = this.getComponent(`${this.input.id}_${this.state.item.id}_datepicker_field`);
-            this.setState("calendarValue", this.input.value);
-            document.addEventListener("click", e => {
-                const calendarArea = document.getElementById(`${this.input.id}_${this.state.item.id}_datepicker`);
-                if (this.state.calendarVisible && calendarArea && !calendarArea.contains(e.target)) {
-                    document.dispatchEvent(new CustomEvent("z3HideCalendar", {
-                        reopen: false
-                    }));
-                }
-                this.setCalendarNullValue();
-            });
-            document.addEventListener("z3HideCalendar", () => {
-                this.hideCalendar();
-            }, false);
-            break;
-        }
-        this.emit("settled");
     }
 
     setFocus() {

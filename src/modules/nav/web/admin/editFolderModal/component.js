@@ -84,7 +84,11 @@ module.exports = class {
     }
 
     setData(data) {
-        this.getComponent("folderEditForm").func.setData(data);
+        if (Object.keys(data).length) {
+            this.getComponent("folderEditForm").func.setData(data);
+        } else {
+            this.getComponent("folderEditForm").func.resetData();
+        }
         this.dataOrigin = cloneDeep(data);
     }
 
