@@ -180,6 +180,7 @@ table tr:last-child td:last-child {
 
 .z3-mt-table-wrap {
     border-style: hidden;
+    margin-bottom: 0 !important;
 }
 
 .z3-mt-table-container {
@@ -274,6 +275,27 @@ table tr:last-child td:last-child {
 
 .z3-mt-deletedAt {
     width: 200px;
+}
+
+.z3-mt-actions-float {
+    position: absolute;
+    top: 2px;
+    border-left: 1px solid $grey-lighter;
+}
+
+.z3-mt-controls-wrap {
+    padding-bottom: 25px;
+    z-index: 20;
+    background: $white;
+}
+
+.z3-mt-controls-dummy {
+    background: $white;
+    display: "none";
+}
+
+.z3-mt-controls-dummy {
+    height: 1px;
 }
 
 @keyframes z3-mt-filter-spinner {

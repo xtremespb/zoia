@@ -10,253 +10,259 @@ style.scss {
 $ const cookies = new Cookies(out.global.cookieOptions);
 $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 <div class="z3-mt-wrap" id=`${input.id}_wrap` key=`${input.id}_wrap`>
-	<div class="columns z3-ap-noselect">
-		<div class="column is-four-fifths">
-			<if(input.buttons && input.buttons.length)>
-				<div
-					class="field has-addons columns is-gapless is-multiline"
-					id=`${input.id}_top_buttons`>
-					<for|btn| of=input.buttons>
-						<p class="z3-mt-top-control mt-1 mr-1">
-							<div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}${
-								btn.dropdownRight ? " is-right" : ""
-							}`>
-								<div class="dropdown-trigger">
-									<div class="field has-addons">
-										<p class="control">
-											<button
-												disabled=(
-													btn.id === "btnDeleteSelectedGeneric" &&
-													!state.anyCheckboxSelected
-												)
-												class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}`
-												data-button=btn.id
-												data-dropdown=String(!!(btn.dropdown && btn.dropdown.length))
-												id=`${input.id}_${btn.id}`
-												type="button"
-												on-click("onTopButtonClick")
-												aria-haspopup="true">
-												<if(btn.icon)>
-													<div class="z3-mt-icon-wrap">
-														<span class="icon">
-															<i class=(
-																btn.id === "btnDeleteSelectedGeneric"
-																	? "mdi mdi-close-circle-outline"
-																	: btn.icon
-															)/>
-														</span>
-													</div>
-												</if>
-												<if(btn.displayText && btn.text)>${btn.text}</if>
-											</button>
-										</p>
-										<if(btn.id === "btnDeleteSelectedGeneric" && input.recycleBin)>
+	<!-- Controls Wrap Begin -->
+	<div class="z3-mt-controls-wrap" id=`${input.id}_controls_wrap`>
+		<div class="columns z3-ap-noselect">
+			<div class="column is-four-fifths">
+				<if(input.buttons && input.buttons.length)>
+					<div
+						class="field has-addons columns is-gapless is-multiline"
+						id=`${input.id}_top_buttons`>
+						<for|btn| of=input.buttons>
+							<p class="z3-mt-top-control mt-1 mr-1">
+								<div class=`dropdown${state.dropdownVisible[btn.id] ? " is-active" : ""}${
+									btn.dropdownRight ? " is-right" : ""
+								}`>
+									<div class="dropdown-trigger">
+										<div class="field has-addons">
 											<p class="control">
 												<button
+													disabled=(
+														btn.id === "btnDeleteSelectedGeneric" &&
+														!state.anyCheckboxSelected
+													)
+													class=`${btn.css} ${btn.tooltip ? " tooltip" : ""}`
 													data-button=btn.id
-													on-click("onRecycleBinOpen")
-													class="button is-light z3-mt-recycle-bin-btn"
+													data-dropdown=String(!!(btn.dropdown && btn.dropdown.length))
+													id=`${input.id}_${btn.id}`
 													type="button"
-													data-tippy-content=out.global.i18n.t("mTable.recycleBin")
+													on-click("onTopButtonClick")
 													aria-haspopup="true">
-													<span class="icon">
-														<i class="mdi mdi-trash-can-outline"/>
-													</span>
+													<if(btn.icon)>
+														<div class="z3-mt-icon-wrap">
+															<span class="icon">
+																<i class=(
+																	btn.id === "btnDeleteSelectedGeneric"
+																		? "mdi mdi-close-circle-outline"
+																		: btn.icon
+																)/>
+															</span>
+														</div>
+													</if>
+													<if(btn.displayText && btn.text)>${btn.text}</if>
 												</button>
 											</p>
-										</if>
-									</div>
-								</div>
-								<if(btn.dropdown && btn.dropdown.length)>
-									<div class="dropdown-menu" role="menu">
-										<div class="dropdown-content">
-											<for|i| of=btn.dropdown>
-												<a href="" on-click("onDropdownItemClick") data-id=i.id class="dropdown-item">
-													${i.label}
-												</a>
-											</for>
+											<if(btn.id === "btnDeleteSelectedGeneric" && input.recycleBin)>
+												<p class="control">
+													<button
+														data-button=btn.id
+														on-click("onRecycleBinOpen")
+														class="button is-light z3-mt-recycle-bin-btn"
+														type="button"
+														data-tippy-content=out.global.i18n.t("mTable.recycleBin")
+														aria-haspopup="true">
+														<span class="icon">
+															<i class="mdi mdi-trash-can-outline"/>
+														</span>
+													</button>
+												</p>
+											</if>
 										</div>
 									</div>
-								</if>
-							</div>
-						</p>
-					</for>
-					<if(input.widgets)>
+									<if(btn.dropdown && btn.dropdown.length)>
+										<div class="dropdown-menu" role="menu">
+											<div class="dropdown-content">
+												<for|i| of=btn.dropdown>
+													<a href="" on-click("onDropdownItemClick") data-id=i.id class="dropdown-item">
+														${i.label}
+													</a>
+												</for>
+											</div>
+										</div>
+									</if>
+								</div>
+							</p>
+						</for>
+						<if(input.widgets)>
+							<p class="z3-mt-top-control mt-1 mr-1">
+								<button
+									class="button is-light"
+									type="button"
+									on-click("onTableWidgetsClick")
+									aria-haspopup="false">
+									<div class="z3-mt-icon-wrap">
+										<span class="icon">
+											<i class="mdi mdi-widgets-outline"/>
+										</span>
+									</div>
+									${out.global.i18n.t("mTable.tableWidgets")}
+								</button>
+							</p>
+						</if>
+						<if(input.filter && input.filter.length)>
+							<p class="z3-mt-top-control mt-1 mr-1">
+								<div class=`dropdown${
+									state.dropdownVisible["filterGeneric"] ? " is-active" : ""
+								}`>
+									<div class="dropdown-trigger">
+										<button
+											class="button is-light"
+											type="button"
+											data-dropdown="true"
+											on-click("onTopButtonClick")
+											data-button="filterGeneric">
+											<div class="z3-mt-icon-wrap">
+												<span class="icon">
+													<i class="mdi mdi-filter-outline"/>
+												</span>
+											</div>
+											${out.global.i18n.t("mTable.filter")}
+										</button>
+									</div>
+									<div class="dropdown-menu" role="menu">
+										<div class="dropdown-content">
+											<a href="" on-click("onAddFilterClick") class="dropdown-item">
+												${out.global.i18n.t("mTable.addFilter")}
+											</a>
+											<a href="" on-click("onAddRawFilterClick") class="dropdown-item">
+												${out.global.i18n.t("mTable.rawFilterEdit")}
+											</a>
+											<if(state.filterCurrentId)>
+												<a href="" on-click("onSaveCurrentFilterSet") class="dropdown-item">
+													${out.global.i18n.t("mTable.saveCurrentFilterSet")}
+												</a>
+											</if>
+											<if(state.filters.length)>
+												<a href="" on-click("onSaveCurrentFilterSetAs") class="dropdown-item">
+													${out.global.i18n.t("mTable.saveCurrentFilterSetAs")}
+												</a>
+											</if>
+											<a href="" on-click("onManageFilters") class="dropdown-item">
+												${out.global.i18n.t("mTable.manageFilters")}
+											</a>
+											<if(state.filters.length)>
+												<a href="" on-click("onRemoveAllFilters") class="dropdown-item">
+													${out.global.i18n.t("mTable.removeAllFilters")}
+												</a>
+											</if>
+										</div>
+									</div>
+								</div>
+							</p>
+						</if>
 						<p class="z3-mt-top-control mt-1 mr-1">
 							<button
 								class="button is-light"
 								type="button"
-								on-click("onTableWidgetsClick")
+								on-click("onTableSettingsClick")
 								aria-haspopup="false">
 								<div class="z3-mt-icon-wrap">
 									<span class="icon">
-										<i class="mdi mdi-widgets-outline"/>
+										<i class="mdi mdi-table-edit"/>
 									</span>
 								</div>
-								${out.global.i18n.t("mTable.tableWidgets")}
+								${out.global.i18n.t("mTable.tableSettings")}
 							</button>
 						</p>
-					</if>
-					<if(input.filter && input.filter.length)>
-						<p class="z3-mt-top-control mt-1 mr-1">
-							<div class=`dropdown${
-								state.dropdownVisible["filterGeneric"] ? " is-active" : ""
-							}`>
-								<div class="dropdown-trigger">
-									<button
-										class="button is-light"
-										type="button"
-										data-dropdown="true"
-										on-click("onTopButtonClick")
-										data-button="filterGeneric">
-										<div class="z3-mt-icon-wrap">
-											<span class="icon">
-												<i class="mdi mdi-filter-outline"/>
-											</span>
-										</div>
-										${out.global.i18n.t("mTable.filter")}
-									</button>
-								</div>
-								<div class="dropdown-menu" role="menu">
-									<div class="dropdown-content">
-										<a href="" on-click("onAddFilterClick") class="dropdown-item">
-											${out.global.i18n.t("mTable.addFilter")}
-										</a>
-										<a href="" on-click("onAddRawFilterClick") class="dropdown-item">
-											${out.global.i18n.t("mTable.rawFilterEdit")}
-										</a>
-										<if(state.filterCurrentId)>
-											<a href="" on-click("onSaveCurrentFilterSet") class="dropdown-item">
-												${out.global.i18n.t("mTable.saveCurrentFilterSet")}
-											</a>
-										</if>
-										<if(state.filters.length)>
-											<a href="" on-click("onSaveCurrentFilterSetAs") class="dropdown-item">
-												${out.global.i18n.t("mTable.saveCurrentFilterSetAs")}
-											</a>
-										</if>
-										<a href="" on-click("onManageFilters") class="dropdown-item">
-											${out.global.i18n.t("mTable.manageFilters")}
-										</a>
-										<if(state.filters.length)>
-											<a href="" on-click("onRemoveAllFilters") class="dropdown-item">
-												${out.global.i18n.t("mTable.removeAllFilters")}
-											</a>
-										</if>
-									</div>
-								</div>
-							</div>
-						</p>
-					</if>
-					<p class="z3-mt-top-control mt-1 mr-1">
-						<button
-							class="button is-light"
-							type="button"
-							on-click("onTableSettingsClick")
-							aria-haspopup="false">
-							<div class="z3-mt-icon-wrap">
-								<span class="icon">
-									<i class="mdi mdi-table-edit"/>
-								</span>
-							</div>
-							${out.global.i18n.t("mTable.tableSettings")}
-						</button>
-					</p>
+					</div>
+				</if>
+			</div>
+			<div class="column">
+				<div class="control has-icons-right mt-1">
+					<input
+						class="input"
+						type="text"
+						on-input("onSearchFieldInput")
+						value=state.searchText
+						id=`${input.id}_searchInput`/>
+					<span class="icon is-small is-right">
+						<i class="mdi mdi-magnify"/>
+					</span>
 				</div>
-			</if>
-		</div>
-		<div class="column">
-			<div class="control has-icons-right mt-1">
-				<input
-					class="input"
-					type="text"
-					on-input("onSearchFieldInput")
-					value=state.searchText
-					id=`${input.id}_searchInput`/>
-				<span class="icon is-small is-right">
-					<i class="mdi mdi-magnify"/>
-				</span>
 			</div>
 		</div>
-	</div>
-	<if(input.filter && input.filter.length && state.filters.length)>
-		<div class="field is-grouped is-grouped-multiline mb-2 z3-ap-noselect">
-			<if(state.filterCurrentId)>
-				<div class="control">
-					<div class="tags">
-						<div class="tag is-success z3-mt-filter-meta">
-							${state.filterCurrentTitle}
-						</div>
-					</div>
-				</div>
-			</if>
-			<for|f, i| of=state.filters>
-				<if(f.type === "raw")>
+		<if(input.filter && input.filter.length && state.filters.length)>
+			<div class="field is-grouped is-grouped-multiline mb-2 z3-ap-noselect">
+				<if(state.filterCurrentId)>
 					<div class="control">
-						<div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
-							<div class="tag is-info" on-click("onFilterTagClick")>
-								<div class="z3-mt-filter-tag-label">
-									${out.global.i18n.t("mTable.rawValue")}
-								</div>
+						<div class="tags">
+							<div class="tag is-success z3-mt-filter-meta">
+								${state.filterCurrentTitle}
 							</div>
-							<a class="tag is-delete" on-click("onFilterTagDeleteClick")/>
 						</div>
 					</div>
 				</if>
-				<else>
-					<div class="control">
-						<div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
-							<div class="tag is-info" on-click("onFilterTagClick")>
-								<div
-									class="z3-mt-filter-tag-label z3-mt-filter-tag-label-short"
-									data-tippy-content=`${f.label}`>
-									${f.label}
+				<for|f, i| of=state.filters>
+					<if(f.type === "raw")>
+						<div class="control">
+							<div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
+								<div class="tag is-info" on-click("onFilterTagClick")>
+									<div class="z3-mt-filter-tag-label">
+										${out.global.i18n.t("mTable.rawValue")}
+									</div>
 								</div>
+								<a class="tag is-delete" on-click("onFilterTagDeleteClick")/>
 							</div>
-							<span
-								class="tag is-dark"
-								on-click("onFilterTagClick")
-								data-tippy-content=out.global.i18n.t(`mTable.filter.${f.mode}`)>
-								${out.global.i18n.t(`mTable.filter.${f.mode}Short`)}
-							</span>
-							<div class="tag is-link" on-click("onFilterTagClick")>
+						</div>
+					</if>
+					<else>
+						<div class="control">
+							<div class="tags has-addons z3-mt-filter-tag" data-filterindex=(i + 1)>
+								<div class="tag is-info" on-click("onFilterTagClick")>
+									<div
+										class="z3-mt-filter-tag-label z3-mt-filter-tag-label-short"
+										data-tippy-content=`${f.label}`>
+										${f.label}
+									</div>
+								</div>
 								<span
-									class="z3-mt-filter-tag-label"
-									data-tippy-content=(f.value.label || out.global.i18n.t("mTable.filter.null"))>
-									${f.value.label || out.global.i18n.t("mTable.filter.null")}
+									class="tag is-dark"
+									on-click("onFilterTagClick")
+									data-tippy-content=out.global.i18n.t(`mTable.filter.${f.mode}`)>
+									${out.global.i18n.t(`mTable.filter.${f.mode}Short`)}
 								</span>
-								<if(f.value.plus > 0)>
-									<span class="z3-mt-filter-tag-plus">+${f.value.plus}</span>
-								</if>
+								<div class="tag is-link" on-click("onFilterTagClick")>
+									<span
+										class="z3-mt-filter-tag-label"
+										data-tippy-content=(f.value.label || out.global.i18n.t("mTable.filter.null"))>
+										${f.value.label || out.global.i18n.t("mTable.filter.null")}
+									</span>
+									<if(f.value.plus > 0)>
+										<span class="z3-mt-filter-tag-plus">+${f.value.plus}</span>
+									</if>
+								</div>
+								<a class="tag is-delete" on-click("onFilterTagDeleteClick")/>
 							</div>
-							<a class="tag is-delete" on-click("onFilterTagDeleteClick")/>
+						</div>
+					</else>
+				</for>
+			</div>
+		</if>
+		<if(input.widgets && state.widgetsView.length)>
+			<div class="columns is-multiline is-variable is-1">
+				<for|w| of=state.widgetsView>
+					<div class="column is-narrow mb-0">
+						<div class="message">
+							<div class="message-body p-2">
+								<div class="menu-label m-0">${w.title}</div>
+								<div>${w.value}</div>
+							</div>
 						</div>
 					</div>
-				</else>
-			</for>
-		</div>
-	</if>
-	<if(input.widgets && state.widgetsView.length)>
-		<div class="columns is-multiline is-variable is-1">
-			<for|w| of=state.widgetsView>
-				<div class="column is-narrow mb-0">
-					<div class="message">
-						<div class="message-body p-2">
-							<div class="menu-label m-0">${w.title}</div>
-							<div>${w.value}</div>
-						</div>
-					</div>
-				</div>
-			</for>
-		</div>
-	</if>
-	<if(state.error)>
-		<div class="notification is-danger z3-ap-noselect">${state.error}</div>
-	</if>
-	<else>
+				</for>
+			</div>
+		</if>
+		<if(state.error)>
+			<div class="notification is-danger z3-ap-noselect">${state.error}</div>
+		</if>
+	</div>
+	<!-- <div class="z3-mt-controls-dummy" id=`${input.id}_controls_dummy` style={display:"none"}/> -->
+	<!-- Controls Wrap End -->
+	<if(!state.error)>
+		<div style={position:"relative"}>
 		<div class="z3-mt-table-container" id=`${input.id}_tableContainer`>
 			<table
-				class=`${input.css} z3-mt-table-wrap z3-mt-grip-resizable`
+				class=`${input.css} table is-bordered is-striped is-hoverable z3-mt-table-wrap z3-mt-grip-resizable`
 				id=`${input.id}_table`>
 				<thead class="z3-mt-noselect z3-mt-table-head">
 					<tr>
@@ -305,7 +311,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							</if>
 						</for>
 						<if(input.actions && input.actions.length)>
-							<th class="z3-mt-actions-wrap">${input.actionsTitle}</th>
+							<th class="z3-mt-actions-wrap" id=`${input.id}_actions_th`>${input.actionsTitle}</th>
 						</if>
 					</tr>
 				</thead>
@@ -344,18 +350,10 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									<td class="z3-mt-actions-wrap">
 										<for|action| of=input.actions>
 											<button
-												class=`${action.css} z3-mt-action-button${
-													action.tooltip ? " tooltip" : ""
-												}`
-												id=`${input.id}_${action.id}_${row.id || row._id}`
-												data-action=action.id
-												data-id=(row.id || row._id)
-												type="button"
-												on-click("onActionButtonClick")
-												data-tippy-content=action.text>
+												class=`${action.css} z3-mt-action-button`>
 												<if(action.icon)>
 													<span class="icon">
-														<i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
+														<i class=action.icon/>
 													</span>
 												</if>
 												<if(action.displayText && action.text)>&nbsp;${action.text}</if>
@@ -381,6 +379,51 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				</tbody>
 			</table>
 		</div>
+			<if(input.actions && input.actions.length)>
+				<div id=`${input.id}_actions_float` class="z3-mt-actions-float">
+					<table
+						class=`${input.css} table is-bordered is-striped is-hoverable z3-mt-table-wrap z3-mt-grip-resizable`
+						id=`${input.id}_table_actions`>
+						<thead class="z3-mt-noselect z3-mt-table-head">
+							<tr>
+								<th class="z3-mt-actions-wrap">${input.actionsTitle}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<if(state.data.length)>
+								<for|row| of=state.data>
+									<tr>
+										<if(input.actions && input.actions.length)>
+											<td class="z3-mt-actions-wrap">
+												<for|action| of=input.actions>
+													<button
+														class=`${action.css} z3-mt-action-button${
+															action.tooltip ? " tooltip" : ""
+														}`
+														id=`${input.id}_${action.id}_${row.id || row._id}`
+														data-action=action.id
+														data-id=(row.id || row._id)
+														type="button"
+														on-click("onActionButtonClick")
+														data-tippy-content=action.text>
+														<if(action.icon)>
+															<span class="icon">
+																<i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
+															</span>
+														</if>
+														<if(action.displayText && action.text)>&nbsp;${action.text}</if>
+													</button>
+												</for>
+											</td>
+										</if>
+									</tr>
+								</for>
+							</if>					
+						</tbody>
+					</table>
+				</div>
+			</if>
+		</div>
 		<div class="z3-mt-table-meter" id=`${input.id}_tableMeter`/>
 		<mpagination
 			on-mount("onPaginationMount")
@@ -388,7 +431,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			css="is-small mb-0 mt-4"
 			on-page-click("onPageClick")
 			key=`${input.id}_pagination`/>
-	</else>
+	</if>
 	<if(state.loading)>
 		<div class="z3-mt-loading">
 			<span class="button is-white is-loading is-large z3-mt-loading-spinner">
@@ -1022,7 +1065,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									${out.global.i18n.t("mTable.recycledDeleteAll")}
 								</button>
 							</div>
-							<table class="table is-bordered is-striped is-hoverable is-fullwidth">
+							<table class="is-fullwidth">
 								<thead>
 									<tr>
 										<th class="z3-mt-td">

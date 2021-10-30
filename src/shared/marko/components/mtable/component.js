@@ -153,6 +153,14 @@ module.exports = class {
         document.addEventListener("touchmove", this.onColumnMoveEventHandler.bind(this));
         document.addEventListener("touchend", this.onColumnUpEventHandler.bind(this));
         window.addEventListener("resize", throttle(this.setupColumnResize.bind(this), 100));
+        window.addEventListener("resize", throttle(this.setupControlsResize.bind(this), 100));
+        this.setupControlsResize();
+        if (this.input.actions) {
+            window.addEventListener("resize", this.actionsResize.bind(this));
+            this.actionsResize();
+        }
+        window.addEventListener("scroll", throttle(this.scrollEventHandler.bind(this), 100));
+        this.scrollEventHandler();
         const cookies = new Cookies(this.cookieOptions);
         const token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
         this.setState("token", token);
@@ -160,6 +168,50 @@ module.exports = class {
         this.calculateTableMaxWidth();
         if (this.pagination) {
             this.pagination.func.generatePagination(this.state.pagesCount || 1);
+        }
+    }
+
+    setupControlsResize() {
+        const table = document.getElementById(`${this.input.id}_tableContainer`);
+        const controls = document.getElementById(`${this.input.id}_controls_wrap`);
+        if (table && controls) {
+            controls.style.width = `${parseFloat(window.getComputedStyle(table).width.replace(/px/, ""))}px`;
+        }
+    }
+
+    scrollEventHandler() {
+        const wrap = document.getElementById(`${this.input.id}_wrap`);
+        const controls = document.getElementById(`${this.input.id}_controls_wrap`);
+        const navbar = document.getElementById("z3_main_navbar");
+        const table = document.getElementById(`${this.input.id}_tableContainer`);
+        if (navbar && controls) {
+            const rectWrap = wrap.getBoundingClientRect();
+            // const tableWrap = table.getBoundingClientRect();
+            const rectControls = controls.getBoundingClientRect();
+            if (!this.initControlsTop) {
+                this.initControlsTop = rectWrap.top;
+            }
+            const rectNavbar = navbar.getBoundingClientRect();
+            console.log(`scrollTop: ${document.documentElement.scrollTop} --- ${this.initControlsTop - rectNavbar.height}`);
+            if (this.initControlsTop - rectNavbar.height <= document.documentElement.scrollTop) {
+                controls.style.position = "fixed";
+                controls.style.top = `${this.initControlsTop - rectNavbar.height - 10}px`;
+                table.style.marginTop = `${rectControls.height - 9}px`;
+            } else {
+                controls.style.position = "relative";
+                controls.style.top = "unset";
+                table.style.marginTop = "unset";
+            }
+            // if (document.body.scrollTop)
+            // if (rectControls.top <= rectNavbar.height) {
+            //     controls.style.position = "fixed";
+            //     dummy.style.height = `${rectControls.height}px`;
+            //     console.log("Setting fixed");
+            // } else {
+            //     controls.style.position = "unset";
+            //     dummy.style.height = "1px";
+            //     console.log("Setting unset");
+            // }
         }
     }
 
@@ -964,6 +1016,21 @@ module.exports = class {
             }
             this.setTableWidth(window.getComputedStyle(this.resizeTable).width);
             this.resizeTableGrips.map(g => g.style.left = `${this.resizeTableColumnWidths[g.dataset.index] - 5}px`);
+        }
+        this.actionsResize();
+    }
+
+    actionsResize() {
+        if (!this.input.actions) {
+            return;
+        }
+        const table = document.getElementById(`${this.input.id}_tableContainer`);
+        const actionsTh = document.getElementById(`${this.input.id}_actions_th`);
+        const actionsFloat = document.getElementById(`${this.input.id}_actions_float`);
+        if (table && actionsTh && actionsFloat) {
+            actionsFloat.style.width = `${parseFloat(window.getComputedStyle(actionsTh).width.replace(/px/, "")) + 2}px`;
+            const left = parseFloat(window.getComputedStyle(table).width.replace(/px/, "") - window.getComputedStyle(actionsTh).width.replace(/px/, "") - 3);
+            actionsFloat.style.left = `${left}px`;
         }
     }
 
