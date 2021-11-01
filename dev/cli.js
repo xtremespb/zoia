@@ -29,6 +29,7 @@ module.exports = (argv) => ({
         ]
     } : {},
     output: {
+        hashFunction: "xxhash64",
         libraryTarget: "commonjs2",
         path: path.resolve(`${__dirname}/../build/bin`),
         filename: argv.update ? "cli_update.js" : "cli.js",

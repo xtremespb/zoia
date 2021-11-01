@@ -30,6 +30,7 @@ module.exports = (markoPlugin, argv) => ({
         ]
     } : {},
     output: {
+        hashFunction: "xxhash64",
         libraryTarget: "commonjs2",
         path: path.resolve(`${__dirname}/../build/bin`),
         filename: argv.update ? "zoia_update.js" : "zoia.js",

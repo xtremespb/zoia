@@ -132,7 +132,7 @@ const buildAnimation = () => {
         });
         // Start building
         loading = buildAnimation();
-        await npmi.execCommand(`node node_modules/webpack-cli/bin/cli ${params[command]}`);
+        await npmi.execCommand(`node --openssl-legacy-provider node_modules/webpack-cli/bin/cli ${params[command]}`);
         // Remove backups
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/zoia.js.bak`));
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/test.js.bak`));

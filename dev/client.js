@@ -93,6 +93,7 @@ module.exports = (moduleDirs, markoPlugin, argv) => ({
         ] : []
     },
     output: {
+        hashFunction: "xxhash64",
         filename: "[contenthash:8].js",
         path: path.resolve(`${__dirname}/../build/public/${argv.update ? "update_" : "zoia_"}`),
         publicPath: `/zoia/`,
