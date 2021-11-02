@@ -154,7 +154,6 @@ module.exports = class {
         document.addEventListener("touchend", this.onColumnUpEventHandler.bind(this));
         window.addEventListener("resize", throttle(this.setupColumnResize.bind(this), 100));
         window.addEventListener("resize", throttle(this.setupControlsResize.bind(this), 100));
-        this.setupControlsResize();
         if (this.input.actions) {
             window.addEventListener("resize", this.actionsResize.bind(this));
             this.actionsResize();
@@ -169,13 +168,17 @@ module.exports = class {
         if (this.pagination) {
             this.pagination.func.generatePagination(this.state.pagesCount || 1);
         }
+        setTimeout(() => {
+            this.setupControlsResize();
+            this.setupColumnResize();
+        }, 10);
     }
 
     setupControlsResize() {
         const table = document.getElementById(`${this.input.id}_tableContainer`);
         const controls = document.getElementById(`${this.input.id}_controls_wrap`);
         if (table && controls) {
-            controls.style.width = `${parseFloat(window.getComputedStyle(table).width.replace(/px/, ""))}px`;
+            controls.style.width = `${parseFloat(window.getComputedStyle(table).width.replace(/px/, "")) + 1}px`;
         }
     }
 
@@ -184,7 +187,7 @@ module.exports = class {
         const controls = document.getElementById(`${this.input.id}_controls_wrap`);
         const navbar = document.getElementById("z3_main_navbar");
         const table = document.getElementById(`${this.input.id}_tableContainer`);
-        if (navbar && controls) {
+        if (navbar && controls && navbar && table) {
             const rectWrap = wrap.getBoundingClientRect();
             // const tableWrap = table.getBoundingClientRect();
             const rectControls = controls.getBoundingClientRect();
@@ -192,26 +195,17 @@ module.exports = class {
                 this.initControlsTop = rectWrap.top;
             }
             const rectNavbar = navbar.getBoundingClientRect();
-            console.log(`scrollTop: ${document.documentElement.scrollTop} --- ${this.initControlsTop - rectNavbar.height}`);
             if (this.initControlsTop - rectNavbar.height <= document.documentElement.scrollTop) {
                 controls.style.position = "fixed";
-                controls.style.top = `${this.initControlsTop - rectNavbar.height - 10}px`;
+                controls.style.top = `${rectNavbar.height}px`;
+                controls.style.paddingTop = "10px";
                 table.style.marginTop = `${rectControls.height - 9}px`;
             } else {
                 controls.style.position = "relative";
                 controls.style.top = "unset";
                 table.style.marginTop = "unset";
+                controls.style.paddingTop = "unset";
             }
-            // if (document.body.scrollTop)
-            // if (rectControls.top <= rectNavbar.height) {
-            //     controls.style.position = "fixed";
-            //     dummy.style.height = `${rectControls.height}px`;
-            //     console.log("Setting fixed");
-            // } else {
-            //     controls.style.position = "unset";
-            //     dummy.style.height = "1px";
-            //     console.log("Setting unset");
-            // }
         }
     }
 
@@ -995,6 +989,13 @@ module.exports = class {
     }
 
     setupColumnResize() {
+        const wrap = document.getElementById(`${this.input.id}_wrap`);
+        if (wrap) {
+            const rectWrap = wrap.getBoundingClientRect();
+            if (!this.initControlsTop) {
+                this.initControlsTop = rectWrap.top;
+            }
+        }
         this.calculateTableMaxWidth();
         this.resizeTable = document.getElementById(`${this.input.id}_table`);
         if (this.resizeTable) {
