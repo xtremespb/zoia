@@ -8,7 +8,7 @@
         "user": "",
         "group": ""
     },
-    "serveStatic": true,
+    "serveStatic": true,    
     "pm2": {
         "enabled": false,
         "script": "./build/bin/zoia.js",
@@ -29,6 +29,7 @@
     "logLevel": "info",
     "trustProxy": true,
     "stackTrace": true,
+    "opensslLegacyProvider": false,
     "modules": ["backup", "files", "nav", "pages", "registry"],
     "templates": ["default"],
     "email": {

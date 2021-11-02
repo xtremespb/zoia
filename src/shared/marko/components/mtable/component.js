@@ -195,11 +195,13 @@ module.exports = class {
                 this.initControlsTop = rectWrap.top;
             }
             const rectNavbar = navbar.getBoundingClientRect();
-            if (this.initControlsTop - rectNavbar.height <= document.documentElement.scrollTop) {
+            console.log(this.initControlsTop - 15 - rectNavbar.height);
+            console.log(document.documentElement.scrollTop);
+            if (this.initControlsTop - 15 - rectNavbar.height <= document.documentElement.scrollTop) {
                 controls.style.position = "fixed";
                 controls.style.top = `${rectNavbar.height}px`;
-                controls.style.paddingTop = "10px";
-                table.style.marginTop = `${rectControls.height - 9}px`;
+                controls.style.paddingTop = "15px";
+                table.style.marginTop = `${rectControls.height}px`;
             } else {
                 controls.style.position = "relative";
                 controls.style.top = "unset";
@@ -996,6 +998,7 @@ module.exports = class {
                 this.initControlsTop = rectWrap.top;
             }
         }
+        console.log(this.initControlsTop);
         this.calculateTableMaxWidth();
         this.resizeTable = document.getElementById(`${this.input.id}_table`);
         if (this.resizeTable) {
