@@ -3,6 +3,7 @@ const commandLineArgs = require("command-line-args");
 const fs = require("fs-extra");
 const path = require("path");
 const NPMI = require("./npmi");
+const systemConfig = require("../etc/system.json");
 
 const options = commandLineArgs([{
     name: "dev",
@@ -132,7 +133,7 @@ const buildAnimation = () => {
         });
         // Start building
         loading = buildAnimation();
-        await npmi.execCommand(`node node_modules/webpack-cli/bin/cli ${params[command]}`);
+        await npmi.execCommand(`node${systemConfig.opensslLegacyProvider ? " --openssl-legacy-provider" : ""} node_modules/webpack-cli/bin/cli ${params[command]}`);
         // Remove backups
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/zoia.js.bak`));
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/test.js.bak`));

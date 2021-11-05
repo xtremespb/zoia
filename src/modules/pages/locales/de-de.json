@@ -38,5 +38,11 @@
 	"date": "Datum",
 	"dateHelpText": "Erscheinungstermin",
 	"areaMeta": "Metadaten",
-	"areaContent": "Seiteninhalt und Anhänge"
+	"areaContent": "Seiteninhalt und Anhänge",
+	"addPageRaw": "Seite hinzufügen (Raw)",
+	"addPagePM": "Seite hinzufügen (PM)",
+	"editPagePM": "Seite bearbeiten (PM)",
+	"engine": "Engine",
+	"rawEngine": "Raw",
+	"pmEngine": "PM"
 }
