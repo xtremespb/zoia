@@ -34,6 +34,7 @@ Text Input
 					class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
 						state.item.readOnly ? " has-background-white-bis" : ""
 					}`
+					id=`${input.id}_${state.item.id}`
 					key=`mf_ctl_${state.item.id}`
 					type=(state.item.textType || "text")
 					placeholder=state.item.placeholder

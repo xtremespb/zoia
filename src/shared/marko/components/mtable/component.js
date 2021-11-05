@@ -154,12 +154,14 @@ module.exports = class {
         document.addEventListener("touchend", this.onColumnUpEventHandler.bind(this));
         window.addEventListener("resize", throttle(this.setupColumnResize.bind(this), 100));
         window.addEventListener("resize", throttle(this.setupControlsResize.bind(this), 100));
-        if (this.input.actions) {
+        if (this.input.actions && this.input.floatingActions) {
             window.addEventListener("resize", this.actionsResize.bind(this));
             this.actionsResize();
         }
-        window.addEventListener("scroll", throttle(this.scrollEventHandler.bind(this), 100));
-        this.scrollEventHandler();
+        if (this.input.stickyControls) {
+            window.addEventListener("scroll", throttle(this.scrollEventStickyHandler.bind(this), 100));
+            this.scrollEventStickyHandler();
+        }
         const cookies = new Cookies(this.cookieOptions);
         const token = cookies.get(`${this.siteId || "zoia3"}.authToken`);
         this.setState("token", token);
@@ -182,12 +184,16 @@ module.exports = class {
         }
     }
 
-    scrollEventHandler() {
+    scrollEventStickyHandler() {
+        if (!this.input.stickyControls) {
+            return;
+        }
         const wrap = document.getElementById(`${this.input.id}_wrap`);
         const controls = document.getElementById(`${this.input.id}_controls_wrap`);
         const navbar = document.getElementById("z3_main_navbar");
         const table = document.getElementById(`${this.input.id}_tableContainer`);
-        if (navbar && controls && navbar && table) {
+        const dummy = document.getElementById(`${this.input.id}_controls_dummy`);
+        if (navbar && controls && navbar && table && dummy) {
             const rectWrap = wrap.getBoundingClientRect();
             // const tableWrap = table.getBoundingClientRect();
             const rectControls = controls.getBoundingClientRect();
@@ -195,18 +201,19 @@ module.exports = class {
                 this.initControlsTop = rectWrap.top;
             }
             const rectNavbar = navbar.getBoundingClientRect();
-            console.log(this.initControlsTop - 15 - rectNavbar.height);
-            console.log(document.documentElement.scrollTop);
-            if (this.initControlsTop - 15 - rectNavbar.height <= document.documentElement.scrollTop) {
+            if (this.initControlsTop - rectNavbar.height <= document.documentElement.scrollTop) {
                 controls.style.position = "fixed";
                 controls.style.top = `${rectNavbar.height}px`;
-                controls.style.paddingTop = "15px";
-                table.style.marginTop = `${rectControls.height}px`;
+                controls.style.paddingTop = "12px";
+                // table.style.marginTop = `${rectControls.height}px`;
+                dummy.style.height = `${rectControls.height - 12}px`;
+                dummy.style.display = "block";
             } else {
                 controls.style.position = "relative";
                 controls.style.top = "unset";
-                table.style.marginTop = "unset";
+                // table.style.marginTop = "unset";
                 controls.style.paddingTop = "unset";
+                dummy.style.display = "none";
             }
         }
     }
@@ -998,7 +1005,6 @@ module.exports = class {
                 this.initControlsTop = rectWrap.top;
             }
         }
-        console.log(this.initControlsTop);
         this.calculateTableMaxWidth();
         this.resizeTable = document.getElementById(`${this.input.id}_table`);
         if (this.resizeTable) {
@@ -1025,7 +1031,7 @@ module.exports = class {
     }
 
     actionsResize() {
-        if (!this.input.actions) {
+        if (!this.input.floatingActions || !this.input.actions) {
             return;
         }
         const table = document.getElementById(`${this.input.id}_tableContainer`);

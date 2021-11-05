@@ -256,7 +256,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			<div class="notification is-danger z3-ap-noselect">${state.error}</div>
 		</if>
 	</div>
-	<!-- <div class="z3-mt-controls-dummy" id=`${input.id}_controls_dummy` style={display:"none"}/> -->
+	<div class="z3-mt-controls-dummy" id=`${input.id}_controls_dummy` style={display:"none"}/>
 	<!-- Controls Wrap End -->
 	<if(!state.error)>
 		<div style={position:"relative"}>
@@ -347,19 +347,44 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									</if>
 								</for>
 								<if(input.actions && input.actions.length)>
-									<td class="z3-mt-actions-wrap">
-										<for|action| of=input.actions>
-											<button
-												class=`${action.css} z3-mt-action-button`>
-												<if(action.icon)>
-													<span class="icon">
-														<i class=action.icon/>
-													</span>
-												</if>
-												<if(action.displayText && action.text)>&nbsp;${action.text}</if>
-											</button>
-										</for>
-									</td>
+									<if(input.floatingActions)>
+										<td class="z3-mt-actions-wrap">
+											<for|action| of=input.actions>
+												<button
+													class=`${action.css} z3-mt-action-button`>
+													<if(action.icon)>
+														<span class="icon">
+															<i class=action.icon/>
+														</span>
+													</if>
+													<if(action.displayText && action.text)>&nbsp;${action.text}</if>
+												</button>
+											</for>
+										</td>
+									</if>
+									<else>
+										<td class="z3-mt-actions-wrap">
+											<for|action| of=input.actions>
+												<button
+													class=`${action.css} z3-mt-action-button${
+														action.tooltip ? " tooltip" : ""
+													}`
+													id=`${input.id}_${action.id}_${row.id || row._id}`
+													data-action=action.id
+													data-id=(row.id || row._id)
+													type="button"
+													on-click("onActionButtonClick")
+													data-tippy-content=action.text>
+													<if(action.icon)>
+														<span class="icon">
+															<i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
+														</span>
+													</if>
+													<if(action.displayText && action.text)>&nbsp;${action.text}</if>
+												</button>
+											</for>
+										</td>
+									</else>
 								</if>
 							</tr>
 						</for>
@@ -379,7 +404,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 				</tbody>
 			</table>
 		</div>
-			<if(input.actions && input.actions.length)>
+			<if(input.floatingActions && input.actions && input.actions.length)>
 				<div id=`${input.id}_actions_float` class="z3-mt-actions-float">
 					<table
 						class=`${input.css} table is-bordered is-striped is-hoverable z3-mt-table-wrap z3-mt-grip-resizable`
@@ -393,7 +418,6 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 							<if(state.data.length)>
 								<for|row| of=state.data>
 									<tr>
-										<if(input.actions && input.actions.length)>
 											<td class="z3-mt-actions-wrap">
 												<for|action| of=input.actions>
 													<button
@@ -415,7 +439,6 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 													</button>
 												</for>
 											</td>
-										</if>
 									</tr>
 								</for>
 							</if>					
