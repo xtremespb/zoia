@@ -18,7 +18,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			label: out.global.i18n.t("mForm.pm.header.title"),
 			autoFocus: true,
 			mandatory: true,
-			shared: true,
+			shared: true
 		},
 		{
 			id: "classColumns",
@@ -26,7 +26,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			label: out.global.i18n.t("mForm.pm.columnsParagraph.classColumns"),
 			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
 			css: "is-fullwidth",
-			shared: true,
+			shared: true
 		},
 		{
 			id: "content",
@@ -36,7 +36,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			noTopButtons: true,
 			simple: true,
 			source: false,
-			shared: false,
+			shared: false
 		},
 		{
 			id: "image",
@@ -46,29 +46,33 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 			instant: true,
 			shared: false,
 			buttonLabel: out.global.i18n.t("mForm.pm.columnsImage.selectImage")
-		}, 
-		[{
-			id: "classColumn",
-			type: "text",
-			label: out.global.i18n.t("mForm.pm.columnsParagraph.classColumn"),
-			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
-			css: "is-fullwidth",
-			shared: false,
-		}, {
-			id: "classParagraph",
-			type: "text",
-			label: out.global.i18n.t("mForm.pm.columnsImage.classParagraph"),
-			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
-			css: "is-fullwidth",
-			shared: false,
-		}, {
-			id: "classImage",
-			type: "text",
-			label: out.global.i18n.t("mForm.pm.columnsImage.classImage"),
-			helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
-			css: "is-fullwidth",
-			shared: false,
-		}]
+		},
+		[
+			{
+				id: "classColumn",
+				type: "text",
+				label: out.global.i18n.t("mForm.pm.columnsParagraph.classColumn"),
+				helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+				css: "is-fullwidth",
+				shared: false
+			},
+			{
+				id: "classParagraph",
+				type: "text",
+				label: out.global.i18n.t("mForm.pm.columnsImage.classParagraph"),
+				helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+				css: "is-fullwidth",
+				shared: false
+			},
+			{
+				id: "classImage",
+				type: "text",
+				label: out.global.i18n.t("mForm.pm.columnsImage.classImage"),
+				helpText: out.global.i18n.t("mForm.pm.header.classHelpText"),
+				css: "is-fullwidth",
+				shared: false
+			}
+		]
 	]
 	tabsCount=8
 	tabsCountInit=2

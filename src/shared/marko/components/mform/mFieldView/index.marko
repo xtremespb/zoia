@@ -1,0 +1,310 @@
+<span>${state.item.type}</span>
+<!--
+Text Input
+iMask
+-->
+<if(state.item.type === "text" || state.item.type === "imask")>
+	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+		<label class="label mb-0" style="white-space:nowrap">
+			${state.item.label}:
+		</label>
+		<div>${input.value || "–"}</div>
+		<if(state.item.helpText)>
+			<p class="help">${state.item.helpText}</p>
+		</if>
+	</div>
+</if>
+<!--
+File Input
+-->
+<if(state.item.type === "file" && state.visible)>
+	<label class="label mb-0">${state.item.label}:</label>
+	<if(input.value && input.value.length)>
+		<div class="z3-mf-margin-small-top">
+			<for|file, index| of=input.value>
+				<div>
+					<if(file.data || state.item.noDownload)>${file.name}</if>
+					<else>
+						<a href=`/z3/core/download?id=${file.id}` target="_blank">${file.name}</a>
+					</else>
+				</div>
+			</for>
+		</div>
+	</if>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Button
+-->
+<if(state.item.type === "button" && state.visible)>
+	<button
+		class=`button ${state.item.css || ""} ${
+			input.progress && input.progressButtonId === state.item.id
+				? "is-loading"
+				: ""
+		}`
+		id=`${input.id}_${state.item.id}`
+		type=state.item.buttonType
+		data-id=state.item.id
+		tabindex=(state.visible ? "" : "-1")
+		key=`mf_ctl_${state.item.id}`
+		on-click("onButtonClick")>
+		${state.item.label}
+	</button>
+</if>
+<!--
+Button group
+-->
+<if(state.item.type === "buttons" && state.visible)>
+	<div class="buttons">
+		<for|btn| of=state.item.data>
+			<if(btn)>
+				<button
+					class=`button ${btn.css || ""} ${
+						input.progress && input.progressButtonId === btn.id ? "is-loading" : ""
+					}`
+					id=`${input.id}_${btn.id}`
+					type=btn.buttonType
+					data-id=btn.id
+					tabindex=(state.visible ? "" : "-1")
+					key=`mf_ctl_${btn.id}`
+					on-click("onButtonClick")
+					disabled=!state.enabled>
+					${btn.label}
+				</button>
+			</if>
+		</for>
+	</div>
+</if>
+<!--
+Divider
+-->
+<if(state.item.type === "divider" && state.visible)>
+	<div class="z3-mf-divider"/>
+</if>
+<!--
+Message
+-->
+<if(state.item.type === "message" && state.visible)>
+	<div class=(state.item.css || "")>${state.item.text || ""}</div>
+</if>
+<!--
+Radio
+-->
+<if(state.item.type === "radio" && state.visible)>
+	<label class="label mb-0">${state.item.label}:</label>
+	<div>
+		<for|option, index| of=state.item.options>
+			<i class=`icon mdi ${
+				input.value === String(option.value)
+					? "mdi-checkbox-marked-circle-outline"
+					: "mdi-checkbox-blank-circle-outline"
+			}`/>
+			<span>${option.label}</span>
+		</for>
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Checkboxes
+-->
+<if(state.item.type === "checkboxes" && state.visible)>
+	<label class="label mb-0">${state.item.label}:</label>
+	<div>
+		<for|option, index| of=state.item.options>
+			<i class=`icon mdi ${
+				input.value.indexOf(String(option.id)) > -1
+					? "mdi-checkbox-outline"
+					: "mdi-checkbox-blank-outline"
+			}`/>
+			<span>${option.label}</span>
+		</for>
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Checkbox
+-->
+<if(state.item.type === "checkbox" && state.visible)>
+	<if(state.item.label)>
+		<label class="label mb-0">${state.item.label}:</label>
+	</if>
+	<div>
+		<i class=`icon mdi ${
+			input.value ? "mdi-checkbox-outline" : "mdi-checkbox-blank-outline"
+		}`/>
+		<span>${state.item.labelCheckbox}</span>
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Textarea
+-->
+<if(state.item.type === "textarea" && state.visible)>
+	<label class="label">${state.item.label}:</label>
+	<div>${input.value}</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Select
+-->
+<if(state.item.type === "select" && state.visible)>
+	<label class="label mb-0">${state.item.label}:</label>
+	<div>
+		<for|option| of=state.item.options>
+			<if(input.value === String(option.value))>${option.label || "–"}</if>
+		</for>
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Key-Value Input
+-->
+<if(state.item.type === "keyvalue" && state.visible)>
+	<label class="label mb-0">${state.item.label}:</label>
+	<div>
+		${input.value.data && Array.isArray(input.value.data) && input.value.data.length === 0 && state.item.emptyArrayLabel ? state.item.emptyArrayLabel : input.value.label}
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Images Input
+-->
+<if(state.item.type === "images" && state.visible)>
+	<label class="label">${state.item.label}:</label>
+	<if(input.value && input.value.length)>
+		<div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
+			<for|file, index| of=input.value>
+				<div
+					class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow`
+					style=(state.item.css || "")>
+					<div>
+						<if(file.data)>
+							<img src=window.URL.createObjectURL(file.data) class="z3-mf-image"/>
+						</if>
+						<else>
+							<img src=`${out.global.publicFiles}/tn_${file.id}.jpg` class="z3-mf-image"/>
+						</else>
+					</div>
+				</div>
+			</for>
+		</div>
+	</if>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Image Input
+-->
+<if(state.item.type === "image" && state.visible)>
+	<label class="label">${state.item.label}:</label>
+	<if(input.value && input.value.length)>
+		<div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
+			$ const file = input.value[0];
+			<div
+				class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow`
+				style=(state.item.css || "")>
+				<if(file.data)>
+					<img src=window.URL.createObjectURL(file.data) class="z3-mf-image"/>
+				</if>
+				<else>
+					<img src=`${out.global.publicFiles}/tn_${file.id}.jpg` class="z3-mf-image"/>
+				</else>
+			</div>
+		</div>
+	</if>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Range Input
+-->
+<if(state.item.type === "range" && state.visible)>
+	<label class="label">${state.item.label}:</label>
+	<div class="control z3-mf-range-wrap">
+		<input
+			type="range"
+			disabled
+			class=`input${input.errors[state.item.id] ? " is-danger" : ""}`
+			id=`${input.id}_${state.item.id}`
+			key=`mf_ctl_${state.item.id}`
+			value=input.value
+			min=input.item.min
+			max=input.item.max
+			tabindex=(state.visible ? "" : "-1")/>
+		<span class="tag is-light mt-2 ml-2">${input.value}</span>
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Date Picker
+-->
+<if(state.item.type === "datepicker")>
+	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+		<label class="label" style="white-space:nowrap">${state.item.label}:</label>
+		<div class="control has-icons-left">
+			<input
+				type="text"
+				class="input"
+				id=`${input.id}_${state.item.id}`
+				key=`mf_ctl_${state.item.id}`
+				no-update
+				tabindex=(state.visible ? "" : "-1")/>
+			<span class="icon is-small is-left">
+				<i class="mdi mdi-calendar-month"/>
+			</span>
+		</div>
+		<if(state.item.helpText)>
+			<p class="help">${state.item.helpText}</p>
+		</if>
+	</div>
+</if>
+<!--
+Tags Input
+-->
+<if(state.item.type === "tags")>
+	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
+		<label class="label mb-0" style="white-space:nowrap">
+			${state.item.label}:
+		</label>
+		<div>
+			<for|tag, index| of=state.tags>
+				<span class="tag is-dark mr-1">${tag}</span>
+			</for>
+		</div>
+		<if(state.item.helpText)>
+			<p class="help">${state.item.helpText}</p>
+		</if>
+	</div>
+</if>
+<!--
+ACE
+-->
+<if(state.item.type === "ace" && state.visible)>
+	<label class="label mb-0">${state.item.label}:</label>
+	<div class="z3-mf-fv-white">
+		<if(state.item.wysiwyg)>$!{input.value || "–"}</if>
+		<else>${input.value || "–"}</else>
+	</div>
+	<if(state.item.helpText)>
+		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>

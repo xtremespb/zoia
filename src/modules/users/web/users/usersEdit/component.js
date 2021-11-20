@@ -15,6 +15,7 @@ module.exports = class {
         this.lockedModal = this.getComponent("z3_ap_ue_lockedModal");
         if (this.input.id !== "new") {
             this.getComponent("userEditForm").loadData();
+            this.getComponent("userEditForm").func.setViewMode(true);
         }
     }
 

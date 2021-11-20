@@ -255,169 +255,132 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		<if(state.error)>
 			<div class="notification is-danger z3-ap-noselect">${state.error}</div>
 		</if>
+		<!-- Scrollbar Wrap Begin -->
+		<if(input.stickyScrollbar && state.secondScrollbarVisible)>
+			<div id=`${input.id}_scrollbar_wrap` class="z3-mt-scrollbar-wrap" style={"z-index": "50"}>
+				<div id=`${input.id}_scrollbar_inner` style={height:"1px"}>
+				</div>
+			</div>
+		</if>
+		<!-- Scrollbar Wrap End -->
 	</div>
-	<div class="z3-mt-controls-dummy" id=`${input.id}_controls_dummy` style={display:"none"}/>
 	<!-- Controls Wrap End -->
+	<div
+		class="z3-mt-controls-dummy"
+		id=`${input.id}_controls_dummy`
+		style={
+			display: "none"
+		}/>
 	<if(!state.error)>
-		<div style={position:"relative"}>
-		<div class="z3-mt-table-container" id=`${input.id}_tableContainer`>
-			<table
-				class=`${input.css} table is-bordered is-striped is-hoverable z3-mt-table-wrap z3-mt-grip-resizable`
-				id=`${input.id}_table`>
-				<thead class="z3-mt-noselect z3-mt-table-head">
-					<tr>
-						<if(input.checkboxColumn)>
-							<th style="width:43px;min-width:43px;max-width:43px" class="z3-mt-td">
-								<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
-									<input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
-									<div class="state p-primary">
-										<label/>
-									</div>
-								</div>
-							</th>
-						</if>
-						$ let columnIndex = 1;
-						<for|column| of=input.columns>
-							<if(state.columnVisibility[column.id])>
-								<th
-									class=`z3-mt-th ${column.css || ""}`
-									data-id=column.id
-									data-index=columnIndex
-									id=`${input.id}_th_${column.id}`>
-									<div class="z3-mt-th-wrap">
-										<div
-											class=`z3-mt-th-data${column.sortable ? " z3-mt-sortable" : ""}`
-											on-click("onColumnClick")
-											data-id=column.id
-											data-sortable=column.sortable>
-											<div class=`z3-mt-sort mdi ${
-												state.sortDirection === "asc"
-													? "mdi-chevron-up"
-													: "mdi-chevron-down"
-											}${state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"}`/>
-											<span>${column.title}</span>
+		<div style={
+			position: "relative"
+		}>
+			<div class="z3-mt-table-container" id=`${input.id}_tableContainer`>
+				<table
+					class=`${input.css} table is-bordered is-striped is-hoverable z3-mt-table-wrap z3-mt-grip-resizable`
+					id=`${input.id}_table`>
+					<thead class="z3-mt-noselect z3-mt-table-head">
+						<tr>
+							<if(input.checkboxColumn)>
+								<th style="width:43px;min-width:43px;max-width:43px" class="z3-mt-td">
+									<div class="z3-pretty p-default z3-mt-pretty-checkbox-id">
+										<input type="checkbox" on-change("setCheckboxes") checked=state.allCheckboxes/>
+										<div class="state p-primary">
+											<label/>
 										</div>
-										<if(column.resize)>
-											<div
-												class="z3-mt-th-resize"
-												data-index=columnIndex
-												on-mousedown("onColumnResizeMouseDown")>
-												&nbsp;
-											</div>
-										</if>
 									</div>
 								</th>
-								$ columnIndex += 1;
 							</if>
-						</for>
-						<if(input.actions && input.actions.length)>
-							<th class="z3-mt-actions-wrap" id=`${input.id}_actions_th`>${input.actionsTitle}</th>
-						</if>
-					</tr>
-				</thead>
-				<tbody>
-					<if(state.data.length)>
-						<for|row| of=state.data>
-							<tr>
-								<if(input.checkboxColumn)>
-									<td style="width:43px;min-width:43px;max-width:43px" class="z3-mt-td">
-										<div class="z3-pretty p-icon z3-mt-pretty-checkbox-id">
-											<input
-												data-id=(row.id || row._id)
-												type="checkbox"
-												checked=state.checkboxes[`i${row.id || row._id}`]
-												on-change("setCheckbox")/>
-											<div class="state">
-												<i class="icon mdi mdi-check"/>
-												<label/>
+							$ let columnIndex = 1;
+							<for|column| of=input.columns>
+								<if(state.columnVisibility[column.id])>
+									<th
+										class=`z3-mt-th ${column.css || ""}`
+										data-id=column.id
+										data-index=columnIndex
+										id=`${input.id}_th_${column.id}`>
+										<div class="z3-mt-th-wrap">
+											<div
+												class=`z3-mt-th-data${column.sortable ? " z3-mt-sortable" : ""}`
+												on-click("onColumnClick")
+												data-id=column.id
+												data-sortable=column.sortable>
+												<div class=`z3-mt-sort mdi ${
+													state.sortDirection === "asc"
+														? "mdi-chevron-up"
+														: "mdi-chevron-down"
+												}${
+													state.sortId === column.id ? " z3-mt-visible" : " z3-mt-hidden"
+												}`/>
+												<span>${column.title}</span>
 											</div>
+											<if(column.resize)>
+												<div
+													class="z3-mt-th-resize"
+													data-index=columnIndex
+													on-mousedown("onColumnResizeMouseDown")>
+													&nbsp;
+												</div>
+											</if>
 										</div>
-									</td>
+									</th>
+									$ columnIndex += 1;
 								</if>
-								<for|column| of=input.columns.map(c => c.id)>
-									$ const columnData = input.columns.find(c => c.id === column);
-									<if(state.columnVisibility[columnData.id])>
-										<td class=`${columnData.multiline ? "" : "z3-mt-td"}`>
-											$!{row[column] !== null && row[column] !== undefined
-											? input.processValue
-												? input.processValue(row.id || row._id, row[column], column, row)
-												: row[column]
-											: ""}
-										</td>
-									</if>
-								</for>
-								<if(input.actions && input.actions.length)>
-									<if(input.floatingActions)>
-										<td class="z3-mt-actions-wrap">
-											<for|action| of=input.actions>
-												<button
-													class=`${action.css} z3-mt-action-button`>
-													<if(action.icon)>
-														<span class="icon">
-															<i class=action.icon/>
-														</span>
-													</if>
-													<if(action.displayText && action.text)>&nbsp;${action.text}</if>
-												</button>
-											</for>
-										</td>
-									</if>
-									<else>
-										<td class="z3-mt-actions-wrap">
-											<for|action| of=input.actions>
-												<button
-													class=`${action.css} z3-mt-action-button${
-														action.tooltip ? " tooltip" : ""
-													}`
-													id=`${input.id}_${action.id}_${row.id || row._id}`
-													data-action=action.id
+							</for>
+							<if(input.actions && input.actions.length)>
+								<th class="z3-mt-actions-wrap" id=`${input.id}_actions_th`>
+									${input.actionsTitle}
+								</th>
+							</if>
+						</tr>
+					</thead>
+					<tbody>
+						<if(state.data.length)>
+							<for|row| of=state.data>
+								<tr>
+									<if(input.checkboxColumn)>
+										<td style="width:43px;min-width:43px;max-width:43px" class="z3-mt-td">
+											<div class="z3-pretty p-icon z3-mt-pretty-checkbox-id">
+												<input
 													data-id=(row.id || row._id)
-													type="button"
-													on-click("onActionButtonClick")
-													data-tippy-content=action.text>
-													<if(action.icon)>
-														<span class="icon">
-															<i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
-														</span>
-													</if>
-													<if(action.displayText && action.text)>&nbsp;${action.text}</if>
-												</button>
-											</for>
+													type="checkbox"
+													checked=state.checkboxes[`i${row.id || row._id}`]
+													on-change("setCheckbox")/>
+												<div class="state">
+													<i class="icon mdi mdi-check"/>
+													<label/>
+												</div>
+											</div>
 										</td>
-									</else>
-								</if>
-							</tr>
-						</for>
-					</if>
-					<else>
-						<if(state.loading)>
-							<tr>
-								<td colspan="100%">${input.i18n.t("mTable.loading")}</td>
-							</tr>
-						</if>
-						<else>
-							<tr>
-								<td colspan="100%">${input.i18n.t("mTable.noData")}</td>
-							</tr>
-						</else>
-					</else>
-				</tbody>
-			</table>
-		</div>
-			<if(input.floatingActions && input.actions && input.actions.length)>
-				<div id=`${input.id}_actions_float` class="z3-mt-actions-float">
-					<table
-						class=`${input.css} table is-bordered is-striped is-hoverable z3-mt-table-wrap z3-mt-grip-resizable`
-						id=`${input.id}_table_actions`>
-						<thead class="z3-mt-noselect z3-mt-table-head">
-							<tr>
-								<th class="z3-mt-actions-wrap">${input.actionsTitle}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<if(state.data.length)>
-								<for|row| of=state.data>
-									<tr>
+									</if>
+									<for|column| of=input.columns.map(c => c.id)>
+										$ const columnData = input.columns.find(c => c.id === column);
+										<if(state.columnVisibility[columnData.id])>
+											<td class=`${columnData.multiline ? "" : "z3-mt-td"}`>
+												$!{row[column] !== null && row[column] !== undefined
+												? input.processValue
+													? input.processValue(row.id || row._id, row[column], column, row)
+													: row[column]
+												: ""}
+											</td>
+										</if>
+									</for>
+									<if(input.actions && input.actions.length)>
+										<if(input.floatingActions)>
+											<td class="z3-mt-actions-wrap">
+												<for|action| of=input.actions>
+													<button class=`${action.css} z3-mt-action-button`>
+														<if(action.icon)>
+															<span class="icon">
+																<i class=action.icon/>
+															</span>
+														</if>
+														<if(action.displayText && action.text)>&nbsp;${action.text}</if>
+													</button>
+												</for>
+											</td>
+										</if>
+										<else>
 											<td class="z3-mt-actions-wrap">
 												<for|action| of=input.actions>
 													<button
@@ -439,9 +402,64 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 													</button>
 												</for>
 											</td>
+										</else>
+									</if>
+								</tr>
+							</for>
+						</if>
+						<else>
+							<if(state.loading)>
+								<tr>
+									<td colspan="100%">${input.i18n.t("mTable.loading")}</td>
+								</tr>
+							</if>
+							<else>
+								<tr>
+									<td colspan="100%">${input.i18n.t("mTable.noData")}</td>
+								</tr>
+							</else>
+						</else>
+					</tbody>
+				</table>
+			</div>
+			<if(input.floatingActions && input.actions && input.actions.length)>
+				<div id=`${input.id}_actions_float` class="z3-mt-actions-float">
+					<table
+						class=`${input.css} table is-bordered is-striped is-hoverable z3-mt-table-wrap z3-mt-grip-resizable`
+						id=`${input.id}_table_actions`>
+						<thead class="z3-mt-noselect z3-mt-table-head">
+							<tr>
+								<th class="z3-mt-actions-wrap">${input.actionsTitle}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<if(state.data.length)>
+								<for|row| of=state.data>
+									<tr>
+										<td class="z3-mt-actions-wrap">
+											<for|action| of=input.actions>
+												<button
+													class=`${action.css} z3-mt-action-button${
+														action.tooltip ? " tooltip" : ""
+													}`
+													id=`${input.id}_${action.id}_${row.id || row._id}`
+													data-action=action.id
+													data-id=(row.id || row._id)
+													type="button"
+													on-click("onActionButtonClick")
+													data-tippy-content=action.text>
+													<if(action.icon)>
+														<span class="icon">
+															<i class=action.icon data-action=action.id data-id=(row.id || row._id)/>
+														</span>
+													</if>
+													<if(action.displayText && action.text)>&nbsp;${action.text}</if>
+												</button>
+											</for>
+										</td>
 									</tr>
 								</for>
-							</if>					
+							</if>
 						</tbody>
 					</table>
 				</div>

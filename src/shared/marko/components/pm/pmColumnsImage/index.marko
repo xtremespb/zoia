@@ -1,13 +1,22 @@
 <div class=`columns ${input.item.data.classColumns || ""}`>
-	<for|i| of=Array.from(Array(input.item.data.__tabsCount), (_,x) => x + 1)>
-		<div class=`column ${input.item.data[`tab${i}`].classColumn || ""}`>
-            $ const image = input.item.data[`tab${i}`].image;
-            <if(image && image.length)>
-                <img
-                    class=(input.item.data[`tab${i}`].classImage || "")
-                    src=`${out.global.publicFiles}/${image[0].id}${image[0].ext}`/>
-            </if>
-			<div class=(input.item.data[`tab${i}`].classParagraph || "")>$!{input.item.data[`tab${i}`].content}</div>
+	<for|i| of=Array.from(Array(input.item.data.__tabsCount), (_, x) => x + 1)>
+		<div class=`column ${input.item.data[
+			{
+				type: "TemplateLiteral",
+				quasis: ["tab", ""],
+				expressions: [{ type: "Identifier", name: "i" }],
+				nonstandard: false
+			}
+		].classColumn || ""}`>
+			$ const image = input.item.data[`tab${i}`].image;
+			<if(image && image.length)>
+				<img
+					class=(input.item.data[`tab${i}`].classImage || "")
+					src=`${out.global.publicFiles}/${image[0].id}${image[0].ext}`/>
+			</if>
+			<div class=(input.item.data[`tab${i}`].classParagraph || "")>
+				$!{input.item.data[`tab${i}`].content}
+			</div>
 		</div>
 	</for>
 </div>
