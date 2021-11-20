@@ -57,45 +57,64 @@ style.scss {
 				$ let areaBorder = false;
 				<for|tItem, tIndex| of=input.fields>
 					<if(typeof tItem === "object" && tItem.type)>
-							<!-- Area-related code start -->
-							<if(tItem.type === "areaStart")>
-								$ isArea = true;
-								$ areaClass = tItem.css || "";
-								$ areaBorder = !!tItem.border;
-								<div class=`z3-mf-area-start${areaBorder ? " z3-mf-area-border-s" : ""}`>
-									<if(tItem.label)>${tItem.label}</if>
-								</div>
-								<if(!areaBorder)>
-									<div class=`z3-mf-area-round-top ${areaClass}`/>
-								</if>
+						<!-- Area-related code start -->
+						<if(tItem.type === "areaStart")>
+							$ isArea = true;
+							$ areaClass = tItem.css || "";
+							$ areaBorder = !!tItem.border;
+							<div class=`z3-mf-area-start${areaBorder ? " z3-mf-area-border-s" : ""}`>
+								<if(tItem.label)>${tItem.label}</if>
+							</div>
+							<if(!areaBorder)>
+								<div class=`z3-mf-area-round-top ${areaClass}`/>
 							</if>
-							<if(tItem.type === "areaEnd")>
-								<div class=`z3-mf-area-end${
-									areaBorder
-										? " z3-mf-area-border-e"
-										: " z3-mf-area-round-bottom " + areaClass
-								}`/>
-								<div class=(tItem.css || "")/>
-								$ isArea = false;
-							</if>
-							<div class=(
-								isArea
-									? "z3-mf-area " + areaClass ||
-									  "" + (areaBorder ? " z3-mf-area-border-lr" : "")
-									: ""
-							)>
-								<!-- Area-related code end -->
+						</if>
+						<if(tItem.type === "areaEnd")>
+							<div class=`z3-mf-area-end${
+								areaBorder
+									? " z3-mf-area-border-e"
+									: " z3-mf-area-round-bottom " + areaClass
+							}`/>
+							<div class=(tItem.css || "")/>
+							$ isArea = false;
+						</if>
+						<div class=(
+							isArea
+								? "z3-mf-area " + areaClass ||
+								  "" + (areaBorder ? " z3-mf-area-border-lr" : "")
+								: ""
+						)>
+							<!-- Area-related code end -->
+							<div
+								class="field columns is-multiline z3-mf-field-columns"
+								key=`mf_cmp_${tItem.id}_wrap`
+								style=(state.visible[tItem.id] ? "" : "position:absolute;top:-100000px")>
 								<div
-									class="field columns is-multiline z3-mf-field-columns"
-									key=`mf_cmp_${tItem.id}_wrap`
-									style=(state.visible[tItem.id] ? "" : "position:absolute;top:-100000px")>
-									<div
-										class=`control column ${tItem.wrapCSS || ""}`
-										style=`position:unset;${
-											tItem.alignBottom
-												? "display:flex;flex-direction:column;justify-content:flex-end"
-												: ""
-										}`>
+									class=`control column ${tItem.wrapCSS || ""}`
+									style=`position:unset;${
+										tItem.alignBottom
+											? "display:flex;flex-direction:column;justify-content:flex-end"
+											: ""
+									}`>
+									<if(state.viewMode)>
+										<mFieldView
+											id=input.id
+											key=`mf_cmp_${tItem.id}`
+											item=tItem
+											value=state.data[state.activeTabId][tItem.id]
+											errors=state.errors[state.activeTabId]
+											on-value-change("onValueChange")
+											on-value-set("onValueSet")
+											on-remove-arr-item("onRemoveArrItem")
+											on-button-click("onButtonClick")
+											on-captcha("onCaptcha")
+											progress=state.progress
+											progressButtonId=input.progressButtonId
+											on-get-key-value("onGetKeyValue")
+											on-context-menu("onContextMenu")
+											on-settled("onFieldSettled")/>
+									</if>
+									<else>
 										<mField
 											id=input.id
 											key=`mf_cmp_${tItem.id}`
@@ -112,32 +131,52 @@ style.scss {
 											on-get-key-value("onGetKeyValue")
 											on-context-menu("onContextMenu")
 											on-settled("onFieldSettled")/>
-									</div>
+									</else>
 								</div>
 							</div>
-						</if>
-						<if(Array.isArray(tItem))>
-							<div class=(
-								isArea
-									? `z3-mf-area ${areaClass || ""}${
-											areaBorder ? " z3-mf-area-border-lr" : ""
-									  }`
-									: ""
-							)>
-								<div class=`field columns is-multiline is-gapless z3-mf-field-columns-group`>
-									<for|sItem, sIndex| of=tItem>
-										<div
-											class=`control column ${sItem.wrapCSS || ""}`
-											key=`mf_cmp_${sItem.id}_wrap`
-											style=`${
-												state.visible[sItem.id]
-													? "position:unset;"
-													: "position:absolute;top:-100000px;"
-											}${
-												sItem.alignBottom
-													? "display:flex;flex-direction:column;justify-content:flex-end"
-													: ""
-											}`>
+						</div>
+					</if>
+					<if(Array.isArray(tItem))>
+						<div class=(
+							isArea
+								? `z3-mf-area ${areaClass || ""}${
+										areaBorder ? " z3-mf-area-border-lr" : ""
+								  }`
+								: ""
+						)>
+							<div class=`field columns is-multiline is-gapless z3-mf-field-columns-group`>
+								<for|sItem, sIndex| of=tItem>
+									<div
+										class=`control column ${sItem.wrapCSS || ""}`
+										key=`mf_cmp_${sItem.id}_wrap`
+										style=`${
+											state.visible[sItem.id]
+												? "position:unset;"
+												: "position:absolute;top:-100000px;"
+										}${
+											sItem.alignBottom
+												? "display:flex;flex-direction:column;justify-content:flex-end"
+												: ""
+										}`>
+										<if(state.viewMode)>
+											<mFieldView
+												id=input.id
+												key=`mf_cmp_${sItem.id}`
+												item=sItem
+												value=state.data[state.activeTabId][sItem.id]
+												errors=state.errors[state.activeTabId]
+												on-value-change("onValueChange")
+												on-value-set("onValueSet")
+												on-remove-arr-item("onRemoveArrItem")
+												on-button-click("onButtonClick")
+												on-captcha("onCaptcha")
+												progress=state.progress
+												progressButtonId=input.progressButtonId
+												on-get-key-value("onGetKeyValue")
+												on-context-menu("onContextMenu")
+												on-settled("onFieldSettled")/>
+										</if>
+										<else>
 											<mField
 												id=input.id
 												key=`mf_cmp_${sItem.id}`
@@ -154,22 +193,29 @@ style.scss {
 												on-get-key-value("onGetKeyValue")
 												on-context-menu("onContextMenu")
 												on-settled("onFieldSettled")/>
-										</div>
-									</for>
-								</div>
+										</else>
+									</div>
+								</for>
 							</div>
-						</if>
+						</div>
+					</if>
 				</for>
 			</if>
 		</fieldset>
 		<button type="submit" style="display:none"/>
 	</form>
-	<if((state.tabs && state.tabs.length > 1) || input.tabsActive || input.tabsCount)>
+	<if(
+		(state.tabs && state.tabs.length > 1) ||
+		input.tabsActive ||
+		input.tabsCount
+	)>
 		<div class=`modal${state.tabSettingsDialogActive ? " is-active" : ""}`>
 			<div class="modal-background" on-click("onTabSettingsDialogCloseClick")/>
 			<div class="modal-card">
 				<header class="modal-card-head">
-					<p class="modal-card-title">${input.settingsTitle || input.i18n.t("mForm.languages")}</p>
+					<p class="modal-card-title">
+						${input.settingsTitle || input.i18n.t("mForm.languages")}
+					</p>
 					<button
 						class="delete"
 						aria-label="close"
@@ -178,11 +224,16 @@ style.scss {
 				<section class="modal-card-body">
 					<if(input.tabsCount)>
 						$ const tabsCount = parseInt(input.tabsCount, 10);
-						$ const tabs = Array.from({
-							length: tabsCount
-						}, (v, k) => k + 1);
+						$ const tabs = Array.from(
+							{
+								length: tabsCount
+							},
+							(v, k) => k + 1
+						);
 						<div class="select is-fullwidth">
-							<select value=state.tabsCountSelected on-change("onSettingsDialogTabsCountChange")>
+							<select
+								value=state.tabsCountSelected
+								on-change("onSettingsDialogTabsCountChange")>
 								<for|i| of=tabs>
 									<option selected=(String(i) === String(state.tabsCountSelected))>${i}</option>
 								</for>
@@ -208,7 +259,10 @@ style.scss {
 					</else>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-primary" type="button" on-click("onTabSettingsDialogSaveClick")>
+					<button
+						class="button is-primary"
+						type="button"
+						on-click("onTabSettingsDialogSaveClick")>
 						${input.i18n.t("mForm.save")}
 					</button>
 					<button

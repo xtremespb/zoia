@@ -75,6 +75,7 @@ module.exports = class {
             recycledPagesCount: 1,
             recycledData: [],
             recycledCurrentIds: null,
+            secondScrollbarVisible: false,
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -148,12 +149,17 @@ module.exports = class {
                 this.setState("dropdownVisible", {});
             }
         });
+        const tableContainer = document.getElementById(`${this.input.id}_tableContainer`);
+        if (tableContainer) {
+            this.tableContainerRightOffset = window.innerWidth - tableContainer.getBoundingClientRect().width - tableContainer.getBoundingClientRect().left;
+        }
         document.addEventListener("mousemove", this.onColumnMoveEventHandler.bind(this));
         document.addEventListener("mouseup", this.onColumnUpEventHandler.bind(this));
         document.addEventListener("touchmove", this.onColumnMoveEventHandler.bind(this));
         document.addEventListener("touchend", this.onColumnUpEventHandler.bind(this));
         window.addEventListener("resize", throttle(this.setupColumnResize.bind(this), 100));
         window.addEventListener("resize", throttle(this.setupControlsResize.bind(this), 100));
+        // window.addEventListener("resize", throttle(this.calculateTableContainerWidth.bind(this), 100));
         if (this.input.actions && this.input.floatingActions) {
             window.addEventListener("resize", this.actionsResize.bind(this));
             this.actionsResize();
@@ -173,7 +179,34 @@ module.exports = class {
         setTimeout(() => {
             this.setupControlsResize();
             this.setupColumnResize();
+            // this.adjustSecondScrollbar();
         }, 10);
+    }
+
+    // calculateTableContainerMaxWidth() {
+    //     this.resizeTable = document.getElementById(`${this.input.id}_table`);
+    //     this.resizeTableMeter = document.getElementById(`${this.input.id}_tableMeter`);
+    //     if (this.resizeTable && this.resizeTableMeter) {
+    //         this.resizeTableMeter.style.display = "block";
+    //         this.resizeTableContainer = document.getElementById(`${this.input.id}_tableContainer`);
+    //         this.resizeTable.style.display = "none";
+    //         this.resizeTableContainer.style.maxWidth = window.getComputedStyle(this.resizeTableMeter).width;
+    //         this.resizeTable.style.display = "table";
+    //         this.resizeTableMeter.style.display = "none";
+    //     }
+    // }
+
+    setupSecondScrollbarHandlers() {
+        if (this.input.stickyScrollbar) {
+            const tableWrap = document.getElementById(`${this.input.id}_tableContainer`);
+            const scrollbarWrap = document.getElementById(`${this.input.id}_scrollbar_wrap`);
+            if (tableWrap && scrollbarWrap) {
+                tableWrap.removeEventListener("scroll", this.scrollEventScrollbarHandler.bind(this));
+                tableWrap.addEventListener("scroll", this.scrollEventScrollbarHandler.bind(this));
+                scrollbarWrap.removeEventListener("scroll", this.scrollEventTableHandler.bind(this));
+                scrollbarWrap.addEventListener("scroll", this.scrollEventTableHandler.bind(this));
+            }
+        }
     }
 
     setupControlsResize() {
@@ -184,6 +217,28 @@ module.exports = class {
         }
     }
 
+    scrollEventScrollbarHandler() {
+        if (!this.input.stickyScrollbar) {
+            return;
+        }
+        const tableWrap = document.getElementById(`${this.input.id}_tableContainer`);
+        const scrollbarWrap = document.getElementById(`${this.input.id}_scrollbar_wrap`);
+        if (tableWrap && scrollbarWrap) {
+            scrollbarWrap.scrollLeft = tableWrap.scrollLeft;
+        }
+    }
+
+    scrollEventTableHandler() {
+        if (!this.input.stickyScrollbar) {
+            return;
+        }
+        const tableWrap = document.getElementById(`${this.input.id}_tableContainer`);
+        const scrollbarWrap = document.getElementById(`${this.input.id}_scrollbar_wrap`);
+        if (tableWrap && scrollbarWrap) {
+            tableWrap.scrollLeft = scrollbarWrap.scrollLeft;
+        }
+    }
+
     scrollEventStickyHandler() {
         if (!this.input.stickyControls) {
             return;
@@ -191,11 +246,9 @@ module.exports = class {
         const wrap = document.getElementById(`${this.input.id}_wrap`);
         const controls = document.getElementById(`${this.input.id}_controls_wrap`);
         const navbar = document.getElementById("z3_main_navbar");
-        const table = document.getElementById(`${this.input.id}_tableContainer`);
         const dummy = document.getElementById(`${this.input.id}_controls_dummy`);
-        if (navbar && controls && navbar && table && dummy) {
+        if (navbar && controls && navbar && dummy) {
             const rectWrap = wrap.getBoundingClientRect();
-            // const tableWrap = table.getBoundingClientRect();
             const rectControls = controls.getBoundingClientRect();
             if (!this.initControlsTop) {
                 this.initControlsTop = rectWrap.top;
@@ -205,17 +258,46 @@ module.exports = class {
                 controls.style.position = "fixed";
                 controls.style.top = `${rectNavbar.height}px`;
                 controls.style.paddingTop = "12px";
-                // table.style.marginTop = `${rectControls.height}px`;
                 dummy.style.height = `${rectControls.height - 12}px`;
                 dummy.style.display = "block";
             } else {
                 controls.style.position = "relative";
                 controls.style.top = "unset";
-                // table.style.marginTop = "unset";
                 controls.style.paddingTop = "unset";
                 dummy.style.display = "none";
             }
         }
+        this.adjustSecondScrollbar();
+    }
+
+    adjustSecondScrollbar() {
+        if (!this.input.stickyScrollbar) {
+            return;
+        }
+        const tableWrap = document.getElementById(`${this.input.id}_tableContainer`);
+        const table = document.getElementById(`${this.input.id}_table`);
+        this.adjustSecondScrollbarVisibility(tableWrap, table);
+        setTimeout(() => {
+            const scrollbarWrap = document.getElementById(`${this.input.id}_scrollbar_wrap`);
+            const scrollbarInner = document.getElementById(`${this.input.id}_scrollbar_inner`);
+            if (scrollbarWrap && scrollbarInner && tableWrap && table) {
+                scrollbarInner.style.width = `${table.scrollWidth}px`;
+                scrollbarWrap.style.width = `${tableWrap.offsetWidth}px`;
+            }
+        }, 10);
+    }
+
+    adjustSecondScrollbarVisibility(tableWrapSource, tableSource) {
+        const tableWrap = tableWrapSource || document.getElementById(`${this.input.id}_tableContainer`);
+        const table = tableSource || document.getElementById(`${this.input.id}_table`);
+        if (tableWrap && table) {
+            const isVisible = table.scrollWidth + 2 !== tableWrap.offsetWidth;
+            this.setState("secondScrollbarVisible", isVisible);
+            if (isVisible) {
+                this.setupSecondScrollbarHandlers();
+            }
+        }
+        this.setupSecondScrollbarHandlers();
     }
 
     onPaginationMount() {
@@ -312,6 +394,7 @@ module.exports = class {
                     this.setState("widgetsView", response.data.widgets.view || []);
                 }
                 setTimeout(() => this.setupColumnResize(), 10);
+                setTimeout(() => this.adjustSecondScrollbar(), 100);
                 if (this.pagination) {
                     this.pagination.func.generatePagination(this.state.pagesCount || 1);
                 }
@@ -997,6 +1080,11 @@ module.exports = class {
         }
     }
 
+    calculateTableContainerWidth() {
+        const tableContainer = document.getElementById(`${this.input.id}_tableContainer`);
+        tableContainer.style.width = `${window.innerWidth - tableContainer.getBoundingClientRect().left - this.tableContainerRightOffset}px`;
+    }
+
     setupColumnResize() {
         const wrap = document.getElementById(`${this.input.id}_wrap`);
         if (wrap) {
@@ -1006,6 +1094,7 @@ module.exports = class {
             }
         }
         this.calculateTableMaxWidth();
+        this.calculateTableContainerWidth();
         this.resizeTable = document.getElementById(`${this.input.id}_table`);
         if (this.resizeTable) {
             this.resizeTableHeaders = Array.from(this.resizeTable.querySelectorAll(`#${this.input.id}_table>thead>tr:nth-of-type(1)>th`));

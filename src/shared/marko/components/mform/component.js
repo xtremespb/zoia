@@ -63,6 +63,7 @@ module.exports = class {
             validation: input.validation,
             visible: {},
             options: {},
+            viewMode: typeof input.viewMode === "boolean" ? input.viewMode : false,
         };
         tabs.map(tab => {
             state.data[tab.id] = {};
@@ -99,11 +100,16 @@ module.exports = class {
             getAceInstance: this.getAceInstance.bind(this),
             focus: this.focus.bind(this),
             serialize: this.serialize.bind(this),
+            setViewMode: this.setViewMode.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
         this.captchaSecret = undefined;
         this.fieldsSettled = 0;
+    }
+
+    setViewMode(mode) {
+        this.setState("viewMode", mode);
     }
 
     getDefaultValue(item) {
