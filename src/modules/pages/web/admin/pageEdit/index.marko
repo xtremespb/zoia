@@ -17,6 +17,8 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 	<mform
 		key="pageEditForm"
 		id="pageEditForm"
+		viewMode=(input.id !== "new")
+		modeSwitch=true
 		save={
 			url: "/api/pages/edit/save",
 			extras: {

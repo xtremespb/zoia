@@ -1,4 +1,3 @@
-<span>${state.item.type}</span>
 <!--
 Text Input
 iMask
@@ -31,6 +30,9 @@ File Input
 			</for>
 		</div>
 	</if>
+	<else>
+		<div>&ndash;</div>
+	</else>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
@@ -306,5 +308,25 @@ ACE
 	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
+	</if>
+</if>
+<!--
+Postmodern Engine
+-->
+<if(state.item.type === "postmodern")>
+	<if(input.value && input.value.length)>
+		<for|i, ix| of=input.value>
+			<div class="card card-body is-shadowless p-2 mb-1 z3-mf-pm-list-item">
+				<div class="columns is-variable is-1">
+					<div
+						class="column is-auto">
+						<div class="menu-label mb-0">
+							${out.global.i18n.t(`mForm.pm.item.${i.type}`)}
+						</div>
+						<div>${i.title}</div>
+					</div>
+				</div>
+			</div>
+		</for>
 	</if>
 </if>

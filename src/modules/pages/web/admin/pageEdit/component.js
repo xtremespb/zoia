@@ -25,8 +25,8 @@ module.exports = class {
                     label
                 });
             } else {
+                // this.pageEditForm.func.setViewMode(true);
                 await this.pageEditForm.func.loadData();
-                this.pageEditForm.func.setViewMode(true);
             }
             await this.folderSelectModal.func.loadTree();
         }, 10);
