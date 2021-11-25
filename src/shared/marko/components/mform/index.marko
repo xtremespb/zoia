@@ -8,7 +8,22 @@ style.scss {
 		<div class="columns is-variable is-1">
 			<if(input.modeSwitch)>
 				<div class="column is-narrow">
-					Mode
+					<div class="field has-addons">
+						<p class="control">
+						  <button class=`button z3-mf-mode-button ${state.viewMode ? "is-success is-selected" : "is-light"}` type="button" on-click("setModeView")>
+							<span class="icon is-small">
+							  <i class="mdi mdi-eye-outline"></i>
+							</span>
+						  </button>
+						</p>
+						<p class="control">
+						  <button class=`button z3-mf-mode-button ${state.viewMode ? "is-light" : "is-warning is-selected"}` type="button" on-click("setModeEdit")>
+							<span class="icon is-small">
+							  <i class="mdi mdi-pencil-outline"></i>
+							</span>
+						  </button>
+						</p>
+					</div>
 				</div>
 			</if>
 			<if((input.tabsActive && !input.hideSettings) || input.tabsCount)>

@@ -136,11 +136,11 @@ Button group
 					class=`button ${btn.css || ""} ${
 						input.progress && input.progressButtonId === btn.id ? "is-loading" : ""
 					}`
-					id=`${input.id}_${btn.id}`
 					type=btn.buttonType
 					data-id=btn.id
 					tabindex=(state.visible ? "" : "-1")
 					key=`mf_ctl_${btn.id}`
+					id=`${input.id}_${btn.id}`
 					on-click("onButtonClick")
 					disabled=!state.enabled>
 					${btn.label}
@@ -912,4 +912,57 @@ Postmodern Engine
 		on-save("onPmItemSave")
 		id=`${input.id}_${input.item.id}`/>
 	<preview key=`${input.id}_${input.item.id}_preview`/>
+</if>
+<!--
+Save & Close
+-->
+<if(state.item.type === "saveclose" && state.visible)>
+	<div class="columns mt-0 pt-0 is-mobile is-variable is-1 is-mobile">
+		<div class="column pt-0 pb-0 is-narrow">
+			<div class="field has-addons">
+					<p class="control">
+						<button 
+							class="button is-primary"
+							data-id="save"
+							on-click("onButtonClick")
+							type="button">
+							<span>${out.global.i18n.t("mForm.save")}</span>
+						</button>
+					</p>
+					<p class="control">
+						<div class="dropdown is-hoverable is-up">
+							<div class="dropdown-trigger">
+								<button 
+									class="button is-primary"
+									type="button">
+									<span class="icon is-small">
+										<i class="mdi mdi-chevron-up"></i>
+									</span>
+								</button>
+							</div>
+							<div class="dropdown-menu" role="menu">
+								<div class="dropdown-content">
+									<a 
+										href="#"
+										data-id="saveAndClose"
+										on-click("onButtonClick")
+										class="dropdown-item">
+										${out.global.i18n.t("mForm.saveAndClose")}
+									</a>
+								</div>
+							</div>
+						</div>
+					</p>
+			</div>
+		</div>
+		<div class="column pt-0 pb-0 is-narrow">
+			<button
+				class="button is-light"
+				data-id="close"
+				on-click("onButtonClick")
+				type="button">
+				${out.global.i18n.t("mForm.close")}
+			</button>
+		</div>
+	</div>
 </if>

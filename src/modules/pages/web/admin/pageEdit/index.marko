@@ -137,25 +137,29 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 				type: "areaEnd",
 				css: "mt-2"
 			},
+			// {
+			// 	id: "bg1",
+			// 	type: "buttons",
+			// 	data: [
+			// 		{
+			// 			id: "btnSave",
+			// 			type: "button",
+			// 			buttonType: "submit",
+			// 			label: out.global.i18n.t("save"),
+			// 			css: "is-primary"
+			// 		},
+			// 		{
+			// 			id: "btnCancel",
+			// 			type: "button",
+			// 			buttonType: "button",
+			// 			label: out.global.i18n.t("cancel"),
+			// 			css: "is-light"
+			// 		}
+			// 	]
+			// },
 			{
-				id: "bg1",
-				type: "buttons",
-				data: [
-					{
-						id: "btnSave",
-						type: "button",
-						buttonType: "submit",
-						label: out.global.i18n.t("save"),
-						css: "is-primary"
-					},
-					{
-						id: "btnCancel",
-						type: "button",
-						buttonType: "button",
-						label: out.global.i18n.t("cancel"),
-						css: "is-light"
-					}
-				]
+				id: "sc1",
+				type: "saveclose",
 			}
 		]
 		formType="formData"
@@ -168,6 +172,7 @@ $ const languageTabs = Object.keys(out.global.languages).map(k => ({
 		tabsAvail=languageTabs
 		tabsActive=[languageTabs[0].id]
 		on-get-key-value("onGetKeyValue")
+		on-edit-mode("onEditMode")
 		on-load-success("onLoadSuccess")/>
 	<folderModal
 		key="z3_ap_pe_folderModal"

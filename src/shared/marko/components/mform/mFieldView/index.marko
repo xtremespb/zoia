@@ -40,6 +40,7 @@ File Input
 <!--
 Button
 -->
+<!--
 <if(state.item.type === "button" && state.visible)>
 	<button
 		class=`button ${state.item.css || ""} ${
@@ -56,9 +57,11 @@ Button
 		${state.item.label}
 	</button>
 </if>
+-->
 <!--
 Button group
 -->
+<!--
 <if(state.item.type === "buttons" && state.visible)>
 	<div class="buttons">
 		<for|btn| of=state.item.data>
@@ -80,6 +83,7 @@ Button group
 		</for>
 	</div>
 </if>
+-->
 <!--
 Divider
 -->
@@ -329,4 +333,20 @@ Postmodern Engine
 			</div>
 		</for>
 	</if>
+</if>
+<!--
+Save & Close
+-->
+<if(state.item.type === "saveclose" && state.visible)>
+	<div class="columns mt-0 pt-0 is-mobile is-variable is-1 is-mobile">
+		<div class="column pt-0 pb-0 is-narrow">
+			<button
+				class="button is-light"
+				data-id="close"
+				on-click("onButtonClick")
+				type="button">
+				${out.global.i18n.t("mForm.close")}
+			</button>
+		</div>
+	</div>
 </if>

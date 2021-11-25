@@ -44,6 +44,8 @@
 	"mForm.ck": "WYSIWYG",
 	"mForm.imageBrowser": "Image Browser",
 	"mForm.save": "Save",
+	"mForm.saveAndClose": "Save and Close",
+	"mForm.close": "Close",
 	"mForm.cancel": "Cancel",
 	"mForm.languages": "Languages",
 	"mFormErr.general": "Form contains errors, please check all inputs",

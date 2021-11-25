@@ -44,6 +44,8 @@
 	"mForm.ck": "WYSIWYG",
 	"mForm.imageBrowser": "Bildbrowser",
 	"mForm.save": "Speichern",
+	"mForm.saveAndClose": "Speichern und schließen",
+	"mForm.close": "Schließen",
 	"mForm.cancel": "Stornieren",
 	"mForm.languages": "Sprachen",
 	"mFormErr.general": "Formular enthält Fehler, bitte überprüfen Sie alle Eingaben",
