@@ -1,4 +1,3 @@
-<span>${state.item.type}</span>
 <!--
 Text Input
 iMask
@@ -31,6 +30,9 @@ File Input
 			</for>
 		</div>
 	</if>
+	<else>
+		<div>&ndash;</div>
+	</else>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
@@ -38,6 +40,7 @@ File Input
 <!--
 Button
 -->
+<!--
 <if(state.item.type === "button" && state.visible)>
 	<button
 		class=`button ${state.item.css || ""} ${
@@ -54,9 +57,11 @@ Button
 		${state.item.label}
 	</button>
 </if>
+-->
 <!--
 Button group
 -->
+<!--
 <if(state.item.type === "buttons" && state.visible)>
 	<div class="buttons">
 		<for|btn| of=state.item.data>
@@ -78,6 +83,7 @@ Button group
 		</for>
 	</div>
 </if>
+-->
 <!--
 Divider
 -->
@@ -307,4 +313,40 @@ ACE
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+</if>
+<!--
+Postmodern Engine
+-->
+<if(state.item.type === "postmodern")>
+	<if(input.value && input.value.length)>
+		<for|i, ix| of=input.value>
+			<div class="card card-body is-shadowless p-2 mb-1 z3-mf-pm-list-item">
+				<div class="columns is-variable is-1">
+					<div
+						class="column is-auto">
+						<div class="menu-label mb-0">
+							${out.global.i18n.t(`mForm.pm.item.${i.type}`)}
+						</div>
+						<div>${i.title}</div>
+					</div>
+				</div>
+			</div>
+		</for>
+	</if>
+</if>
+<!--
+Save & Close
+-->
+<if(state.item.type === "saveclose" && state.visible)>
+	<div class="columns mt-0 pt-0 is-mobile is-variable is-1 is-mobile">
+		<div class="column pt-0 pb-0 is-narrow">
+			<button
+				class="button is-light"
+				data-id="close"
+				on-click("onButtonClick")
+				type="button">
+				${out.global.i18n.t("mForm.close")}
+			</button>
+		</div>
+	</div>
 </if>

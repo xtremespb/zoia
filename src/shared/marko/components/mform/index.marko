@@ -4,33 +4,55 @@ style.scss {
 }
 
 <div class="z3-mf-wrap">
-	<if((state.tabs && state.tabs.length > 1) || input.tabsActive)>
+	<if((state.tabs && state.tabs.length > 1) || input.tabsActive || input.modeSwitch)>
 		<div class="columns is-variable is-1">
-			<div class="column is-auto">
-				<div class=`tabs is-toggle ${input.tabsCSS || ""} ${
-					((state.tabs && state.tabs.length > 1) || input.tabsActive) &&
-					input.borderWhenTabs
-						? " z3-mf-tabs"
-						: ""
-				}`>
-					<ul>
-						<for|tab| of=state.tabs>
-							<li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
-								<a on-click("onTabClick") data-id=tab.id>${tab.label}</a>
-							</li>
-						</for>
-					</ul>
-				</div>
-			</div>
-			<if((input.tabsActive && !input.hideSettings) || input.tabsCount)>
+			<if(input.modeSwitch)>
 				<div class="column is-narrow">
-					<a on-click("onTabSettingsClick") class="is-underlined">
-						<span class="icon">
-							<i class="mdi mdi-cog" aria-hidden="true"/>
-						</span>
-						<span>${input.settingsTitle || input.i18n.t("mForm.languages")}</span>
-					</a>
+					<div class="field has-addons">
+						<p class="control">
+						  <button class=`button z3-mf-mode-button ${state.viewMode ? "is-success is-selected" : "is-light"}` type="button" on-click("setModeView")>
+							<span class="icon is-small">
+							  <i class="mdi mdi-eye-outline"></i>
+							</span>
+						  </button>
+						</p>
+						<p class="control">
+						  <button class=`button z3-mf-mode-button ${state.viewMode ? "is-light" : "is-warning is-selected"}` type="button" on-click("setModeEdit")>
+							<span class="icon is-small">
+							  <i class="mdi mdi-pencil-outline"></i>
+							</span>
+						  </button>
+						</p>
+					</div>
 				</div>
+			</if>
+			<if((input.tabsActive && !input.hideSettings) || input.tabsCount)>
+				<div class="column is-auto">
+					<div class=`tabs is-toggle ${input.tabsCSS || ""} ${
+						((state.tabs && state.tabs.length > 1) || input.tabsActive) &&
+						input.borderWhenTabs
+							? " z3-mf-tabs"
+							: ""
+					}`>
+						<ul>
+							<for|tab| of=state.tabs>
+								<li class=`${state.activeTabId === tab.id ? "is-active" : ""}`>
+									<a on-click("onTabClick") data-id=tab.id>${tab.label}</a>
+								</li>
+							</for>
+						</ul>
+					</div>
+				</div>
+				<if((input.tabsActive && !input.hideSettings) || input.tabsCount)>
+					<div class="column is-narrow">
+						<a on-click("onTabSettingsClick") class="is-underlined">
+							<span class="icon">
+								<i class="mdi mdi-cog" aria-hidden="true"/>
+							</span>
+							<span>${input.settingsTitle || input.i18n.t("mForm.languages")}</span>
+						</a>
+					</div>
+				</if>
 			</if>
 		</div>
 	</if>

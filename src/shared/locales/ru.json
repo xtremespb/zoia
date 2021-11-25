@@ -41,6 +41,8 @@
 	"forbiddenErrorMsg": "Отсутствует доступ к запрошенному ресурсу.",
 	"dataSaveSuccess": "Данные успешно сохранены",
 	"mForm.save": "Сохранить",
+	"mForm.saveAndClose": "Сохранить и закрыть",
+	"mForm.close": "Закрыть",
 	"mForm.cancel": "Отмена",
 	"mForm.languages": "Языковые настройки",
 	"mForm.ace": "Код",

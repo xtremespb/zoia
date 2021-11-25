@@ -16,6 +16,7 @@ module.exports = class {
         this.pageEditForm = this.getComponent("pageEditForm");
         this.folderSelectModal = this.getComponent("z3_ap_pe_folderModal");
         this.lockedModal = this.getComponent("z3_ap_pe_lockedModal");
+        this.editMode = false;
         setTimeout(async () => {
             if (this.input.id === "new") {
                 const data = this.input.dir ? this.input.dir.data : "";
@@ -25,39 +26,57 @@ module.exports = class {
                     label
                 });
             } else {
+                // this.pageEditForm.func.setViewMode(true);
                 await this.pageEditForm.func.loadData();
-                this.pageEditForm.func.setViewMode(true);
             }
             await this.folderSelectModal.func.loadTree();
         }, 10);
     }
 
     async onFormPostSuccess() {
-        // if (window.__z3_mtable_func && window.__z3_mtable_func["pages"]) {
-        //     await window.__z3_mtable_func["pages"].loadData();
-        // }
+        // window.router.navigate("pages", {
+        //     successNotification: true,
+        //     dirData: this.pageEditForm.func.getValue("dir").data
+        // });
+        this.pageEditForm.func.showNotification(this.i18n.t("dataSaveSuccess"), "is-success");
+    }
+
+    onEditMode() {
+        if (this.io) {
+            this.io.z3.sendMessage("pages.lock", {
+                id: this.itemId
+            });
+        }
+    }
+
+    doClose(successNotification = false) {
         if (this.io) {
             this.io.z3.sendMessage("pages.release", {
                 id: this.itemId
             });
         }
         window.router.navigate("pages", {
-            successNotification: true,
-            dirData: this.pageEditForm.func.getValue("dir").data
+            dirData: this.pageEditForm.func.getValue("dir").data,
+            successNotification,
         });
     }
 
-    onButtonClick(obj) {
+    async doSave() {
+        await this.pageEditForm.func.submitForm();
+    }
+
+    async onButtonClick(obj) {
         switch (obj.id) {
-        case "btnCancel":
-            if (this.io) {
-                this.io.z3.sendMessage("pages.release", {
-                    id: this.itemId
-                });
-            }
-            window.router.navigate("pages", {
-                dirData: this.pageEditForm.func.getValue("dir").data
-            });
+        case "close":
+            this.doClose();
+            break;
+        case "save":
+            await this.doSave();
+            break;
+        case "saveAndClose":
+            await this.doSave();
+            this.doClose(true);
+            break;
         }
     }
 
@@ -101,10 +120,5 @@ module.exports = class {
 
     onLoadSuccess(data) {
         this.itemId = data._id;
-        if (this.io) {
-            this.io.z3.sendMessage("pages.lock", {
-                id: data._id
-            });
-        }
     }
 };

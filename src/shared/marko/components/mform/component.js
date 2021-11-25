@@ -101,6 +101,7 @@ module.exports = class {
             focus: this.focus.bind(this),
             serialize: this.serialize.bind(this),
             setViewMode: this.setViewMode.bind(this),
+            showNotification: this.showNotification.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -372,6 +373,9 @@ module.exports = class {
     }
 
     async onValueChange(obj) {
+        if (this.state.viewMode) {
+            return;
+        }
         const data = cloneDeep(this.state.data);
         let {
             value,
@@ -1043,9 +1047,11 @@ module.exports = class {
             }
             this.setState("loading", false);
             if (e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword) {
-                this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`) || this.i18n.t(`mFormErr.server`), "is-danger");
+                this.showNotification(this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`) || this.i18n.t(`mFormErr.server`), "is-danger");
+                // this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`) || this.i18n.t(`mFormErr.server`), "is-danger");
             } else {
-                this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.server`), "is-danger");
+                // this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.server`), "is-danger");
+                this.showNotification(this.i18n.t(`mFormErr.server`), "is-danger");
             }
             this.emit("load-error");
         }
@@ -1075,13 +1081,19 @@ module.exports = class {
             }
             this.setState("loading", false);
             if (e && e.response && e.response.data && e.response.data.error && e.response.data.error.errorKeyword) {
-                this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`) || this.i18n.t(`mFormErr.server`), "is-danger");
+                // this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`) || this.i18n.t(`mFormErr.server`), "is-danger");
+                this.showNotification(this.i18n.t(`mFormErr.${e.response.data.error.errorKeyword}`) || this.i18n.t(`mFormErr.server`), "is-danger");
             } else {
-                this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.server`), "is-danger");
+                // this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t(`mFormErr.server`), "is-danger");
+                this.showNotification(this.i18n.t(`mFormErr.server`), "is-danger");
             }
             this.emit("load-error");
         }
         return false;
+    }
+
+    showNotification(message, messageClass) {
+        this.getComponent(`${this.input.id}_mnotify`).func.show(message, messageClass);
     }
 
     onCaptcha(secret) {
@@ -1201,5 +1213,14 @@ module.exports = class {
     onSettingsDialogTabsCountChange(e) {
         const count = parseInt(e.target.value, 10);
         this.setState("tabsCountSelected", count);
+    }
+
+    setModeView() {
+        this.setState("viewMode", true);
+    }
+
+    setModeEdit() {
+        this.setState("viewMode", false);
+        this.emit("edit-mode");
     }
 };

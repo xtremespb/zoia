@@ -26,6 +26,12 @@
     transition: 0.09s;
 }
 
+.button.is-warning:not(.is-action-button):hover {
+    border: 1px solid rgba($yellow-dark, 0.9) !important;
+    border-bottom: 2px solid $yellow-darker !important;
+    transition: 0.09s;
+}
+
 .button.is-primary {
     border-bottom: 2px solid $primary-dark !important;
     transition: 0.09s;
@@ -40,6 +46,18 @@
 
 .button.is-dialog-secondary:hover {
     background-color: $white-lightest !important;
+}
+
+.button.is-success {
+    border: 1px solid $green !important;
+    background-color: $green !important;
+    border-bottom: 2px solid findDarkColor($green) !important;
+    transition: 0.09s;
+}
+
+.button.is-success:not(.is-action-button):hover {
+    background: rgba($green, 0.9) !important;
+    border-bottom: 2px solid findDarkColor($green) !important;
 }
 
 .button,
