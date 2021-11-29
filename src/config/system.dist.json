@@ -29,7 +29,6 @@
     "logLevel": "info",
     "trustProxy": true,
     "stackTrace": true,
-    "opensslLegacyProvider": false,
     "modules": ["backup", "files", "nav", "pages", "registry"],
     "templates": ["default"],
     "email": {

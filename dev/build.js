@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 const commandLineArgs = require("command-line-args");
 const fs = require("fs-extra");
+const os = require("os");
 const path = require("path");
 const NPMI = require("./npmi");
-const systemConfig = require("../etc/system.json");
 
 const options = commandLineArgs([{
     name: "dev",
@@ -21,7 +21,7 @@ const options = commandLineArgs([{
 
 if (Object.keys(options).length !== 1) {
     console.error("Build parameter missing or invalid");
-    return;
+    process.exit();
 }
 
 let buildMode = "production";
@@ -41,34 +41,38 @@ const params = {
 
 if (!params[command]) {
     console.error("Build parameter missing or invalid");
-    return;
+    process.exit();
 }
 
-const installAnimation = (module, version) => {
-    const h = ["|", "/", "-", "\\"];
-    let i = 0;
-    return setInterval(() => {
-        i = (i > 3) ? 0 : i;
-        const msg = `- Installing ${module}@${version}... ${h[i]}`;
-        process.stdout.write(`\r${msg}`);
-        i += 1;
-    }, 100);
-};
+const majorNodeVersion = parseInt(process.versions.node.split(/\./), 10);
+const opensslLegacyProvider = majorNodeVersion >= 17;
+const platform = os.platform();
+let currentSystem;
 
-const buildAnimation = () => {
-    const h = ["|", "/", "-", "\\"];
-    let i = 0;
-    return setInterval(() => {
-        i = (i > 3) ? 0 : i;
-        const msg = `Building ZOIA, this may take ${options.production ? "LONG" : "some"} time... ${h[i]}`;
-        process.stdout.write(`\r${msg}`);
-        i += 1;
-    }, 100);
-};
+if (platform === "linux") {
+    try {
+        const osReleaseFile = fs.readFileSync("/etc/os-release", "utf-8");
+        const linesArr = osReleaseFile.split(/\n/);
+        linesArr.map(line => {
+            const [par, val] = line.split(/=/);
+            if (par === "ID") {
+                currentSystem = val.charAt(0).toUpperCase();
+            }
+        });
+    } catch {
+        // Ignore
+    }
+}
+
+if (platform === "win32") {
+    currentSystem = "Windows";
+}
 
 (async () => {
+    const ora = (await import("ora")).default;
+    let spinner;
     const packageJson = require(path.resolve(`${__dirname}/../package.json`));
-    console.log(`ZOIA Build Script, mode: ${buildMode}, version: ${packageJson.version}\nStart time: ${new Date()}\n`);
+    console.log(`ZOIA Build Script, mode: ${buildMode}, version: ${packageJson.version}\nStart time: ${new Date()}\nOperating system: ${currentSystem || "other"}\n`);
     const timestampStart = new Date().getTime() / 1000;
     const dir = command === "update" ? "update" : "zoia";
     let loading;
@@ -109,12 +113,13 @@ const buildAnimation = () => {
             for (const m of extraModuleNames) {
                 const moduleIsInstalled = await npmi.isInstalled(m, extraModules[m]);
                 if (!moduleIsInstalled) {
-                    loading = installAnimation(m, extraModules[m]);
+                    spinner = ora(` - Installing ${m}@${extraModules[m]}...`).start();
                     await npmi.execCommand(`npm i ${m}@${extraModules[m]} --loglevel=info`);
                     clearTimeout(loading);
-                    process.stdout.write(`\r- Successfully installed NPM module: ${m}@${extraModules[m]}\n`);
+                    spinner.stop();
+                    console.log(`\r - Successfully installed NPM module: ${m}@${extraModules[m]}\n`);
                 } else {
-                    console.log(`- Already up-to-date, skipping: ${m}@${extraModules[m]}`);
+                    console.log(` - Already up-to-date, skipping: ${m}@${extraModules[m]}`);
                 }
             }
             console.log("");
@@ -132,8 +137,8 @@ const buildAnimation = () => {
             errorOnExist: false
         });
         // Start building
-        loading = buildAnimation();
-        await npmi.execCommand(`node${systemConfig.opensslLegacyProvider ? " --openssl-legacy-provider" : ""} node_modules/webpack-cli/bin/cli ${params[command]}`);
+        spinner = ora(` Building ZOIA, this may take ${options.production ? "LONG" : "some"} time...`).start();
+        await npmi.execCommand(`node${opensslLegacyProvider ? " --openssl-legacy-provider" : ""} node_modules/webpack-cli/bin/cli ${params[command]}`);
         // Remove backups
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/zoia.js.bak`));
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/test.js.bak`));
@@ -142,7 +147,7 @@ const buildAnimation = () => {
         fs.removeSync(path.resolve(`${__dirname}/../build/public/${dir}_bak`));
         fs.removeSync(path.resolve(`${__dirname}/../package-update.json`));
         fs.moveSync(path.resolve(`${__dirname}/../build/public/${dir}_`), path.resolve(`${__dirname}/../build/public/${dir}`));
-        clearTimeout(loading);
+        spinner.stop();
     } catch (e) {
         try {
             if (fs.existsSync(path.resolve(`${__dirname}/../build/public/${dir}_`))) {
@@ -151,8 +156,8 @@ const buildAnimation = () => {
         } catch {
             // Ignore
         }
-        if (loading) {
-            clearTimeout(loading);
+        if (spinner) {
+            spinner.stop();
         }
         console.log(`Failed:\n`);
         console.log(e);
