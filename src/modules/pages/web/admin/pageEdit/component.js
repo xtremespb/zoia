@@ -34,10 +34,6 @@ module.exports = class {
     }
 
     async onFormPostSuccess() {
-        // window.router.navigate("pages", {
-        //     successNotification: true,
-        //     dirData: this.pageEditForm.func.getValue("dir").data
-        // });
         this.pageEditForm.func.showNotification(this.i18n.t("dataSaveSuccess"), "is-success");
     }
 

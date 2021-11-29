@@ -1,3 +1,4 @@
+$ const helpText = false;
 <!--
 Text Input
 iMask
@@ -8,7 +9,7 @@ iMask
 			${state.item.label}:
 		</label>
 		<div>${input.value || "–"}</div>
-		<if(state.item.helpText)>
+		<if(helpText && state.item.helpText)>
 			<p class="help">${state.item.helpText}</p>
 		</if>
 	</div>
@@ -33,7 +34,7 @@ File Input
 	<else>
 		<div>&ndash;</div>
 	</else>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -111,7 +112,7 @@ Radio
 			<span>${option.label}</span>
 		</for>
 	</div>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -130,7 +131,7 @@ Checkboxes
 			<span>${option.label}</span>
 		</for>
 	</div>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -147,7 +148,7 @@ Checkbox
 		}`/>
 		<span>${state.item.labelCheckbox}</span>
 	</div>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -157,7 +158,7 @@ Textarea
 <if(state.item.type === "textarea" && state.visible)>
 	<label class="label">${state.item.label}:</label>
 	<div>${input.value}</div>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -171,7 +172,7 @@ Select
 			<if(input.value === String(option.value))>${option.label || "–"}</if>
 		</for>
 	</div>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -183,7 +184,7 @@ Key-Value Input
 	<div>
 		${input.value.data && Array.isArray(input.value.data) && input.value.data.length === 0 && state.item.emptyArrayLabel ? state.item.emptyArrayLabel : input.value.label}
 	</div>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -210,7 +211,7 @@ Images Input
 			</for>
 		</div>
 	</if>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -234,7 +235,7 @@ Image Input
 			</div>
 		</div>
 	</if>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -256,7 +257,7 @@ Range Input
 			tabindex=(state.visible ? "" : "-1")/>
 		<span class="tag is-light mt-2 ml-2">${input.value}</span>
 	</div>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -265,22 +266,10 @@ Date Picker
 -->
 <if(state.item.type === "datepicker")>
 	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-		<label class="label" style="white-space:nowrap">${state.item.label}:</label>
-		<div class="control has-icons-left">
-			<input
-				type="text"
-				class="input"
-				id=`${input.id}_${state.item.id}`
-				key=`mf_ctl_${state.item.id}`
-				no-update
-				tabindex=(state.visible ? "" : "-1")/>
-			<span class="icon is-small is-left">
-				<i class="mdi mdi-calendar-month"/>
-			</span>
+		<label class="label mb-0" style="white-space:nowrap">${state.item.label}:</label>
+		<div>
+			${input.value || "–"}
 		</div>
-		<if(state.item.helpText)>
-			<p class="help">${state.item.helpText}</p>
-		</if>
 	</div>
 </if>
 <!--
@@ -296,7 +285,7 @@ Tags Input
 				<span class="tag is-dark mr-1">${tag}</span>
 			</for>
 		</div>
-		<if(state.item.helpText)>
+		<if(helpText && state.item.helpText)>
 			<p class="help">${state.item.helpText}</p>
 		</if>
 	</div>
@@ -310,7 +299,7 @@ ACE
 		<if(state.item.wysiwyg)>$!{input.value || "–"}</if>
 		<else>${input.value || "–"}</else>
 	</div>
-	<if(state.item.helpText)>
+	<if(helpText && state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
 </if>
@@ -337,7 +326,7 @@ Postmodern Engine
 <!--
 Save & Close
 -->
-<if(state.item.type === "saveclose" && state.visible)>
+<if(state.item.type === "saveClose" && state.visible)>
 	<div class="columns mt-0 pt-0 is-mobile is-variable is-1 is-mobile">
 		<div class="column pt-0 pb-0 is-narrow">
 			<button
