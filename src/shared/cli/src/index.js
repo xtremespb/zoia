@@ -94,8 +94,13 @@ const options = commandLineArgs([{
             keepAlive: true,
             useNewUrlParser: true
         });
-        await mongoClient.connect();
-        const db = mongoClient.db(config.mongo.dbName);
+        let db = null;
+        try {
+            await mongoClient.connect();
+            db = mongoClient.db(config.mongo.dbName);
+        } catch {
+            // Ignore
+        }
         // Maintenance
         if (options.maintenance) {
             await maintenance(config, options, modulesConfig, db);
@@ -112,7 +117,7 @@ const options = commandLineArgs([{
         if (options.acl) {
             await acl(config, options, modulesConfig, db);
         }
-        // ACL
+        // Patch
         if (options.patch) {
             await patch(config, options, modulesConfig, db);
         }
@@ -121,7 +126,9 @@ const options = commandLineArgs([{
             await defaults(config, options, modulesConfig, db, defaultsData);
         }
         // Shut down Mongo connection
-        await mongoClient.close();
+        if (db) {
+            await mongoClient.close();
+        }
     } catch (e) {
         console.error(e);
         process.exit(1);

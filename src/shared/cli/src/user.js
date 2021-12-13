@@ -11,6 +11,10 @@ import crypto from "crypto";
 
 export default async (config, options, modulesConfig, db) => {
     console.log(`\n${colors.cyan(" Operation:")} create an user or reset password`);
+    if (!db) {
+        console.error(`${colors.red(" Error:")} database is not connected`);
+        return;
+    }
     const password = crypto.createHmac("sha256", config.secret).update("password").digest("hex");
     await db.collection(modulesConfig["users"].collectionUsers).updateOne({
         username: options.user

@@ -10,6 +10,10 @@ import colors from "colors/safe";
 
 export default async (config, options, modulesConfig, db) => {
     console.log(`\n${colors.cyan(" Operation:")} turn maintenance mode on or off`);
+    if (!db) {
+        console.error(`${colors.red(" Error:")} database is not connected`);
+        return;
+    }
     const resultSave = await db.collection(config.collections.registry).updateOne({
         _id: "core_maintenance"
     }, {

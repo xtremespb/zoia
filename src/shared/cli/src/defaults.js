@@ -13,6 +13,10 @@ import {
 
 export default async (config, options, modulesConfig, db, defaultsData) => {
     console.log(`\n${colors.cyan(" Operation:")} create database defaults\n`);
+    if (!db) {
+        console.error(`${colors.red(" Error:")} database is not connected`);
+        return;
+    }
     for (const m of Object.keys(defaultsData)) {
         console.log(`${colors.yellow(" Processing:")} ${m}`);
         for (const c of Object.keys(defaultsData[m])) {

@@ -11,6 +11,10 @@ import cloneDeep from "lodash.clonedeep";
 
 export default async (config, options, modulesConfigData, db) => {
     console.log(`\n${colors.cyan(" Operation:")} create or update an ACL group`);
+    if (!db) {
+        console.error(`${colors.red(" Error:")} database is not connected`);
+        return;
+    }
     if (!options.permissions || !options.permissions.match(/[crud]+/gi)) {
         console.error(`${colors.red(" Error:")} missing or invalid permissions`);
         return;
