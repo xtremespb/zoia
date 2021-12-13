@@ -109,17 +109,17 @@ if (platform === "win32") {
         const extraModuleNames = Object.keys(extraModules);
         // Install 3rd-party modules when necessary
         if (extraModuleNames.length) {
-            console.log(`${extraModuleNames.length} additional NPM module(s) will be installed:\n`);
+            console.log(`${extraModuleNames.length} additional NPM module(s) are required:\n`);
             for (const m of extraModuleNames) {
                 const moduleIsInstalled = await npmi.isInstalled(m, extraModules[m]);
                 if (!moduleIsInstalled) {
-                    spinner = ora(` - Installing ${m}@${extraModules[m]}...`).start();
+                    spinner = ora(`Installing ${m}@${extraModules[m]}...`).start();
                     await npmi.execCommand(`npm i ${m}@${extraModules[m]} --loglevel=info`);
                     clearTimeout(loading);
                     spinner.stop();
-                    console.log(`\r - Successfully installed NPM module: ${m}@${extraModules[m]}\n`);
+                    console.log(`- Successfully installed NPM module: ${m}@${extraModules[m]}`);
                 } else {
-                    console.log(` - Already up-to-date, skipping: ${m}@${extraModules[m]}`);
+                    console.log(`- Already up-to-date, skipping: ${m}@${extraModules[m]}`);
                 }
             }
             console.log("");
@@ -137,7 +137,7 @@ if (platform === "win32") {
             errorOnExist: false
         });
         // Start building
-        spinner = ora(` Building ZOIA, this may take ${options.production ? "LONG" : "some"} time...`).start();
+        spinner = ora(`Building ZOIA, this may take ${options.production ? "LONG" : "some"} time...`).start();
         await npmi.execCommand(`node${opensslLegacyProvider ? " --openssl-legacy-provider" : ""} node_modules/webpack-cli/bin/cli ${params[command]}`);
         // Remove backups
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/zoia.js.bak`));
@@ -163,5 +163,5 @@ if (platform === "win32") {
         console.log(e);
         process.exit(1);
     }
-    console.log(`\rAll done, ${command} version of ZOIA has been built successfully in ${parseInt(new Date().getTime() / 1000 - timestampStart, 10)} second(s).\n`);
+    console.log(`All done, ${command} version of ZOIA has been built successfully in ${parseInt(new Date().getTime() / 1000 - timestampStart, 10)} second(s).\n`);
 })();
