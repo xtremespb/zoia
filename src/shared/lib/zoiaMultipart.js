@@ -1,5 +1,5 @@
 import fastifyPlugin from "fastify-plugin";
-import Busboy from "busboy";
+import busboy from "busboy";
 import {
     PassThrough
 } from "stream";
@@ -20,7 +20,7 @@ const setMultipart = (req, payload, done) => {
 
 const getBusboyInstance = options => {
     try {
-        return new Busboy(options);
+        return busboy(options);
     } catch (e) {
         const errorEmitter = new PassThrough();
         process.nextTick(() => errorEmitter.emit("error", e));
@@ -45,7 +45,7 @@ const fastifyMultipart = (fastify, options, done) => {
             let filesCount = 0;
             let filesProcessed = 0;
             // Get Busboy instance
-            const busboy = getBusboyInstance({
+            const busboyInstance = getBusboyInstance({
                 headers: request.headers
             });
             // Resolve Files
@@ -89,9 +89,9 @@ const fastifyMultipart = (fastify, options, done) => {
             // Request close handler
             const cleanup = async () => {
                 request.removeListener("close", cleanup);
-                busboy.removeListener("field", onField);
-                busboy.removeListener("file", onFile);
-                busboy.removeListener("close", cleanup);
+                busboyInstance.removeListener("field", onField);
+                busboyInstance.removeListener("file", onFile);
+                busboyInstance.removeListener("close", cleanup);
             };
             // onFinish Handler
             const onFinish = () => {
@@ -103,13 +103,13 @@ const fastifyMultipart = (fastify, options, done) => {
                     });
                 }
             };
-            busboy.on("file", onFile);
-            busboy.on("field", onField);
-            busboy.on("error", onError);
-            busboy.on("finish", onFinish);
-            busboy.on("close", cleanup);
+            busboyInstance.on("file", onFile);
+            busboyInstance.on("field", onField);
+            busboyInstance.on("error", onError);
+            busboyInstance.on("finish", onFinish);
+            busboyInstance.on("close", cleanup);
             request.on("close", cleanup);
-            request.pipe(busboy);
+            request.pipe(busboyInstance);
         });
     }
     // Remove temporary files
