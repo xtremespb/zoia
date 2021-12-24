@@ -179,7 +179,6 @@ module.exports = class {
         setTimeout(() => {
             this.setupControlsResize();
             this.setupColumnResize();
-            // this.adjustSecondScrollbar();
         }, 10);
     }
 
@@ -294,10 +293,9 @@ module.exports = class {
             const isVisible = table.scrollWidth + 2 !== tableWrap.offsetWidth;
             this.setState("secondScrollbarVisible", isVisible);
             if (isVisible) {
-                this.setupSecondScrollbarHandlers();
+                setTimeout(() => this.setupSecondScrollbarHandlers());
             }
         }
-        this.setupSecondScrollbarHandlers();
     }
 
     onPaginationMount() {
