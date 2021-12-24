@@ -3,6 +3,7 @@ const commandLineArgs = require("command-line-args");
 const fs = require("fs-extra");
 const os = require("os");
 const path = require("path");
+const spinners = require("cli-spinners");
 const NPMI = require("./npmi");
 
 const options = commandLineArgs([{
@@ -113,7 +114,10 @@ if (platform === "win32") {
             for (const m of extraModuleNames) {
                 const moduleIsInstalled = await npmi.isInstalled(m, extraModules[m]);
                 if (!moduleIsInstalled) {
-                    spinner = ora(`Installing ${m}@${extraModules[m]}...`).start();
+                    spinner = ora({
+                        spinner: spinners.line,
+                        text: `Installing ${m}@${extraModules[m]}...`
+                    }).start();
                     await npmi.execCommand(`npm i ${m}@${extraModules[m]} --loglevel=info`);
                     clearTimeout(loading);
                     spinner.stop();
@@ -137,7 +141,10 @@ if (platform === "win32") {
             errorOnExist: false
         });
         // Start building
-        spinner = ora(`Building ZOIA, this may take ${options.production ? "LONG" : "some"} time...`).start();
+        spinner = ora({
+            spinner: spinners.line,
+            text: `Building ZOIA, this may take ${options.production ? "LONG" : "some"} time...`
+        }).start();
         await npmi.execCommand(`node${opensslLegacyProvider ? " --openssl-legacy-provider" : ""} node_modules/webpack-cli/bin/cli ${params[command]}`);
         // Remove backups
         fs.removeSync(path.resolve(`${__dirname}/../build/bin/zoia.js.bak`));
