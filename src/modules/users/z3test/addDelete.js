@@ -50,7 +50,7 @@ export default async (zoia, test, page, utils) => {
         await page.waitForFunction(`document.getElementById("userEditForm_username").value !== ""`);
         const currentUsername = await page.$eval("#userEditForm_username", el => el.value);
         const currentEmail = await page.$eval("#userEditForm_email", el => el.value);
-        const currentGroups = await page.$eval("#userEditForm_groups", el => el.value);
+        // const currentGroups = await page.$eval("#userEditForm_groups", el => el.value);
         const currentPassword = await page.$eval("#userEditForm_password", el => el.value);
         const currentPasswordRepeat = await page.$eval("#userEditForm_passwordRepeat", el => el.value);
         const currentActive = await page.$eval("#userEditForm_status_active", check => check.checked);
@@ -59,8 +59,8 @@ export default async (zoia, test, page, utils) => {
         test.assert.equal(currentUsername, username);
         zoia.log.step("Asserting e-mail");
         test.assert.equal(currentEmail, `${username}@zoiajs.org`);
-        zoia.log.step("Asserting groups");
-        test.assert.equal(currentGroups, "");
+        // zoia.log.step("Asserting groups");
+        // test.assert.equal(currentGroups, "");
         zoia.log.step("Asserting password and passwordRepeat");
         test.assert.equal(currentPassword, "");
         test.assert.equal(currentPasswordRepeat, "");
