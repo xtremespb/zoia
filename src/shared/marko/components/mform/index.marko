@@ -110,7 +110,7 @@ style.scss {
 							<div
 								class="field columns is-multiline z3-mf-field-columns"
 								key=`mf_cmp_${tItem.id}_wrap`
-								style=(state.visible[tItem.id] ? "" : "position:absolute;top:-100000px")>
+								style=(state.visible[tItem.id] ? "" : "")>
 								<div
 									class=`control column ${tItem.wrapCSS || ""}`
 									style=`position:unset;${
@@ -120,8 +120,8 @@ style.scss {
 									}`>
 									<div style=(state.viewMode ? "" : "position:absolute;top:-100000px")>
 										<mFieldView
-											id=input.id
-											key=`mf_cmp_${tItem.id}`
+											id=`${input.id}_view`
+											key=`mf_cmp_view_${tItem.id}`
 											item=tItem
 											value=state.data[state.activeTabId][tItem.id]
 											errors=state.errors[state.activeTabId]

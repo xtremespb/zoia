@@ -57,7 +57,7 @@ export default () => ({
                     return sr;
                 });
             }
-            const count = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).find(query, options).count();
+            const count = await this.mongo.db.collection(req.zoiaModulesConfig["users"].collectionAcl).countDocuments(query);
             const columns = await utils.getTableSettings(req, this.mongo.db, auth, "acl");
             const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;

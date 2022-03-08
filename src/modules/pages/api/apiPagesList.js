@@ -76,7 +76,7 @@ export default () => ({
                     }
                 });
             }
-            const count = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).find(query, options).count();
+            const count = await this.mongo.db.collection(req.zoiaModulesConfig["pages"].collectionPages).countDocuments(query);
             const columns = await utils.getTableSettings(req, this.mongo.db, auth, "pages");
             const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;

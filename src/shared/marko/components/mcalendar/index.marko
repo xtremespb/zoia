@@ -8,7 +8,8 @@ style.scss {
 			<div class="column is-narrow">
 				<a class="button is-ghost" on-click("onCalendarLeft")>
 					<span class="icon is-small">
-						<i class="mdi mdi-chevron-left"/>
+						<if(input.noIcons)>&larr;</if>
+						<else><i class="mdi mdi-chevron-left"/></else>
 					</span>
 				</a>
 			</div>
@@ -22,7 +23,8 @@ style.scss {
 			<div class="column is-narrow">
 				<a class="button is-ghost" on-click("onCalendarRight")>
 					<span class="icon is-small">
-						<i class="mdi mdi-chevron-right"/>
+						<if(input.noIcons)>&rarr;</if>
+						<else><i class="mdi mdi-chevron-right"/></else>
 					</span>
 				</a>
 			</div>
@@ -74,7 +76,7 @@ style.scss {
 			<div
 				class="column is-6 z3-mf-calendar-control has-text-primary"
 				on-click("onCalendarToday")>
-				${out.global.i18n.t("calendar.today")}
+				<if(!input.disabledToday)>${out.global.i18n.t("calendar.today")}</if>
 			</div>
 			<div
 				class="column is-6 z3-mf-calendar-control has-text-danger"

@@ -24,7 +24,6 @@ export default () => ({
         }
         try {
             const formData = await req.processMultipart();
-            console.log(formData);
             const root = path.resolve(`${__dirname}/../../${req.zoiaConfig.directories.publicFiles}`).replace(/\\/gm, "/");
             try {
                 await fs.promises.access(root);

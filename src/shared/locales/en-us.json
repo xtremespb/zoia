@@ -1,7 +1,7 @@
 {
 	"global.dateFormatShort": "yyyy-MM-dd",
 	"global.timeFormatShort": "hh:mm a",
-	"global.langCode": "en",
+	"global.langCode": "en-us",
 	"global.weekStart": "0",
 	"global.weekDays": [
 		"Sun",

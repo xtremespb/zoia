@@ -45,7 +45,7 @@ export default () => ({
                 });
             }
             const columns = await utils.getTableSettings(req, this.mongo.db, auth, "backup");
-            const count = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).find(query, options).count();
+            const count = await this.mongo.db.collection(req.zoiaModulesConfig["backup"].collectionBackup).countDocuments(query);
             const limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;

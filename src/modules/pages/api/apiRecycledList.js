@@ -59,7 +59,7 @@ export default () => ({
                     return sr;
                 });
             }
-            const count = await this.mongo.db.collection(collectionPages).find(query, options).count();
+            const count = await this.mongo.db.collection(collectionPages).countDocuments(query);
             const limit = req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             options.limit = limit;
             options.skip = (req.body.page - 1) * limit;

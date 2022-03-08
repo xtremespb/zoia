@@ -156,6 +156,10 @@ module.exports = class {
             if (component && component.func.performUpdate) {
                 component.func.performUpdate();
             }
+            const componentView = this.getComponent(`mf_cmp_view_${f.id}`);
+            if (componentView && componentView.func.performUpdate) {
+                component.func.performUpdate();
+            }
         });
     }
 
@@ -208,6 +212,9 @@ module.exports = class {
             }
             if (this.input.save && this.getComponent(`mf_cmp_${field.id}`)) {
                 this.getComponent(`mf_cmp_${field.id}`).func.setHeaders(this.input.save.headers);
+            }
+            if (this.input.save && this.getComponent(`mf_cmp_view_${field.id}`)) {
+                this.getComponent(`mf_cmp_view_${field.id}`).func.setHeaders(this.input.save.headers);
             }
         });
         this.dataOnMount = cloneDeep(this.state.data);
@@ -472,16 +479,24 @@ module.exports = class {
         if (component && component.func.performUpdate) {
             component.func.performUpdate();
         }
+        const componentView = this.getComponent(`mf_cmp_view_${id}`);
+        if (componentView && componentView.func.performUpdate) {
+            componentView.func.performUpdate();
+        }
     }
 
     setOptions(id, options) {
         const component = this.getComponent(`mf_cmp_${id}`);
         if (component && component.func.setOptions) {
             component.func.setOptions(options);
-            const optionsState = cloneDeep(this.state.options);
+        }
+        const componentView = this.getComponent(`mf_cmp_view_${id}`);
+        if (componentView && componentView.func.setOptions) {
+            componentView.func.setOptions(options);
+        }
+        const optionsState = cloneDeep(this.state.options);
             optionsState[id] = options;
             this.setState("options", optionsState);
-        }
     }
 
     onValueSet(data) {
@@ -492,6 +507,10 @@ module.exports = class {
         const component = this.getComponent(`mf_cmp_${id}`);
         if (component && component.func.setAceValue) {
             component.func.setAceValue(value);
+        }
+        const componentView = this.getComponent(`mf_cmp_view_${id}`);
+        if (componentView && componentView.func.setAceValue) {
+            componentView.func.setAceValue(value);
         }
     }
 
@@ -1159,6 +1178,9 @@ module.exports = class {
         const visible = cloneDeep(this.state.visible);
         visible[id] = flag;
         this.setState("visible", visible);
+        if (this.getComponent(`mf_cmp_view_${id}`)) {
+            this.getComponent(`mf_cmp_view_${id}`).func.setVisible(flag);
+        }
     }
 
     setFieldEnabled(id, flag) {
@@ -1192,6 +1214,9 @@ module.exports = class {
 
     setItemData(id, data) {
         this.getComponent(`mf_cmp_${id}`).func.setData(data);
+        if (this.getComponent(`mf_cmp_view_${id}`)) {
+            this.getComponent(`mf_cmp_view_${id}`).func.setData(data);
+        }
         const currentData = this.fieldsFlat[this.fieldsFlat.findIndex(i => i.id === id)];
         this.fieldsFlat[this.fieldsFlat.findIndex(i => i.id === id)] = {
             ...currentData,
@@ -1217,10 +1242,12 @@ module.exports = class {
 
     setModeView() {
         this.setState("viewMode", true);
+        setTimeout(() => this.emitFieldsUpdate());
     }
 
     setModeEdit() {
         this.setState("viewMode", false);
         this.emit("edit-mode");
+        setTimeout(() => this.emitFieldsUpdate());
     }
 };
