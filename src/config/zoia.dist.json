@@ -2,7 +2,7 @@
     "languages": {
         "en-us": "English",
         "de-de": "Deutsch",
-        "ru": "Русский"
+        "ru-ru": "Русский"
     },
     "siteMetadata": {
         "en-us": {
@@ -19,7 +19,7 @@
             "siteLink": "https://zoiajs.org",
             "siteLinkText": "Beispielwebsite"
         },
-        "ru": {
+        "ru-ru": {
             "title": "Сайт на ZOIA",
             "titleShort": "Сайт на ZOIA",
             "descShort": "Тестовый веб-сайт, запущенный на ZOIA",

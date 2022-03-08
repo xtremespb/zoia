@@ -102,11 +102,11 @@ export default {
     },
     async saveFiles(req, rep, db, uploadFiles, formData, auth = false, admin = false) {
         const response = new rep.Response(req, rep);
-        const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
+        const duplicates = await db.collection(req.zoiaConfig.collections.files).countDocuments({
             $or: uploadFiles.map(f => ({
                 _id: f.id
             }))
-        }).count();
+        });
         if (duplicates) {
             response.requestError({
                 failed: true,
@@ -151,11 +151,11 @@ export default {
     },
     async saveImages(req, rep, db, uploadImages, formData) { // , auth = false, admin = false
         const response = new rep.Response(req, rep);
-        const duplicates = await db.collection(req.zoiaConfig.collections.files).find({
+        const duplicates = await db.collection(req.zoiaConfig.collections.files).countDocuments({
             $or: uploadImages.map(f => ({
                 _id: f.id
             }))
-        }).count();
+        });
         if (duplicates) {
             response.requestError({
                 failed: true,
@@ -314,6 +314,7 @@ export default {
         });
     },
     getImageBuffer(image) {
+        // eslint-disable-next-line no-promise-executor-return
         return new Promise(resolve => image.getBuffer("image/png", (err, buf) => resolve(buf)));
     },
     getRandomInt(low, high) {
@@ -448,12 +449,17 @@ export default {
                 query.$and.push(filter);
                 break;
             case "noneOf":
-                console.log(f.value.id);
+                filter.$and = [];
                 f.value.id.map(i => {
-                    query.$and.push({
-                        $ne: i
-                    });
+                    if (i !== undefined) {
+                        const noneOfFilter = {};
+                        noneOfFilter[f.id] = {
+                            $ne: i
+                        };
+                        filter.$and.push(noneOfFilter);
+                    }
                 });
+                query.$and.push(filter);
                 break;
             case "greaterThan":
                 if (f.type === "date") {

@@ -3,6 +3,8 @@ const {
     startOfWeek,
     format,
     parse,
+    getDay,
+    isBefore,
 } = require("date-fns");
 const cloneDeep = require("lodash.clonedeep");
 
@@ -26,6 +28,8 @@ module.exports = class {
                 mode: "date",
             },
             whitelist: [],
+            disabledDaysOfWeek: [],
+            firstDate: null,
         };
         this.state = state;
         this.i18n = out.global.i18n;
@@ -33,6 +37,8 @@ module.exports = class {
             setDate: this.setDateExt.bind(this),
             setMonthYear: this.setMonthYear.bind(this),
             setWhitelist: this.setWhitelist.bind(this),
+            setDisabledDaysOfWeek: this.setDisabledDaysOfWeek.bind(this),
+            setFirstDate: this.setFirstDate.bind(this),
             clear: this.onCalendarClear.bind(this),
         };
     }
@@ -101,7 +107,7 @@ module.exports = class {
                 d: addDays(startDate, index).getDate(),
                 m: addDays(startDate, index).getMonth(),
                 y: addDays(startDate, index).getFullYear(),
-                enabled: this.state.whitelist.length ? this.state.whitelist.indexOf(format(addDays(startDate, index), "yyyyMMdd")) > -1 : true
+                enabled: (this.state.whitelist.length ? this.state.whitelist.indexOf(format(addDays(startDate, index), "yyyyMMdd")) > -1 : true) && (this.state.disabledDaysOfWeek.length ? this.state.disabledDaysOfWeek.indexOf(getDay(addDays(startDate, index))) === -1 : true) && (!this.state.firstDate || (this.state.firstDate && !isBefore(addDays(startDate, index), this.state.firstDate)))
             }))
             .reduce((matrix, current, index, days) => !(index % cols !== 0) ? [...matrix, days.slice(index, index + cols)] : matrix, []);
         if (data[5][0].d < 10) {
@@ -234,6 +240,9 @@ module.exports = class {
 
     onCalendarToday(e) {
         e.preventDefault();
+        if (this.input.disabledToday) {
+            return;
+        }
         const calendar = cloneDeep(this.state.calendar);
         calendar.value = new Date();
         calendar.valueText = format(calendar.value, this.i18n.t("global.dateFormatShort"));
@@ -250,10 +259,24 @@ module.exports = class {
         this.emit("value-change", calendar.value);
     }
 
-    setWhitelist(whitelist) {
-        this.setState("whitelist", whitelist);
+    _updateData() {
         const calendar = cloneDeep(this.state.calendar);
         calendar.data = this.updateCalendarData(calendar.year, calendar.month);
         this.setState("calendar", calendar);
+    }
+
+    setWhitelist(whitelist) {
+        this.setState("whitelist", whitelist);
+        this._updateData();
+    }
+
+    setDisabledDaysOfWeek(disabledDaysOfWeek) {
+        this.setState("disabledDaysOfWeek", disabledDaysOfWeek);
+        this._updateData();
+    }
+
+    setFirstDate(firstDate) {
+        this.setState("firstDate", firstDate);
+        this._updateData();
     }
 };

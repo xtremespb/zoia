@@ -1,11 +1,12 @@
 {
     "cSpell.words": [
-        "Cryptr",
-        "Pino",
-        "Prehandler",
-        "Regitser",
+        "виджетами",
+        "Моточасы",
+        "управление",
         "bulma",
         "clonedeep",
+        "Cryptr",
+        "DDTHH",
         "decidalo",
         "fastify",
         "formbody",
@@ -22,7 +23,10 @@
         "mnotify",
         "mtable",
         "npmi",
+        "Pino",
+        "Prehandler",
         "ratelimit",
+        "Regitser",
         "rerr",
         "rspace",
         "serializers",
@@ -31,10 +35,7 @@
         "uuidv",
         "zoia",
         "zoiajs",
-        "zuid",
-        "Моточасы",
-        "виджетами",
-        "управление"
+        "zuid"
     ],
     "cSpell.ignoreWords": [
         "div"

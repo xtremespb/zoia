@@ -1,7 +1,7 @@
 {
 	"global.dateFormatShort": "dd.MM.yyyy",
 	"global.timeFormatShort": "HH:mm",
-	"global.langCode": "ru",
+	"global.langCode": "ru-ru",
 	"global.weekStart": 1,
 	"global.weekDays": [
 		"Пн",

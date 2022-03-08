@@ -62,7 +62,7 @@ export default () => ({
             }
             const widgets = await utils.getWidgets(req, this.mongo.db, "users", collectionUsers, filterQuery);
             const columns = await utils.getTableSettings(req, this.mongo.db, auth, "users");
-            const count = await this.mongo.db.collection(collectionUsers).find(query, options).count();
+            const count = await this.mongo.db.collection(collectionUsers).countDocuments(query);
             let limit = columns.itemsPerPage || req.body.itemsPerPage || req.zoiaConfig.commonTableItemsLimit;
             if (req.body.autoItemsPerPage && widgets.config.length) {
                 limit -= 2;

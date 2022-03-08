@@ -1,3 +1,8 @@
+import {
+    format,
+	parse,
+} from "date-fns";
+
 $ const helpText = false;
 <!--
 Text Input
@@ -268,7 +273,7 @@ Date Picker
 	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
 		<label class="label mb-0" style="white-space:nowrap">${state.item.label}:</label>
 		<div>
-			${input.value || "–"}
+			${input.value ? format(parse(input.value, "yyyyMMdd", new Date()), out.global.i18n.t("global.dateFormatShort")) : "–"}
 		</div>
 	</div>
 </if>

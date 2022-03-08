@@ -6,13 +6,13 @@ export default () => ({
         const {
             log,
             response,
-            auth,
+            // auth,
         } = req.zoia;
         // Check permissions
-        if (!auth.statusAdmin()) {
-            response.unauthorizedError();
-            return;
-        }
+        // if (!auth.statusAdmin()) {
+        //     response.unauthorizedError();
+        //     return;
+        // }
         try {
             const cryptr = new Cryptr(req.zoiaConfig.secret);
             // c = code

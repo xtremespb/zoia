@@ -11,6 +11,9 @@ const {
 } = require("date-fns");
 const axios = require("axios");
 const cloneDeep = require("lodash.clonedeep");
+const {
+    format,
+} = require("date-fns");
 const CKEditorImageUploadAdapter = require("./CKEditorImageUploadAdapter");
 const postmodern = require("./postmodern.json");
 
@@ -200,7 +203,7 @@ module.exports = class {
             this.setState("tags", this.input.value || []);
             break;
         case "datepicker":
-            this.updateDatePicker(this.input.value);
+            setTimeout(() => this.updateDatePicker(this.input.value));
             break;
         case "imask":
             this.emit("value-change", {
@@ -334,6 +337,10 @@ module.exports = class {
                 id: this.state.item.id,
                 value: dateObject,
             });
+            const element = document.getElementById(`${this.input.id}_${this.state.item.id}`);
+            if (element) {
+                element.value = format(dateObject, this.i18n.t("global.dateFormatShort"));
+            }
         } else {
             this.emit("value-change", {
                 type: "datepicker",
