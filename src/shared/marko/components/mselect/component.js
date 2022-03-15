@@ -58,6 +58,7 @@ module.exports = class {
         if (data.indexOf(dataset.id) > -1 && !checked) {
             data = data.filter(i => i !== dataset.id);
         }
+        data = data.filter(i => i !== undefined);
         this.state.value = data;
         this.emit("value-change", this.getValue());
     }

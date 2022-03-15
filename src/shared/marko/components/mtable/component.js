@@ -246,7 +246,7 @@ module.exports = class {
         const controls = document.getElementById(`${this.input.id}_controls_wrap`);
         const navbar = document.getElementById("z3_main_navbar");
         const dummy = document.getElementById(`${this.input.id}_controls_dummy`);
-        if (navbar && controls && navbar && dummy) {
+        if (navbar && controls && dummy) {
             const rectWrap = wrap.getBoundingClientRect();
             const rectControls = controls.getBoundingClientRect();
             if (!this.initControlsTop) {

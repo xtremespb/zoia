@@ -277,6 +277,18 @@ module.exports = class {
         });
     }
 
+    recreateInputMasks() {
+        this.fieldsFlat.map(field => {
+            if (this.masked[field.id] && field.maskOptions) {
+                this.masked[field.id].destroy();
+                setTimeout(() => {
+                    const element = document.getElementById(`${this.input.id}_${field.id}`);
+                    this.masked[field.id] = new InputMask(element, field.maskOptions);
+                }, 10);
+            }
+        });
+    }
+
     onTabSettingsClick() {
         if (this.state.tabsAvail) {
             const tabsSelect = this.state.tabsAvail.map(tab => ({
@@ -895,9 +907,11 @@ module.exports = class {
             this.emit("form-submit", data);
         }
         if (this.input.manual && (e !== true || !this.input.save)) {
+            setTimeout(() => this.recreateInputMasks());
             return true;
         }
         await this.upload(data);
+        setTimeout(() => this.recreateInputMasks());
         return false;
     }
 
