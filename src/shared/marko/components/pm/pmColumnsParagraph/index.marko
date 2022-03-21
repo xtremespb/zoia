@@ -1,7 +1,9 @@
 <if(input.item.data)>
 	<div class=`columns ${input.item.data.classColumns || ""}`>
 		<for|i| of=Array.from(Array(input.item.data.__tabsCount), (_, x) => x + 1)>
-			<div class=`column ${input.item.data["tab" + i].classColumn || ""}`>$!{input.item.data["tab" + i].content}</div>
+			<div class=`column ${input.item.data["tab" + i].classColumn || ""}`>
+				$!{input.item.data["tab" + i].content}
+			</div>
 		</for>
 	</div>
 </if>

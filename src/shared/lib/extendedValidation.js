@@ -261,6 +261,30 @@ export default class {
         return data;
     }
 
+    getDefaultRawData() {
+        const data = {};
+        const formData = this.data && this.data.fields && this.data.fields.__form ? JSON.parse(this.data.fields.__form) : this.data || {};
+        if (this.schemas.root) {
+            Object.keys(this.schemas.root.properties).map(field => {
+                data[field] = formData.__default[field];
+                if (formData[field] && this.schemas.root.properties[field].zoiaConvert) {
+                    switch (this.schemas.root.properties[field].zoiaConvert) {
+                        case "YYYYMMDD":
+                            data[field] = parse(formData[field], "yyyyMMdd", new Date());
+                            break;
+                    }
+                }
+                if (data[field] === undefined) {
+                    delete data[field];
+                }
+            });
+        }
+        if (formData.ids) {
+            data.ids = formData.ids;
+        }
+        return data;
+    }
+
     getFiles(type = "file") {
         const formData = this.data && this.data.fields && this.data.fields.__form ? JSON.parse(this.data.fields.__form) : null;
         if (!formData) {

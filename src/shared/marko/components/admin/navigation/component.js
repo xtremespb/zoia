@@ -1,3 +1,5 @@
+// const debounce = require("lodash.debounce");
+
 module.exports = class {
     onCreate() {
         this.state = {
@@ -15,7 +17,7 @@ module.exports = class {
         this.sideMenuTop = this.sideMenu.getBoundingClientRect().top;
         this.sideMenuBottom = this.sideMenu.getBoundingClientRect().bottom;
         window.addEventListener("scroll", this.onSideMenuToggle.bind(this));
-        this.onSideMenuToggle();
+        setTimeout(() => this.onSideMenuToggle());
         document.addEventListener("click", e => {
             if (e.target.id !== "za_ap_username_dropdown") {
                 this.setState("activeUserMenu", false);
@@ -27,8 +29,8 @@ module.exports = class {
     }
 
     onSideMenuToggle() {
-        const sideMenuHeight = parseInt(document.getElementById("z3_ap_side_menu").clientHeight, 10);
-        const viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+        const sideMenuHeight = document.getElementById("z3_ap_side_menu").clientHeight + document.getElementById("z3_ap_side_menu").offsetTop;
+        const viewportHeight = window.innerHeight || 0;
         document.getElementById("z3_ap_side_menu").style.position = viewportHeight > sideMenuHeight ? "fixed" : "unset";
         document.getElementById("z3_ap_side_menu").style.top = viewportHeight > sideMenuHeight ? "63px" : "unset";
     }

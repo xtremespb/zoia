@@ -264,16 +264,19 @@ table tr:last-child td:last-child {
     margin-left: 1px !important;
 }
 
-.z3-mt-recycle-bin-modal-card {
+.z3-mt-recycle-bin-modal-card,
+.z3-mt-bulk-edit-modal-card {
     width: 100%;
 }
 
-.z3-mt-recycle-bin-modal-card-body {
+.z3-mt-recycle-bin-modal-card-body,
+.z3-mt-bulk-edit-modal-card-body {
     border-bottom-left-radius: 4px !important;
     border-bottom-right-radius: 4px !important;
 }
 
-.z3-mt-recycle-bin-modal-card-head {
+.z3-mt-recycle-bin-modal-card-head,
+.z3-mt-bulk-edit-modal-card-head {
     border-bottom: 1px solid $grey-lightest;
 }
 

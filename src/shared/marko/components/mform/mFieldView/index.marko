@@ -1,7 +1,7 @@
 import {
     format,
 	parse,
-} from "date-fns";
+} from "date-fns"
 
 $ const helpText = false;
 <!--
@@ -48,20 +48,20 @@ Button
 -->
 <!--
 <if(state.item.type === "button" && state.visible)>
-	<button
-		class=`button ${state.item.css || ""} ${
-			input.progress && input.progressButtonId === state.item.id
-				? "is-loading"
-				: ""
-		}`
-		id=`${input.id}_${state.item.id}`
-		type=state.item.buttonType
-		data-id=state.item.id
-		tabindex=(state.visible ? "" : "-1")
-		key=`mf_ctl_${state.item.id}`
-		on-click("onButtonClick")>
-		${state.item.label}
-	</button>
+<button
+	class=`button ${state.item.css || ""} ${
+		input.progress && input.progressButtonId === state.item.id
+			? "is-loading"
+			: ""
+	}`
+	id=`${input.id}_${state.item.id}`
+	type=state.item.buttonType
+	data-id=state.item.id
+	tabindex=(state.visible ? "" : "-1")
+	key=`mf_ctl_${state.item.id}`
+	on-click("onButtonClick")>
+	${state.item.label}
+</button>
 </if>
 -->
 <!--
@@ -69,25 +69,25 @@ Button group
 -->
 <!--
 <if(state.item.type === "buttons" && state.visible)>
-	<div class="buttons">
-		<for|btn| of=state.item.data>
-			<if(btn)>
-				<button
-					class=`button ${btn.css || ""} ${
-						input.progress && input.progressButtonId === btn.id ? "is-loading" : ""
-					}`
-					id=`${input.id}_${btn.id}`
-					type=btn.buttonType
-					data-id=btn.id
-					tabindex=(state.visible ? "" : "-1")
-					key=`mf_ctl_${btn.id}`
-					on-click("onButtonClick")
-					disabled=!state.enabled>
-					${btn.label}
-				</button>
-			</if>
-		</for>
-	</div>
+<div class="buttons">
+	<for|btn| of=state.item.data>
+		<if(btn)>
+			<button
+				class=`button ${btn.css || ""} ${
+					input.progress && input.progressButtonId === btn.id ? "is-loading" : ""
+				}`
+				id=`${input.id}_${btn.id}`
+				type=btn.buttonType
+				data-id=btn.id
+				tabindex=(state.visible ? "" : "-1")
+				key=`mf_ctl_${btn.id}`
+				on-click("onButtonClick")
+				disabled=!state.enabled>
+				${btn.label}
+			</button>
+		</if>
+	</for>
+</div>
 </if>
 -->
 <!--
@@ -271,7 +271,9 @@ Date Picker
 -->
 <if(state.item.type === "datepicker")>
 	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-		<label class="label mb-0" style="white-space:nowrap">${state.item.label}:</label>
+		<label class="label mb-0" style="white-space:nowrap">
+			${state.item.label}:
+		</label>
 		<div>
 			${input.value ? format(parse(input.value, "yyyyMMdd", new Date()), out.global.i18n.t("global.dateFormatShort")) : "–"}
 		</div>
@@ -316,8 +318,7 @@ Postmodern Engine
 		<for|i, ix| of=input.value>
 			<div class="card card-body is-shadowless p-2 mb-1 z3-mf-pm-list-item">
 				<div class="columns is-variable is-1">
-					<div
-						class="column is-auto">
+					<div class="column is-auto">
 						<div class="menu-label mb-0">
 							${out.global.i18n.t(`mForm.pm.item.${i.type}`)}
 						</div>
