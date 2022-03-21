@@ -64,13 +64,18 @@ module.exports = class {
             visible: {},
             options: {},
             viewMode: typeof input.viewMode === "boolean" ? input.viewMode : false,
+            selectable: typeof input.selectable === "boolean" ? input.selectable : false,
+            selected: {},
         };
         tabs.map(tab => {
             state.data[tab.id] = {};
             state.errors[tab.id] = {};
         });
         this.fieldsFlat = input.fields.reduce((acc, val) => acc.concat(val), []);
-        this.fieldsFlat.map(f => state.visible[f.id] = true);
+        this.fieldsFlat.map(f => {
+            state.visible[f.id] = true;
+            state.selected[f.id] = !state.selectable;
+        });
         if (input.fields) {
             tabs.map(tab => this.fieldsFlat.map(i => state.data[tab.id][i.id] = this.getDefaultValue(i)));
         }
@@ -102,6 +107,7 @@ module.exports = class {
             serialize: this.serialize.bind(this),
             setViewMode: this.setViewMode.bind(this),
             showNotification: this.showNotification.bind(this),
+            getSelectedFields: this.getSelectedFields.bind(this),
         };
         this.i18n = input.i18n;
         this.masked = {};
@@ -111,6 +117,10 @@ module.exports = class {
 
     setViewMode(mode) {
         this.setState("viewMode", mode);
+    }
+
+    getSelectedFields() {
+        return Object.keys(this.state.selected).filter(i => this.state.selected[i]);
     }
 
     getDefaultValue(item) {
@@ -507,8 +517,8 @@ module.exports = class {
             componentView.func.setOptions(options);
         }
         const optionsState = cloneDeep(this.state.options);
-            optionsState[id] = options;
-            this.setState("options", optionsState);
+        optionsState[id] = options;
+        this.setState("options", optionsState);
     }
 
     onValueSet(data) {
@@ -1263,5 +1273,11 @@ module.exports = class {
         this.setState("viewMode", false);
         this.emit("edit-mode");
         setTimeout(() => this.emitFieldsUpdate());
+    }
+
+    onLabelValueChange(data) {
+        const stateSelected = cloneDeep(this.state.selected);
+        stateSelected[data.id] = data.value;
+        this.setState("selected", stateSelected);
     }
 };

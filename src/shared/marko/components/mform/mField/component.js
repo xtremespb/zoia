@@ -918,4 +918,11 @@ module.exports = class {
             value,
         });
     }
+
+    onLabelCheckboxChange(e) {
+        this.emit("label-value-change", {
+            id: e.target.dataset.id,
+            value: e.target.checked
+        });
+    }
 };

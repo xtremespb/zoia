@@ -5,53 +5,83 @@ Text Input
 -->
 <if(state.item.type === "text")>
 	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-		<label class="label" style="white-space:nowrap">
-			${state.item.label}:<if(state.mandatory)>
-				&nbsp;<span class="has-text-danger">*</span>
-			</if>
-		</label>
-		<div class="control">
-			<if(state.item.noUpdate)>
+		<if(input.selectable)>
+			<div class="z3-pretty p-icon">
 				<input
-					class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
-						state.item.readOnly ? " has-background-white-bis" : ""
-					}`
-					id=`${input.id}_${state.item.id}`
-					key=`mf_ctl_${state.item.id}`
-					type=(state.item.textType || "text")
-					placeholder=state.item.placeholder
-					value=input.value
-					on-change("onFieldValueChange")
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
 					data-id=state.item.id
-					tabindex=(state.visible ? "" : "-1")
-					disabled=(!state.enabled || !state.visible)
-					no-update-if(input.maskedOptions)
-					readonly=(state.item.readOnly ? true : false)
-					no-update/>
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
+			</div>
+		</if>
+		<else>
+			<label class="label" style="white-space:nowrap">
+				${state.item.label}:<if(state.mandatory)>
+					&nbsp;<span class="has-text-danger">*</span>
+				</if>
+			</label>
+		</else>
+		<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+			<div class="control">
+				<if(state.item.noUpdate)>
+					<input
+						class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
+							state.item.readOnly ? " has-background-white-bis" : ""
+						}`
+						id=`${input.id}_${state.item.id}`
+						key=`mf_ctl_${state.item.id}`
+						type=(state.item.textType || "text")
+						placeholder=state.item.placeholder
+						value=input.value
+						on-change("onFieldValueChange")
+						data-id=state.item.id
+						tabindex=(state.visible ? "" : "-1")
+						disabled=(!state.enabled || !state.visible)
+						no-update-if(input.maskedOptions)
+						readonly=(state.item.readOnly ? true : false)
+						no-update/>
+				</if>
+				<else>
+					<input
+						class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
+							state.item.readOnly ? " has-background-white-bis" : ""
+						}`
+						id=`${input.id}_${state.item.id}`
+						key=`mf_ctl_${state.item.id}`
+						type=(state.item.textType || "text")
+						placeholder=state.item.placeholder
+						value=input.value
+						on-change("onFieldValueChange")
+						data-id=state.item.id
+						tabindex=(state.visible ? "" : "-1")
+						disabled=(!state.enabled || !state.visible)
+						no-update-if(input.maskedOptions)
+						readonly=(state.item.readOnly ? true : false)/>
+				</else>
+			</div>
+			<if(state.item.helpText)>
+				<p class="help">${state.item.helpText}</p>
 			</if>
 			<else>
-				<input
-					class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
-						state.item.readOnly ? " has-background-white-bis" : ""
-					}`
-					id=`${input.id}_${state.item.id}`
-					key=`mf_ctl_${state.item.id}`
-					type=(state.item.textType || "text")
-					placeholder=state.item.placeholder
-					value=input.value
-					on-change("onFieldValueChange")
-					data-id=state.item.id
-					tabindex=(state.visible ? "" : "-1")
-					disabled=(!state.enabled || !state.visible)
-					no-update-if(input.maskedOptions)
-					readonly=(state.item.readOnly ? true : false)/>
+				<div class="mt-4"/>
 			</else>
+			<if(input.errors[state.item.id])>
+				<p class="help is-danger">${input.errors[state.item.id]}</p>
+			</if>
 		</div>
-		<if(state.item.helpText)>
-			<p class="help">${state.item.helpText}</p>
-		</if>
-		<if(input.errors[state.item.id])>
-			<p class="help is-danger">${input.errors[state.item.id]}</p>
+		<if(input.selectable && !input.selected)>
+			<div class="mt-4"/>
 		</if>
 	</div>
 </if>
@@ -59,49 +89,78 @@ Text Input
 File Input
 -->
 <if(state.item.type === "file" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
-		<label class="file-label">
-			<input
-				class="file-input"
-				type="file"
-				multiple=state.item.multiple
-				on-change("onFileInputChange")
-				data-id=state.item.id
-				id=`${input.id}_${state.item.id}`/>
-			<a class="file-cta button is-light" key=`mf_ctl_${state.item.id}` tabindex="0">
-				<span class="file-icon">
-					<i class="mdi mdi-upload"/>
-				</span>
-				<span class="file-label">${state.item.buttonLabel}</span>
-			</a>
-		</label>
-	</div>
-	<if(input.value && input.value.length)>
-		<div class="z3-mf-margin-small-top">
-			<for|file, index| of=input.value>
-				<div>
-					<if(file.data || state.item.noDownload)>${file.name}</if>
-					<else>
-						<a href=`/z3/core/download?id=${file.id}` target="_blank">${file.name}</a>
-					</else>
-					&nbsp;
-					<a
-						class="mdi mdi-close"
-						data-id=state.item.id
-						data-itemid=file.id
-						on-click("onFileRemove")/>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
 				</div>
-			</for>
+			</div>
 		</div>
 	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
+			<label class="file-label">
+				<input
+					class="file-input"
+					type="file"
+					multiple=state.item.multiple
+					on-change("onFileInputChange")
+					data-id=state.item.id
+					id=`${input.id}_${state.item.id}`/>
+				<a class="file-cta button is-light" key=`mf_ctl_${state.item.id}` tabindex="0">
+					<span class="file-icon">
+						<i class="mdi mdi-upload"/>
+					</span>
+					<span class="file-label">${state.item.buttonLabel}</span>
+				</a>
+			</label>
+		</div>
+		<if(input.value && input.value.length)>
+			<div class="z3-mf-margin-small-top">
+				<for|file, index| of=input.value>
+					<div>
+						<if(file.data || state.item.noDownload)>${file.name}</if>
+						<else>
+							<a href=`/z3/core/download?id=${file.id}` target="_blank">${file.name}</a>
+						</else>
+						&nbsp;
+						<a
+							class="mdi mdi-close"
+							data-id=state.item.id
+							data-itemid=file.id
+							on-click("onFileRemove")/>
+					</div>
+				</for>
+			</div>
+		</if>
+	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -165,32 +224,61 @@ Message
 Select
 -->
 <if(state.item.type === "select" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<div class=`select ${state.item.css || ""}${
-		input.errors[state.item.id] ? " is-danger" : ""
-	}`>
-		<select
-			data-id=state.item.id
-			key=`mf_ctl_${state.item.id}`
-			id=`${input.id}_${state.item.id}`
-			value=input.value
-			on-change("onFieldValueChange")
-			tabindex=(state.visible ? "" : "-1")
-			disabled=!state.enabled>
-			<for|option| of=state.item.options>
-				<option value=option.value selected=(input.value === String(option.value))>
-					${option.label}
-				</option>
-			</for>
-		</select>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
+			</div>
+		</div>
+	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div class=`select ${state.item.css || ""}${
+			input.errors[state.item.id] ? " is-danger" : ""
+		}`>
+			<select
+				data-id=state.item.id
+				key=`mf_ctl_${state.item.id}`
+				id=`${input.id}_${state.item.id}`
+				value=input.value
+				on-change("onFieldValueChange")
+				tabindex=(state.visible ? "" : "-1")
+				disabled=!state.enabled>
+				<for|option| of=state.item.options>
+					<option value=option.value selected=(input.value === String(option.value))>
+						${option.label}
+					</option>
+				</for>
+			</select>
+		</div>
 	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -199,30 +287,59 @@ Select
 Radio
 -->
 <if(state.item.type === "radio" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<div>
-		<for|option, index| of=state.item.options>
-			<label class=`radio ${state.item.css || ""}`>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
 				<input
-					type="radio"
-					key=`mf_ctl_${state.item.id}_${index}`
-					id=`${input.id}_${state.item.id}_${index}`
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
 					data-id=state.item.id
-					name=state.item.id
-					tabindex=(state.visible ? "" : "-1")
-					value=option.value
-					checked=(input.value === String(option.value))
-					on-change("onFieldValueChange")/>&nbsp;${option.label}
-			</label>
-		</for>
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
+			</div>
+		</div>
+	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div>
+			<for|option, index| of=state.item.options>
+				<label class=`radio ${state.item.css || ""}`>
+					<input
+						type="radio"
+						key=`mf_ctl_${state.item.id}_${index}`
+						id=`${input.id}_${state.item.id}_${index}`
+						data-id=state.item.id
+						name=state.item.id
+						tabindex=(state.visible ? "" : "-1")
+						value=option.value
+						checked=(input.value === String(option.value))
+						on-change("onFieldValueChange")/>&nbsp;${option.label}
+				</label>
+			</for>
+		</div>
 	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -231,31 +348,60 @@ Radio
 Checkboxes
 -->
 <if(state.item.type === "checkboxes" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<for|option, index| of=state.item.options>
-		<div class="z3-pretty p-icon">
-			<input
-				type="checkbox"
-				key=`mf_ctl_${state.item.id}_${index}`
-				on-change("onArrInputChange")
-				id=`${input.id}_${state.item.id}_${option.id}`
-				data-id=state.item.id
-				data-inputid=option.id
-				tabindex=(state.visible ? "" : "-1")
-				checked=(input.value.indexOf(String(option.id)) > -1)/>
-			<div class="state">
-				<i class="icon mdi mdi-check"/>
-				<label>${option.label}</label>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
 			</div>
 		</div>
-	</for>
+	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<for|option, index| of=state.item.options>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					key=`mf_ctl_${state.item.id}_${index}`
+					on-change("onArrInputChange")
+					id=`${input.id}_${state.item.id}_${option.id}`
+					data-id=state.item.id
+					data-inputid=option.id
+					tabindex=(state.visible ? "" : "-1")
+					checked=(input.value.indexOf(String(option.id)) > -1)/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label>${option.label}</label>
+				</div>
+			</div>
+		</for>
+	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -264,30 +410,57 @@ Checkboxes
 Checkbox
 -->
 <if(state.item.type === "checkbox" && state.visible)>
-	<if(state.item.label)>
-		<label class="label">
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
+			</div>
+		</div>
+	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
 			${state.item.label}:<if(state.mandatory)>
 				&nbsp;<span class="has-text-danger">*</span>
 			</if>
 		</label>
-	</if>
-	<div class="z3-pretty p-default" style=(state.item.style || "")>
-		<input
-			type="checkbox"
-			key=`mf_ctl_${state.item.id}`
-			id=`${input.id}_${state.item.id}`
-			on-change("onBooleanInputChange")
-			data-id=state.item.id
-			checked=input.value
-			tabindex=(state.visible ? "" : "-1")
-			class=(state.item.css || "")/>
-		<div class="state p-primary">
-			<label>${state.item.labelCheckbox}</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div class="z3-pretty p-default" style=(state.item.style || "")>
+			<input
+				type="checkbox"
+				key=`mf_ctl_${state.item.id}`
+				id=`${input.id}_${state.item.id}`
+				on-change("onBooleanInputChange")
+				data-id=state.item.id
+				checked=input.value
+				tabindex=(state.visible ? "" : "-1")
+				class=(state.item.css || "")/>
+			<div class="state p-primary">
+				<label>${state.item.labelCheckbox}</label>
+			</div>
 		</div>
 	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -296,35 +469,64 @@ Checkbox
 Captcha
 -->
 <if(state.item.type === "captcha" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<div class="control">
-		<div class="z3-mf-captcha-wrap">
-			<div>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
 				<input
-					class=`z3-mf-captcha-input input${
-						input.errors[state.item.id] ? " is-danger" : ""
-					}`
-					id=`${input.id}_${state.item.id}`
-					key=`mf_ctl_${state.item.id}`
-					type="text"
-					placeholder=state.item.placeholder
-					value=input.value
-					tabindex=(state.visible ? "" : "-1")
-					on-change("onFieldValueChange")
-					data-id=state.item.id/>
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
 			</div>
-			<div>
-				<img src=state.captchaData class="z3-mf-captcha-img" on-click("reloadCaptcha")/>
+		</div>
+	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div class="control">
+			<div class="z3-mf-captcha-wrap">
+				<div>
+					<input
+						class=`z3-mf-captcha-input input${
+							input.errors[state.item.id] ? " is-danger" : ""
+						}`
+						id=`${input.id}_${state.item.id}`
+						key=`mf_ctl_${state.item.id}`
+						type="text"
+						placeholder=state.item.placeholder
+						value=input.value
+						tabindex=(state.visible ? "" : "-1")
+						on-change("onFieldValueChange")
+						data-id=state.item.id/>
+				</div>
+				<div>
+					<img src=state.captchaData class="z3-mf-captcha-img" on-click("reloadCaptcha")/>
+				</div>
 			</div>
 		</div>
 	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -333,25 +535,54 @@ Captcha
 Textarea
 -->
 <if(state.item.type === "textarea" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<div class="control">
-		<textarea
-			class=`textarea${input.errors[state.item.id] ? " is-danger" : ""}`
-			id=`${input.id}_${state.item.id}`
-			key=`mf_ctl_${state.item.id}`
-			placeholder=state.item.placeholder
-			value=input.value
-			tabindex=(state.visible ? "" : "-1")
-			on-change("onFieldValueChange")
-			data-id=state.item.id/>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
+			</div>
+		</div>
+	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div class="control">
+			<textarea
+				class=`textarea${input.errors[state.item.id] ? " is-danger" : ""}`
+				id=`${input.id}_${state.item.id}`
+				key=`mf_ctl_${state.item.id}`
+				placeholder=state.item.placeholder
+				value=input.value
+				tabindex=(state.visible ? "" : "-1")
+				on-change("onFieldValueChange")
+				data-id=state.item.id/>
+		</div>
 	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -360,14 +591,54 @@ Textarea
 ACE
 -->
 <if(state.item.type === "ace" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+					<if(state.item.toggle)>
+						<button
+							type="button"
+							class="button is-small is-rounded z3-mf-toggle-wrap mb-3"
+							data-id=state.item.id
+							tabindex=(state.visible ? "" : "-1")
+							on-click("onAceToggleClick")>
+							<span class="icon is-small">
+								<i
+									class=`mdi mdi-18px ${
+										state.toggleAce[state.item.id] ? "mdi-chevron-up" : "mdi-chevron-down"
+									}`
+									data-id=state.item.id/>
+							</span>
+						</button>
+					</if>
+				</div>
+			</div>
+		</div>
+	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
 		<if(state.item.toggle)>
 			<button
 				type="button"
-				class="button is-small is-rounded z3-mf-toggle-wrap"
+				class="button is-small is-rounded z3-mf-toggle-wrap mb-3"
 				data-id=state.item.id
 				tabindex=(state.visible ? "" : "-1")
 				on-click("onAceToggleClick")>
@@ -380,67 +651,72 @@ ACE
 				</span>
 			</button>
 		</if>
-	</label>
-	<if(state.item.wysiwyg && !state.item.noTopButtons)>
-		<div class="tabs is-toggle is-small mb-1 z3-mf-wysiwyg-toggle">
-			<ul>
-				<if(state.item.source)>
-					<li class=(state.modeAce === "ace" ? "is-active" : "")>
-						<a on-click("onAceModeChange") data-id="ace">
-							${out.global.i18n.t("mForm.ace")}
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<if(state.item.wysiwyg && !state.item.noTopButtons)>
+			<div class="tabs is-toggle is-small mb-1 z3-mf-wysiwyg-toggle">
+				<ul>
+					<if(state.item.source)>
+						<li class=(state.modeAce === "ace" ? "is-active" : "")>
+							<a on-click("onAceModeChange") data-id="ace">
+								${out.global.i18n.t("mForm.ace")}
+							</a>
+						</li>
+					</if>
+					<li class=(state.modeAce === "ck" ? "is-active" : "")>
+						<a on-click("onAceModeChange") data-id="ck">
+							${out.global.i18n.t("mForm.ck")}
 						</a>
 					</li>
-				</if>
-				<li class=(state.modeAce === "ck" ? "is-active" : "")>
-					<a on-click("onAceModeChange") data-id="ck">
-						${out.global.i18n.t("mForm.ck")}
-					</a>
-				</li>
-				<li>
-					<a on-click("onImageBrowser")>${out.global.i18n.t("mForm.imageBrowser")}</a>
-				</li>
-			</ul>
-		</div>
-	</if>
-	<div
-		class="control"
-		id=`${input.id}_${state.item.id}`
-		key=`mf_ctl_${state.item.id}`
-		style=`display:${
-			state.item.toggle
-				? state.toggleAce[state.item.id]
-					? "block"
-					: "none"
-				: "block"
-		}`>
+					<li>
+						<a on-click("onImageBrowser")>${out.global.i18n.t("mForm.imageBrowser")}</a>
+					</li>
+				</ul>
+			</div>
+		</if>
 		<div
-			id=`${input.id}_${state.item.id}_ace`
-			style=(
-				state.modeAce === "ace"
-					? ""
-					: "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden"
-			)>
-			<div class="z3-mf-ace" no-update/>
-		</div>
-		<if(state.item.wysiwyg)>
+			class="control"
+			id=`${input.id}_${state.item.id}`
+			key=`mf_ctl_${state.item.id}`
+			style=`display:${
+				state.item.toggle
+					? state.toggleAce[state.item.id]
+						? "block"
+						: "none"
+					: "block"
+			}`>
 			<div
-				class="z3-mf-ckeditor"
+				id=`${input.id}_${state.item.id}_ace`
 				style=(
-					state.modeAce === "ck"
+					state.modeAce === "ace"
 						? ""
 						: "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden"
 				)>
-				<div no-update>
-					<div
-						key=`mf_ctl_ckeditor_${state.item.id}`
-						id=`mf_ctl_ckeditor_${state.item.id}`/>
-				</div>
+				<div class="z3-mf-ace" no-update/>
 			</div>
-		</if>
+			<if(state.item.wysiwyg)>
+				<div
+					class="z3-mf-ckeditor"
+					style=(
+						state.modeAce === "ck"
+							? ""
+							: "clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden"
+					)>
+					<div no-update>
+						<div
+							key=`mf_ctl_ckeditor_${state.item.id}`
+							id=`mf_ctl_ckeditor_${state.item.id}`/>
+					</div>
+				</div>
+			</if>
+		</div>
 	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -449,44 +725,73 @@ ACE
 Key-Value Input
 -->
 <if(state.item.type === "keyvalue" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<div class="z3-mf-ctl-keyvalue-wrap">
-		<input
-			class=`input${input.errors[state.item.id] ? " is-danger" : ""}`
-			id=`${input.id}_${state.item.id}`
-			key=`mf_ctl_${state.item.id}`
-			type=(state.item.textType || "text")
-			placeholder=state.item.placeholder
-			tabindex=(state.visible ? "" : "-1")
-			value=(
-				input.value.data &&
-				Array.isArray(input.value.data) &&
-				input.value.data.length === 0 &&
-				state.item.emptyArrayLabel
-					? state.item.emptyArrayLabel
-					: input.value.label
-			)
-			on-change("onFieldValueChange")
-			data-id=state.item.id
-			readonly/>
-		&nbsp;
-		<button
-			type="button"
-			class="button is-light"
-			data-id=state.item.id
-			on-click("onKeyValueButtonClick")>
-			<span class="icon is-small">
-				<i class="mdi mdi-dots-horizontal"/>
-			</span>
-		</button>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
+			</div>
+		</div>
+	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div class="z3-mf-ctl-keyvalue-wrap">
+			<input
+				class=`input${input.errors[state.item.id] ? " is-danger" : ""}`
+				id=`${input.id}_${state.item.id}`
+				key=`mf_ctl_${state.item.id}`
+				type=(state.item.textType || "text")
+				placeholder=state.item.placeholder
+				tabindex=(state.visible ? "" : "-1")
+				value=(
+					input.value.data &&
+					Array.isArray(input.value.data) &&
+					input.value.data.length === 0 &&
+					state.item.emptyArrayLabel
+						? state.item.emptyArrayLabel
+						: input.value.label
+				)
+				on-change("onFieldValueChange")
+				data-id=state.item.id
+				readonly/>
+			&nbsp;
+			<button
+				type="button"
+				class="button is-light"
+				data-id=state.item.id
+				on-click("onKeyValueButtonClick")>
+				<span class="icon is-small">
+					<i class="mdi mdi-dots-horizontal"/>
+				</span>
+			</button>
+		</div>
 	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -495,82 +800,111 @@ Key-Value Input
 Images Input
 -->
 <if(state.item.type === "images" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
-		<label class="file-label">
-			<input
-				class="file-input"
-				type="file"
-				multiple=state.item.multiple
-				on-change("onImageInputChange")
-				data-id=state.item.id
-				tabindex=(state.visible ? "" : "-1")
-				id=`${input.id}_${state.item.id}`/>
-			<a class="file-cta button is-light" key=`mf_ctl_${state.item.id}` tabindex="0">
-				<span class="file-icon">
-					<i class="mdi mdi-upload"/>
-				</span>
-				<span class="file-label">${state.item.buttonLabel}</span>
-			</a>
-		</label>
-	</div>
-	<if(input.value && input.value.length)>
-		<div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
-			<for|file, index| of=input.value>
-				<if(state.imageDragging)>
-					<div
-						class="z3-mf-drop-area"
-						on-dragover("onImageDragOver")
-						on-dragleave("onImageDragLeave")
-						on-dragenter("onImageDragEnter")
-						on-drop("onImageDrop")
-						data-index=index/>
-				</if>
-				<div
-					class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow`
-					style=(state.item.css || "")>
-					<div
-						on-dragstart("onImageDragStart")
-						on-dragend("onImageDragEnd")
-						draggable="true"
-						data-mfimageid=file.id>
-						<if(file.data)>
-							<img
-								src=window.URL.createObjectURL(file.data)
-								class="z3-mf-image"
-								on-contextmenu("onContextMenu")
-								data-mfimageid=file.id
-								draggable=false/>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
 						</if>
-						<else>
-							<img
-								src=`${out.global.publicFiles}/tn_${file.id}.jpg`
-								class="z3-mf-image"
-								on-contextmenu("onContextMenu")
-								data-mfimageid=file.id
-								draggable=false/>
-						</else>
-					</div>
+					</label>
 				</div>
-				<if(index === input.value.length - 1 && state.imageDragging)>
-					<div
-						class="z3-mf-drop-area"
-						on-dragover("onImageDragOver")
-						on-dragleave("onImageDragLeave")
-						on-dragenter("onImageDragEnter")
-						on-drop("onImageDrop")
-						data-index=-1/>
-				</if>
-			</for>
+			</div>
 		</div>
 	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
+			<label class="file-label">
+				<input
+					class="file-input"
+					type="file"
+					multiple=state.item.multiple
+					on-change("onImageInputChange")
+					data-id=state.item.id
+					tabindex=(state.visible ? "" : "-1")
+					id=`${input.id}_${state.item.id}`/>
+				<a class="file-cta button is-light" key=`mf_ctl_${state.item.id}` tabindex="0">
+					<span class="file-icon">
+						<i class="mdi mdi-upload"/>
+					</span>
+					<span class="file-label">${state.item.buttonLabel}</span>
+				</a>
+			</label>
+		</div>
+		<if(input.value && input.value.length)>
+			<div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
+				<for|file, index| of=input.value>
+					<if(state.imageDragging)>
+						<div
+							class="z3-mf-drop-area"
+							on-dragover("onImageDragOver")
+							on-dragleave("onImageDragLeave")
+							on-dragenter("onImageDragEnter")
+							on-drop("onImageDrop")
+							data-index=index/>
+					</if>
+					<div
+						class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow`
+						style=(state.item.css || "")>
+						<div
+							on-dragstart("onImageDragStart")
+							on-dragend("onImageDragEnd")
+							draggable="true"
+							data-mfimageid=file.id>
+							<if(file.data)>
+								<img
+									src=window.URL.createObjectURL(file.data)
+									class="z3-mf-image"
+									on-contextmenu("onContextMenu")
+									data-mfimageid=file.id
+									draggable=false/>
+							</if>
+							<else>
+								<img
+									src=`${out.global.publicFiles}/tn_${file.id}.jpg`
+									class="z3-mf-image"
+									on-contextmenu("onContextMenu")
+									data-mfimageid=file.id
+									draggable=false/>
+							</else>
+						</div>
+					</div>
+					<if(index === input.value.length - 1 && state.imageDragging)>
+						<div
+							class="z3-mf-drop-area"
+							on-dragover("onImageDragOver")
+							on-dragleave("onImageDragLeave")
+							on-dragenter("onImageDragEnter")
+							on-drop("onImageDrop")
+							data-index=-1/>
+					</if>
+				</for>
+			</div>
+		</if>
+	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -579,65 +913,94 @@ Images Input
 Image Input
 -->
 <if(state.item.type === "image" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
-		<label class="file-label">
-			<input
-				class="file-input"
-				type="file"
-				multiple=false
-				on-change("onSingleImageInputChange")
-				data-id=state.item.id
-				tabindex=(state.visible ? "" : "-1")
-				id=`${input.id}_${state.item.id}`/>
-			<a
-				class="file-cta button is-light mr-1"
-				key=`mf_ctl_${state.item.id}`
-				tabindex="0">
-				<span class="file-icon">
-					<i class="mdi mdi-upload"/>
-				</span>
-				<span class="file-label">${state.item.buttonLabel}</span>
-			</a>
-		</label>
-		<button
-			class="button is-light"
-			type="button"
-			on-click("onSingleImageRemove")
-			data-id=state.item.id>
-			<span class="icon is-small">
-				<i class="mdi mdi-cancel"/>
-			</span>
-		</button>
-	</div>
-	<if(input.value && input.value.length)>
-		<div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
-			$ const file = input.value[0];
-			<div
-				class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow`
-				style=(state.item.css || "")>
-				<if(file.data)>
-					<img
-						src=window.URL.createObjectURL(file.data)
-						class="z3-mf-image"
-						data-mfimageid=file.id/>
-				</if>
-				<else>
-					<img
-						src=`${out.global.publicFiles}/tn_${file.id}.jpg`
-						class="z3-mf-image"
-						data-mfimageid=file.id/>
-				</else>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
 			</div>
 		</div>
 	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div class=`file${input.errors[state.item.id] ? " is-danger" : ""}`>
+			<label class="file-label">
+				<input
+					class="file-input"
+					type="file"
+					multiple=false
+					on-change("onSingleImageInputChange")
+					data-id=state.item.id
+					tabindex=(state.visible ? "" : "-1")
+					id=`${input.id}_${state.item.id}`/>
+				<a
+					class="file-cta button is-light mr-1"
+					key=`mf_ctl_${state.item.id}`
+					tabindex="0">
+					<span class="file-icon">
+						<i class="mdi mdi-upload"/>
+					</span>
+					<span class="file-label">${state.item.buttonLabel}</span>
+				</a>
+			</label>
+			<button
+				class="button is-light"
+				type="button"
+				on-click("onSingleImageRemove")
+				data-id=state.item.id>
+				<span class="icon is-small">
+					<i class="mdi mdi-cancel"/>
+				</span>
+			</button>
+		</div>
+		<if(input.value && input.value.length)>
+			<div class="z3-mf-margin-small-top columns is-multiline is-variable is-1 mt-2 mb-2">
+				$ const file = input.value[0];
+				<div
+					class=`${state.item.css ? "" : "z3-mf-image-wrap "} column is-narrow`
+					style=(state.item.css || "")>
+					<if(file.data)>
+						<img
+							src=window.URL.createObjectURL(file.data)
+							class="z3-mf-image"
+							data-mfimageid=file.id/>
+					</if>
+					<else>
+						<img
+							src=`${out.global.publicFiles}/tn_${file.id}.jpg`
+							class="z3-mf-image"
+							data-mfimageid=file.id/>
+					</else>
+				</div>
+			</div>
+		</if>
+	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -646,30 +1009,59 @@ Image Input
 Range Input
 -->
 <if(state.item.type === "range" && state.visible)>
-	<label class="label">
-		${state.item.label}:<if(state.mandatory)>
-			&nbsp;<span class="has-text-danger">*</span>
-		</if>
-	</label>
-	<div class="control z3-mf-range-wrap">
-		<input
-			type="range"
-			class=`input${input.errors[state.item.id] ? " is-danger" : ""}`
-			id=`${input.id}_${state.item.id}`
-			key=`mf_ctl_${state.item.id}`
-			value=input.value
-			min=input.item.min
-			max=input.item.max
-			tabindex=(state.visible ? "" : "-1")
-			on-change("onFieldValueChange")
-			on-input("onRangeFieldValueChange")
-			data-id=state.item.id
-			disabled=!state.enabled/>
-		<span class="tag is-light mt-2 ml-2">${input.value}</span>
+	<if(input.selectable)>
+		<div>
+			<div class="z3-pretty p-icon">
+				<input
+					type="checkbox"
+					id=`bulk_${input.id}_${state.item.id}`
+					key=`bulk_${input.id}_${state.item.id}`
+					checked=input.selected
+					data-id=state.item.id
+					onChange("onLabelCheckboxChange")
+					tabindex=(state.visible ? "" : "-1")/>
+				<div class="state">
+					<i class="icon mdi mdi-check"/>
+					<label class="label has-text-weight-bold" style="white-space:nowrap">
+						${state.item.label}<if(state.mandatory)>
+							&nbsp;<span class="has-text-danger">*</span>
+						</if>
+					</label>
+				</div>
+			</div>
+		</div>
+	</if>
+	<else>
+		<label class="label" style="white-space:nowrap">
+			${state.item.label}:<if(state.mandatory)>
+				&nbsp;<span class="has-text-danger">*</span>
+			</if>
+		</label>
+	</else>
+	<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+		<div class="control z3-mf-range-wrap">
+			<input
+				type="range"
+				class=`input${input.errors[state.item.id] ? " is-danger" : ""}`
+				id=`${input.id}_${state.item.id}`
+				key=`mf_ctl_${state.item.id}`
+				value=input.value
+				min=input.item.min
+				max=input.item.max
+				tabindex=(state.visible ? "" : "-1")
+				on-change("onFieldValueChange")
+				on-input("onRangeFieldValueChange")
+				data-id=state.item.id
+				disabled=!state.enabled/>
+			<span class="tag is-light mt-2 ml-2">${input.value}</span>
+		</div>
 	</div>
 	<if(state.item.helpText)>
 		<p class="help">${state.item.helpText}</p>
 	</if>
+	<else>
+		<div class="mt-4"/>
+	</else>
 	<if(input.errors[state.item.id])>
 		<p class="help is-danger">${input.errors[state.item.id]}</p>
 	</if>
@@ -679,41 +1071,70 @@ Date Picker
 -->
 <if(state.item.type === "datepicker")>
 	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-		<label class="label" style="white-space:nowrap">
-			${state.item.label}:<if(state.mandatory)>
-				&nbsp;<span class="has-text-danger">*</span>
-			</if>
-		</label>
-		<div class="control has-icons-left">
-			<input
-				type="text"
-				class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
-					state.item.readOnly ? " has-background-white-bis" : ""
-				}`
-				id=`${input.id}_${state.item.id}`
-				key=`mf_ctl_${state.item.id}`
-				data-id=state.item.id
-				disabled=(!state.enabled || !state.visible)
-				no-update
-				tabindex=(state.visible ? "" : "-1")
-				on-click("onDatePickerInputClick")
-				on-focus("onDatePickerInputClick")
-				on-keydown("onDatePickerKeyPress")/>
-			<span class="icon is-small is-left">
-				<i class="mdi mdi-calendar-month"/>
-			</span>
-		</div>
-		<div
-			class=`z3-mf-calendar-wrap${state.calendarVisible ? "" : " is-hidden"}`
-			id=`${input.id}_${state.item.id}_datepicker`>
-			<mcalendar
-				key=`${input.id}_${state.item.id}_datepicker_field`
-				on-value-change("onCalendarValueChange")
-				on-clear-click("onCalendarClearClick")/>
+		<if(input.selectable)>
+			<div>
+				<div class="z3-pretty p-icon">
+					<input
+						type="checkbox"
+						id=`bulk_${input.id}_${state.item.id}`
+						key=`bulk_${input.id}_${state.item.id}`
+						checked=input.selected
+						data-id=state.item.id
+						onChange("onLabelCheckboxChange")
+						tabindex=(state.visible ? "" : "-1")/>
+					<div class="state">
+						<i class="icon mdi mdi-check"/>
+						<label class="label has-text-weight-bold" style="white-space:nowrap">
+							${state.item.label}<if(state.mandatory)>
+								&nbsp;<span class="has-text-danger">*</span>
+							</if>
+						</label>
+					</div>
+				</div>
+			</div>
+		</if>
+		<else>
+			<label class="label" style="white-space:nowrap">
+				${state.item.label}:<if(state.mandatory)>
+					&nbsp;<span class="has-text-danger">*</span>
+				</if>
+			</label>
+		</else>
+		<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+			<div class="control has-icons-left">
+				<input
+					type="text"
+					class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
+						state.item.readOnly ? " has-background-white-bis" : ""
+					}`
+					id=`${input.id}_${state.item.id}`
+					key=`mf_ctl_${state.item.id}`
+					data-id=state.item.id
+					disabled=(!state.enabled || !state.visible)
+					no-update
+					tabindex=(state.visible ? "" : "-1")
+					on-click("onDatePickerInputClick")
+					on-focus("onDatePickerInputClick")
+					on-keydown("onDatePickerKeyPress")/>
+				<span class="icon is-small is-left">
+					<i class="mdi mdi-calendar-month"/>
+				</span>
+			</div>
+			<div
+				class=`z3-mf-calendar-wrap${state.calendarVisible ? "" : " is-hidden"}`
+				id=`${input.id}_${state.item.id}_datepicker`>
+				<mcalendar
+					key=`${input.id}_${state.item.id}_datepicker_field`
+					on-value-change("onCalendarValueChange")
+					on-clear-click("onCalendarClearClick")/>
+			</div>
 		</div>
 		<if(state.item.helpText)>
 			<p class="help">${state.item.helpText}</p>
 		</if>
+		<else>
+			<div class="mt-4"/>
+		</else>
 		<if(input.errors[state.item.id])>
 			<p class="help is-danger">${input.errors[state.item.id]}</p>
 		</if>
@@ -724,39 +1145,68 @@ Tags Input
 -->
 <if(state.item.type === "tags")>
 	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-		<label class="label z3-mf-tags-label" style="white-space:nowrap">
-			${state.item.label}:<if(state.mandatory)>
-				&nbsp;<span class="has-text-danger">*</span>
-			</if>
-		</label>
-		<div
-			class="input columns is-variable is-1 is-multiline is-mobile z3-mf-tags-wrap pt-1"
-			on-click("onTagsWrapClick")
-			id=`${input.id}_${state.item.id}_wrap`
-			key=`mf_ctl_${state.item.id}`>
-			<for|tag, index| of=state.tags>
-				<div class="control pb-1 pl-1 pr-1">
-					<div class="tags has-addons">
-						<span class="tag is-info" on-click("onTagClick")>${tag}</span>
-						<a class="tag is-delete" on-click("onTagCloseClick") data-index=index/>
+		<if(input.selectable)>
+			<div>
+				<div class="z3-pretty p-icon">
+					<input
+						type="checkbox"
+						id=`bulk_${input.id}_${state.item.id}`
+						key=`bulk_${input.id}_${state.item.id}`
+						checked=input.selected
+						data-id=state.item.id
+						onChange("onLabelCheckboxChange")
+						tabindex=(state.visible ? "" : "-1")/>
+					<div class="state">
+						<i class="icon mdi mdi-check"/>
+						<label class="label has-text-weight-bold" style="white-space:nowrap">
+							${state.item.label}<if(state.mandatory)>
+								&nbsp;<span class="has-text-danger">*</span>
+							</if>
+						</label>
 					</div>
 				</div>
-			</for>
-			<div class=`column is-auto z3-mf-tags-input-wrap pb-1 ${
-				state.tags.length ? "ml-1" : "ml-2"
-			} mr-2`>
-				<input
-					id=`${input.id}_${state.item.id}_input`
-					tabindex=(state.visible ? "" : "-1")
-					on-focus("onTagsInputFocus")
-					on-blur("onTagsInputBlur")
-					on-keydown("onTagsInputKeyup")
-					class="input z3-mf-tags-input p-0"/>
+			</div>
+		</if>
+		<else>
+			<label class="label" style="white-space:nowrap">
+				${state.item.label}:<if(state.mandatory)>
+					&nbsp;<span class="has-text-danger">*</span>
+				</if>
+			</label>
+		</else>
+		<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+			<div
+				class="input columns is-variable is-1 is-multiline is-mobile z3-mf-tags-wrap pt-1"
+				on-click("onTagsWrapClick")
+				id=`${input.id}_${state.item.id}_wrap`
+				key=`mf_ctl_${state.item.id}`>
+				<for|tag, index| of=state.tags>
+					<div class="control pb-1 pl-1 pr-1">
+						<div class="tags has-addons">
+							<span class="tag is-info" on-click("onTagClick")>${tag}</span>
+							<a class="tag is-delete" on-click("onTagCloseClick") data-index=index/>
+						</div>
+					</div>
+				</for>
+				<div class=`column is-auto z3-mf-tags-input-wrap pb-1 ${
+					state.tags.length ? "ml-1" : "ml-2"
+				} mr-2`>
+					<input
+						id=`${input.id}_${state.item.id}_input`
+						tabindex=(state.visible ? "" : "-1")
+						on-focus("onTagsInputFocus")
+						on-blur("onTagsInputBlur")
+						on-keydown("onTagsInputKeyup")
+						class="input z3-mf-tags-input p-0"/>
+				</div>
 			</div>
 		</div>
 		<if(state.item.helpText)>
-			<p class="help">${state.item.helpText}</p>
+			<p class="help mt-4">${state.item.helpText}</p>
 		</if>
+		<else>
+			<div class="mt-4"/>
+		</else>
 		<if(input.errors[state.item.id])>
 			<p class="help is-danger">${input.errors[state.item.id]}</p>
 		</if>
@@ -767,30 +1217,59 @@ Masked input (IMASK)
 -->
 <if(state.item.type === "imask")>
 	<div style=(state.visible ? "" : "position:absolute;top:-100000px")>
-		<label class="label" style="white-space:nowrap">
-			${state.item.label}:<if(state.mandatory)>
-				&nbsp;<span class="has-text-danger">*</span>
-			</if>
-		</label>
-		<div class="control">
-			<input
-				class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
-					state.item.readOnly ? " has-background-white-bis" : ""
-				}`
-				id=`${input.id}_${state.item.id}`
-				key=`mf_ctl_${state.item.id}`
-				type=(state.item.textType || "text")
-				placeholder=state.item.placeholder
-				on-keydown("onIMaskKeyPress")
-				data-id=state.item.id
-				tabindex=(state.visible ? "" : "-1")
-				disabled=(!state.enabled || !state.visible)
-				readonly=(state.item.readOnly ? true : false)
-				no-update/>
+		<if(input.selectable)>
+			<div>
+				<div class="z3-pretty p-icon">
+					<input
+						type="checkbox"
+						id=`bulk_${input.id}_${state.item.id}`
+						key=`bulk_${input.id}_${state.item.id}`
+						checked=input.selected
+						data-id=state.item.id
+						onChange("onLabelCheckboxChange")
+						tabindex=(state.visible ? "" : "-1")/>
+					<div class="state">
+						<i class="icon mdi mdi-check"/>
+						<label class="label has-text-weight-bold" style="white-space:nowrap">
+							${state.item.label}<if(state.mandatory)>
+								&nbsp;<span class="has-text-danger">*</span>
+							</if>
+						</label>
+					</div>
+				</div>
+			</div>
+		</if>
+		<else>
+			<label class="label" style="white-space:nowrap">
+				${state.item.label}:<if(state.mandatory)>
+					&nbsp;<span class="has-text-danger">*</span>
+				</if>
+			</label>
+		</else>
+		<div style=(!input.selectable || input.selected ? "" : "position:absolute;top:-100000px")>
+			<div class="control">
+				<input
+					class=`input${input.errors[state.item.id] ? " is-danger" : ""}${
+						state.item.readOnly ? " has-background-white-bis" : ""
+					}`
+					id=`${input.id}_${state.item.id}`
+					key=`mf_ctl_${state.item.id}`
+					type=(state.item.textType || "text")
+					placeholder=state.item.placeholder
+					on-keydown("onIMaskKeyPress")
+					data-id=state.item.id
+					tabindex=(state.visible ? "" : "-1")
+					disabled=(!state.enabled || !state.visible)
+					readonly=(state.item.readOnly ? true : false)
+					no-update/>
+			</div>
 		</div>
 		<if(state.item.helpText)>
 			<p class="help">${state.item.helpText}</p>
 		</if>
+		<else>
+			<div class="mt-4"/>
+		</else>
 		<if(input.errors[state.item.id])>
 			<p class="help is-danger">${input.errors[state.item.id]}</p>
 		</if>
@@ -920,39 +1399,37 @@ Save & Close
 	<div class="columns mt-0 pt-0 is-mobile is-variable is-1 is-mobile">
 		<div class="column pt-0 pb-0 is-narrow">
 			<div class="field has-addons">
-					<p class="control">
-						<button 
-							class="button is-primary"
-							data-id="save"
-							on-click("onButtonClick")
-							type="button">
-							<span>${out.global.i18n.t("mForm.save")}</span>
-						</button>
-					</p>
-					<p class="control">
-						<div class="dropdown is-hoverable is-up">
-							<div class="dropdown-trigger">
-								<button 
-									class="button is-primary"
-									type="button">
-									<span class="icon is-small">
-										<i class="mdi mdi-chevron-up"></i>
-									</span>
-								</button>
-							</div>
-							<div class="dropdown-menu" role="menu">
-								<div class="dropdown-content">
-									<a 
-										href="#"
-										data-id="saveAndClose"
-										on-click("onButtonClick")
-										class="dropdown-item">
-										${out.global.i18n.t("mForm.saveAndClose")}
-									</a>
-								</div>
+				<p class="control">
+					<button
+						class="button is-primary"
+						data-id="save"
+						on-click("onButtonClick")
+						type="button">
+						<span>${out.global.i18n.t("mForm.save")}</span>
+					</button>
+				</p>
+				<p class="control">
+					<div class="dropdown is-hoverable is-up">
+						<div class="dropdown-trigger">
+							<button class="button is-primary" type="button">
+								<span class="icon is-small">
+									<i class="mdi mdi-chevron-up"/>
+								</span>
+							</button>
+						</div>
+						<div class="dropdown-menu" role="menu">
+							<div class="dropdown-content">
+								<a
+									href="#"
+									data-id="saveAndClose"
+									on-click("onButtonClick")
+									class="dropdown-item">
+									${out.global.i18n.t("mForm.saveAndClose")}
+								</a>
 							</div>
 						</div>
-					</p>
+					</div>
+				</p>
 			</div>
 		</div>
 		<div class="column pt-0 pb-0 is-narrow">

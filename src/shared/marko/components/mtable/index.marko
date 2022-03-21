@@ -83,6 +83,22 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								</div>
 							</p>
 						</for>
+						<if(input.bulk)>
+							<p class="z3-mt-top-control mt-1 mr-1">
+								<button
+									class="button is-light"
+									type="button"
+									on-click("onBulkEditClick")
+									aria-haspopup="false">
+									<div class="z3-mt-icon-wrap">
+										<span class="icon">
+											<i class="mdi mdi-playlist-edit"/>
+										</span>
+									</div>
+									${out.global.i18n.t("mTable.bulkEdit")}
+								</button>
+							</p>
+						</if>
 						<if(input.widgets)>
 							<p class="z3-mt-top-control mt-1 mr-1">
 								<button
@@ -257,9 +273,17 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</if>
 		<!-- Scrollbar Wrap Begin -->
 		<if(input.stickyScrollbar && state.secondScrollbarVisible)>
-			<div id=`${input.id}_scrollbar_wrap` class="z3-mt-scrollbar-wrap" style={"z-index": "50"}>
-				<div id=`${input.id}_scrollbar_inner` style={height:"1px"}>
-				</div>
+			<div
+				id=`${input.id}_scrollbar_wrap`
+				class="z3-mt-scrollbar-wrap"
+				style={
+					"z-index": "50"
+				}>
+				<div
+					id=`${input.id}_scrollbar_inner`
+					style={
+						height: "1px"
+					}/>
 			</div>
 		</if>
 		<!-- Scrollbar Wrap End -->
@@ -580,14 +604,16 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 						<mselect
 							key=`${input.id}_mselect`
 							active=(state.filterSelectedData.type === "select")/>
-						<div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")>
+						<!-- <div class=(state.filterSelectedData.type !== "input" ? "is-hidden" : "")> -->
+						<if(state.filterSelectedData.type === "input")>
 							<input
 								class="input"
 								type="text"
 								value=state.filterValue
 								on-change("onFilterValueChange")
 								placeholder=input.i18n.t("mTable.filterValue")/>
-						</div>
+						</if>
+						<!-- </div> -->
 						<div class=(state.filterSelectedData.type !== "date" ? "is-hidden" : "")>
 							<mcalendar
 								id=`${input.id}_filterDate`
@@ -1177,6 +1203,63 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</div>
 	</if>
 	<!-- Recycle Bin modal: end -->
+	<!-- Bulk Edit modal: start -->
+	<if(state.bulkEditDialogActive)>
+		<div class="modal is-active">
+			<div class="modal-background" on-click("onBulkEditDialogClose")/>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">${out.global.i18n.t("mTable.bulkEdit")}</p>
+					<if(!state.bulkEditLoading)>
+						<button class="delete" aria-label="close" on-click("onBulkEditDialogClose")/>
+					</if>
+				</header>
+				<section class="modal-card-body">
+					<if(!state.bulkEditItems.length)>
+						<div class="notification is-warning">
+							${out.global.i18n.t("mTable.multipleRecordsWarning")}
+						</div>
+					</if>
+					<div
+						style=`display:${state.bulkEditLoading ? "flex" : "none"}`
+						class="z3-mt-filter-spinner-wrap">
+						<div class="z3-mt-filter-spinner">
+							<div/>
+							<div/>
+							<div/>
+							<div/>
+						</div>
+					</div>
+					<div style=`display:${state.bulkEditLoading ? "none" : "block"}`>
+						<mform
+							key=`${input.id}_bulkEditForm`
+							id=`${input.id}_bulkEditForm`
+							fields=input.bulk
+							i18n=out.global.i18n
+							manual=true
+							selectable=true
+							validation=input.bulkValidation
+							on-form-submit("onBulkEditFormSubmit")/>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button
+						disabled=state.bulkEditLoading
+						class="button is-success"
+						on-click("onBulkEditDialogSaveClick")>
+						${out.global.i18n.t("mTable.save")}
+					</button>
+					<button
+						disabled=state.bulkEditLoading
+						class="button is-light"
+						on-click("onBulkEditDialogClose")>
+						${out.global.i18n.t("mTable.cancel")}
+					</button>
+				</footer>
+			</div>
+		</div>
+	</if>
+	<!-- Bulk Edit modal: end -->
 	<mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
 	<mconfirm
 		key=`${input.id}_filterDeleteConfirm`

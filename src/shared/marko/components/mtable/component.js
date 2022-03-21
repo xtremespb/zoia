@@ -76,6 +76,9 @@ module.exports = class {
             recycledData: [],
             recycledCurrentIds: null,
             secondScrollbarVisible: false,
+            bulkEditDialogActive: false,
+            bulkEditLoading: false,
+            bulkEditItems: [],
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -129,7 +132,8 @@ module.exports = class {
         if (window.__z3_mtable_data[this.input.id]) {
             // Restore state from saved data
             Object.keys(this.initialState).map(k => this.setState(k, window.__z3_mtable_data[this.input.id][k]));
-        } else if (!this.input.noAutoDataRequest) {
+        }
+        if (!this.input.noAutoDataRequest) {
             // Request new data
             this.dataRequest();
         }
@@ -601,13 +605,13 @@ module.exports = class {
 
     onAddFilterClick(e) {
         e.preventDefault();
+        this.setState("filterDialogActive", true);
         this.setState("filterError", null);
         this.setState("filterSelected", "");
         this.setState("filterMode", "equals");
         this.setState("filterSelectedData", {});
         this.setState("filterValue", "");
         this.setState("filterDialogEdit", null);
-        this.setState("filterDialogActive", true);
         this.setState("dropdownVisible", {});
     }
 
@@ -728,24 +732,27 @@ module.exports = class {
             this.setState("filterRawDialogActive", true);
             setTimeout(() => this.getComponent(`${this.input.id}_filterRawForm`).func.autoFocus(), 50);
         } else {
-            const filterData = this.input.filter.find(f => f.id === data.id) || {};
-            this.setState("filterSelectedData", filterData);
-            this.setState("filterMode", data.mode);
-            let filterValue = null;
-            switch (this.state.filterSelectedData.type) {
-            case "select":
-                this.selectField.func.setValue(data.value.id);
-                this.selectField.func.setItems(filterData.items);
-                break;
-            case "date":
-                this.calendarField.func.setDate(data.value.id);
-                break;
-            default:
-                filterValue = data.value.id;
-            }
-            this.setState("filterValue", filterValue);
-            this.setState("filterError", null);
             this.setState("filterDialogActive", true);
+            setTimeout(() => {
+                const filterData = this.input.filter.find(f => f.id === data.id) || {};
+                this.setState("filterSelectedData", filterData);
+                this.setState("filterMode", data.mode);
+                let filterValue = null;
+                switch (this.state.filterSelectedData.type) {
+                case "select":
+                    this.selectField.func.setValue(data.value.id);
+                    this.selectField.func.setItems(filterData.items);
+                    break;
+                case "date":
+                    this.calendarField.func.setDate(data.value.id);
+                    break;
+                default:
+                    filterValue = data.value.id;
+                }
+                console.log(filterValue);
+                this.setState("filterValue", filterValue);
+                this.setState("filterError", null);
+            });
         }
     }
 
@@ -1554,5 +1561,74 @@ module.exports = class {
             this.setState("recycleBinLoading", false);
             this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.general"), "is-danger");
         }
+    }
+
+    onBulkEditClick(e) {
+        e.preventDefault();
+        const ids = this.getCheckboxes();
+        this.setState("bulkEditItems", ids);
+        this.setState("bulkEditDialogActive", true);
+    }
+
+    onBulkEditDialogClose(e) {
+        e.preventDefault();
+        if (this.state.bulkEditLoading) {
+            return;
+        }
+        this.setState("bulkEditDialogActive", false);
+    }
+
+    async onBulkEditFormSubmit(data) {
+        if (this.state.bulkEditLoading) {
+            return;
+        }
+        const selectedFields = this.getComponent(`${this.input.id}_bulkEditForm`).func.getSelectedFields();
+        Object.keys(data).map(t => {
+            Object.keys(data[t]).map(f => {
+                if (selectedFields.indexOf(f) === -1) {
+                    delete data[t][f];
+                }
+            });
+        });
+        const ids = this.getCheckboxes();
+        data = { ...data, ids };
+        try {
+            let uploadData;
+            if (this.input.bulkFormType === "formData") {
+                uploadData = new FormData();
+                if (this.input.bulkSave.extras) {
+                    Object.keys(this.input.bulkSave.extras).map(e => uploadData.append(e, this.input.bulkSave.extras[e]));
+                }
+                uploadData.append("__form", JSON.stringify(data));
+            } else {
+                uploadData = {
+                    ...data,
+                };
+                if (this.input.bulkSave.extras) {
+                    uploadData = {
+                        ...uploadData,
+                        ...this.input.bulkSave.extras,
+                    };
+                }
+            }
+            this.setState("bulkEditLoading", true);
+            await axios.post(this.input.bulkSave.url, uploadData, this.input.bulkSave.headers ? {
+                headers: this.input.bulkSave.headers
+            } : undefined);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTable.saveSuccess"), "is-success");
+            this.setState("bulkEditDialogActive", false);
+            this.dataRequest();
+        } catch (e) {
+            if (e && e.response && e.response.status === 401) {
+                this.emit("unauthorized", {});
+            }
+            this.getComponent(`${this.input.id}_mnotify`).func.show(this.i18n.t("mTableErr.general"), "is-danger");
+        }
+        this.setState("bulkEditLoading", false);
+    }
+
+    onBulkEditDialogSaveClick(e) {
+        e.preventDefault();
+        this.getComponent(`${this.input.id}_bulkEditForm`).func.submitForm();
     }
 };
