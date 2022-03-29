@@ -218,7 +218,7 @@ Divider
 Message
 -->
 <if(state.item.type === "message" && state.visible)>
-	<div class=(state.item.css || "")>${state.item.text || ""}</div>
+	<div class=(state.item.css || "")>$!{state.item.text || ""}</div>
 </if>
 <!--
 Select
