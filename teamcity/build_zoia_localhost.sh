@@ -4,7 +4,7 @@ ZOIA_PORT=$1
 MONGO_DB=$2
 MONGO_PORT=$3
 
-source ./print_env_info
+source print_env_info
 
 echo "####### BUILD ZOIA LOCALHOST########"
 
