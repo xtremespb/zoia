@@ -4,7 +4,9 @@ ZOIA_PORT=$1
 MONGO_DB=$2
 MONGO_PORT=$3
 
+source print_env_info.sh
 
+echo "####### BUILD ZOIA LOCALHOST########"
 
 echo "Loading packages"
 npm i
@@ -26,9 +28,6 @@ echo "################################################"
 
 echo "#### Running setup-all for ZOIA ################"
 npm run setup-all
-node build/bin/cli --user admin --email info@zoiajs.org
+
 echo "################################################"
 
-echo "Launching ZOIA as service..."
-npm install pm2 -g
-pm2 start
