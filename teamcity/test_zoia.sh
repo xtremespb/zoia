@@ -34,6 +34,10 @@ for pack in "${packages[@]}"
 do
 	echo "Installing $pack"
 	apt-get -y install $pack
+	echo "############################"
 done
+
+echo "####### Starting TESTS #######"
+npm run test
 
 echo "################################################"
