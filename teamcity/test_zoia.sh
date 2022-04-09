@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source print_env_info
+source print_env_info.sh
 
 echo "####### TESTING ZOIA ########"
 
