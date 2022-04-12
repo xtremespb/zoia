@@ -256,7 +256,9 @@ module.exports = class {
                 this.masked[field.id].destroy();
                 setTimeout(() => {
                     const element = document.getElementById(`${this.input.id}_${field.id}`);
-                    this.masked[field.id] = new InputMask(element, field.maskOptions);
+                    if (element) {
+                        this.masked[field.id] = new InputMask(element, field.maskOptions);
+                    }
                 }, 10);
             }
             if (field.type === "datepicker") {
@@ -293,7 +295,9 @@ module.exports = class {
                 this.masked[field.id].destroy();
                 setTimeout(() => {
                     const element = document.getElementById(`${this.input.id}_${field.id}`);
-                    this.masked[field.id] = new InputMask(element, field.maskOptions);
+                    if (element) {
+                        this.masked[field.id] = new InputMask(element, field.maskOptions);
+                    }
                 }, 10);
             }
         });
@@ -955,7 +959,9 @@ module.exports = class {
                         this.masked[field.id].destroy();
                         setTimeout(() => {
                             const element = document.getElementById(`${this.input.id}_${field.id}`);
-                            this.masked[field.id] = new InputMask(element, field.maskOptions);
+                            if (element) {
+                                this.masked[field.id] = new InputMask(element, field.maskOptions);
+                            }
                         }, 1);
                     }
                     if (this.masked[field.id] && field.imask) {
@@ -986,7 +992,9 @@ module.exports = class {
                             this.masked[field.id].destroy();
                             setTimeout(() => {
                                 const element = document.getElementById(`${this.input.id}_${field.id}`);
-                                this.masked[field.id] = new InputMask(element, field.maskOptions);
+                                if (element) {
+                                    this.masked[field.id] = new InputMask(element, field.maskOptions);
+                                }
                             }, 1);
                         }
                         if (this.masked[field.id] && field.imask) {
@@ -1018,7 +1026,9 @@ module.exports = class {
                     this.masked[field.id].destroy();
                     setTimeout(() => {
                         const element = document.getElementById(`${this.input.id}_${field.id}`);
-                        this.masked[field.id] = new InputMask(element, field.maskOptions);
+                        if (element) {
+                            this.masked[field.id] = new InputMask(element, field.maskOptions);
+                        }
                     }, 1);
                 }
                 if (this.masked[field.id] && field.imask) {
