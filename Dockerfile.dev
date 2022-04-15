@@ -1,12 +1,11 @@
 # syntax=docker/dockerfile:1
 
 FROM node:latest
-ENV NODE_ENV=production
 
 WORKDIR /zoia
 
 COPY ["package.json", "package-lock.json*", "package-core.json*", "./"]
-RUN npm install --production
+RUN npm i
 
 COPY . .
 
