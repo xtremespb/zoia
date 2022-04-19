@@ -2,6 +2,9 @@
 
 FROM node:latest
 
+ARG mongo_addr=localhost
+ARG mongo_port=27017
+
 WORKDIR /zoia
 
 COPY ["package.json", "package-lock.json*", "package-core.json*", "./"]
@@ -11,6 +14,9 @@ COPY . .
 
 RUN npm run config
 RUN npm run build-dev
+RUN npm run cli -- --patch MONGO_URL=mongodb://$mongo_addr:$mongo_port
+RUN npm run cli -- --demo on
+RUN npm run cli -- --acl admin --permissions r
 
 RUN apt-get update && apt-get upgrade -y
 RUN npm install pm2 -g
