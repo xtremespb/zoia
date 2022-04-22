@@ -42,7 +42,9 @@ export default class {
             publicImages: true,
             demoMode: true,
             commonTableItemsLimit: true,
+            version: true,
         };
+        this.req = req;
         this.i18n.setLanguage(this.language);
     }
 
@@ -100,6 +102,7 @@ export default class {
             publicImages: this.config.routes.publicImages,
             demoMode: demoData && demoData.status,
             commonTableItemsLimit: this.config.commonTableItemsLimit,
+            version: this.req.zoiaPackageJson.version,
         };
     }
 }

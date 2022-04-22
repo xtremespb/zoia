@@ -189,6 +189,7 @@ import Env from "../../lib/env";
         fastify.decorate("ExtendedValidation", extendedValidation);
         fastify.decorateRequest("ExtendedValidation", extendedValidation);
         fastify.decorate("zoiaPackageJson", packageJson);
+        fastify.decorateRequest("zoiaPackageJson", packageJson);
         fastify.decorate("zoiaBuildJson", buildJson);
         fastify.decorate("mailTemplatesHTML", mailTemplatesHTML);
         fastify.decorate("mailTemplatesText", mailTemplatesText);
