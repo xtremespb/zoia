@@ -297,6 +297,7 @@ module.exports = class {
                     const element = document.getElementById(`${this.input.id}_${field.id}`);
                     if (element) {
                         this.masked[field.id] = new InputMask(element, field.maskOptions);
+                        this.masked[field.id].value = String(this.state.data[this.state.activeTabId][field.id]);
                     }
                 }, 10);
             }
@@ -416,6 +417,11 @@ module.exports = class {
         const item = this.fieldsFlat.find(i => i.id === obj.id);
         const options = this.state.options[obj.id] || item.options;
         switch (item.type) {
+        case "text":
+            if (this.masked[obj.id]) {
+                value = this.masked[obj.id].unmaskedValue;
+            }
+            break;
         case "select":
             obj.label = options.find(i => String(i.value) === String(obj.value)).label;
             break;

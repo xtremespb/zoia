@@ -67,7 +67,7 @@ export default () => ({
                     ...m,
                     allowed: acl.checkPermission(m.id, "read")
                 })),
-                version: req.zoiaPackageJson.version,
+                version: req.zoiaVersion,
                 moduleId: moduleData.id,
             });
             return response.sendHTML(render);

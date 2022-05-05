@@ -1,12 +1,5 @@
 import path from "path";
 import fs from "fs-extra";
-import fastifyMongo from "fastify-mongodb";
-import fastifyURLData from "fastify-url-data";
-import fastifyCORS from "fastify-cors";
-import fastifyJWT from "fastify-jwt";
-import fastifyFormbody from "fastify-formbody";
-import fastifyCookie from "fastify-cookie";
-import fastifyStatic from "fastify-static";
 import Pino from "pino";
 import {
     Telegraf
@@ -125,12 +118,12 @@ import Env from "../../lib/env";
         // Serve static routes
         if (config.serveStatic) {
             const staticFolders = ["zoia"];
-            fastify.register(fastifyStatic, {
+            fastify.register(require("@fastify/static"), {
                 root: path.resolve(__dirname, `../public/zoia`),
                 prefix: `/zoia`
             });
             fs.readdirSync(path.resolve(__dirname, "../public")).filter(f => f !== "zoia" && fs.lstatSync(path.resolve(__dirname, `../public/${f}`)).isDirectory()).map(dir => {
-                fastify.register(fastifyStatic, {
+                fastify.register(require("@fastify/static"), {
                     root: path.resolve(__dirname, `../public/${dir}`),
                     prefix: `/${dir}`,
                     decorateReply: false
@@ -154,7 +147,7 @@ import Env from "../../lib/env";
         });
         await mongoClient.connect();
         // Regitser MongoDB for Fastify
-        fastify.register(fastifyMongo, {
+        fastify.register(require("@fastify/mongodb"), {
             client: mongoClient,
             database: config.mongo.dbName
         }).register(async (ff, opts, next) => {
@@ -189,7 +182,7 @@ import Env from "../../lib/env";
         fastify.decorate("ExtendedValidation", extendedValidation);
         fastify.decorateRequest("ExtendedValidation", extendedValidation);
         fastify.decorate("zoiaPackageJson", packageJson);
-        fastify.decorateRequest("zoiaPackageJson", packageJson);
+        fastify.decorateRequest("zoiaVersion", packageJson.version);
         fastify.decorate("zoiaBuildJson", buildJson);
         fastify.decorate("mailTemplatesHTML", mailTemplatesHTML);
         fastify.decorate("mailTemplatesText", mailTemplatesText);
@@ -207,18 +200,18 @@ import Env from "../../lib/env";
         const socketIO = new SocketIO(fastify);
         socketIO.setEvents();
         // Register FormBody and Multipart
-        fastify.register(fastifyFormbody);
+        fastify.register(require("@fastify/formbody"));
         fastify.register(zoiaMultipart);
         // Register URL Data Processor
-        fastify.register(fastifyURLData);
+        fastify.register(require("@fastify/url-data"));
         // Register Cookie Processor
-        fastify.register(fastifyCookie);
+        fastify.register(require("@fastify/cookie"));
         // Register CORS
-        fastify.register(fastifyCORS, {
+        fastify.register(require("@fastify/cors"), {
             origin: config.originCORS
         });
         // Register JWT
-        fastify.register(fastifyJWT, {
+        fastify.register(require("@fastify/jwt"), {
             secret: config.secret
         });
         // Load modules
