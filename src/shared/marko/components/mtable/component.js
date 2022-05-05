@@ -749,7 +749,6 @@ module.exports = class {
                 default:
                     filterValue = data.value.id;
                 }
-                console.log(filterValue);
                 this.setState("filterValue", filterValue);
                 this.setState("filterError", null);
             });

@@ -102,7 +102,7 @@ export default class {
             publicImages: this.config.routes.publicImages,
             demoMode: demoData && demoData.status,
             commonTableItemsLimit: this.config.commonTableItemsLimit,
-            version: this.req.zoiaPackageJson.version,
+            version: this.req.zoiaVersion,
         };
     }
 }
