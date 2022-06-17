@@ -226,5 +226,11 @@
 	"mForm.pm.columnsImage.image": "Image",
 	"mFormErr.instantImageUpload": "Could not upload image to server",
 	"mForm.pm.columnsImage.classParagraph": "Paragraph Class",
-	"mForm.pm.columnsImage.classImage": "Image Class"
+	"mForm.pm.columnsImage.classImage": "Image Class",
+	"mTable.databaseAccess": "Database",
+	"mTable.mongoQueryValue": "",
+	"mTable.mongoQueryValueHelpText": "",
+	"mTable.smartSelect": "Select",
+	"mTable.smartSelectIds": "Identificators",
+	"mTable.selected": "Selected records"
 }
