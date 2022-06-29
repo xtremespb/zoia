@@ -310,7 +310,10 @@ import Env from "../../lib/env";
             await maintenanceHandler(req, rep, fastify);
         });
         // Start Web Server
-        await fastify.listen(config.webServer.port, config.webServer.ip);
+        await fastify.listen({
+            port: config.webServer.port,
+            host: config.webServer.ip
+        });
     } catch (e) {
         pino.error(`Fatal: ${e}`);
         process.exit(1);

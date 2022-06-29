@@ -5,7 +5,10 @@ import parse from "date-fns/parse";
 export default class {
     constructor(data, root = {}, part = {}, files = {}, parts = []) {
         this.data = data;
-        this.ajv = new Ajv();
+        this.ajv = new Ajv({
+            allowUnionTypes: true,
+            strict: false,
+        });
         this.schemas = {
             root: parts.length === 1 && parts[0] === "__default" ? null : root,
             part: parts.length === 1 && parts[0] === "__default" ? root : part,
