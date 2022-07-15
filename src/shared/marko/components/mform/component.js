@@ -420,6 +420,10 @@ module.exports = class {
         case "text":
             if (this.masked[obj.id]) {
                 value = this.masked[obj.id].unmaskedValue;
+                // const element = document.getElementById(`${this.input.id}_${obj.id}`);
+                // if (element) {
+                //     this.masked[obj.id] = new InputMask(element, this.fieldsFlat[obj.id].maskOptions);
+                // }
             }
             break;
         case "select":
@@ -498,6 +502,14 @@ module.exports = class {
         }
         this.emit("value-change", obj);
         this.setState("data", data);
+        setTimeout(() => {
+            if (this.masked[obj.id] && this.fieldsFlat.find(f => f.id === obj.id).maskOptions) {
+                const element = document.getElementById(`${this.input.id}_${obj.id}`);
+                if (element) {
+                    this.masked[obj.id] = new InputMask(element, this.fieldsFlat.find(f => f.id === obj.id).maskOptions);
+                }
+            }
+        }, 10);
     }
 
     setValue(id, value) {

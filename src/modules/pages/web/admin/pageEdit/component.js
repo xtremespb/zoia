@@ -68,6 +68,9 @@ module.exports = class {
             break;
         case "save":
             await this.doSave();
+            if (this.input.id === "new") {
+                this.doClose(true);
+            }
             break;
         case "saveAndClose":
             await this.doSave();

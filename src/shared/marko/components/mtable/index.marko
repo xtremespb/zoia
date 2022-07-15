@@ -180,6 +180,38 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 								${out.global.i18n.t("mTable.tableSettings")}
 							</button>
 						</p>
+						<if(input.databaseAccess)>
+							<p class="z3-mt-top-control mt-1 mr-1">
+								<button
+									class="button is-light"
+									type="button"
+									on-click("onTableDatabaseAccessClick")
+									aria-haspopup="false">
+									<div class="z3-mt-icon-wrap">
+										<span class="icon">
+											<i class="mdi mdi-database-outline"/>
+										</span>
+									</div>
+									${out.global.i18n.t("mTable.databaseAccess")}
+								</button>
+							</p>
+						</if>
+						<if(input.smartSelect)>
+							<p class="z3-mt-top-control mt-1 mr-1">
+								<button
+									class="button is-light"
+									type="button"
+									on-click("onTableSmartSelectClick")
+									aria-haspopup="false">
+									<div class="z3-mt-icon-wrap">
+										<span class="icon">
+											<i class="mdi mdi-select-group"/>
+										</span>
+									</div>
+									${out.global.i18n.t("mTable.smartSelect")}
+								</button>
+							</p>
+						</if>
 					</div>
 				</if>
 			</div>
@@ -1132,7 +1164,7 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 									${out.global.i18n.t("mTable.recycledDeleteAll")}
 								</button>
 							</div>
-							<table class="is-fullwidth">
+							<table class="table is-fullwidth">
 								<thead>
 									<tr>
 										<th class="z3-mt-td">
@@ -1260,6 +1292,106 @@ $ const token = cookies.get(`${out.global.siteId || "zoia3"}.authToken`);
 		</div>
 	</if>
 	<!-- Bulk Edit modal: end -->
+	<!-- Database Access: start -->
+	<if(state.databaseAccessDialogActive)>
+		<div class="modal is-active">
+			<div class="modal-background" on-click("onDatabaseAccessDialogClose")/>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">${out.global.i18n.t("mTable.databaseAccess")}</p>
+					<if(!state.bulkEditLoading)>
+						<button class="delete" aria-label="close" on-click("onDatabaseAccessDialogClose")/>
+					</if>
+				</header>
+				<section class="modal-card-body">
+					<mform
+						manual=true
+						key=`${input.id}_databaseAccessForm`
+						id=`${input.id}_databaseAccessForm`
+						fields=[
+							{
+								id: "value",
+								type: "ace",
+								label: out.global.i18n.t("mTable.mongoQueryValue"),
+								helpText: out.global.i18n.t("mTable.mongoQueryValueHelpText"),
+								wysiwyg: false,
+								source: true,
+								autoFocus: true,
+								aceOptions: {
+									mode: "ace/mode/json"
+								}
+							}
+						]
+						i18n=out.global.i18n
+						on-button-click("onFilterRawFormButtonClick")/>
+				</section>
+				<footer class="modal-card-foot">
+					<button
+						disabled=state.bulkEditLoading
+						class="button is-success"
+						on-click("onDatabaseAccessDialogSaveClick")>
+						${out.global.i18n.t("mTable.save")}
+					</button>
+					<button
+						disabled=state.bulkEditLoading
+						class="button is-light"
+						on-click("onDatabaseAccessDialogClose")>
+						${out.global.i18n.t("mTable.cancel")}
+					</button>
+				</footer>
+			</div>
+		</div>
+	</if>
+	<!-- Database Access: end -->
+	<!-- Smart Select: start -->
+	<if(state.smartSelectDialogActive)>
+		<div class="modal is-active">
+			<div class="modal-background" on-click("onSmartSelectDialogClose")/>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">${out.global.i18n.t("mTable.smartSelect")}</p>
+					<if(!state.bulkEditLoading)>
+						<button class="delete" aria-label="close" on-click("onSmartSelectDialogClose")/>
+					</if>
+				</header>
+				<section class="modal-card-body">
+					<mform
+						manual=true
+						key=`${input.id}_smartSelectForm`
+						id=`${input.id}_smartSelectForm`
+						fields=[
+							{
+								id: "value",
+								type: "ace",
+								label: `${out.global.i18n.t("mTable.smartSelectIds")} (${input.smartSelect})`,
+								wysiwyg: false,
+								source: true,
+								autoFocus: true,
+								aceOptions: {
+									mode: "ace/mode/text"
+								}
+							}
+						]
+						i18n=out.global.i18n/>
+				</section>
+				<footer class="modal-card-foot">
+					<button
+						disabled=state.bulkEditLoading
+						class="button is-success"
+						on-click("onSmartSelectDialogSaveClick")>
+						${out.global.i18n.t("mTable.save")}
+					</button>
+					<button
+						disabled=state.bulkEditLoading
+						class="button is-light"
+						on-click("onSmartSelectDialogClose")>
+						${out.global.i18n.t("mTable.cancel")}
+					</button>
+				</footer>
+			</div>
+		</div>
+	</if>
+	<!-- Smart Select: end -->
 	<mnotify key=`${input.id}_mnotify` id=`${input.id}_mnotify`/>
 	<mconfirm
 		key=`${input.id}_filterDeleteConfirm`

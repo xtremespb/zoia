@@ -79,6 +79,8 @@ module.exports = class {
             bulkEditDialogActive: false,
             bulkEditLoading: false,
             bulkEditItems: [],
+            databaseAccessDialogActive: false,
+            smartSelectDialogActive: false,
         };
         input.columns.map(c => this.initialState.columnVisibility[c.id] = !c.hidden);
         this.state = this.initialState;
@@ -118,6 +120,7 @@ module.exports = class {
         this.widgetEditForm = this.getComponent(`${this.input.id}_widgetsEditForm`);
         this.recycledRestoreConfirm = this.getComponent(`${this.input.id}_recycledRestoreConfirm`);
         this.recycledDeleteAllConfirm = this.getComponent(`${this.input.id}_recycledDeleteAllConfirm`);
+        this.initControlsTop = null;
         this.onWindowResize();
         if (this.input.updateOnWindowResize) {
             window.addEventListener("resize", throttle(this.onWindowResize.bind(this), 1000));
@@ -254,7 +257,7 @@ module.exports = class {
             const rectWrap = wrap.getBoundingClientRect();
             const rectControls = controls.getBoundingClientRect();
             if (!this.initControlsTop) {
-                this.initControlsTop = rectWrap.top;
+                this.initControlsTop = rectWrap.top + document.documentElement.scrollTop;
             }
             const rectNavbar = navbar.getBoundingClientRect();
             if (this.initControlsTop - rectNavbar.height <= document.documentElement.scrollTop) {
@@ -1086,7 +1089,9 @@ module.exports = class {
 
     calculateTableContainerWidth() {
         const tableContainer = document.getElementById(`${this.input.id}_tableContainer`);
-        tableContainer.style.width = `${window.innerWidth - tableContainer.getBoundingClientRect().left - this.tableContainerRightOffset}px`;
+        if (tableContainer) {
+            tableContainer.style.width = `${window.innerWidth - tableContainer.getBoundingClientRect().left - this.tableContainerRightOffset}px`;
+        }
     }
 
     setupColumnResize() {
@@ -1590,7 +1595,10 @@ module.exports = class {
             });
         });
         const ids = this.getCheckboxes();
-        data = { ...data, ids };
+        data = {
+            ...data,
+            ids
+        };
         try {
             let uploadData;
             if (this.input.bulkFormType === "formData") {
@@ -1629,5 +1637,70 @@ module.exports = class {
     onBulkEditDialogSaveClick(e) {
         e.preventDefault();
         this.getComponent(`${this.input.id}_bulkEditForm`).func.submitForm();
+    }
+
+    onDatabaseAccessDialogClose(e) {
+        e.preventDefault();
+        this.setState("databaseAccessDialogActive", false);
+    }
+
+    onDatabaseAccessDialogSaveClick(e) {
+        e.preventDefault();
+    }
+
+    onTableDatabaseAccessClick(e) {
+        e.preventDefault();
+        this.setState("databaseAccessDialogActive", true);
+    }
+
+    onSmartSelectDialogSaveClick(e) {
+        e.preventDefault();
+        let value = this.getComponent(`${this.input.id}_smartSelectForm`).func.getValue("value");
+        if (value) {
+            const items = [];
+            const smartSelectItems = this.input.smartSelect.split(/ /);
+            value = value.replace(/ /gm, "\t").replace(/\r/gm, "");
+            const itemsArr = value.split(/\n/);
+            for (const line of itemsArr) {
+                const item = {};
+                const itemsArrLine = line.split(/\t/);
+                for (let i = 0; i < smartSelectItems.length; i += 1) {
+                    item[smartSelectItems[i]] = itemsArrLine[i];
+                }
+                items.push(item);
+            }
+            const ids = [];
+            for (const dataItem of this.state.data) {
+                for (const item of items) {
+                    const match = [];
+                    for (const k of Object.keys(item)) {
+                        if (typeof item[k] === "string" && item[k].trim().toLowerCase() === dataItem[k].trim().toLowerCase()) {
+                            match.push(k);
+                        }
+                    }
+                    if (match.length === smartSelectItems.length) {
+                        ids.push(dataItem._id);
+                    }
+                }
+            }
+            const checkboxes = {};
+            for (const id of ids) {
+                checkboxes[`i${id}`] = true;
+            }
+            this.setState("checkboxes", checkboxes);
+            this.anyCheckboxCheck();
+            this.setState("smartSelectDialogActive", false);
+            this.getComponent(`${this.input.id}_mnotify`).func.show(`${this.i18n.t(`mTable.selected`)}: ${ids.length}`, "is-success");
+        }
+    }
+
+    onSmartSelectDialogClose(e) {
+        e.preventDefault();
+        this.setState("smartSelectDialogActive", false);
+    }
+
+    onTableSmartSelectClick(e) {
+        e.preventDefault();
+        this.setState("smartSelectDialogActive", true);
     }
 };

@@ -26,7 +26,9 @@ typings/
 /data
 /backup
 /update
+/src/modules/telekom
 package.json.bak
 package-update.json
 /src/design/index.marko
 /src/design/variables
+.DS_Store
